@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <script type="text/javascript" src="akihabara/gbox.js"></script>
+    <script type="text/javascript" src="akihabara/iphopad.js"></script>
+    <script type="text/javascript" src="akihabara/trigo.js"></script>
+    <script type="text/javascript" src="akihabara/toys.js"></script>
+    <script type="text/javascript" src="akihabara/help.js"></script>
+    <script type="text/javascript" src="akihabara/tool.js"></script>
+    <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+    <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  </head>
+  <body></body>
+  <script>
+var maingame;
+
+window.addEventListener('load', loadResources, false);
+
+function loadResources() {
+  // This initializes Akihabara with the default settings.
+  // The title (which appears in the browser title bar) is the text we're passing to the function.
+  help.akihabaraInit('8by5');
+
+  // Here we tell the game to look for an image called 'font.png' in the same directory as the HTML file and call it 'font' internally
+  gbox.addImage('font', 'font.png');
+
+  // Same thing for our logo here.
+  gbox.addImage('logo', 'logo.png');
+
+  // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
+  gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+
+  // The 'main' function is registered as a callback: this just says 'when we're done with this
+  gbox.setCallback(main);
+
+  // When everything is ready, the 'loadAll' downloads all the needed resources.
+  gbox.loadAll();
+}
+
+function main() {
+  gbox.setGroups(['game']);
+  maingame = gamecycle.createMaingame('game', 'game');
+
+  maingame.gameTitleIntroAnimation=function(reset) { 
+    if (reset) {
+      toys.resetToy(this, 'rising');
+    }
+
+    gbox.blitFade(gbox.getBufferContext(),{ alpha: 1 }); 
+
+    toys.logos.linear(this, 'rising', {
+      image: 'logo',
+      sx:    gbox.getScreenW()/2-gbox.getImage('logo').width/2,
+      sy:    gbox.getScreenH(),
+      x:     gbox.getScreenW()/2-gbox.getImage('logo').width/2,
+      y:     20,
+      speed: 1
+    });
+  };
+
+  gbox.go();
+}
+  </script>
+</html>

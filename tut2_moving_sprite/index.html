@@ -1,0 +1,126 @@
+<html>
+<head>
+  <script type="text/javascript" src="akihabara/gbox.js"></script>
+  <script type="text/javascript" src="akihabara/iphopad.js"></script>
+  <script type="text/javascript" src="akihabara/trigo.js"></script>
+  <script type="text/javascript" src="akihabara/toys.js"></script>
+  <script type="text/javascript" src="akihabara/help.js"></script>
+  <script type="text/javascript" src="akihabara/tool.js"></script>
+  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <style>BODY { -webkit-user-select:none; margin:0px}</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+</head>
+<body>
+</body>
+<script>
+  var maingame;
+
+  window.addEventListener('load', loadResources, false);
+
+  function loadResources() {
+    // This initializes Akihabara with the default settings.
+    // The title (which appears in the browser title bar) is the text we're passing to the function.
+    help.akihabaraInit('8by5');
+
+    // Here we tell the game to look for an image called 'font.png' in the same directory as the HTML file and call it 'font' internally
+    gbox.addImage('font', 'font.png');
+
+    // Same thing for our logo here.
+    gbox.addImage('logo', 'logo.png');
+
+    // Adding our spritesheet here.
+    gbox.addImage('sprites', 'cels.png');
+
+    // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
+    gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+
+    // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
+      gbox.addTiles({id:'playerTiles',image:'sprites',tileh:12,tilew:12,tilerow:10,gapx:0,gapy:0});
+
+    // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
+    gbox.setCallback(main);
+
+    // When everything is ready, the 'loadAll' downloads all the needed resources.
+    gbox.loadAll();
+  };
+
+  function main() {
+    gbox.setGroups(['player','game']);
+    maingame = gamecycle.createMaingame('game', 'game');
+
+    maingame.gameTitleIntroAnimation=function(reset) {
+      if (reset) {
+        toys.resetToy(this, 'rising');
+      }
+
+      gbox.blitFade(gbox.getBufferContext(),{ alpha: 1 });
+
+      toys.logos.linear(this, 'rising', { image: 'logo', sx: gbox.getScreenW()/2-gbox.getImage('logo').width/2, sy:gbox.getScreenH(), x:gbox.getScreenW()/2-gbox.getImage('logo').width/2, y:20, speed:1});
+    };
+
+    // maingame.initializeGame is where all the game's objects and behaviors are defined. This is where your game code lives!
+    maingame.initializeGame=function() {
+    //gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
+    gbox.addObject({
+      // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
+      id: 'playerid',
+      group: 'player',
+      // for now, the object is smart enough to default to frame 0 of this tileset so we'll leave it at that
+      tileset: 'playerTiles',
+
+      // the initialize function contains code that is run when the object is first created. In the case of the player object this only
+      // happens once, at the beginning of the game, or possibly after a player dies and respawns.
+      initialize:function() {
+
+        // toys are helper functions that are specific to certain genres.
+        // we're using the "topview" toys because we're creating a game with a top view. other game types include shmup, TODO
+        // the toys.topview.initialize function sets a bunch of data on the player object that we want
+        toys.topview.initialize(
+        // here we're telling it to initialize this object, in this case our player
+        this,
+          // now we're passing a big bucket of data
+          {
+          // these next two lines set a rectangular collision box around the object set to the tile height and width
+          colh:gbox.getTiles(this.tileset).tileh,
+          colw:gbox.getTiles(this.tileset).tilew,
+
+          // kinda broken right now, can't get animation working
+      //    frames:{
+      //      still:{ speed:3, frames:[0] }
+      //    }
+
+        });
+      },
+
+      // the first function is like a step function. it runs every frame and does calculations. it's called first
+      // because it happens before the rendering, so we calculate new positions and actions and THEN render them
+      first:function() {
+        // the next line is needed in every object that has animation. We're not worrying about animation yet but
+        // you should get used to including this in your animated objects so we'll put it here for the future.
+        this.counter=(this.counter+1)%10;
+        // toys.topview.controlKeys sets the main key controls. In this case we want to use the arrow keys which
+        // are mapped to their english names. Inside this function it applies accelerations to each of these
+        // directions
+        toys.topview.controlKeys(this,{left:"left",right:"right",up:"up",down:"down"});
+        // this tells the physics engine that this object will be getting acceleration forces from those control keys
+        toys.topview.handleAccellerations(this);
+        // this tells the physics engine to apply those forces
+        toys.topview.applyForces(this);
+
+      },
+
+      // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
+      blit:function() {
+        // clear the screen.
+        gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+        // render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
+        // the default drawing function, sinding along the tileset, the frame info, coordinates, whether the
+        // spries is flipped, camera info, and the alpha transparency value
+        gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,fliph:this.fliph,flipv:this.flipv,camera:this.camera,alpha:1.0});
+      },
+    }); // end gbox.addObject for player
+    };
+    gbox.go();
+  }
+  </script>
+</html> 

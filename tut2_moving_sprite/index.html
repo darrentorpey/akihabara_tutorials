@@ -54,6 +54,12 @@ function main() {
 
   maingame = gamecycle.createMaingame('game', 'game');
 
+  // Disable the default difficulty-choice menu; we don't need it for our tutorial
+  maingame.gameMenu = function() { return true; };
+
+  // Disable the default "get ready" screen; we don't need it for our tutorial
+  maingame.gameIntroAnimation = function() { return true; };
+
   maingame.gameTitleIntroAnimation = function(reset) {
     if (reset) {
       toys.resetToy(this, 'rising');

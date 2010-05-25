@@ -32,7 +32,15 @@ function loadResources() {
   gbox.addImage('mapSpriteSheet', 'maze_cels4.png');
 
   // The tilesets are taken from the sprite sheet too.
-  gbox.addTiles({ id: 'map', image: 'mapSpriteSheet', tileh: 4, tilew: 4, tilerow: 13, gapx: 0, gapy: 0 });
+  gbox.addTiles({
+    id: 'map_pieces',
+    image: 'mapSpriteSheet',
+    tileh: 4,
+    tilew: 4,
+    tilerow: 1,
+    gapx: 0,
+    gapy: 0
+  });
 
   // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
   gbox.addTiles({
@@ -111,7 +119,7 @@ function main() {
   // This is just an array with the tile id or NULL for an empty transparent space.
   // > finalizeTilemap does some magic to the maze object: calculate real width/height of the map in pixels and values the "h" and "w" property.
   map = help.finalizeTilemap({
-    tileset: 'map',
+    tileset: 'map_pieces',
     map: load_map(),            // ...this array as palette. Don't you think that a map like this is quite easy to edit and read with your on-the-go text editor?
     tileIsSolid: function(obj, t) { // This function have to return true if the object "obj" is checking if the tile "t" is a wall, so...
       return (t != null) &&        // Is a wall if is not an empty space and...

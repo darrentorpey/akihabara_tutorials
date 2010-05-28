@@ -27,6 +27,7 @@ function loadResources() {
 
   // Adding our spritesheet here, which gives us our circular protagonist
   gbox.addImage('playerSprite', 'playerSprite.png');
+  // gbox.addImage('playerSpriteEight', 'eight.png');
 
   // Adding our spritesheet here, which gives us our circular protagonist
   gbox.addImage('mapSpriteSheet', 'maze_cels4.png');
@@ -37,7 +38,7 @@ function loadResources() {
     image: 'mapSpriteSheet',
     tileh: 4,
     tilew: 4,
-    tilerow: 1,
+    tilerow: 13,
     gapx: 0,
     gapy: 0
   });
@@ -92,10 +93,6 @@ function main() {
     });
   };
 
-  maingame.changeLevel = function(level) {
-    console.log("Changing level...");
-  }
-
   // maingame.initializeGame is where all the game's objects and behaviors are defined. This is where your game code lives!
   maingame.initializeGame = function() {
     addPlayer();
@@ -139,72 +136,70 @@ function main() {
 
 function load_map() { return help.asciiArtToMap([
 "T----------------------------------------------------------------------------------------------------------------T",
-"||T----------------------------------------------------TxxT----------------------------------------------------T||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||L--------------------------------------------T      ||xx||      T--------------------------------------------J||",
-"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||T--------------------------------------------J      ||xx||      L--------------------------------------------T||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||      T--------------------------------------------JxxL--------------------------------------------T      ||||",
-"||||      ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||      ||||",
-"||||      L--------------------------------------------------------------------------------------------J      ||||",
-"||||                                                                                                          ||||",
-"||||                                                                                                          ||||",
-"||||                                                                                                          ||||",
-"||L------------------------------------------------------------------------------------------------------------J||",
-"L----------------------------------------------------------------------------------------------------------------J",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"                                                                                                                  ",
-"T----------------------------------------------------------------------------------------------------------------T",
-"||T----------------------------------------------------TxxT----------------------------------------------------T||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||      T------------T      T----------------T      ||xx||      T----------------T      T------------T      ||||",
-"||||      ||xxxxxxxxxx||      ||xxxxxxxxxxxxxx||      ||xx||      ||xxxxxxxxxxxxxx||      ||xxxxxxxxxx||      ||||",
-"||||      L--------Txx||      L----------------J      L----J      L----------------J      ||xxT--------J      ||||",
-"||||              ||xx||                                                                  ||xx||              ||||",
-"||||              ||xx||                                                                  ||xx||              ||||",
-"||||              ||xx||                                                                  ||xx||              ||||",
-"||L--------T      ||xx||      T----T      T----------------------------T      T----T      ||xx||      T--------J||",
-"||xxxxxxxx||      ||xx||      ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xx||      ||xxxxxxxx||",
-"||T--------J      L----J      ||xx||      L------------TxxT------------J      ||xx||      L----J      L--------T||",
-"||||                          ||xx||                  ||xx||                  ||xx||                          ||||",
-"||||                          ||xx||                  ||xx||                  ||xx||                          ||||",
-"||||                          ||xx||                  L----J                  ||xx||                          ||||",
-"||||      T--------------------JxxL------------T                  T------------JxxL--------------------T      ||||",
-"||||      ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||                  ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||      ||||",
-"||||      L------------------------------------J                  L------------------------------------J      ||||",
-"||||                                                  T----T                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||||                                                  ||xx||                                                  ||||",
-"||L----------------------------------------------------JxxL----------------------------------------------------J||",
+"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
+"||xxT--------------------------------------------------TxxT--------------------------------------------------Txx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                                                ||xx||        T----------------------------------------Jxx||",
+"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
+"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
+"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
+"||xx||                                                ||xx||        L----------------------------------------Txx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                                                ||xx||                                                ||xx||",
+"||xx||                T--------------------------------JxxL----------------T                                ||xx||",
+"||xx||                ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||                                ||xx||",
+"||xx||                L----------------------------------------------------J                                ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                        T----------------T                  T----------------T      T------------T    ||xx||",
+"||xx||                        ||xxxxxxxxxxxxxx||                  ||xxxxxxxxxxxxxx||      ||xxxxxxxxxx||    ||xx||",
+"||xx||                        L----------------J                  L----------------J      ||xxT--------J    ||xx||",
+"||xx||                                                                                    ||xx||            ||xx||",
+"||xx||                                                                                    ||xx||            ||xx||",
+"||xx||                                                                                    ||xx||            ||xx||",
+"||xxL----------T              T----T      T----------------------------T      T----T      ||xx||      T------Jxx||",
+"||xxxxxxxxxxxx||              ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xx||      ||xxxxxxxx||",
+"||xxT----------J              ||xx||      L------------TxxT------------J      ||xx||      L----J      L------Txx||",
+"||xx||                        ||xx||                  ||xx||                  ||xx||                        ||xx||",
+"||xx||                        ||xx||                  ||xx||                  ||xx||                        ||xx||",
+"||xx||                        ||xx||                  L----J                  ||xx||                        ||xx||",
+"||xx||    T--------------------JxxL------------T                  T------------JxxL--------------------T    ||xx||",
+"||xx||    ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||                  ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||    ||xx||",
+"||xx||    L------------------------------------J                  L------------------------------------J    ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xx||                                                                                                      ||xx||",
+"||xxL--------------------------------------------------------------------------------------------------------Jxx||",
+"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
 "L----------------------------------------------------------------------------------------------------------------J",
 ],[[null,"  "],[0,"||"],[1,"--"],[2,"L-"],[3,"-J"],[4,"T-"],[5,"-T"],[6,"~~"],[7,"xx"],[8," ."],[9," o"],[10, "=="]]) }
 
 // Our wrapper function for adding a player object -- this keeps our main game code nice and clean
-function addPlayer() {
+function addPlayer(startingPosition) {
+  startingPosition = startingPosition || { x: 20, y: 20 }
+
   // gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
-  gbox.addObject({
+  player = gbox.addObject({
     // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
     id: 'playerid',
 
@@ -232,17 +227,31 @@ function addPlayer() {
       //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
+      var olddata=help.createModel(this,["x","y","accx","accy","xpushing","ypushing","facing"]); // A little trick: capman cannot change direction, if hits a wall, so we backup capman's status here. Will restored if capman hits the wall.
+
       // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
       toys.topview.handleAccellerations(this);
 
       // This tells the physics engine to apply those forces
       toys.topview.applyForces(this);
+
+      toys.topview.tileCollision(this,map,"map",null,{tollerance:0,approximation:1}); // check tile collisions.
+
+      // Tollerance indicates how "rounded" the corners are (for turning precision - in capman have to be precise but not too much, for anticipated turnings)
+      // Approximation is the distance in pixel of each check. Lower approximation is better but is slower. Usually using the lower between the tile size and the sprite height is enough.
+
+      if (this.touchedup||this.toucheddown||this.touchedleft||this.touchedright) { // If capman hits some wall
+        help.copyModel(this,olddata); // the olddata properties are replaced to the local object
+        toys.topview.applyForces(this); // And is moved like we've done before, like the player hasn't changed direction.
+        toys.topview.tileCollision(this,map,"map",null,{tollerance:0,approximation:1});
+      }
+
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
     blit: function() {
       // Clear the screen.
-      gbox.blitFade(gbox.getBufferContext(),{});
+      // gbox.blitFade(gbox.getBufferContext(),{});
 
       // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
       //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
@@ -259,6 +268,9 @@ function addPlayer() {
       });
     },
   }); // end gbox.addObject for player
+  player.x = startingPosition.x;
+  player.y = startingPosition.y;
+  return player;
 }
 </script>
 </head><body></body></html>

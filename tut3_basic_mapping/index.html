@@ -93,23 +93,16 @@ function main() {
     });
   };
 
-  // maingame.initializeGame is where all the game's objects and behaviors are defined. This is where your game code lives!
+  // We define a 'background' layer (rendering group) that renders first (so that everything else renders "above" it)
+  gbox.setGroups(['background', 'player', 'game']);
+
+  // ...
   maingame.initializeGame = function() {
+    // From Part 2...
     addPlayer();
 
-    // An object will draw the maze on the screen
-    gbox.addObject({
-      id: 'bg', // This is the object ID
-      group: 'background', // Is in the "backround" group, that is the lower group in the "setGroups" list. Will be drawn for first.
-      initialize: function() { // This action is executed the first time the object is called, so...
-        gbox.setCameraY(2, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
-      },
-      blit:function() { // Then, the most important action: the "blit", where object are drawn on the screen.
-      // console.log("blit map");
-        gbox.blitFade(gbox.getBufferContext(), { alpha: 1 }); // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
-        gbox.blit(gbox.getBufferContext(),gbox.getCanvas('mazecanvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('mazecanvas').width, dh: gbox.getCanvas('mazecanvas').height, sourcecamera: true }); // Simply draw the maze on the screen.
-      }
-    });
+    // Here we create a background object that will draw the map onto the 'background' layer each time our game world is drawn
+    addMap();
   };
 
   // Let's prepare the maze map now. Every stage is the same level but you can generate a new level each "changeLevel" call, using the "level" argument value.
@@ -193,6 +186,28 @@ function load_map() { return help.asciiArtToMap([
 "||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
 "L----------------------------------------------------------------------------------------------------------------J",
 ],[[null,"  "],[0,"||"],[1,"--"],[2,"L-"],[3,"-J"],[4,"T-"],[5,"-T"],[6,"~~"],[7,"xx"],[8," ."],[9," o"],[10, "=="]]) }
+
+function addMap() {
+  gbox.addObject({
+    id: 'bg', // This is the object ID
+    group: 'background', // We use the 'backround' group we created above with our 'setGroups' call.
+    initialize: function() {
+      // Ignore this for now. We'll cover how cameras work in a later tutorial
+      gbox.setCameraY(2, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
+    },
+    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+    blit:function() {
+      // Then, the most important action: the "blit", where object are drawn on the screen.
+    // console.log("blit map");
+      gbox.blitFade(gbox.getBufferContext(), { alpha: 1 }); // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+
+      // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
+      //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
+      //  spries is flipped, camera info, and the alpha transparency value
+      gbox.blit(gbox.getBufferContext(),gbox.getCanvas('mazecanvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('mazecanvas').width, dh: gbox.getCanvas('mazecanvas').height, sourcecamera: true }); // Simply draw the maze on the screen.
+    }
+  });
+}
 
 // Our wrapper function for adding a player object -- this keeps our main game code nice and clean
 function addPlayer(startingPosition) {

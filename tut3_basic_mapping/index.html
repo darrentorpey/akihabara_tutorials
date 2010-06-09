@@ -29,16 +29,16 @@ function loadResources() {
   gbox.addImage('playerSprite', 'playerSprite.png');
   // gbox.addImage('playerSpriteEight', 'eight.png');
 
-  // Adding our spritesheet here, which gives us our circular protagonist
-  gbox.addImage('mapSpriteSheet', 'maze_cels4.png');
+  // Add our map spritesheet, which gives us our "wall" pieces
+  gbox.addImage('mapSpriteSheet', 'map_pieces.png');
 
   // The tilesets are taken from the sprite sheet too.
   gbox.addTiles({
     id: 'map_pieces',
     image: 'mapSpriteSheet',
-    tileh: 4,
-    tilew: 4,
-    tilerow: 13,
+    tileh: 8,
+    tilew: 8,
+    tilerow: 1,
     gapx: 0,
     gapy: 0
   });
@@ -93,9 +93,6 @@ function main() {
     });
   };
 
-  // We define a 'background' layer (rendering group) that renders first (so that everything else renders "above" it)
-  gbox.setGroups(['background', 'player', 'game']);
-
   // ...
   maingame.initializeGame = function() {
     // From Part 2...
@@ -128,64 +125,36 @@ function main() {
 }
 
 function load_map() { return help.asciiArtToMap([
-"T----------------------------------------------------------------------------------------------------------------T",
-"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xxT--------------------------------------------------TxxT--------------------------------------------------Txx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                                                ||xx||        T----------------------------------------Jxx||",
-"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xx||                                                ||xx||        ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"||xx||                                                ||xx||        L----------------------------------------Txx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                                                ||xx||                                                ||xx||",
-"||xx||                T--------------------------------JxxL----------------T                                ||xx||",
-"||xx||                ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||                                ||xx||",
-"||xx||                L----------------------------------------------------J                                ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                        T----------------T                  T----------------T      T------------T    ||xx||",
-"||xx||                        ||xxxxxxxxxxxxxx||                  ||xxxxxxxxxxxxxx||      ||xxxxxxxxxx||    ||xx||",
-"||xx||                        L----------------J                  L----------------J      ||xxT--------J    ||xx||",
-"||xx||                                                                                    ||xx||            ||xx||",
-"||xx||                                                                                    ||xx||            ||xx||",
-"||xx||                                                                                    ||xx||            ||xx||",
-"||xxL----------T              T----T      T----------------------------T      T----T      ||xx||      T------Jxx||",
-"||xxxxxxxxxxxx||              ||xx||      ||xxxxxxxxxxxxxxxxxxxxxxxxxx||      ||xx||      ||xx||      ||xxxxxxxx||",
-"||xxT----------J              ||xx||      L------------TxxT------------J      ||xx||      L----J      L------Txx||",
-"||xx||                        ||xx||                  ||xx||                  ||xx||                        ||xx||",
-"||xx||                        ||xx||                  ||xx||                  ||xx||                        ||xx||",
-"||xx||                        ||xx||                  L----J                  ||xx||                        ||xx||",
-"||xx||    T--------------------JxxL------------T                  T------------JxxL--------------------T    ||xx||",
-"||xx||    ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||                  ||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||    ||xx||",
-"||xx||    L------------------------------------J                  L------------------------------------J    ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xx||                                                                                                      ||xx||",
-"||xxL--------------------------------------------------------------------------------------------------------Jxx||",
-"||xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx||",
-"L----------------------------------------------------------------------------------------------------------------J",
-],[[null,"  "],[0,"||"],[1,"--"],[2,"L-"],[3,"-J"],[4,"T-"],[5,"-T"],[6,"~~"],[7,"xx"],[8," ."],[9," o"],[10, "=="]]) }
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                          x         xx",
+"xxxxxxxxxxxxxxxx            x         xx",
+"xx                          x         xx",
+"xx                          x         xx",
+"xx                          x         xx",
+"xx                          x         xx",
+"xx                          x         xx",
+"xx                          x         xx",
+"xx         xxxxxxxxx   xxxxxxxxxxxxxxxxx",
+"xx                                    gxx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xxxxxxxx                              xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+],[[null," "],[0,"x"]]) }
 
 function addMap() {
   gbox.addObject({
@@ -193,7 +162,7 @@ function addMap() {
     group: 'background', // We use the 'backround' group we created above with our 'setGroups' call.
     initialize: function() {
       // Ignore this for now. We'll cover how cameras work in a later tutorial
-      gbox.setCameraY(2, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
+      gbox.setCameraY(0, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
     },
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit:function() {

@@ -110,8 +110,7 @@ function main() {
     map: load_map(),            // ...this array as palette. Don't you think that a map like this is quite easy to edit and read with your on-the-go text editor?
     tileIsSolid: function(obj, t) { // This function have to return true if the object "obj" is checking if the tile "t" is a wall, so...
       return (t != null) &&        // Is a wall if is not an empty space and...
-        ((t < 6) ||                 // Is a piece of wall or...
-        ((t == 6) && (obj.status != "goout") && (obj.status != "goin"))); // The ghost's door (only if is not a ghost that is trying to go out or in)
+        ((t == 0)); // Is a wall of type 0
     }
   });
 
@@ -140,7 +139,7 @@ function load_map() { return help.asciiArtToMap([
 "xx                          x         xx",
 "xx                          x         xx",
 "xx         xxxxxxxxx   xxxxxxxxxxxxxxxxx",
-"xx                                    gxx",
+"xx                                    xx",
 "xx                                    xx",
 "xx                                    xx",
 "xx                                    xx",
@@ -188,9 +187,17 @@ function addPlayer(startingPosition) {
     id: 'playerid',
 
     group: 'player',
-
+    
     // for now, the object is smart enough to default to frame 0 of this tileset so we'll leave it at that
     tileset: 'playerTiles',
+
+
+    // We're overriding the default colh value for the object. "colh" stands for collision height, and it's the height of our collision box. Similarly
+    // the object automatically has values for colw (collision box width) and colx and coly (the x/y offset of the collision box). We're overriding
+    // colh from its default because by default in the toys.topview object, colh is set to half the height of the sprite. This is because topview is
+    // normally used for Zelda-style games where the hitbox is considered to be the bottom half of the sprite so the top half can "overlap" scenery
+    // that's "behind" it. In this case we're just setting colh to the default tile height.
+    colh:gbox.getTiles('playerTiles').tileh,
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
@@ -202,6 +209,7 @@ function addPlayer(startingPosition) {
       // Here we're just telling it to initialize the object, in this case our player. 
       toys.topview.initialize(this, {
       });
+     
     },
 
     // the first function is like a step function. it runs every frame and does calculations. it's called first
@@ -211,24 +219,16 @@ function addPlayer(startingPosition) {
       //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
-      var olddata=help.createModel(this,["x","y","accx","accy","xpushing","ypushing","facing"]); // A little trick: capman cannot change direction, if hits a wall, so we backup capman's status here. Will restored if capman hits the wall.
-
       // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
       toys.topview.handleAccellerations(this);
 
       // This tells the physics engine to apply those forces
-      toys.topview.applyForces(this);
+      toys.topview.applyForces(this);  
 
-      toys.topview.tileCollision(this,map,"map",null,{tollerance:0,approximation:1}); // check tile collisions.
-
-      // Tollerance indicates how "rounded" the corners are (for turning precision - in capman have to be precise but not too much, for anticipated turnings)
-      // Approximation is the distance in pixel of each check. Lower approximation is better but is slower. Usually using the lower between the tile size and the sprite height is enough.
-
-      if (this.touchedup||this.toucheddown||this.touchedleft||this.touchedright) { // If capman hits some wall
-        help.copyModel(this,olddata); // the olddata properties are replaced to the local object
-        toys.topview.applyForces(this); // And is moved like we've done before, like the player hasn't changed direction.
-        toys.topview.tileCollision(this,map,"map",null,{tollerance:0,approximation:1});
-      }
+      // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 9
+      // because our sprite is round. A tolerance of about 9 gives us a good feeling of rounded corners to our object. We arrived that the
+      // particular number through trial and error -- generally speaking tolerance should be somewhere between 0 and half your sprite width or height.
+      toys.topview.tileCollision(this,map,"map",null,{tollerance:9,approximation:3}); // check tile collisions.
 
     },
 

@@ -225,10 +225,11 @@ function addPlayer(startingPosition) {
       // This tells the physics engine to apply those forces
       toys.topview.applyForces(this);  
 
-      // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 9
-      // because our sprite is round. A tolerance of about 9 gives us a good feeling of rounded corners to our object. We arrived that the
-      // particular number through trial and error -- generally speaking tolerance should be somewhere between 0 and half your sprite width or height.
-      toys.topview.tileCollision(this,map,"map",null,{tollerance:9,approximation:3}); // check tile collisions.
+      // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 6
+      // because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
+      // feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
+      // be somewhere between 0 and half your sprite width or height. And yes, it's spelled "tollerance" in the code :P
+      toys.topview.tileCollision(this,map,"map",null,{tollerance:6,approximation:3}); // check tile collisions.
 
     },
 

@@ -65,7 +65,7 @@ function loadResources() {
 };
 
 function main() {
-  // ** For Part 2 we're adding 'player' to the next line **
+  // ** For Part 3 we're adding 'background' to the next line **
   gbox.setGroups(['background', 'player', 'game']);
 
   maingame = gamecycle.createMaingame('game', 'game');
@@ -114,11 +114,11 @@ function main() {
     }
   });
 
-  // Since finalizeMap have calculated the real height and width, we can create a canvas that fits perfectly our maze... Let's call it "mazecanvas".
-  gbox.createCanvas('mazecanvas', { w: map.w, h: map.h });
+  // Since finalizeMap have calculated the real height and width, we can create a canvas that fits perfectly our map... Let's call it "map_canvas".
+  gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
 
-  // Let's paste our map in the "map" object into the just created "mazecanvas". So is now ready to be rendered.
-  gbox.blitTilemap(gbox.getCanvasContext('mazecanvas'), map);
+  // Let's paste our map in the "map" object into the just created "map_canvas". So is now ready to be rendered.
+  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 
   gbox.go();
 }
@@ -172,7 +172,7 @@ function addMap() {
       // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
       //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
       //  spries is flipped, camera info, and the alpha transparency value
-      gbox.blit(gbox.getBufferContext(),gbox.getCanvas('mazecanvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('mazecanvas').width, dh: gbox.getCanvas('mazecanvas').height, sourcecamera: true }); // Simply draw the maze on the screen.
+      gbox.blit(gbox.getBufferContext(),gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true }); // Simply draw the maze on the screen.
     }
   });
 }
@@ -229,15 +229,12 @@ function addPlayer(startingPosition) {
       // because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
       // feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
       // be somewhere between 0 and half your sprite width or height. And yes, it's spelled "tollerance" in the code :P
-      toys.topview.tileCollision(this,map,"map",null,{tollerance:6,approximation:3}); // check tile collisions.
+      toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 }); // check tile collisions.
 
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
     blit: function() {
-      // Clear the screen.
-      // gbox.blitFade(gbox.getBufferContext(),{});
-
       // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
       //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
       //  spries is flipped, camera info, and the alpha transparency value

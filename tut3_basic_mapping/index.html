@@ -177,8 +177,7 @@ function addMap() {
 }
 
 // Our wrapper function for adding a player object -- this keeps our main game code nice and clean
-function addPlayer(startingPosition) {
-  startingPosition = startingPosition || { x: 20, y: 20 }
+function addPlayer() {
 
   // gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
   player = gbox.addObject({
@@ -208,7 +207,10 @@ function addPlayer(startingPosition) {
       // Here we're just telling it to initialize the object, in this case our player. 
       toys.topview.initialize(this, {
       });
-     
+
+      // And we set the starting position for our player.
+      this.x = 20;
+      this.y = 20;     
     },
 
     // the first function is like a step function. it runs every frame and does calculations. it's called first
@@ -249,8 +251,6 @@ function addPlayer(startingPosition) {
       });
     },
   }); // end gbox.addObject for player
-  player.x = startingPosition.x;
-  player.y = startingPosition.y;
   return player;
 }
 </script>

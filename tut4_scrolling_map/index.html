@@ -296,10 +296,10 @@ function followCamera(obj,viewdata) {
   xcam = gbox.getCamera().x;
   ycam = gbox.getCamera().y;
 
-  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX( xcam + (obj.x - xcam)-(gbox._screenw - xbuf),viewdata);
-  if ((obj.x - xcam) < (xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (xbuf),viewdata);
-  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY( ycam + (obj.y - ycam)-(gbox._screenh - ybuf),viewdata);
-  if ((obj.y - ycam) < (ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (ybuf),viewdata);
+  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX( xcam + (obj.x - xcam)-(gbox._screenw - xbuf), viewdata);
+  if ((obj.x - xcam) < (xbuf)) gbox.setCameraX( xcam + (obj.x - xcam) - (xbuf), viewdata);
+  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY( ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
+  if ((obj.y - ycam) < (ybuf)) gbox.setCameraY( ycam + (obj.y - ycam) - (ybuf), viewdata);
 
  
 }

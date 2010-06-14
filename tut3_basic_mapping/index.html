@@ -27,7 +27,17 @@ function loadResources() {
 
   // Adding our spritesheet here, which gives us our circular protagonist
   gbox.addImage('playerSprite', 'playerSprite.png');
-  // gbox.addImage('playerSpriteEight', 'eight.png');
+
+  // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
+  gbox.addTiles({
+    id:      'playerTiles', // Set a unique ID for future reference
+    image:   'playerSprite', // Use the 'playerSprite' image, as loaded above
+    tileh:   16,
+    tilew:   16,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
+  });
 
   // Add our map spritesheet, which gives us our "wall" pieces
   gbox.addImage('mapSpriteSheet', 'map_pieces.png');
@@ -41,17 +51,6 @@ function loadResources() {
     tilerow: 1,
     gapx: 0,
     gapy: 0
-  });
-
-  // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
-  gbox.addTiles({
-    id:      'playerTiles', // Set a unique ID for future reference
-    image:   'playerSprite', // Use the 'playerSprite' image, as loaded above
-    tileh:   16,
-    tilew:   16,
-    tilerow: 1,
-    gapx:    0,
-    gapy:    0
   });
 
   // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
@@ -102,17 +101,18 @@ function main() {
     addMap();
   };
 
-  // Let's prepare the maze map now. Every stage is the same level but you can generate a new level each "changeLevel" call, using the "level" argument value.
-  // This is just an array with the tile id or NULL for an empty transparent space.
-  // > finalizeTilemap does some magic to the maze object: calculate real width/height of the map in pixels and values the "h" and "w" property.
-  map = help.finalizeTilemap({
+  // here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
+  map = {
     tileset: 'map_pieces',
     map: load_map(),            // ...this array as palette. Don't you think that a map like this is quite easy to edit and read with your on-the-go text editor?
     tileIsSolid: function(obj, t) { // This function have to return true if the object "obj" is checking if the tile "t" is a wall, so...
       return (t != null) &&        // Is a wall if is not an empty space and...
         ((t == 0)); // Is a wall of type 0
     }
-  });
+  }
+  
+  
+  map = help.finalizeTilemap(map);
 
   // Since finalizeMap have calculated the real height and width, we can create a canvas that fits perfectly our map... Let's call it "map_canvas".
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
@@ -153,7 +153,7 @@ function load_map() { return help.asciiArtToMap([
 "xx                                    xx",
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-],[[null," "],[0,"x"]]) }
+],[ [null," "],[0,"x"] ]) }
 
 function addMap() {
   gbox.addObject({

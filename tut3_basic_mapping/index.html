@@ -111,13 +111,13 @@ function main() {
     }
   }
   
-  
+  // this function calculates the overall height and width of the map by counting the number of tiles.
   map = help.finalizeTilemap(map);
 
-  // Since finalizeMap have calculated the real height and width, we can create a canvas that fits perfectly our map... Let's call it "map_canvas".
+  // Since finalizeMap has calculated the height and width, we can create a canvas that fits our map. Let's call it "map_canvas".
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
 
-  // Let's paste our map in the "map" object into the just created "map_canvas". So is now ready to be rendered.
+  // This function grabs the map from the "map" object and draws it onto our "map_canvas". So now the map is in the rendering pipeline.
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 
   gbox.go();
@@ -159,17 +159,12 @@ function addMap() {
   gbox.addObject({
     id: 'bg', // This is the object ID
     group: 'background', // We use the 'backround' group we created above with our 'setGroups' call.
-    initialize: function() {
-      // Ignore this for now. We'll cover how cameras work in a later tutorial
-      gbox.setCameraY(0, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
-    },
+
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit:function() {
-      // Then, the most important action: the "blit", where object are drawn on the screen.
-    // console.log("blit map");
+
       gbox.blitFade(gbox.getBufferContext(), { alpha: 1 }); // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
 
-      // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
       //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
       //  spries is flipped, camera info, and the alpha transparency value
       gbox.blit(gbox.getBufferContext(),gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true }); // Simply draw the maze on the screen.

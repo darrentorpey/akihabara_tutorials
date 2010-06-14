@@ -211,7 +211,7 @@ function addMap() {
       gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
 
       // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
-      followCamera(gbox.getObject('player', 'player_id'), {w: map.w, h: map.h});
+      gbox.centerCamera(gbox.getObject("player","player_id"),{w: map.w, h: map.h});
 
       // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
       //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
@@ -288,21 +288,5 @@ function addPlayer() {
     },
   });
 }
-
-function followCamera(obj,viewdata) {
-
-  xbuf = 96;
-  ybuf = 96;
-  xcam = gbox.getCamera().x;
-  ycam = gbox.getCamera().y;
-
-  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX( xcam + (obj.x - xcam)-(gbox._screenw - xbuf),viewdata);
-  if ((obj.x - xcam) < (xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (xbuf),viewdata);
-  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY( ycam + (obj.y - ycam)-(gbox._screenh - ybuf),viewdata);
-  if ((obj.y - ycam) < (ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (ybuf),viewdata);
-
- 
-}
-
 </script>
 </head><body></body></html>

@@ -12,13 +12,6 @@
 var maingame;
 var map;
 
-var LEFT = 0;
-var RIGHT = 0;
-var UP = 0;
-var DOWN = 0;// added my own key tracking booleans -Nick
-
-var total=0;//total is defined here for simplicity and is the total of the four directional variables
-
 window.addEventListener('load', loadResources, false);
 
 function loadResources() {
@@ -264,93 +257,36 @@ function addPlayer() {
 			//  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
 			toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
-			if(gbox.keyIsReleased("left"))
-			{
-				LEFT = 0;
-			}
-			if(gbox.keyIsReleased("right"))
-			{
-				RIGHT = 0;
-			}
-			if(gbox.keyIsReleased("up"))
+			if(this.accx == 0 && this.accy == 0) this.frame = 0;
+
+			if(this.accy == 0)
 			{
 				UP = 0;
+				DOWN = 0;
 			}
-			if(gbox.keyIsReleased("down"))
+		
+			if(this.accx > 0)
 			{
+				RIGHT = 1;
+				LEFT = 0;
+			}
+			if(this.accy > 0)
+			{
+				DOWN = 2;
+				UP = 0;
+			}
+			if(this.accx < 0)
+			{
+				LEFT = 4;
+				RIGHT = 0;
+			}
+			if(this.accy < 0)
+			{
+				UP = 8;
 				DOWN = 0;
 			}
 			
-			if(gbox.keyIsPressed("right"))
-			{
-				RIGHT = 1;
-			}
-			if(gbox.keyIsPressed("down"))
-			{
-				DOWN = 2;
-			}
-			if(gbox.keyIsPressed("left"))
-			{
-				LEFT = 4;
-			}
-			if(gbox.keyIsPressed("up"))
-			{
-				UP = 8;
-			}
-			
-			total = (LEFT+RIGHT+UP+DOWN);
-			
-			console.log(total);
-			
-			switch(total)
-			{
-				case 1:
-					this.frame = 1;
-					break;
-				case 2:
-					this.frame = 3;
-					break;
-				case 3:
-					this.frame = 2;
-					break;
-				case 4:
-					this.frame = 5;
-					break;
-				case 5:
-					//this case is holding the left and right keys at the same time, do nothing
-					break;
-				case 6:
-					this.frame = 4;
-					break;
-				case 7:
-					this.frame = 3;
-					break;
-				case 8:
-					this.frame = 7;
-					break;
-				case 9:
-					this.frame = 8;
-					break;
-				case 10:
-					//dead case
-					break;
-				case 11:
-					this.frame = 1;
-					break;
-				case 12:
-					this.frame = 6;
-					break;
-				case 13:
-					this.frame = 7;
-					break;
-				case 14:
-					this.frame = 5;
-					break;
-				case 15:
-					//dead case
-					break;
-			}
-			
+		
 			// This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
 			toys.topview.handleAccellerations(this);
 

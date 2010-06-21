@@ -12,6 +12,9 @@
 var maingame;
 var map;
 
+//this keeps track of how many frames have gone by in the current animation -Nick
+var frameCount = 0;
+
 window.addEventListener('load', loadResources, false);
 
 function loadResources() {
@@ -34,7 +37,7 @@ function loadResources() {
     image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
     tileh:   16,
     tilew:   16,
-    tilerow: 9, //the sprite sheet now has nine tiles including the original -Nick
+    tilerow: 19, //the sprite sheet now has nine tiles including the original -Nick
     gapx:    0,
     gapy:    0
   });
@@ -205,6 +208,11 @@ function addMap() {
 		id:    'background_id', // This is the object ID
 		group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
 
+		first: function() {
+			//this is incrementing the global frame counter
+			frameCount++;
+		},
+		
 		// The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
 		blit: function() {
 			// First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
@@ -222,6 +230,7 @@ function addMap() {
 
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
+
 	gbox.addObject({
 		id:      'player_id',    // id refers to the specific object
 		group:   'player',       // The rendering group
@@ -248,6 +257,22 @@ function addPlayer() {
 			// And we set the starting position for our player.
 			this.x = 20;
 			this.y = 20;
+			
+			this.frameCounter = 0;
+			
+			this.animList = {
+								still: {speed: 1, frames: [0]},
+								right: {speed: 3, frames: [1,11]},
+								downRight: {speed: 3, frames: [2,12]},
+								down: {speed: 3, frames: [3,13]},
+								downLeft: {speed: 3, frames: [4,14]},
+								left: {speed: 3, frames: [5,15]},
+								leftUp: {speed: 3, frames: [6,16]},
+								up: {speed: 3, frames: [7,17]},
+								upRight: {speed: 3, frames: [8,18]}
+							};
+							
+			this.animIndex = "still";
 		},
 
 		// The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -257,35 +282,17 @@ function addPlayer() {
 			//  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
 			toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
-			if(this.accx == 0 && this.accy == 0) this.frame = 0;
-
-			if(this.accy == 0)
-			{
-				UP = 0;
-				DOWN = 0;
-			}
-		
-			if(this.accx > 0)
-			{
-				RIGHT = 1;
-				LEFT = 0;
-			}
-			if(this.accy > 0)
-			{
-				DOWN = 2;
-				UP = 0;
-			}
-			if(this.accx < 0)
-			{
-				LEFT = 4;
-				RIGHT = 0;
-			}
-			if(this.accy < 0)
-			{
-				UP = 8;
-				DOWN = 0;
-			}
+			if(this.accx == 0 && this.accy == 0){ this.animIndex = "still";}
+			if(this.accx > 0 && this.accy == 0){ this.animIndex = "right";}
+			if(this.accx > 0 && this.accy > 0){ this.animIndex = "downRight";}
+			if(this.accx == 0 && this.accy > 0){ this.animIndex = "down";}
+			if(this.accx < 0 && this.accy > 0){ this.animIndex = "downLeft";}
+			if(this.accx < 0 && this.accy == 0){ this.animIndex = "left";}
+			if(this.accx < 0 && this.accy < 0){ this.animIndex = "leftUp";}
+			if(this.accx == 0 && this.accy < 0){ this.animIndex = "up";}
+			if(this.accx > 0 && this.accy < 0){ this.animIndex = "upRight";}
 			
+			if(frameCount%this.animList[this.animIndex].speed == 0) this.frame = this.animList[this.animIndex].frames[Math.floor(frameCount/this.animList[this.animIndex].speed)%this.animList[this.animIndex].frames.length];
 		
 			// This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
 			toys.topview.handleAccellerations(this);

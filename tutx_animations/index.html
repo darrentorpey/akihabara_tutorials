@@ -209,7 +209,7 @@ function addMap() {
 		group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
 
 		first: function() {
-			//this is incrementing the global frame counter
+			//this is incrementing the global frame counter -Nick
 			frameCount++;
 		},
 		
@@ -257,13 +257,12 @@ function addPlayer() {
 			// And we set the starting position for our player.
 			this.x = 20;
 			this.y = 20;
-			
-			this.frameCounter = 0;
-			
+
+			// animation list and default animation state -Nick	
 			this.animList = {
 								still: {speed: 1, frames: [0]},
 								right: {speed: 3, frames: [1,11]},
-								downRight: {speed: 3, frames: [2,12]},
+								rightDown: {speed: 3, frames: [2,12]},
 								down: {speed: 3, frames: [3,13]},
 								downLeft: {speed: 3, frames: [4,14]},
 								left: {speed: 3, frames: [5,15]},
@@ -282,17 +281,19 @@ function addPlayer() {
 			//  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
 			toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
-			if(this.accx == 0 && this.accy == 0){ this.animIndex = "still";}
-			if(this.accx > 0 && this.accy == 0){ this.animIndex = "right";}
-			if(this.accx > 0 && this.accy > 0){ this.animIndex = "downRight";}
-			if(this.accx == 0 && this.accy > 0){ this.animIndex = "down";}
-			if(this.accx < 0 && this.accy > 0){ this.animIndex = "downLeft";}
-			if(this.accx < 0 && this.accy == 0){ this.animIndex = "left";}
-			if(this.accx < 0 && this.accy < 0){ this.animIndex = "leftUp";}
-			if(this.accx == 0 && this.accy < 0){ this.animIndex = "up";}
-			if(this.accx > 0 && this.accy < 0){ this.animIndex = "upRight";}
+			// animation handling -Nick
+			if(this.accx == 0 && this.accy == 0) this.animIndex = "still";
+			if(this.accx > 0 && this.accy == 0) this.animIndex = "right";
+			if(this.accx > 0 && this.accy > 0) this.animIndex = "rightDown";
+			if(this.accx == 0 && this.accy > 0) this.animIndex = "down";
+			if(this.accx < 0 && this.accy > 0) this.animIndex = "downLeft";
+			if(this.accx < 0 && this.accy == 0) this.animIndex = "left";
+			if(this.accx < 0 && this.accy < 0) this.animIndex = "leftUp";
+			if(this.accx == 0 && this.accy < 0) this.animIndex = "up";
+			if(this.accx > 0 && this.accy < 0) this.animIndex = "upRight";
 			
-			if(frameCount%this.animList[this.animIndex].speed == 0) this.frame = this.animList[this.animIndex].frames[Math.floor(frameCount/this.animList[this.animIndex].speed)%this.animList[this.animIndex].frames.length];
+			// set the animation -Nick
+			if(frameCount%this.animList[this.animIndex].speed == 0) this.frame = help.decideFrame(frameCount,this.animList[this.animIndex]);
 		
 			// This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
 			toys.topview.handleAccellerations(this);

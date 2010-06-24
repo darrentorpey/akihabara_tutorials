@@ -1,0 +1,52 @@
+//start with gbox.addImage, this will load the image file for the sprite sheet
+gbox.addImage("imageName","the/file/path.png");
+
+//then use gbox.addTiles to parse up the sprite
+//you can have as many tiles as you want per image
+gbox.addTiles({id: "tileSetName", image: "imageName", tileh: tileHeight, tilew: tileWidth, tilerow: rows, gapx: dispx, gapy: dispy});
+//the id is what you will refer to this tile set with like any other ID
+//the imageName is the image you're passing in that the tile set will grab it's subdivisions from
+//		Note, you can have as many tile sets per image as you like and their subdivisions can overlap
+//tileh is the height of an individual tile
+//tilew is the width of an idividual tile
+//tilerow is the number of tiles in the row
+//		Note, there doesn't seem to be any support for vertically tiled animations or image sets
+//		In other words, rows only, no columns
+//gapx is the horizontal gap from the start of the image to the upper left hand corner of the first tile in the animation
+//gapy is the vertical gap from the upper left hand corner of the image to the upper left hand corner of the first tile in the animation
+//		Tiles are parsed out of the stored tile map by the blitTilemap function which uses blitTile. All of this happens behind the scenes in gBox.
+
+//This is where things get interesting, key events are odd and a bit of a maze
+gbox.keyIsPressed(id);
+
+frames:{ // These are quite self explanatory <- capman's creator's words
+	still:{ speed:2, frames:[0] },
+	hit:{speed:1,frames:[0,1,0,1]},
+	standup:{ speed:1, frames:[0] },
+	standdown:{ speed:1, frames:[0] },
+	standleft:{ speed:1, frames:[0] },
+	standright:{ speed:1, frames:[0] },
+	movingup:{speed:3,frames:[0,2,1,2] },
+	movingdown:{speed:3,frames:[0,4,3,4] },
+	movingleft:{speed:3,frames:[0,6,5,6] },
+	movingright:{speed:3,frames:[0,6,5,6] }
+} // self explanatory my a**! <-mine
+
+//okay, here's how this works. The setFrame method from toy.topview shown below is called on capman every frame of the game
+//Here's the method as shown.
+setFrame:function(th) {
+	var pref="stand";
+	if (th.xpushing||th.ypushing) 
+		if (th.haspushing&&(th.toucheddown||th.touchedup||th.touchedleft||th.touchedright)) pref="pushing"; else pref="moving";
+	if (th.flipside)
+		th.fliph=(th.facing==toys.FACE_RIGHT);
+	th.frame=help.decideFrame(th.counter,th.frames[pref+toys.FACES[th.facing]]);
+},
+//what happens here is that this method determines the state of the object, "stand", "pushing", or "moving"
+//"stand" is the default
+//it then takes this determination which is made in the first three lines of the method
+//the fourth and fifth lines don't seem to do anything in the instance of the capman game but they seem to be a default facing
+//all of this information is then passed into the help.decideFrame method in the form of a frame counter for animations and an array reference to frames
+//this array reference is the "self explanatory" thing from capman.
+//basically what this does is to combine the word stored in the pref variable with one of the four cardinal direction (th.facing) to give us one of the results stored in "frames" at initilization
+//each case then stores the speed of the animation and the array numbers for help.decideFrame to pick from

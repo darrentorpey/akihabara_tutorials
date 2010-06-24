@@ -17,6 +17,28 @@ var frameCount = 0;
 
 window.addEventListener('load', loadResources, false);
 
+//This function is called when you click on the game screen (the canvas)
+//The canvas is where everything we've been doing so far happens but it's buried in Akihabara which handles most of it for us.
+//To add mouse controls though we need to dig out the canvas and directly add an event listener to it as well as get it's offset from the screen
+//tempCanvas is where we're storing the canvas for this function (we're storing all the variables we're dragging in temporarily to avoid lots of get calls)
+//thePlayer stores the player since we'll need his position
+//cam is the game camera, we need to know where on the map we are since the screen is only showing a small portion of the whole map area
+//event.layerX gets the X cordinante of the event we're handling (a mouse down event in this instance) and event.layerY gets the Y cordinate
+//layerX and layerY are relative to the CONTAINING element for the object that triggers the event, in this case the canvas. If your game is tightly wrapped in a div or other element you may not have to deal with offsets
+//offsetLeft and offsetTop get the offset from the parent for the canvas
+//and cam.x and cam.y get the X and Y position of the camera on the map (this is the top left corner of the displayed area of the map)
+//we divide everything but the camera position by 2 because Akihibara scales all the sprites up by 2 by default.
+//The camera position is not divided because it uses this scaled up cordinate system already -Nick
+function goToClick(event)
+{
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+  var thePlayer = gbox.getObject('player', 'player_id');
+  var cam = gbox.getCamera();
+  
+  thePlayer.x = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x;
+  thePlayer.y = (event.layerY - tempCanvas.offsetTop)/2 + cam.y;
+}
+
 function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
@@ -37,7 +59,7 @@ function loadResources() {
     image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
     tileh:   16,
     tilew:   16,
-    tilerow: 19, //the sprite sheet now has nine tiles including the original -Nick
+    tilerow: 19, //the sprite sheet now has nineteen tiles including the original and one blank space between the red and the black ones -Nick
     gapx:    0,
     gapy:    0
   });
@@ -55,6 +77,20 @@ function loadResources() {
     gapx:    0,
     gapy:    0
   });
+  
+  //this is our custom cursor image -Nick
+  gbox.addImage('cursor_sprite', 'cursor.png');
+  
+  //and this turns it into a usable tileset -Nick
+  gbox.addTiles({
+    id:       'target_cursor',
+	image:    'cursor_sprite',
+	tileh:    7,
+	tilew:    7,
+	tilerow:  1,
+	gapx:     0,
+	gapy:     0
+  });
 
   // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
@@ -69,7 +105,8 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'player', 'game']);
+  // Added an interface group where things like our custom cursor will display. We want this to display overtop of everything else.
+  gbox.setGroups(['interface', 'background', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -275,6 +312,12 @@ function addPlayer() {
 	  
       // the starting animation for the player
       this.animIndex = "still";
+	  
+	  //this adds an event listener to the canvas for mousedown events
+	  //whenever your mouse button goes down inside the area of the canvas the goToClick function will be called
+	  //"CANVAS" is the default name for the canvas element and there's only one so we grab the zero index of the array returned by getElementsByTagName
+	  //using gbox.getCanvas(canvasID) doesn't seem to allow us to add event listeners so we can't use that to access the canvas for this purpose -Nick
+	  document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', goToClick, false);
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -342,8 +385,6 @@ function followCamera(obj,viewdata) {
   if ((obj.x - xcam) < (xbuf)) gbox.setCameraX( xcam + (obj.x - xcam) - (xbuf), viewdata);
   if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY( ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
   if ((obj.y - ycam) < (ybuf)) gbox.setCameraY( ycam + (obj.y - ycam) - (ybuf), viewdata);
-
- 
 }
 
 </script>

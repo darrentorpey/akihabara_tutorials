@@ -284,16 +284,15 @@ function addPlayer() {
       //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
 
-      // this handles different directional animation cases
-      // the if statements check for accelerations in the x and y directions and whether they are positive or negative. It then sets the animation index to the keyword corresponding to that direction.-Nick
-      if(this.accx == 0 && this.accy == 0) this.animIndex = "still";
-      if(this.accx > 0 && this.accy == 0) this.animIndex = "right";
-      if(this.accx > 0 && this.accy > 0) this.animIndex = "rightDown";
-      if(this.accx == 0 && this.accy > 0) this.animIndex = "down";
-      if(this.accx < 0 && this.accy > 0) this.animIndex = "downLeft";
-      if(this.accx < 0 && this.accy == 0) this.animIndex = "left";
-      if(this.accx < 0 && this.accy < 0) this.animIndex = "leftUp";
-      if(this.accx == 0 && this.accy < 0) this.animIndex = "up";
+      // The if statements check for accelerations in the x and y directions and whether they are positive or negative. It then sets the animation index to the keyword corresponding to that direction.-Nick
+      if(this.accx == 0 && this.accy == 0) this.animIndex = 'still';
+      if(this.accx > 0 && this.accy == 0) this.animIndex = 'right';
+      if(this.accx > 0 && this.accy > 0) this.animIndex = 'rightDown';
+      if(this.accx == 0 && this.accy > 0) this.animIndex = 'down';
+      if(this.accx < 0 && this.accy > 0) this.animIndex = 'downLeft';
+      if(this.accx < 0 && this.accy == 0) this.animIndex = 'left';
+      if(this.accx < 0 && this.accy < 0) this.animIndex = 'leftUp';
+      if(this.accx == 0 && this.accy < 0) this.animIndex = 'up';
       if(this.accx > 0 && this.accy < 0) this.animIndex = "upRight";
       
       // set the animation -Nick

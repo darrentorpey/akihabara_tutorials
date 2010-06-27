@@ -15,34 +15,22 @@ var map;
 window.addEventListener('load', loadResources, false);
 
 function loadResources() {
-  // This initializes Akihabara with the default settings.
-  // The title (which appears in the browser title bar) is the text we're passing to the function.
   help.akihabaraInit('8by5');
 
-  // Here we tell the game to look for an image called 'font.png' in the same directory as this HTML file and call it 'font' internally
   gbox.addImage('font', 'font.png');
-
-  // Same thing for our logo here, where we add our logo image for the intro screen
   gbox.addImage('logo', 'logo.png');
-
-  // Adding our spritesheet here, which gives us our circular protagonist
   gbox.addImage('player_sprite', 'player_sprite.png');
+  gbox.addImage('map_spritesheet', 'map_pieces.png');
 
-  // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
   gbox.addTiles({
-    id:      'player_tiles',  // Set a unique ID for future reference
-    image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
+    id:      'player_tiles',
+    image:   'player_sprite',
     tileh:   16,
     tilew:   16,
     tilerow: 1,
     gapx:    0,
     gapy:    0
   });
-
-  // Add our map spritesheet, which gives us our "wall" pieces
-  gbox.addImage('map_spritesheet', 'map_pieces.png');
-
-  // The tilesets are taken from the sprite sheet too.
   gbox.addTiles({
     id:      'map_pieces',
     image:   'map_spritesheet',
@@ -53,49 +41,20 @@ function loadResources() {
     gapy:    0
   });
 
-  // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
 
-  // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
   gbox.setCallback(main);
-
-  // When everything is ready, the 'loadAll' downloads all the needed resources.
   gbox.loadAll();
 };
 
 function main() {
-  // These are essentially our rendering 'layers' and are rendered in the order in which they appear in this array
-  //  (e.g. 'background' is rendered first)
   gbox.setGroups(['background', 'player', 'game']);
 
-  // Create a new maingame object that will handle the main game cycle (intro screen, begin/end, etc.)
   maingame = gamecycle.createMaingame('game', 'game');
 
-  // Disable the default difficulty-choice menu; we don't need it for our tutorial
   maingame.gameMenu = function() { return true; };
-
-  // Disable the default "get ready" screen; we don't need it for our tutorial
   maingame.gameIntroAnimation = function() { return true; };
-
-  // Set our intro screen animation
-  maingame.gameTitleIntroAnimation = function(reset) {
-    if (reset) {
-      toys.resetToy(this, 'rising');
-    }
-
-    gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
-
-    toys.logos.linear(this, 'rising', {
-      image: 'logo',
-      sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      sy:    gbox.getScreenH(),
-      x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      y:     20,
-      speed: 1
-    });
-  };
-
-  // This function will be called before the game starts running, so here is where we add our game elements
+  maingame.gameTitleIntroAnimation = introScreenAnimation;
   maingame.initializeGame = function() {
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     addPlayer();
@@ -116,10 +75,25 @@ function main() {
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 
-  // Now that we've set up our game's elements, this tells the game to run
   gbox.go();
 }
 
+function introScreenAnimation(reset) {
+  if (reset) {
+    toys.resetToy(this, 'rising');
+  }
+
+  gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+  toys.logos.linear(this, 'rising', {
+    image: 'logo',
+    sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    sy:    gbox.getScreenH(),
+    x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    y:     20,
+    speed: 1
+  });
+};
 
 function loadMap() {
   return help.asciiArtToMap([

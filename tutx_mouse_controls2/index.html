@@ -12,9 +12,6 @@
 var maingame;
 var map;
 
-var cursorX;
-var cursorY;
-
 // This keeps track of how many frames have gone by in the current animation We can use this to keep track of animations and potentially anything else that needs to happen at a fixed interval. -Nick
 var frameCount = 0;
 
@@ -40,6 +37,32 @@ function goToClick(event)
   
   thePlayer.x = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x;
   thePlayer.y = (event.layerY - tempCanvas.offsetTop)/2 + cam.y;
+}
+
+function shootAtClick(event)
+{
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+  var thePlayer = gbox.getObject('player', 'player_id');
+  var cam = gbox.getCamera();
+  
+  var xPos = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x;
+  var yPos = (event.layerY - tempCanvas.offsetTop)/2 + cam.y;
+  
+  var ang = Math.atan2(yPos-(thePlayer.y+8),xPos-(thePlayer.x+8));
+  
+  toys.shmup.fireBullet("bullets", null,
+			{
+			  tileset:		"player_shot",
+			  angle:		ang,
+			  acc:			8,
+			  collidegroup:	"background",
+			  from:			thePlayer,
+			  x:			thePlayer.x/1.5,
+			  y:			thePlayer.y/1.5,
+			  frames:		{ speed: 2, frames: [0, 1] },
+			  upper: 		false,
+			});
+  console.log("Player x: " + thePlayer.x + " Player y: " + thePlayer.y);
 }
 
 function loadResources() {
@@ -94,6 +117,20 @@ function loadResources() {
 	gapx:     0,
 	gapy:     0
   });
+  
+  // loading in the bullet image -Nick
+  gbox.addImage('player_bullet', 'bullet.png');
+  
+  // making the bullet tileset, our bullet is going to flash as it moves -Nick
+  gbox.addTiles({
+    id:       'player_shot',
+    image:    'player_bullet',
+    tileh:    4,
+    tilew:    4,
+    tilerow:  2,
+    gapx:     0,
+    gapy:     0
+  });
 
   // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
@@ -108,8 +145,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  // Added an interface group where things like our custom cursor will display. We want this to display overtop of everything else.
-  gbox.setGroups(['background', 'player', 'game', 'interface']);
+  gbox.setGroups(['background', 'bullets', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -147,7 +183,7 @@ function main() {
     addMap();
 	
 	// This creates the cursor function and associated event handlers -Nick
-	addCursor();
+	changeCursor();
   };
 
   // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
@@ -319,11 +355,13 @@ function addPlayer() {
       // the starting animation for the player
       this.animIndex = "still";
 	  
-	  //this adds an event listener to the canvas for mousedown events
-	  //whenever your mouse button goes down inside the area of the canvas the goToClick function will be called
-	  //"CANVAS" is the default name for the canvas element and there's only one so we grab the zero index of the array returned by getElementsByTagName
-	  //using gbox.getCanvas(canvasID) doesn't seem to allow us to add event listeners so we can't use that to access the canvas for this purpose -Nick
-	  document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', goToClick, false);
+	  // this adds an event listener to the canvas for mousedown events
+	  // whenever your mouse button goes down inside the area of the canvas the goToClick function will be called
+	  // "CANVAS" is the default name for the canvas element and there's only one so we grab the zero index of the array returned by getElementsByTagName
+	  // using gbox.getCanvas(canvasID) doesn't seem to allow us to add event listeners so we can't use that to access the canvas for this purpose -Nick
+	  //document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', goToClick, false);
+	  
+	  document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', shootAtClick, false);
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -380,57 +418,10 @@ function addPlayer() {
   });
 }
 
-function addCursor() {
-  gbox.addObject({
-    id:       'cursor_id',  //the ID for the cursor object
-	group:    'interface',  //the cursor is part of the interface group
-	tileset:  'target_cursor',  //and it uses the target_cursor tileset
-	
-	initialize: function() {
-	  toys.topview.initialize(this, {});
-	  
-	  //cursorX = gbox.screenw/2;
-	  //cursorY = gbox.screenh/2;
-	  
-	  cursorX = 40;
-	  cursorY = 40;
-	  
-	  this.frame = 0;
-	  
-	  //document.getElementsByTagName("CANVAS")[0].addEventListener('onmousemove', setCursorPos, false);
-	  window.addEventListener('mousemove', setCursorPos, true);
-	},
-	
-	first: function() {
-	  this.x = cursorX;
-	  this.y = cursorY;
-	  
-	  //console.log("cursor x: " + this.x + " cursor y: " + this.y);
-	},
-	
-	blit: function() {
-	  gbox.blitTile(gbox.getBufferContext(), {
-        tileset: this.tileset,
-        tile:    this.frame,
-        dx:      this.x,
-        dy:      this.y,
-        fliph:   this.fliph,
-        flipv:   this.flipv,
-		camera:  this.camera,
-        alpha:   1.0
-      });
-	},
-  });
-}
-
-// -Nick
-function setCursorPos(event) {
+function changeCursor() {
   var tempCanvas = document.getElementsByTagName("CANVAS")[0];
-  var thePlayer = gbox.getObject('player', 'player_id');
-  var cam = gbox.getCamera();
 
-  cursorX = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x - 3;
-  cursorY = (event.layerY - tempCanvas.offsetTop)/2 + cam.y - 3;
+  tempCanvas.style.cursor = "url('targeter.cur'), crosshair";
 }
 
 function followCamera(obj,viewdata) {

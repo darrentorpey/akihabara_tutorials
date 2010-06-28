@@ -248,21 +248,24 @@ function addEnemy(xx, yy, eid) {
     
     first: function() {
 	if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) { 
-	  if ((this.waypointCount % 8) - this.enemy_index == 0 ) {    
-	    this.waypointCount++; 
+	  if (this.waypointCount < 5) {    
+	    this.waypointCount++;
+	    if (this.nodes.length <= this.waypointCount) {
+	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
+	      if (this.nodes.length == 1) this.waypointCount = 0; 
+	        else this.waypointCount = 1;
+	    }
 	    this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
     	    }
 	    else {
 	      this.waypointCount = 1;
 	      obj = gbox.getObject('player','player_id');
 	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
+	      console.log(frameCount + "astar");
 	      this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
 	    }
 
 	  }
-	
-	
-	
 
 	if (this.x < this.waypoint[0]) this.x += this.speed;
 	if (this.x > this.waypoint[0]) this.x -= this.speed;

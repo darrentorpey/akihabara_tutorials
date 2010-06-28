@@ -63,18 +63,17 @@ function main() {
     addMap();
   };
 
-  // Here we setup our map. See part 3 for a detailed explanation
   map = {
-    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+    tileset: 'map_pieces',
     map: loadMap(),
     tileIsSolid: function(obj, t) {
-      return t != null; // Is a wall if is not an empty space
+      return t != null;
     }
   }
   map = help.finalizeTilemap(map);
+
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
-
   gbox.go();
 }
 
@@ -188,14 +187,10 @@ function followCamera(obj, viewdata) {
   xcam = gbox.getCamera().x; // The current x-coordinate of the camera
   ycam = gbox.getCamera().y; // The current y-coordinate of the camera
 
-  if ((obj.x - xcam) > (gbox._screenw - xbuf))
-    gbox.setCameraX( xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
-  if ((obj.x - xcam) < (xbuf))
-    gbox.setCameraX( xcam + (obj.x - xcam) - (xbuf), viewdata);
-  if ((obj.y - ycam) > (gbox._screenh - ybuf))
-    gbox.setCameraY( ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
-  if ((obj.y - ycam) < (ybuf))
-    gbox.setCameraY( ycam + (obj.y - ycam) - (ybuf), viewdata);
+  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
+  if ((obj.x - xcam) < (xbuf))                 gbox.setCameraX(xcam + (obj.x - xcam) - xbuf,                   viewdata);
+  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
+  if ((obj.y - ycam) < (ybuf))                 gbox.setCameraY(ycam + (obj.y - ycam) - ybuf,                   viewdata);
 }
 
 // This is our function for adding the player object -- this keeps our main game code nice and clean

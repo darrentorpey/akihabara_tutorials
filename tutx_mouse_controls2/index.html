@@ -57,12 +57,14 @@ function shootAtClick(event)
 			  acc:			8,
 			  collidegroup:	"background",
 			  from:			thePlayer,
-			  x:			thePlayer.x/1.5,
-			  y:			thePlayer.y/1.5,
+			  x:			thePlayer.x,
+			  y:			thePlayer.y,
 			  frames:		{ speed: 2, frames: [0, 1] },
 			  upper: 		false,
+			  camera:		true,
 			});
   console.log("Player x: " + thePlayer.x + " Player y: " + thePlayer.y);
+  console.log("xPos: " + xPos + " yPos: " + yPos);
 }
 
 function loadResources() {

@@ -300,7 +300,6 @@ function addPlayer() {
       toys.topview.initialize(this, {});
       this.x = 20;
       this.y = 20;
-      this.enemyCount = 3;
     },
     first: function() {
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
@@ -308,7 +307,6 @@ function addPlayer() {
       toys.topview.applyForces(this);
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
 
-      if (!(frameCount % 50)) {addEnemy(16*28,16*28,this.enemyCount); this.enemyCount++;}
     },
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {

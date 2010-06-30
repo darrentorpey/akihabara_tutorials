@@ -12,47 +12,41 @@
   <script>
 var maingame;
 var map;
-var pathMap; // tut5
+var pathMap; // New for Part 5
 var frameCount = 0;
+
 window.addEventListener('load', loadResources, false);
 
+// Pay no attention to the (Akihabara hack) behind the curtain
 function customInit(title) {
-	var device=iphopad.getDeviceConfig();
-
-	document.title=(title?title:"Akihabara");
-	document.body.style.backgroundColor="#000000";
+	var device = iphopad.getDeviceConfig();
+	document.title = (title ? title: 'Akihabara');
+	document.body.style.backgroundColor = '#000000';
 	gbox.setScreenBorder(false);
-	if (help.geturlparameter("statusbar")) gbox.setStatusBar(1);
-	if (help.geturlparameter("db")) gbox.setDoubleBuffering(true);
-	if (help.geturlparameter("noautoskip")) gbox.setAutoskip(null);
+	if (help.geturlparameter('statusbar'))  gbox.setStatusBar(1);
+	if (help.geturlparameter('db'))         gbox.setDoubleBuffering(true);
+	if (help.geturlparameter('noautoskip')) gbox.setAutoskip(null);
 	gbox.setZoom(1);
-	if (help.geturlparameter("fps")) gbox.setFps(help.geturlparameter("fps")*1);
+	if (help.geturlparameter('fps')) gbox.setFps(help.geturlparameter('fps') * 1);
 		else gbox.setFps(25);
-	if (help.geturlparameter("fskip")) gbox.setFrameskip(help.geturlparameter("fskip"));
-		
-		
-	gbox.initScreen(640,480);
-	
-	if (help.geturlparameter("touch")=="no");
-		else if ((help.geturlparameter("touch")=="yes")||device.touch)
-			iphopad.initialize({h:100,dpad:"akihabara/dpad.png",buttons:"akihabara/buttons.png",bg:"akihabara/padbg.png"});
-
-	// Debug fonts
-	gbox.addImage("_dbf","akihabara/debugfont.png");
-	gbox.addFont({id:"_dbf",image:"_dbf",firstletter:" ",tileh:5,tilew:4,tilerow:16,gapx:0,gapy:0});
-	
+	if (help.geturlparameter('fskip')) gbox.setFrameskip(help.geturlparameter('fskip'));
+	gbox.initScreen(640, 480);
+	if (help.geturlparameter('touch') == 'no');
+	else if ((help.geturlparameter('touch') == 'yes') || device.touch)
+		iphopad.initialize({ h: 100, dpad: 'akihabara/dpad.png', buttons: 'akihabara/buttons.png', bg: 'akihabara/padbg.png' });
+	gbox.addImage('_dbf', 'akihabara/debugfont.png');
+	gbox.addFont({ id:'_dbf', image: '_dbf', firstletter: ' ', tileh: 5, tilew: 4, tilerow: 16, gapx: 0, gapy: 0 });
 }
 
 function loadResources() {
-     
+  // We've replaced the old help.akihabaraInit call with a custom init
   customInit('8by5');
-
 
   gbox.addImage('font', 'font.png');
   gbox.addImage('logo', 'logo.png');
   gbox.addImage('player_sprite', 'player_sprite.png');
   gbox.addImage('map_spritesheet', 'map_pieces.png');
-  gbox.addImage('enemy_sprite', 'enemy_sprite.png'); //tut5
+  gbox.addImage('enemy_sprite', 'enemy_sprite.png'); // New for Part 5
 
   gbox.addTiles({
     id:      'player_tiles',
@@ -72,7 +66,7 @@ function loadResources() {
     gapx:    0,
     gapy:    0
   });
-  gbox.addTiles({ // tut5
+  gbox.addTiles({ // New for Part 5
     id:      'enemy_tiles',
     image:   'enemy_sprite',
     tileh:   16,
@@ -103,43 +97,40 @@ function main() {
     // Create the 'map' (see tutorial Part 3 for a detailed explanation)
     addMap();
 
-    // Create the 'enemy'
+    // Create the enemies
     addEnemy(16*8,16*8,0);
     addEnemy(16*18,16*24,1);
     addEnemy(16*28,16*28,2);
-
   };
 
-  // Here we setup our map. See part 3 for a detailed explanation
   map = {
-    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+    tileset: 'map_pieces',
     map: loadMap(),
     tileIsSolid: function(obj, t) {
-      return t != null; // Is a wall if is not an empty space
+      return t != null;
     }
   }
   map = help.finalizeTilemap(map);
 
-  // tut5
+  // New for Part 5
   pathMap = new Array(40);
   for (i = 0; i < pathMap.length; i++)
-	pathMap [i] = new Array(30);
-  for(i=0;i<map.map.length;i++)
-    for(j=0;j<map.map[0].length;j++) 
-      if (map.map[i][j] == null) pathMap[j][i] = 0;
-       else pathMap[j][i] = 1;
-
+	  pathMap [i] = new Array(30);
+  for(i = 0; i < map.map.length; i++)
+    for(j = 0; j < map.map[0].length; j++) 
+      if (map.map[i][j] == null)
+        pathMap[j][i] = 0;
+      else
+        pathMap[j][i] = 1;
 
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
-
   gbox.go();
 }
 
 function introScreenAnimation(reset) {
-  if (reset) {
+  if (reset)
     toys.resetToy(this, 'rising');
-  }
 
   gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
 
@@ -187,7 +178,6 @@ function loadMap() {
     ], [ [null, ' '], [0, 'x'] ])
 }
 
-
 // This is our function for adding the map object -- this keeps our main game code nice and clean
 //  For Part 4, we're adding the "followCamera" line you see in here
 function addMap() {
@@ -227,12 +217,12 @@ function followCamera(obj, viewdata) {
     gbox.setCameraY( ycam + (obj.y - ycam) - (ybuf), viewdata);
 }
 
-function addEnemy(xx, yy, eid) {
+function addEnemy(xx, yy, enemy_id) {
   gbox.addObject({
-    id:      'enemy_id'+eid,    // id refers to the specific object
-    group:   'enemy',       // The rendering group
-    tileset: 'enemy_tiles', // tileset is where the graphics come from
-    colh: gbox.getTiles('enemy_tiles').tileh,
+    id:      'enemy_id' + enemy_id, // id refers to the specific object
+    group:   'enemy',               // The rendering group
+    tileset: 'enemy_tiles',         // tileset is where the graphics come from
+    colh:    gbox.getTiles('enemy_tiles').tileh,
     initialize: function() {
       toys.topview.initialize(this, {});
       this.x = xx;
@@ -241,40 +231,37 @@ function addEnemy(xx, yy, eid) {
       obj = gbox.getObject('player','player_id');
       this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
       this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
-
     },
     speed: 2, // needs to be multiple of 2
-    enemy_index: eid,
-    
+    enemy_index: enemy_id,
     first: function() {
-	if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) { 
-	  if (this.waypointCount < 5) {    
-	    this.waypointCount++;
-	    if (this.nodes.length <= this.waypointCount) {
-	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
-	      if (this.nodes.length == 1) this.waypointCount = 0; 
-	        else this.waypointCount = 1;
-	    }
-	    this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
+    	if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) { 
+    	  if (this.waypointCount < 5) {    
+    	    this.waypointCount++;
+    	    if (this.nodes.length <= this.waypointCount) {
+    	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
+    	      if (this.nodes.length == 1)
+    	        this.waypointCount = 0; 
+    	      else
+    	        this.waypointCount = 1;
     	    }
-	    else {
-	      this.waypointCount = 1;
-	      obj = gbox.getObject('player','player_id');
-	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
-	      console.log(frameCount + "astar");
-	      this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
-	    }
+    	    this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];
+        } else {
+  	      this.waypointCount = 1;
+  	      obj = gbox.getObject('player','player_id');
+  	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(obj.x/16),Math.floor(obj.y/16)],pathMap,40,30);
+          // console.log(frameCount + "astar");
+  	      this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
+  	    }
+    	}
 
-	  }
+      // Move toward our new waypoint
+    	if (this.x < this.waypoint[0]) this.x += this.speed;
+    	if (this.x > this.waypoint[0]) this.x -= this.speed;
+    	if (this.y < this.waypoint[1]) this.y += this.speed;
+    	if (this.y > this.waypoint[1]) this.y -= this.speed;
 
-	if (this.x < this.waypoint[0]) this.x += this.speed;
-	if (this.x > this.waypoint[0]) this.x -= this.speed;
-	if (this.y < this.waypoint[1]) this.y += this.speed;
-	if (this.y > this.waypoint[1]) this.y -= this.speed;
-
-
-    frameCount++;
-
+      frameCount++;
     },
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
@@ -291,14 +278,12 @@ function addEnemy(xx, yy, eid) {
   });
 }
 
-
-// This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
   gbox.addObject({
     id:      'player_id',    // id refers to the specific object
     group:   'player',       // The rendering group
     tileset: 'player_tiles', // tileset is where the graphics come from
-    colh: gbox.getTiles('player_tiles').tileh,
+    colh:    gbox.getTiles('player_tiles').tileh,
     initialize: function() {
       toys.topview.initialize(this, {});
       this.x = 20;
@@ -309,7 +294,6 @@ function addPlayer() {
       toys.topview.handleAccellerations(this);
       toys.topview.applyForces(this);
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
-
     },
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {

@@ -21,17 +21,8 @@ function customInit(title) {
 	document.title = (title ? title: 'Akihabara');
 	document.body.style.backgroundColor = '#000000';
 	gbox.setScreenBorder(false);
-	if (help.geturlparameter('statusbar'))  gbox.setStatusBar(1);
-	if (help.geturlparameter('db'))         gbox.setDoubleBuffering(true);
-	if (help.geturlparameter('noautoskip')) gbox.setAutoskip(null);
 	gbox.setZoom(1);
-	if (help.geturlparameter('fps')) gbox.setFps(help.geturlparameter('fps') * 1);
-		else gbox.setFps(25);
-	if (help.geturlparameter('fskip')) gbox.setFrameskip(help.geturlparameter('fskip'));
 	gbox.initScreen(640, 480);
-	if (help.geturlparameter('touch') == 'no');
-	else if ((help.geturlparameter('touch') == 'yes') || device.touch)
-		iphopad.initialize({ h: 100, dpad: 'akihabara/dpad.png', buttons: 'akihabara/buttons.png', bg: 'akihabara/padbg.png' });
 	gbox.addImage('_dbf', 'akihabara/debugfont.png');
 	gbox.addFont({ id:'_dbf', image: '_dbf', firstletter: ' ', tileh: 5, tilew: 4, tilerow: 16, gapx: 0, gapy: 0 });
 }

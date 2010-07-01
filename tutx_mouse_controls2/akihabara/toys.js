@@ -152,7 +152,7 @@
 				th.touchedright=false;
 				
 				var tollerance=(data&&(data.tollerance!=null)?data.tollerance:6);
-				var approximation=(data&&(data.approximation!=null)?data.approximation:10);
+				var approximation=(data&&(data.approximation!=null)?data.approximation:20);
 				var t=tollerance-approximation;
 				do {
 					t+=approximation;

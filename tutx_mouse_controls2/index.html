@@ -12,6 +12,8 @@
 var maingame;
 var map;
 
+var bulletCount = 0;
+
 // This keeps track of how many frames have gone by in the current animation We can use this to keep track of animations and potentially anything else that needs to happen at a fixed interval. -Nick
 var frameCount = 0;
 
@@ -50,7 +52,7 @@ function shootAtClick(event)
   
   var ang = Math.atan2(yPos-(thePlayer.y+8),xPos-(thePlayer.x+8));
   
-  toys.shmup.fireBullet("bullets", null,
+  toys.topview.fireBullet("bullets", ("bullet_" + bulletCount),
 			{
 			  tileset:		"player_shot",
 			  angle:		ang,
@@ -65,6 +67,7 @@ function shootAtClick(event)
 			  upper: 		true,
 			  camera:		true,
 			});
+  bulletCount++;
   //console.log("Player x: " + thePlayer.x + " Player y: " + thePlayer.y);
   //console.log("xPos: " + xPos + " yPos: " + yPos);
 }
@@ -401,6 +404,12 @@ function addPlayer() {
       //  feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
       //  be somewhere between 0 and half your sprite width or height. And yes, it's spelled "tollerance" in the code :P
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
+	  
+	  for(var obj in gbox._objects['bullets']) {
+	    //console.log("bullet: " + gbox._objects['bullets'][obj].id);
+		//console.log("" + gbox._objects['bullets'][obj].y+ "---" + gbox._objects['bullets'][obj].coly+ "---" + gbox._objects['bullets'][obj].colh)
+	    toys.topview.tileCollision(gbox._objects['bullets'][obj], map, 'map', null, { tollerance: 0, approximation: 0 });
+      }
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

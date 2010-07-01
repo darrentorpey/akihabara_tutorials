@@ -22,6 +22,7 @@ function customInit(title) {
 	document.body.style.backgroundColor = '#000000';
 	gbox.setScreenBorder(false);
 	gbox.setZoom(1);
+	gbox.setFps(25);
 	gbox.initScreen(640, 480);
 	gbox.addImage('_dbf', 'akihabara/debugfont.png');
 	gbox.addFont({ id:'_dbf', image: '_dbf', firstletter: ' ', tileh: 5, tilew: 4, tilerow: 16, gapx: 0, gapy: 0 });
@@ -152,7 +153,7 @@ function addMap() {
 
     first: function() {
       frameCount++;
-    }
+    },
     
     blit: function() {   
       gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });

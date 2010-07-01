@@ -1,0 +1,313 @@
+<html><head>
+  <script type="text/javascript" src="akihabara/gbox.js"></script>
+  <script type="text/javascript" src="akihabara/iphopad.js"></script>
+  <script type="text/javascript" src="akihabara/trigo.js"></script>
+  <script type="text/javascript" src="akihabara/toys.js"></script>
+  <script type="text/javascript" src="akihabara/help.js"></script>
+  <script type="text/javascript" src="akihabara/tool.js"></script>
+  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <script>
+var maingame;
+var map;
+
+window.addEventListener('load', loadResources, false);
+
+function loadResources() {
+  // This initializes Akihabara with the default settings.
+  // The title (which appears in the browser title bar) is the text we're passing to the function.
+  help.akihabaraInit('8by5');
+
+  // Here we tell the game to look for an image called 'font.png' in the same directory as the HTML file and call it 'font' internally
+  gbox.addImage('font', 'font.png');
+
+  // Same thing for our logo here.
+  gbox.addImage('logo', 'logo.png');
+
+  // Adding our spritesheet here, which gives us our circular protagonist
+  gbox.addImage('playerSprite', 'playerSprite.png');
+  // gbox.addImage('playerSpriteEight', 'eight.png');
+
+  // Add our map spritesheet, which gives us our "wall" pieces
+  gbox.addImage('mapSpriteSheet', 'map_pieces.png');
+
+  // The tilesets are taken from the sprite sheet too.
+  gbox.addTiles({
+    id: 'map_pieces',
+    image: 'mapSpriteSheet',
+    tileh: 8,
+    tilew: 8,
+    tilerow: 1,
+    gapx: 0,
+    gapy: 0
+  });
+
+  // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
+  gbox.addTiles({
+    id:      'playerTiles', // Set a unique ID for future reference
+    image:   'playerSprite', // Use the 'playerSprite' image, as loaded above
+    tileh:   16,
+    tilew:   16,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
+  });
+
+  // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
+  gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+
+  // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
+  gbox.setCallback(main);
+
+  // When everything is ready, the 'loadAll' downloads all the needed resources.
+  gbox.loadAll();
+};
+
+function main() {
+  // ** For Part 2 we're adding 'player' to the next line **
+  gbox.setGroups(['background', 'player', 'game']);
+
+  maingame = gamecycle.createMaingame('game', 'game');
+
+  // Disable the default difficulty-choice menu; we don't need it for our tutorial
+  maingame.gameMenu = function() { return true; };
+
+  // Disable the default "get ready" screen; we don't need it for our tutorial
+  maingame.gameIntroAnimation = function() { return true; };
+
+  maingame.gameTitleIntroAnimation = function(reset) {
+    if (reset) {
+      toys.resetToy(this, 'rising');
+    }
+
+    gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+    toys.logos.linear(this, 'rising', {
+      image: 'logo',
+      sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+      sy:    gbox.getScreenH(),
+      x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+      y:     20,
+      speed: 1
+    });
+  };
+
+  // ...
+  maingame.initializeGame = function() {
+    // From Part 2...
+    addPlayer();
+
+    // Here we create a background object that will draw the map onto the 'background' layer each time our game world is drawn
+    addMap();
+  };
+
+  // Let's prepare the maze map now. Every stage is the same level but you can generate a new level each "changeLevel" call, using the "level" argument value.
+  // This is just an array with the tile id or NULL for an empty transparent space.
+  // > finalizeTilemap does some magic to the maze object: calculate real width/height of the map in pixels and values the "h" and "w" property.
+  map = help.finalizeTilemap({
+    tileset: 'map_pieces',
+    map: load_map(),            // ...this array as palette. Don't you think that a map like this is quite easy to edit and read with your on-the-go text editor?
+    tileIsSolid: function(obj, t) { // This function have to return true if the object "obj" is checking if the tile "t" is a wall, so...
+      return (t != null) &&        // Is a wall if is not an empty space and...
+        ((t == 0)); // Is a wall of type 0
+    }
+  });
+
+  // Since finalizeMap have calculated the real height and width, we can create a canvas that fits perfectly our maze... Let's call it "mazecanvas".
+  gbox.createCanvas('mazecanvas', { w: map.w, h: map.h });
+
+  // Let's paste our map in the "map" object into the just created "mazecanvas". So is now ready to be rendered.
+  gbox.blitTilemap(gbox.getCanvasContext('mazecanvas'), map);
+
+  gbox.go();
+}
+
+function load_map() { return help.asciiArtToMap([
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                                    xx",
+"xxxxxxxxxxxxxxxx            xx        xxxxxxxxxxxxxxxxxxx                     xx",
+"xx                          xx        xxxxxxxxxxxxxxxxxxx                     xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxx                              xxxx                                    xx",
+"xxxxxxxx                              xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xx                                    xxxx            xxxxxxxx                xx",
+"xx                                    xxxx            xxxxxxxx                xx",
+"xx                                    xxxx                xx                  xx",
+"xx                                    xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                xx                  xx",
+"xx                          xx        xxxx                xx                  xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                                    xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxx                                                                      xx",
+"xxxxxxxx                                                                      xx",
+"xx                                                                            xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+],[[null," "],[0,"x"]]) }
+
+function addMap() {
+  gbox.addObject({
+    id: 'bg', // This is the object ID
+    group: 'background', // We use the 'backround' group we created above with our 'setGroups' call.
+    cameraValue: 0,
+    initialize: function() {
+      // Ignore this for now. We'll cover how cameras work in a later tutorial
+      // gbox.setCameraY(0, { w: map.w, h: map.h }); // We place the camera a bit down, since the full maze doesn't fit the screen.
+      this.cameraValue = parseFloat(help.geturlparameter("cameraType"));
+    },
+    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+    blit:function() {
+      // Then, the most important action: the "blit", where object are drawn on the screen.
+    // console.log("blit map");
+    gbox.blitFade(gbox.getBufferContext(), { alpha: 1 }); // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+    
+   if (this.cameraValue) followCamera(gbox.getObject("player","playerid"),{w: map.w, h: map.h});
+   else gbox.centerCamera(gbox.getObject("player","playerid"),{w: map.w, h: map.h});
+
+      // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
+      //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
+      //  spries is flipped, camera info, and the alpha transparency value
+      gbox.blit(gbox.getBufferContext(),gbox.getCanvas('mazecanvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('mazecanvas').width, dh: gbox.getCanvas('mazecanvas').height, sourcecamera: true }); // Simply draw the maze on the screen.
+    }
+  });
+}
+
+// Our wrapper function for adding a player object -- this keeps our main game code nice and clean
+function addPlayer(startingPosition) {
+  startingPosition = startingPosition || { x: 20, y: 20 }
+
+  // gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
+  player = gbox.addObject({
+    // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
+    id: 'playerid',
+
+    group: 'player',
+    
+    // for now, the object is smart enough to default to frame 0 of this tileset so we'll leave it at that
+    tileset: 'playerTiles',
+
+
+    // We're overriding the default colh value for the object. "colh" stands for collision height, and it's the height of our collision box. Similarly
+    // the object automatically has values for colw (collision box width) and colx and coly (the x/y offset of the collision box). We're overriding
+    // colh from its default because by default in the toys.topview object, colh is set to half the height of the sprite. This is because topview is
+    // normally used for Zelda-style games where the hitbox is considered to be the bottom half of the sprite so the top half can "overlap" scenery
+    // that's "behind" it. In this case we're just setting colh to the default tile height.
+    colh:gbox.getTiles('playerTiles').tileh,
+
+    // the initialize function contains code that is run when the object is first created. In the case of the player object this only
+    // happens once, at the beginning of the game, or possibly after a player dies and respawns.
+    initialize: function() {
+
+      // Toys are helper functions that are specific to certain genres.
+      // We're using the "topview" toys because we're creating a game with a top view and Akihabara provides convenient helper functions for that.
+
+      // Here we're just telling it to initialize the object, in this case our player. 
+      toys.topview.initialize(this, {
+      });
+     
+    },
+
+    // the first function is like a step function. it runs every frame and does calculations. it's called first
+    // because it happens before the rendering, so we calculate new positions and actions and THEN render them
+    first: function() {
+      // Toys.topview.controlKeys sets the main key controls. In this case we want to use the arrow keys which
+      //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
+      toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
+
+      // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
+      toys.topview.handleAccellerations(this);
+
+      // This tells the physics engine to apply those forces
+      toys.topview.applyForces(this);  
+
+      // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 6
+      // because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
+      // feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
+      // be somewhere between 0 and half your sprite width or height. And yes, it's spelled "tollerance" in the code :P
+      toys.topview.tileCollision(this,map,"map",null,{tollerance:6,approximation:3}); // check tile collisions.
+
+    },
+
+    // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
+    blit: function() {
+      // Clear the screen.
+      // gbox.blitFade(gbox.getBufferContext(),{});
+
+
+      // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
+      //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
+      //  spries is flipped, camera info, and the alpha transparency value
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    },
+  }); // end gbox.addObject for player
+  player.x = startingPosition.x;
+  player.y = startingPosition.y;
+  return player;
+}
+
+function followCamera(obj,viewdata) {
+  xbuf = 96;
+  ybuf = 96;
+  xcam = gbox.getCamera().x;
+  ycam = gbox.getCamera().y;
+
+  // if the object we're following is 
+  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX( xcam + (obj.x - xcam)-(gbox._screenw - xbuf),viewdata);
+  if ((obj.x - xcam) < (xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (xbuf),viewdata);  
+
+  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY( ycam + (obj.y - ycam)-(gbox._screenh - ybuf),viewdata);
+  if ((obj.y - ycam) < (ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (ybuf),viewdata);  
+
+}
+
+
+</script>
+</head><body></body></html>

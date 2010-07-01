@@ -1,0 +1,237 @@
+<html><head>
+  <script type="text/javascript" src="akihabara/gbox.js"></script>
+  <script type="text/javascript" src="akihabara/iphopad.js"></script>
+  <script type="text/javascript" src="akihabara/trigo.js"></script>
+  <script type="text/javascript" src="akihabara/toys.js"></script>
+  <script type="text/javascript" src="akihabara/help.js"></script>
+  <script type="text/javascript" src="akihabara/tool.js"></script>
+  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <script>
+var maingame;
+var map;
+
+window.addEventListener('load', loadResources, false);
+
+function loadResources() {
+  help.akihabaraInit('8by5');
+
+  gbox.addImage('font', 'font.png');
+  gbox.addImage('logo', 'logo.png');
+  gbox.addImage('player_sprite', 'player_sprite.png');
+  gbox.addImage('map_spritesheet', 'map_pieces.png');
+
+  gbox.addTiles({
+    id:      'player_tiles',
+    image:   'player_sprite',
+    tileh:   16,
+    tilew:   16,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
+  });
+  gbox.addTiles({
+    id:      'map_pieces',
+    image:   'map_spritesheet',
+    tileh:   8,
+    tilew:   8,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
+  });
+
+  gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+
+  gbox.setCallback(main);
+  gbox.loadAll();
+};
+
+function main() {
+  gbox.setGroups(['background', 'player', 'game']);
+
+  maingame = gamecycle.createMaingame('game', 'game');
+
+  maingame.gameMenu = function() { return true; };
+  maingame.gameIntroAnimation = function() { return true; };
+  maingame.gameTitleIntroAnimation = introScreenAnimation;
+  maingame.initializeGame = function() {
+    // Create the 'player' (see tutorial Part 2 for a detailed explanation)
+    addPlayer();
+
+    // Create the 'map' (see tutorial Part 3 for a detailed explanation)
+    addMap();
+  };
+
+  // Here we setup our map. See part 3 for a detailed explanation
+  map = {
+    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+    map: loadMap(),
+    tileIsSolid: function(obj, t) {
+      return t != null; // Is a wall if is not an empty space
+    }
+  }
+  map = help.finalizeTilemap(map);
+  gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
+  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+
+  gbox.go();
+}
+
+function introScreenAnimation(reset) {
+  if (reset) {
+    toys.resetToy(this, 'rising');
+  }
+
+  gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+  toys.logos.linear(this, 'rising', {
+    image: 'logo',
+    sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    sy:    gbox.getScreenH(),
+    x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    y:     20,
+    speed: 1
+  });
+};
+
+function loadMap() {
+  return help.asciiArtToMap([
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                                    xx",
+"xxxxxxxxxxxxxxxx            xx        xxxxxxxxxxxxxxxxxxx                     xx",
+"xx                          xx        xxxxxxxxxxxxxxxxxxx                     xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx                          xx                                                xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                     xxxxxxxxxxxxxxxxx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxx                              xxxx                                    xx",
+"xxxxxxxx                              xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx  xxxxxxxxxxxxxxxxxxxxxxxx                xx                  xx",
+"xx                                    xxxx            xxxxxxxx                xx",
+"xx                                    xxxx            xxxxxxxx                xx",
+"xx                                    xxxx                xx                  xx",
+"xx                                    xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                xx                  xx",
+"xxxxxxxxxxxxxxxx            xx        xxxx                xx                  xx",
+"xx                          xx        xxxx                xx                  xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx                          xx        xxxx                                    xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                                    xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxx                                                                      xx",
+"xxxxxxxx                                                                      xx",
+"xx                                                                            xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xx                                    xxxx                                    xx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    ], [ [null, ' '], [0, 'x'] ])
+}
+
+
+// This is our function for adding the map object -- this keeps our main game code nice and clean
+//  For Part 4, we're adding the "followCamera" line you see in here
+function addMap() {
+  gbox.addObject({    
+    id:    'background_id', // This is the object ID
+    group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
+
+    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+    blit: function() {
+      // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+      gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+      // Center the camera on the player object.
+      // The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
+      // Note: this seems to cause a bug in Firefox 3.6.4 (and possibly other versions), so try running this code with Safari or Chrome
+      gbox.centerCamera(gbox.getObject('player', 'player_id'), {w: map.w, h: map.h});
+debugger
+
+      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
+      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+    }
+  });
+}
+
+// This is our camera helper method that allows the "camera" to follow the player through the map
+function followCamera(obj, viewdata) {
+  xbuf = 96;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
+  ybuf = 96;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
+  xcam = gbox.getCamera().x; // The current x-coordinate of the camera
+  ycam = gbox.getCamera().y; // The current y-coordinate of the camera
+
+  if ((obj.x - xcam) > (gbox._screenw - xbuf))
+    gbox.setCameraX( xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
+  if ((obj.x - xcam) < (xbuf))
+    gbox.setCameraX( xcam + (obj.x - xcam) - (xbuf), viewdata);
+  if ((obj.y - ycam) > (gbox._screenh - ybuf))
+    gbox.setCameraY( ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
+  if ((obj.y - ycam) < (ybuf))
+    gbox.setCameraY( ycam + (obj.y - ycam) - (ybuf), viewdata);
+}
+
+// This is our function for adding the player object -- this keeps our main game code nice and clean
+function addPlayer() {
+  gbox.addObject({
+    id:      'player_id',    // id refers to the specific object
+    group:   'player',       // The rendering group
+    tileset: 'player_tiles', // tileset is where the graphics come from
+    colh: gbox.getTiles('player_tiles').tileh,
+    initialize: function() {
+      toys.topview.initialize(this, {});
+      this.x = 20;
+      this.y = 20;
+    },
+    first: function() {
+      toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
+      toys.topview.handleAccellerations(this);
+      toys.topview.applyForces(this);
+      toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
+    },
+    blit: function() {
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    },
+  });
+}
+</script>
+</head><body></body></html>

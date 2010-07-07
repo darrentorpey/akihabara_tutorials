@@ -209,7 +209,7 @@ function addPlayer() {
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
       toys.topview.handleAccellerations(this);
       toys.topview.applyForces(this);
-      toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
+      toys.topview.tileCollision(this, map, 'map', null, { tolerance: 6, approximation: 3 });
     },
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {

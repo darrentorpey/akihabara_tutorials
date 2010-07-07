@@ -179,8 +179,7 @@ function addMap() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
       gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
 
-      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
-      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
+      // Simply draw the map on the screen
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
     }
   });
@@ -233,7 +232,7 @@ function addPlayer() {
       //  because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
       //  feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
       //  be somewhere between 0 and half your sprite width or height. And yes, it's spelled "tollerance" in the code :P
-      toys.topview.tileCollision(this, map, 'map', null, { tolerance: 6, approximation: 3 });
+      toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

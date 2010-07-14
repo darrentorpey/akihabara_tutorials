@@ -29,8 +29,16 @@ function customInit(title) {
 }
 
 function loadResources() {
-  // We've replaced the old help.akihabaraInit call with a custom init
-  customInit('8by5');
+  // We've replaced the old help.akihabaraInit call with a custom init  
+  help.akihabaraInit({
+    title: '8by5',
+	width: 640,
+	height: 480
+	});
+	
+  console.log("urlZoom: " + help.geturlparameter("zoom"));
+  
+  console.log("zoom2: " + gbox._zoom);
 
   gbox.addImage('font', 'font.png');
   gbox.addImage('logo', 'logo.png');

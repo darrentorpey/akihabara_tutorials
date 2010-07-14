@@ -15,31 +15,15 @@ var frameCount = 0; // New for Part 4.5
 
 window.addEventListener('load', loadResources, false);
 
-// This is going to be used instead of help.akihabaraInit. We wanted more screen resolution, so we changed setZoom and initScreen here.
-function customInit(title) {
-	var device = iphopad.getDeviceConfig();
-	document.title = (title ? title: 'Akihabara');
-	document.body.style.backgroundColor = '#000000';
-	gbox.setScreenBorder(false);
-	gbox.setZoom(1);
-	gbox.setFps(25);
-	gbox.initScreen(640, 480);
-	gbox.addImage('_dbf', 'akihabara/debugfont.png');
-	gbox.addFont({ id:'_dbf', image: '_dbf', firstletter: ' ', tileh: 5, tilew: 4, tilerow: 16, gapx: 0, gapy: 0 });
-}
-
 function loadResources() {
-  // We've replaced the old help.akihabaraInit call with a custom init  
+  // We're passing some overrides to help.akihabaraInit to set our title, resolution, and zoom factor
   help.akihabaraInit({
     title: '8by5',
-	width: 640,
-	height: 480
+    width: 640,
+    height: 480,
+    zoom: 1
 	});
 	
-  console.log("urlZoom: " + help.geturlparameter("zoom"));
-  
-  console.log("zoom2: " + gbox._zoom);
-
   gbox.addImage('font', 'font.png');
   gbox.addImage('logo', 'logo.png');
   gbox.addImage('player_sprite', 'player_sprite.png');
@@ -66,8 +50,7 @@ function loadResources() {
 
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
 
-  gbox.setCallback(main);
-  gbox.loadAll();
+  gbox.loadAll(main);
 };
 
 function main() {

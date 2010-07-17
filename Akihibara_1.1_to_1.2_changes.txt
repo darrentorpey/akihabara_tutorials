@@ -1,0 +1,90 @@
+Gamecycle:
+
+added comments and what seems to be a little extra code but no new methods
+
+GBox:
+
+cyclelist is a circular queue and a bunch of helper methods.
+	Has push, pop, as well as Dump that returns everything in the queue.
+	Dump could be used to print out to Firebug
+
+cachelist is a circular cache handler
+	lets you add, read, and clear but there doesn't seem to be a remove method.
+
+A large number of variables have been added to gbox
+	_flags which contains the experimental and noaudio bools.
+	a long list of vars starting with _systemcookie and ending with the log function
+
+setCallback has been depreciated. Still exists for backwards compatibility. Functionality now exists  in LoadAll in some form.
+
+_nextframe function added. Seems to return the next frame in the game
+
+loadqueue and gamewating related functionality added to go method
+
+_forcedidle handling in go
+
+GBox has save and load functionality that may need to be explored.
+
+GBox now makes sure it deletes any previous canvas with the same ID on canvas creation
+
+imageIsLoaded method added
+
+deleteImage method added
+
+getFont method added
+
+loadAll has been heavily reworked
+
+Sound support added in GBox
+
+Help:
+
+New animation methods in Help, decideFrameOnce and isLastFrameOnce
+
+Also a helper method upAndDown
+
+Tool:
+
+One comment added at the top. No other changes
+
+Toys:
+
+Tolerance spelling corrected (from Tollerance)
+
+Minor code changes plus one comment at the top describing the package like all the others
+
+Audio trigger support added to floorCollision
+
+Audio vars added to makedoor
+
+ismoving var added to makedoor to support the addition of audio triggers
+
+Fix in Horrizontal Tile Collision
+
+Audio on key events added to jumpkeys for the platformer library
+
+bugfix in dontFall
+
+Audio support added in Timer: real
+
+Added option for audio to the menu UI
+
+Added the gauge widget option
+
+added the getNumberValue method (not sure what it does yet)
+
+Added audio support to fadeOut and fadeIn
+
+Added audio support to logos
+
+Added audio support to bounce
+
+Added audio support to dialogue
+
+Added blinkspeed to generate: sparks method; This lets you set how often the spark blits
+
+Added an audio generator to the generate: library
+
+trigo:
+
+No change

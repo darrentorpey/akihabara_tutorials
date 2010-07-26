@@ -199,60 +199,19 @@ function addEnemy(xx, yy, enemy_id) {
       // Set the starting position of the object to the x/y coordinates that we passed in.
       this.x = xx;
       this.y = yy;
-
-      // Set the initial waypoint count to 0, our max to 5
-      this.waypointCount = 0;
-      this.waypointMax = 5;
-	  
-	  // Calculate our initial A* path to the player. We grab the player object and then run the A* function to
-	  //  populate this.nodes with a set of nodes comprising the path, setting our waypoint to the 2nd x/y pair in the path.
-    //  The first x/y pair, at this.nodes[0], is our current node, which isn't a valid waypoint for us.
-      this.obj = gbox.getObject('player','player_id');
-      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
-      this.waypoint = [16*this.nodes[1].x, 16*this.nodes[1].y]; // multiply by 16 to get the true pixel coord of each pair
     },
-    		
+
     first: function() {
-    // If we've reached the next waypoint...
-		if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) { 
-        // ...and if we haven't gone through enough waypoints to recalculate the path yet...
-    	  if (this.waypointCount < this.waypointMax) {    
-          // ...then increase the waypoint count
-    	    this.waypointCount++;
-                    
-          // However, if the number of nodes in our path is less than or equal to our current waypoint count (i.e., we're
-          //  going to try and move 3 more nodes when there's only 2 left)...
-    	    if (this.nodes.length <= this.waypointCount) {
-            // ...then re-run our A*.
-    	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
-    	      // If it turns out we're AT our destination, just stay in our current location...
-            if (this.nodes.length == 1)
-    	        this.waypointCount = 0; 
-    	      else // ...otherwise, start moving to the next location.
-    	        this.waypointCount = 1;
-    	    }
-          
-          // Set this.waypoint to the next waypoint that we determined above
-          this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];    	    
-        } else {
-          // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
-  	      // reset our waypoint counter
-          this.waypointCount = 1;
-          
-          // grab the player object and calculate our A* path to the player, and set the next waypoint
-  	      this.obj = gbox.getObject('player','player_id');
-  	      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
-  	      this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
-  	    }
-    	}
-
+      this.obj = gbox.getObject('player','player_id');
+      this.nodes = a_star([Math.floor(this.x/16), Math.floor(this.y/16)], [Math.floor(this.obj.x/16), Math.floor(this.obj.y/16)], pathMap, 40, 30);
+      this.waypoint = [16*this.nodes[1].x, 16*this.nodes[1].y]; // multiply by 16 to get the true pixel coord of each pair<br />
       // Move toward our new waypoint
-    	if (this.x < this.waypoint[0]) this.x += this.speed;
-    	if (this.x > this.waypoint[0]) this.x -= this.speed;
-    	if (this.y < this.waypoint[1]) this.y += this.speed;
-    	if (this.y > this.waypoint[1]) this.y -= this.speed; 
+      if (this.x < this.waypoint[0]) this.x += this.speed;
+      if (this.x > this.waypoint[0]) this.x -= this.speed;
+      if (this.y < this.waypoint[1]) this.y += this.speed;
+      if (this.y > this.waypoint[1]) this.y -= this.speed;
     },
-    
+
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
         tileset: this.tileset,

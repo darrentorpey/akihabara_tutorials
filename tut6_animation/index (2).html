@@ -65,7 +65,6 @@ function loadResources() {
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
 
   gbox.loadAll(main);
-  gbox.loadAll();
 };
 
 function main() {
@@ -93,9 +92,11 @@ function main() {
   // Here we setup our map. See part 3 for a detailed explanation
   map = {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+
     map: loadMap(),
     tileIsSolid: function(obj, t) {
       return t != null; // Is a wall if is not an empty space
+
     }
   }
 

@@ -698,6 +698,10 @@ var gbox={
 	loadAll:function(cb) {
 		// Setup logger
 		if (this._canlog) this.log=console.log;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 550b48e920ac293040dac55dcaee37d78b70bc8b
 		// Set the callback function, which is called after the resources are loaded.
 		if (!this._cb) this._cb = cb;
 		// Default stuff

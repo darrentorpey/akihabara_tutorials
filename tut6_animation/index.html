@@ -178,10 +178,8 @@ function addMap() {
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
       gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
-
       // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
       followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
-
       // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
       //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
@@ -195,7 +193,6 @@ function followCamera(obj, viewdata) {
   ybuf = 96;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
   xcam = gbox.getCamera().x; // The current x-coordinate of the camera
   ycam = gbox.getCamera().y; // The current y-coordinate of the camera
-
   if ((obj.x - xcam) > (gbox._screenw - xbuf))
     gbox.setCameraX( xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
   if ((obj.x - xcam) < (xbuf))
@@ -210,7 +207,7 @@ function followCamera(obj, viewdata) {
 function addPlayer() {
   gbox.addObject({
     id:      'player_id',    // id refers to the specific object.
-    group:   'player',       // the rendering group
+    group:   'player',       // The rendering group
     tileset: 'player_tiles', // tileset is where the graphics come from.
     colh: gbox.getTiles('player_tiles').tileh,
     initialize: function() {

@@ -15,7 +15,7 @@ var map;
 
 // This keeps track of how many frames have been rendered in total
 var frameCount = 0;
-var pathMap; // New for Part 5
+var pathMap;
 
 window.addEventListener('load', loadResources, false);
 
@@ -32,14 +32,14 @@ function loadResources() {
   gbox.addImage('logo', 'logo.png');
   gbox.addImage('player_sprite', 'player_sprite.png');
   gbox.addImage('map_spritesheet', 'map_pieces.png');
-  gbox.addImage('enemy_sprite', 'enemy_sprite.png'); // New for Part 5
+  gbox.addImage('enemy_sprite', 'enemy_sprite.png');
 
   gbox.addTiles({
     id:      'player_tiles',
     image:   'player_sprite',
     tileh:   16,
     tilew:   16,
-    tilerow: 19,
+    tilerow: 19, // Now that we are animating, we need to tell the addTiles function to load 19 tiles per row
     gapx:    0,
     gapy:    0
   });
@@ -52,7 +52,7 @@ function loadResources() {
     gapx:    0,
     gapy:    0
   });
-  gbox.addTiles({ // New for Part 5, adding the enemy sprite
+  gbox.addTiles({
     id:      'enemy_tiles',
     image:   'enemy_sprite',
     tileh:   16,
@@ -68,7 +68,7 @@ function loadResources() {
 };
 
 function main() {
-  gbox.setGroups(['background', 'player', 'enemy', 'game']); // New 'enemy' group for part 5
+  gbox.setGroups(['background', 'player', 'enemy', 'game']);
 
   maingame = gamecycle.createMaingame('game', 'game');
 
@@ -82,14 +82,13 @@ function main() {
   // Create the 'map' (see tutorial Part 3 for a detailed explanation)
   addMap();
 
-  // Create the enemies for Part 5. We're passing in x coord, y coord, and a unique ID for the enemy.
-  //  The reason we write 16*8 instead of 128 is it helps us remember it's 8 tiles in length.
+  // Create the enemies (see tutorial Part 5 for a detailed explanation)
   addEnemy(16*8,16*8,0);
   addEnemy(16*18,16*24,1);
   addEnemy(16*28,16*28,2);
   };
   
-  // Here we setup our map. See part 3 for a detailed explanation
+  // Here we set up our map. See part 3 for a detailed explanation
   map = {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
 
@@ -102,15 +101,10 @@ function main() {
 
   map = help.finalizeTilemap(map);
 
-  // New for Part 5, we create a 40x30 array to match our 40x30 tiles in the map.
+  // Initializing our pathMap, see tutorial Part 5 for details
   pathMap = new Array(40);
   for (i = 0; i < pathMap.length; i++)
     pathMap [i] = new Array(30);
-  // For each element in the array, check and see if the corresponding tile is solid using our map's tileIsSolid function.
-  //  The function will return 1 if the tile is solid, and 0 if it's empty space. We copy map(i,j) to pathMap(j,i) since map
-  //  is addressed (row, column) and the a_star wants things in a (column, row) format. What we're creating is an array
-  //  of 0's and 1's where each array element represent one tile and whether it's solid. This is what the pathfinding algorithm
-  //  will use as its version of the level map.
   for(i = 0; i < map.map.length; i++)
     for(j = 0; j < map.map[0].length; j++)
         pathMap[j][i] = map.tileIsSolid(map,map.map[i][j]);
@@ -174,7 +168,6 @@ function loadMap() {
 
 
 // This is our function for adding the map object -- this keeps our main game code nice and clean
-//  For Part 4, we're adding the "followCamera" line you see in here
 function addMap() {
   gbox.addObject({
     id:    'background_id', // This is the object ID.
@@ -206,60 +199,41 @@ function addEnemy(xx, yy, enemy_id) {
     speed: 2, // needs to be a power of 2 (2, 4, 8, 16)
 
     initialize: function() {
-      // First we initialize this like any other topview object.
       toys.topview.initialize(this, {});
 
-      // Set the starting position of the object to the x/y coordinates that we passed in.
       this.x = xx;
       this.y = yy;
 
-      // Set the initial waypoint count to 0, our max to 5
       this.waypointCount = 0;
       this.waypointMax = 5;
 
-    // Calculate our initial A* path to the player. We grab the player object and then run the A* function to
-    //  populate this.nodes with a set of nodes comprising the path, setting our waypoint to the 2nd x/y pair in the path.
-    //  The first x/y pair, at this.nodes[0], is our current node, which isn't a valid waypoint for us.
       this.obj = gbox.getObject('player','player_id');
       this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
       this.waypoint = [16*this.nodes[1].x, 16*this.nodes[1].y]; // multiply by 16 to get the true pixel coord of each pair
     },
 
     first: function() {
-    // If we've reached the next waypoint...
     if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) {
-        // ...and if we haven't gone through enough waypoints to recalculate the path yet...
         if (this.waypointCount < this.waypointMax) {
-          // ...then increase the waypoint count
-          this.waypointCount++;
-
-          // However, if the number of nodes in our path is less than or equal to our current waypoint count (i.e., we're
-          //  going to try and move 3 more nodes when there's only 2 left)...
-          if (this.nodes.length <= this.waypointCount) {
-            // ...then re-run our A*.
+           this.waypointCount++;
+           if (this.nodes.length <= this.waypointCount) {
             this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
-            // If it turns out we're AT our destination, just stay in our current location...
             if (this.nodes.length == 1)
               this.waypointCount = 0;
-            else // ...otherwise, start moving to the next location.
+            else
               this.waypointCount = 1;
           }
 
-          // Set this.waypoint to the next waypoint that we determined above
           this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];
         } else {
-          // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
-          // reset our waypoint counter
           this.waypointCount = 1;
 
-          // grab the player object and calculate our A* path to the player, and set the next waypoint
           this.obj = gbox.getObject('player','player_id');
           this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
           this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
         }
       }
 
-      // Move toward our new waypoint
       if (this.x < this.waypoint[0]) this.x += this.speed;
       if (this.x > this.waypoint[0]) this.x -= this.speed;
       if (this.y < this.waypoint[1]) this.y += this.speed;
@@ -294,7 +268,7 @@ function addPlayer() {
       this.x = 20;
       this.y = 20;
 	  
-      // Here we define the list of animations. We can name these whatever we want.
+      // New for Part 6: Here we define the list of animations. We can name these whatever we want.
       // These are referenced with this.animList[id].
       // So for example, this.animList[rightDown].frames[1] would return 12.
       this.animList = {

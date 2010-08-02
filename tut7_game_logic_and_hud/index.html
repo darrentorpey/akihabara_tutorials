@@ -12,7 +12,6 @@
   <script>
 var maingame;
 var map;
-var pathMap; // tut5
 // This keeps track of how many frames have been rendered in total
 var frameCount = 0;
 var TIME_LIMIT = 10; // This will determine how many seconds the player must survive to win
@@ -217,10 +216,6 @@ function addMap() {
       maingame.hud.setValue('time_left', 'value', Math.ceil(TIME_LIMIT - secondsElapsed));
       maingame.hud.redraw();
 
-      /*if (gbox.keyIsHit("b")) {
-        gameOverFail();
-      }*/ //-- replaced with enemy killing you code in the enemy updates
-
       // If we're reached our TIME_LIMIT, show the victory screen
       if (secondsElapsed >= TIME_LIMIT)
         gameOverWin();
@@ -300,7 +295,7 @@ function addEnemy(xx, yy, enemy_id) {
       if (this.y < this.waypoint[1]) this.y += this.speed;
       if (this.y > this.waypoint[1]) this.y -= this.speed;
     },
-
+    
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
         tileset: this.tileset,
@@ -313,6 +308,10 @@ function addEnemy(xx, yy, enemy_id) {
         alpha:   1.0
       });
     },
+    
+    gameOverFail: function() {
+      maingame.setState(700);
+    },
   });
 }
 
@@ -323,6 +322,17 @@ function gameOverWin() {
 function gameOverFail() {
   maingame.setState(700);
 }
+
+function callInColliding(th,data) {
+			for (var i in gbox._objects[data.group])
+				if ((!gbox._objects[data.group][i].initialize)&&toys.topview.collides(data,gbox._objects[data.group][i]))
+					if (gbox._objects[data.group][i][data.call]) {
+						gbox._objects[data.group][i][data.call](th);
+						return i;
+					}
+			return false;
+		}
+    
 
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
@@ -377,10 +387,17 @@ function addPlayer() {
       toys.topview.applyForces(this);
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
 	  
-	  for (var i in gbox._objects["enemy"])
-	    if ((!gbox._objects["enemy"][i].initialize)&&toys.topview.pixelcollides(this,gbox._objects["enemy"][i]))
-		  gameOverFail();
+	  //for (var i in gbox._objects["enemy"])
+	  //  if ((!gbox._objects["enemy"][i].initialize)&&toys.topview.pixelcollides(this,gbox._objects["enemy"][i]))
+		//  gameOverFail();
+    
+    var data = this;
+    data.group = "enemy";
+    data.call = "gameOverFail";
+    callInColliding(this,data);
+    
     },
+    
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
         tileset: this.tileset,

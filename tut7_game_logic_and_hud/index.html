@@ -319,10 +319,6 @@ function gameOverWin() {
   maingame.setState(801);
 }
 
-function gameOverFail() {
-  maingame.setState(700);
-}
-
 function callInColliding(th,data) {
 			for (var i in gbox._objects[data.group])
 				if ((!gbox._objects[data.group][i].initialize)&&toys.topview.collides(data,gbox._objects[data.group][i]))

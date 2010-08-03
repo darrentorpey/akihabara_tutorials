@@ -237,7 +237,11 @@ function addEnemy(xx, yy, enemy_id) {
         } else {
           // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
           // reset our waypoint counter
-          this.waypointCount = 1;
+            // If it turns out we're AT our destination, just stay in our current location...
+            if (this.nodes.length == 1)
+              this.waypointCount = 0;
+            else // ...otherwise, start moving to the next location.
+              this.waypointCount = 1;
 
           // grab the player object and calculate our A* path to the player, and set the next waypoint
           this.obj = gbox.getObject('player','player_id');

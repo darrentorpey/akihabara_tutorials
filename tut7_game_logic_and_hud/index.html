@@ -188,7 +188,21 @@ function loadMap() {
     ], [ [null, ' '], [0, 'x'] ])
 }
 
+function gameOverWin() {
+  maingame.setState(801);
+}
 
+
+function callWhenColliding(obj,group,call) {
+			for (var i in gbox._objects[group])
+				if ((!gbox._objects[group][i].initialize)&&toys.topview.collides(obj,gbox._objects[group][i]))
+					if (gbox._objects[group][i][call]) {
+						gbox._objects[group][i][call](obj);
+						return i;
+					}
+			return false;
+		}
+    
 // This is our function for adding the map object -- this keeps our main game code nice and clean
 //  For Part 4, we're adding the "followCamera" line you see in here
 function addMap() {
@@ -280,7 +294,11 @@ function addEnemy(xx, yy, enemy_id) {
         } else {
           // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
           // reset our waypoint counter
-          this.waypointCount = 1;
+            if (this.nodes.length == 1)
+              this.waypointCount = 0;
+            else
+              this.waypointCount = 1;
+
 
           // grab the player object and calculate our A* path to the player, and set the next waypoint
           this.obj = gbox.getObject('player','player_id');
@@ -313,22 +331,7 @@ function addEnemy(xx, yy, enemy_id) {
       maingame.setState(700);
     },
   });
-}
-
-function gameOverWin() {
-  maingame.setState(801);
-}
-
-function callInColliding(th,data) {
-			for (var i in gbox._objects[data.group])
-				if ((!gbox._objects[data.group][i].initialize)&&toys.topview.collides(data,gbox._objects[data.group][i]))
-					if (gbox._objects[data.group][i][data.call]) {
-						gbox._objects[data.group][i][data.call](th);
-						return i;
-					}
-			return false;
-		}
-    
+}   
 
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
@@ -379,18 +382,12 @@ function addPlayer() {
       if (frameCount%this.animList[this.animIndex].speed == 0)
       this.frame = help.decideFrame(frameCount, this.animList[this.animIndex]);
       
-	  toys.topview.handleAccellerations(this);
+      toys.topview.handleAccellerations(this);
       toys.topview.applyForces(this);
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
 	  
-	  //for (var i in gbox._objects["enemy"])
-	  //  if ((!gbox._objects["enemy"][i].initialize)&&toys.topview.pixelcollides(this,gbox._objects["enemy"][i]))
-		//  gameOverFail();
-    
-    var data = this;
-    data.group = "enemy";
-    data.call = "gameOverFail";
-    callInColliding(this,data);
+      // New code for Part 7
+      callWhenColliding(this, 'enemy', 'gameOverFail');
     
     },
     

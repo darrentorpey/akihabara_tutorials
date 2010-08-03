@@ -226,7 +226,10 @@ function addEnemy(xx, yy, enemy_id) {
 
           this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];
         } else {
-          this.waypointCount = 1;
+            if (this.nodes.length == 1)
+              this.waypointCount = 0;
+            else
+              this.waypointCount = 1;
 
           this.obj = gbox.getObject('player','player_id');
           this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);

@@ -1,39 +1,39 @@
 <html><head>
-  <script type="text/javascript" src="akihabara/gbox.js"></script>
-  <script type="text/javascript" src="akihabara/iphopad.js"></script>
-  <script type="text/javascript" src="akihabara/trigo.js"></script>
-  <script type="text/javascript" src="akihabara/toys.js"></script>
-  <script type="text/javascript" src="akihabara/help.js"></script>
-  <script type="text/javascript" src="akihabara/tool.js"></script>
-  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
-  <script type="text/javascript" src="a_star.js"></script>
-  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
-  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-  <script>
+<script type="text/javascript" src="akihabara/gbox.js"></script>
+<script type="text/javascript" src="akihabara/iphopad.js"></script>
+<script type="text/javascript" src="akihabara/trigo.js"></script>
+<script type="text/javascript" src="akihabara/toys.js"></script>
+<script type="text/javascript" src="akihabara/help.js"></script>
+<script type="text/javascript" src="akihabara/tool.js"></script>
+<script type="text/javascript" src="akihabara/gamecycle.js"></script>
+<script type="text/javascript" src="a_star.js"></script>
+<style>BODY { -webkit-user-select: none; margin: 0px }</style>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<script>
 var maingame;
 var map;
-// This keeps track of how many frames have been rendered in total
-var frameCount = 0;
+
+var frameCount = 0;  // This keeps track of how many frames have been rendered in total
 var TIME_LIMIT = 10; // This will determine how many seconds the player must survive to win
 var timeStarted;     // This will record the current time when the game started
-var pathMap; // New for Part 5
+var pathMap;         // New for Part 5
 
 window.addEventListener('load', loadResources, false);
 
 function loadResources() {
   // We're passing some overrides to help.akihabaraInit to set our title, resolution, and zoom factor
   help.akihabaraInit({
-    title: '8by5',
-    width: 640,
+    title:  '8by5',
+    width:  640,
     height: 480,
     zoom: 1
   });
-  
-  gbox.addImage('font', 'font.png');
-  gbox.addImage('logo', 'logo.png');
-  gbox.addImage('player_sprite', 'player_sprite.png');
+
+  gbox.addImage('font',            'font.png');
+  gbox.addImage('logo',            'logo.png');
+  gbox.addImage('player_sprite',   'player_sprite.png');
   gbox.addImage('map_spritesheet', 'map_pieces.png');
-  gbox.addImage('enemy_sprite', 'enemy_sprite.png'); // New for Part 5
+  gbox.addImage('enemy_sprite',    'enemy_sprite.png'); // New for Part 5
 
   gbox.addTiles({
     id:      'player_tiles',
@@ -62,7 +62,7 @@ function loadResources() {
     gapx:    0,
     gapy:    0
   });
-  
+
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
 
   gbox.loadAll(main);
@@ -100,22 +100,21 @@ function main() {
     });
     // Create the enemies for Part 5. We're passing in x coord, y coord, and a unique ID for the enemy.
     //  The reason we write 16*8 instead of 128 is it helps us remember it's 8 tiles in length.
-    addEnemy(16*8,16*8,0);
-    addEnemy(16*18,16*24,1);
-    addEnemy(16*28,16*28,2);
+    addEnemy(16*8,  16*8,  0);
+    addEnemy(16*18, 16*24, 1);
+    addEnemy(16*28, 16*28, 2);
   };
 
   // Here we setup our map. See part 3 for a detailed explanation
   map = {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-	
+
     map: loadMap(),
     tileIsSolid: function(obj, t) {
       return t != null; // Is a wall if is not an empty space
-	  
     }
   }
-  
+
   map = help.finalizeTilemap(map);
 
   // New for Part 5, we create a 40x30 array to match our 40x30 tiles in the map.
@@ -130,10 +129,10 @@ function main() {
   for(i = 0; i < map.map.length; i++)
     for(j = 0; j < map.map[0].length; j++)
         pathMap[j][i] = map.tileIsSolid(map,map.map[i][j]);
-		
+
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
-  
+
   gbox.go();
 }
 
@@ -192,21 +191,22 @@ function gameOverWin() {
   maingame.setState(801);
 }
 
-
 function callWhenColliding(obj,group,call) {
-			for (var i in gbox._objects[group])
-				if ((!gbox._objects[group][i].initialize)&&toys.topview.collides(obj,gbox._objects[group][i]))
-					if (gbox._objects[group][i][call]) {
-						gbox._objects[group][i][call](obj);
-						return i;
-					}
-			return false;
-		}
-    
+  for (var i in gbox._objects[group]) {
+    if ((!gbox._objects[group][i].initialize)&&toys.topview.collides(obj,gbox._objects[group][i])) {
+      if (gbox._objects[group][i][call]) {
+        gbox._objects[group][i][call](obj);
+        return i;
+      }
+    }
+  }
+  return false;
+}
+
 // This is our function for adding the map object -- this keeps our main game code nice and clean
 //  For Part 4, we're adding the "followCamera" line you see in here
 function addMap() {
-  gbox.addObject({    
+  gbox.addObject({
     id:    'background_id', // This is the object ID.
     group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
 
@@ -214,7 +214,7 @@ function addMap() {
       // Increment the global frame counter.
       frameCount++;
     },
-	
+
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
@@ -243,11 +243,11 @@ function addMap() {
 
 function addEnemy(xx, yy, enemy_id) {
   gbox.addObject({
-    id:      		'enemy_id' + enemy_id, // id refers to the specific object, here we concatenate a unique id so enemy 2 would be 'enemy_id2'
-    group:  		'enemy',               // The rendering group
-    tileset: 		'enemy_tiles',         // tileset is where the graphics come from
-    colh:    		gbox.getTiles('enemy_tiles').tileh,
-    speed: 			2, // needs to be a power of 2 (2, 4, 8, 16)
+    id:          'enemy_id' + enemy_id, // id refers to the specific object, here we concatenate a unique id so enemy 2 would be 'enemy_id2'
+    group:       'enemy',               // The rendering group
+    tileset:     'enemy_tiles',         // tileset is where the graphics come from
+    colh:        gbox.getTiles('enemy_tiles').tileh,
+    speed:       2, // needs to be a power of 2 (2, 4, 8, 16)
 
     initialize: function() {
       // First we initialize this like any other topview object.
@@ -264,14 +264,14 @@ function addEnemy(xx, yy, enemy_id) {
     // Calculate our initial A* path to the player. We grab the player object and then run the A* function to
     //  populate this.nodes with a set of nodes comprising the path, setting our waypoint to the 2nd x/y pair in the path.
     //  The first x/y pair, at this.nodes[0], is our current node, which isn't a valid waypoint for us.
-      this.obj = gbox.getObject('player','player_id');
-      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
+      this.obj = gbox.getObject('player', 'player_id');
+      this.nodes = a_star([Math.floor(this.x/16), Math.floor(this.y/16)], [Math.floor(this.obj.x/16), Math.floor(this.obj.y/16)], pathMap,40,30);
       this.waypoint = [16*this.nodes[1].x, 16*this.nodes[1].y]; // multiply by 16 to get the true pixel coord of each pair
     },
 
     first: function() {
-    // If we've reached the next waypoint...
-    if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) {
+      // If we've reached the next waypoint...
+      if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) {
         // ...and if we haven't gone through enough waypoints to recalculate the path yet...
         if (this.waypointCount < this.waypointMax) {
           // ...then increase the waypoint count
@@ -294,16 +294,15 @@ function addEnemy(xx, yy, enemy_id) {
         } else {
           // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
           // reset our waypoint counter
-            if (this.nodes.length == 1)
-              this.waypointCount = 0;
-            else
-              this.waypointCount = 1;
-
+          if (this.nodes.length == 1)
+            this.waypointCount = 0;
+          else
+            this.waypointCount = 1;
 
           // grab the player object and calculate our A* path to the player, and set the next waypoint
-          this.obj = gbox.getObject('player','player_id');
-          this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
-          this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
+          this.obj = gbox.getObject('player', 'player_id');
+          this.nodes = a_star([Math.floor(this.x/16), Math.floor(this.y/16)], [Math.floor(this.obj.x/16), Math.floor(this.obj.y/16)], pathMap, 40, 30);
+          this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];
         }
       }
 
@@ -313,7 +312,7 @@ function addEnemy(xx, yy, enemy_id) {
       if (this.y < this.waypoint[1]) this.y += this.speed;
       if (this.y > this.waypoint[1]) this.y -= this.speed;
     },
-    
+
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
         tileset: this.tileset,
@@ -326,12 +325,12 @@ function addEnemy(xx, yy, enemy_id) {
         alpha:   1.0
       });
     },
-    
+
     gameOverFail: function() {
       maingame.setState(700);
     },
   });
-}   
+}
 
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
@@ -339,13 +338,13 @@ function addPlayer() {
     id:      'player_id',    // id refers to the specific object.
     group:   'player',       // The rendering group
     tileset: 'player_tiles', // tileset is where the graphics come from.
-    colh: gbox.getTiles('player_tiles').tileh,
-	
+    colh:    gbox.getTiles('player_tiles').tileh,
+
     initialize: function() {
       toys.topview.initialize(this, {});
       this.x = 20;
       this.y = 20;
-	  
+
       // Here we define the list of animations. We can name these whatever we want.
       // These are referenced with this.animList[id].
       // So for example, this.animList[rightDown].frames[1] would return 12.
@@ -364,10 +363,12 @@ function addPlayer() {
       // Set the starting animation for the player object.
       this.animIndex = 'still';
     },
+
     first: function() {
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
-	  
-      // The if statements check for accelerations in the x and y directions and whether they are positive or negative. It then sets the animation index to the keyword corresponding to that direction.
+
+      // The if statements check for accelerations in the x and y directions and whether they are positive or negative.
+      // It then sets the animation index to the keyword corresponding to that direction.
       if (this.accx == 0 && this.accy == 0) this.animIndex = 'still';
       if (this.accx > 0 && this.accy == 0)  this.animIndex = 'right';
       if (this.accx > 0 && this.accy > 0)   this.animIndex = 'rightDown';
@@ -381,16 +382,15 @@ function addPlayer() {
       // Set the animation.
       if (frameCount%this.animList[this.animIndex].speed == 0)
       this.frame = help.decideFrame(frameCount, this.animList[this.animIndex]);
-      
+
       toys.topview.handleAccellerations(this);
       toys.topview.applyForces(this);
       toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
-	  
+
       // New code for Part 7
       callWhenColliding(this, 'enemy', 'gameOverFail');
-    
     },
-    
+
     blit: function() {
       gbox.blitTile(gbox.getBufferContext(), {
         tileset: this.tileset,
@@ -402,7 +402,7 @@ function addPlayer() {
         camera:  this.camera,
         alpha:   1.0
       });
-    },
+    }
   });
 }
 </script>

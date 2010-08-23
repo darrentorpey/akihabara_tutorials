@@ -582,10 +582,13 @@ function addPlayer() {
       
       if (help.geturlparameter("precision")) precision = help.geturlparameter("precision");
         else precision = 4;
+      if (help.geturlparameter("ang")) ang = help.geturlparameter("ang");
+        else ang = 0.314;  
       points = precision*2+1;
-      inc = 0.314/precision;
-      startAng = this.theta-0.314;
-      dist = 200;
+      inc = ang/precision;
+      startAng = this.theta-ang;
+      if (help.geturlparameter("dist")) dist = help.geturlparameter("dist");
+        else dist=200;  
       for (c=0;c<points;c++)
       {
       xtp  = 1*Math.cos(startAng+(inc*c));

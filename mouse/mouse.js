@@ -20,10 +20,6 @@ mouse = gbox.addObject({
     document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', mouse.down, false);
     document.getElementsByTagName("CANVAS")[0].addEventListener('mouseup', mouse.up, false);
     },
-
-    first: function() {
-    gbox.blitFade(gbox.getBufferContext(),{});
-    },
     
     blit: function() {
     if (this.upCount > 0) {mouse.isClicked = false; this.upCount = 0;}

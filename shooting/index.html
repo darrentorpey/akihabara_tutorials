@@ -82,7 +82,7 @@ function loadResources() {
   gbox.addImage('player_bullet', 'bullet.png');
 
   gbox.addImage("sprites","explode.png");
-    gbox.addTiles({id:"explosion",image:"sprites",tileh:32,tilew:32,tilerow:4,gapx:0,gapy:0});
+  gbox.addTiles({id:"explosion",image:"sprites",tileh:32,tilew:32,tilerow:4,gapx:0,gapy:0});
   
   gbox.addTiles({
     id:      'player_tiles',
@@ -168,17 +168,13 @@ function main() {
   };
 
   // Here we setup our map. See part 3 for a detailed explanation
-  map = {
+  map = help.finalizeTilemap({
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-	
     map: loadMap(),
     tileIsSolid: function(obj, t) {
       return t != null; // Is a wall if is not an empty space
-	  
     }
-  }
-  
-  map = help.finalizeTilemap(map);
+  });
 
   // New for Part 5, we create a 40x30 array to match our 40x30 tiles in the map.
   pathMap = new Array(40);
@@ -212,7 +208,7 @@ function introScreenAnimation(reset) {
     sy:    gbox.getScreenH(),
     x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
     y:     20,
-    speed: 1
+    speed: 3
   });
 };
 
@@ -257,7 +253,7 @@ function gameOverWin() {
 
 function callWhenColliding(obj,group,call) {
 			for (var i in gbox._objects[group])
-				if ((!gbox._objects[group][i].initialize)&&toys.topview.collides(obj,gbox._objects[group][i]))
+				if ((!gbox._objects[group][i].initialize) && toys.topview.collides(obj,gbox._objects[group][i]))
 					if (gbox._objects[group][i][call]) {
 						gbox._objects[group][i][call](obj);
 						return i;

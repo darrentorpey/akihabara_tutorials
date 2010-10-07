@@ -1,0 +1,193 @@
+<html><head>
+  <script type="text/javascript" src="akihabara/gbox.js"></script>
+  <script type="text/javascript" src="akihabara/iphopad.js"></script>
+  <script type="text/javascript" src="akihabara/trigo.js"></script>
+  <script type="text/javascript" src="akihabara/toys.js"></script>
+  <script type="text/javascript" src="akihabara/help.js"></script>
+  <script type="text/javascript" src="akihabara/tool.js"></script>
+  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <script>
+var maingame;
+var mouse;
+
+window.addEventListener('load', loadResources, false);
+
+
+
+function loadResources() {
+  help.akihabaraInit('8by5');
+
+  gbox.addImage('font', 'font.png');
+  gbox.addImage('logo', 'logo.png');
+  gbox.addImage('playerSprite', 'sprites.png');
+
+  gbox.addTiles({
+    id:      'playerTiles', // Set a unique ID for future reference
+    image:   'playerSprite', // Use the 'playerSprite' image, as loaded above
+    tileh:   16,
+    tilew:   16,
+    tilerow: 4,
+    gapx:    0,
+    gapy:    0
+  });
+
+  gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+
+  gbox.setCallback(main);
+
+  gbox.loadAll();
+};
+
+function main() {
+  gbox.setGroups(['mouse', 'object', 'game']);
+  
+  maingame = gamecycle.createMaingame('game', 'game');
+  maingame.gameMenu = function() { return true; };
+  maingame.gameIntroAnimation = function() { return true; };
+  maingame.gameTitleIntroAnimation = function() {return true;};
+
+  maingame.initializeGame = function() {
+    addDragObject();
+    addClickObject();
+    addMouseControl();
+   };
+
+  gbox.go();
+}
+
+function addMouseControl() {
+mouse = gbox.addObject({
+    id: 'mouse_id',
+    group: 'mouse',
+    upCount: 0,
+    
+    initialize: function() {
+    mouse.x = 0;
+    mouse.y = 0;
+    mouse.isDown = false;
+    mouse.isDragging = false;
+    mouse.isClicked = false;
+    mouse.dragObject = null;
+    
+    
+    document.getElementsByTagName("CANVAS")[0].addEventListener('mousemove', mouse.move, false);
+    document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', mouse.down, false);
+    document.getElementsByTagName("CANVAS")[0].addEventListener('mouseup', mouse.up, false);
+    },
+
+    first: function() {
+    gbox.blitFade(gbox.getBufferContext(),{});
+    },
+    
+    blit: function() {
+    if (this.upCount > 0) {mouse.isClicked = false; this.upCount = 0;}
+    if (mouse.isClicked) this.upCount += 1;
+    },
+    
+    move: function(event) {
+    var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+    var cam = gbox.getCamera();
+    
+    mouse.x = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x;
+    mouse.y = (event.layerY - tempCanvas.offsetTop)/2 + cam.y;
+    },
+    
+    down: function(event) {
+    mouse.isDown = true;
+    },
+    
+    up: function(event) {
+    mouse.isDown = false;
+    mouse.isDragging = false;
+    mouse.dragObject = null;
+    mouse.isClicked = true;
+    },
+    
+    dragCheck: function(obj) {
+      if (mouse.isDown == true && gbox.pixelcollides(mouse,obj) && mouse.isDragging == false)
+        {
+        mouse.isDragging = true;
+        mouse.dragObject = obj;
+        }
+      if (mouse.isDragging && mouse.dragObject.id == obj.id && mouse.dragObject.group == obj.group) 
+        {
+        obj.x = mouse.x-obj.hh;
+        obj.y = mouse.y-obj.hw;
+        }
+      }
+  }); // end gbox.addObject for mouseControl
+}
+
+function addClickObject() {
+  gbox.addObject({
+    id: 'clickObject',
+    group: 'object',
+    tileset: 'playerTiles',
+
+    initialize: function() {
+      this.x = 80;
+      this.y = 100;
+      this.frame = 1;
+      toys.topview.initialize(this, {
+      });
+    },
+
+    first: function() {
+      if (mouse.isClicked && gbox.pixelcollides(mouse,this))
+        if (this.frame == 1) this.frame = 2;
+          else this.frame = 1;
+      },
+
+    blit: function() {
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    },
+  });
+}
+
+function addDragObject() {
+  gbox.addObject({
+    id: 'dragObject',
+    group: 'object',
+    tileset: 'playerTiles',
+
+    initialize: function() {
+      this.x = 20;
+      this.y = 100;
+      toys.topview.initialize(this, {
+      });
+    },
+
+    first: function() {
+      mouse.dragCheck(this);
+      this.frame = 0;
+    },
+
+    blit: function() {
+      gbox.blitFade(gbox.getBufferContext(),{});
+
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    },
+  });
+}
+</script>
+</head><body></body></html>

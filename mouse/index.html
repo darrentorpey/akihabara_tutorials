@@ -74,7 +74,7 @@ function addClickObject() {
     },
 
     first: function() {
-      if (mouse.isClicked && gbox.pixelcollides(mouse,this))
+      if (mouse.isClicked && mouse.isColliding(this))
         if (this.frame == 1) this.frame = 2;
           else this.frame = 1;
       },

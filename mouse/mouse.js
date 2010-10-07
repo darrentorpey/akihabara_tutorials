@@ -49,6 +49,10 @@ mouse = gbox.addObject({
     mouse.isClicked = true;
     },
     
+    isColliding: function(obj) {
+    return gbox.pixelcollides(mouse, obj);
+    },
+    
     dragCheck: function(obj) {
       if (mouse.isDown == true && gbox.pixelcollides(mouse,obj) && mouse.isDragging == false)
         {

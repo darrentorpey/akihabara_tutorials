@@ -1,5 +1,8 @@
-var mouse;
+// AkiMouse, by Darius Kazemi
+// Oct 07, 2010
+// http://bostongamejams.com/akimouses
 
+var mouse;
 
 function addMouseControl() {
 mouse = gbox.addObject({

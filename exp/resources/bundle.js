@@ -62,6 +62,6 @@
   ],
 
   addAudio: [
-    ['explosion', ['resources/explosion_1.mp3'], { channel: 'bgmusic', loop: false }]
+    ['explosion', ['resources/explosion_1a.mp3'], { channel: 'bgmusic', loop: false }]
   ]
 }

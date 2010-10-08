@@ -33,8 +33,8 @@ mouse = gbox.addObject({
     var tempCanvas = document.getElementsByTagName("CANVAS")[0];
     var cam = gbox.getCamera();
     
-    mouse.x = (event.layerX - tempCanvas.offsetLeft)/2 + cam.x;
-    mouse.y = (event.layerY - tempCanvas.offsetTop)/2 + cam.y;
+    mouse.x = (event.layerX - tempCanvas.offsetLeft)/gbox._zoom + cam.x;
+    mouse.y = (event.layerY - tempCanvas.offsetTop)/gbox._zoom + cam.y;
     },
     
     down: function(event) {

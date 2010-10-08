@@ -1,0 +1,7 @@
+#toolbox_panel {
+  position: fixed;
+  background-color: white;
+  height: 80px;
+  width: 80px;
+  display: block;
+}

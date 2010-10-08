@@ -43,7 +43,7 @@ function loadResources() {
 
 function main() {
   gbox.setGroups(['mouse', 'object', 'game']);
-  
+
   maingame = gamecycle.createMaingame('game', 'game');
   maingame.gameMenu = function() { return true; };
   maingame.gameIntroAnimation = function() { return true; };
@@ -52,6 +52,7 @@ function main() {
   maingame.initializeGame = function() {
     addDragObject();
     addClickObject();
+    addFragileObject();
     addMouseControl();
    };
 
@@ -88,7 +89,39 @@ function addClickObject() {
         fliph:   this.fliph,
         flipv:   this.flipv,
         camera:  this.camera,
-        alpha:   1.0
+        alpha:   0.8
+      });
+    },
+  });
+}
+
+function addFragileObject() {
+  gbox.addObject({
+    id: 'fragileObject',
+    group: 'object',
+    tileset: 'playerTiles',
+
+    initialize: function() {
+      this.x = 160;
+      this.y = 120;
+      this.frame = 1;
+      toys.topview.initialize(this, {});
+    },
+
+    first: function() {
+      if (mouse.dragObject != null) // First make sure there IS an object being dragged
+        if (gbox.collides(this, mouse.dragObject)) // Check if we collide with it
+          gbox.trashObject(this); // Destroy ourselves if we do
+    },
+
+    blit: function() {
+      gbox.blitRect(gbox.getBufferContext(), {
+        x:      this.x,
+        y:      this.y,
+        w:      20,
+        h:      20,
+        color:  'rgb(0, 100, 200)',
+        alpha: 0.8
       });
     },
   });

@@ -7,10 +7,12 @@
   <script type="text/javascript" src="akihabara/tool.js"></script>
   <script type="text/javascript" src="akihabara/gamecycle.js"></script>
   <script type="text/javascript" src="a_star.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.4.2.js"></script>
   <script type="text/javascript" src="lib/screen.js"></script>
   <script type="text/javascript" src="lib/base64.js"></script>
   <script type="text/javascript" src="lib/canvas2image.js"></script>
   <script type="text/javascript" src="lib/darren_tools.js"></script>
+  <script type="text/javascript" src="lib/actors/basic_box.js"></script>
 
   <link rel="stylesheet" href="resources/style.css">
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
@@ -44,7 +46,7 @@ function loadResources() {
 };
 
 function setup() {
-  gbox.setGroups(['background', 'bullets', 'player', 'enemy', 'game']);
+  gbox.setGroups(['background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
 
   maingame = gamecycle.createMaingame('game', 'game');
 
@@ -76,6 +78,10 @@ function setup() {
     addEnemy(16*8,16*8,0);
     addEnemy(16*18,16*24,1);
     addEnemy(16*28,16*28,2);
+
+    new BasicBox({ x: 50, y: 50, height: 50, width: 50 });
+    new BasicBox({ x: 150, y: 150, height: 50, width: 50, color: 'rgb(0, 100, 200)' });
+    new BasicBox({ x: 150, y: 250, height: 50, width: 50, color: 'rgb(100, 100, 200)' });
     
   	// This creates the cursor function and associated event handlers -Nick
     changeCursor();

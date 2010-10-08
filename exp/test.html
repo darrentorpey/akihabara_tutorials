@@ -1,0 +1,589 @@
+<html><head>
+  <script type="text/javascript" src="akihabara/gbox.js"></script>
+  <script type="text/javascript" src="akihabara/iphopad.js"></script>
+  <script type="text/javascript" src="akihabara/trigo.js"></script>
+  <script type="text/javascript" src="akihabara/toys.js"></script>
+  <script type="text/javascript" src="akihabara/help.js"></script>
+  <script type="text/javascript" src="akihabara/tool.js"></script>
+  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <script type="text/javascript" src="a_star.js"></script>
+  <script type="text/javascript" src="lib/jquery-1.4.2.js"></script>
+  <script type="text/javascript" src="lib/jquery.lowpro.js"></script>
+  <script type="text/javascript" src="lib/screen.js"></script>
+  <script type="text/javascript" src="lib/base64.js"></script>
+  <script type="text/javascript" src="lib/canvas2image.js"></script>
+  <script type="text/javascript" src="lib/core/object.js"></script>
+  <script type="text/javascript" src="lib/darren_tools.js"></script>
+  <script type="text/javascript" src="lib/actors/basic_box.js"></script>
+  <script type="text/javascript" src="lib/mouse.js"></script>
+
+  <link rel="stylesheet" href="resources/style.css">
+  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  <script>
+var maingame;
+var map;
+// This keeps track of how many frames have been rendered in total
+var frameCount = 0;
+var TIME_LIMIT = 10; // This will determine how many seconds the player must survive to win
+var timeStarted;     // This will record the current time when the game started
+var pathMap;
+var mx, my;
+
+window.addEventListener('load', loadResources, false);
+
+function loadResources() {
+  // We're passing some overrides to help.akihabaraInit to set our title, resolution, and zoom factor
+  help.akihabaraInit({
+    title: '8by5',
+    width: 640,
+    height: 480,
+    zoom: 1
+  });
+
+  gbox.addBundle({ file: 'resources/bundle.js' });
+
+  gbox.setAudioChannels({ bgmusic: { volume: 0.5 }, sfx: { volume: 1.0 }});
+
+  gbox.loadAll(setup);
+};
+
+function setup() {
+  gbox.setGroups(['mouse', 'background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
+
+  maingame = gamecycle.createMaingame('game', 'game');
+
+  maingame.gameMenu = function() { return true; };
+  maingame.gameIntroAnimation = function() { return true; };
+  maingame.gameTitleIntroAnimation = introScreenAnimation;
+  maingame.initializeGame = function() {
+    addMouseControl();
+
+    addPlayer();
+
+    addMap();
+
+    // This gives us the time at which the game started,
+    //  in milliseconds since the epoch
+    timeStarted = (new Date()).getTime();
+
+    // This adds a "label" widget, with "small"-font text to the screen
+    //  located 25 pixels down from the top of the screen and
+    //  40 pixels back from the right side of the screen
+    maingame.hud.setWidget('time_left', {
+      widget: 'label',
+      font:   'small',
+      value:  0,
+      dx:     gbox.getScreenW() - 40,
+      dy:     25,
+      clear:  true
+    });
+
+    maingame.hud.setWidget('mouse_pos', {
+      widget: 'label',
+      font:   'small',
+      value:  0,
+      dx:     gbox.getScreenW() - 160,
+      dy:     25,
+      clear:  true
+    });
+    // Create the enemies. We're passing in x coord, y coord, and a unique ID for the enemy.
+    //  The reason we write 16*8 instead of 128 is it helps us remember it's 8 tiles in length.
+    addEnemy(16*8,16*8,0);
+    addEnemy(16*18,16*24,1);
+    addEnemy(16*28,16*28,2);
+
+    new BasicBox({ x: 60, y: 60, height: 50, width: 50 });
+
+    new BasicBox({ x: 150, y: 150, height: 50, width: 50, color: 'rgb(0, 100, 200)' });
+    new BasicBox({ x: 150, y: 250, height: 75, width: 75, color: 'rgb(100, 100, 200)' });
+    new BasicBox({ x: 350, y: 40, height: 100, width: 100, color: 'rgb(100, 200, 200)' });
+
+    // This creates the cursor function and associated event handlers -Nick
+    changeCursor();
+  };
+
+  // Here we setup our map.
+  map = help.finalizeTilemap({
+    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+    map: loadMap(),
+    tileIsSolid: function(obj, t) {
+      return t != null; // Is a wall if is not an empty space
+    }
+  });
+
+  // Create a 40x30 array to match our 40x30 tiles in the map.
+  pathMap = new Array(40);
+  for (i = 0; i < pathMap.length; i++)
+    pathMap [i] = new Array(30);
+  // For each element in the array, check and see if the corresponding tile is solid using our map's tileIsSolid function.
+  //  The function will return 1 if the tile is solid, and 0 if it's empty space. We copy map(i,j) to pathMap(j,i) since map
+  //  is addressed (row, column) and the a_star wants things in a (column, row) format. What we're creating is an array
+  //  of 0's and 1's where each array element represent one tile and whether it's solid. This is what the pathfinding algorithm
+  //  will use as its version of the level map.
+  for(i = 0; i < map.map.length; i++)
+    for(j = 0; j < map.map[0].length; j++)
+        pathMap[j][i] = map.tileIsSolid(map,map.map[i][j]);
+
+  gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
+  gbox.createCanvas('los_canvas', { w: map.w, h: map.h });
+  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+
+  gbox.go();
+}
+
+function introScreenAnimation(reset) {
+  var introScreen = new IntroScreen();
+  introScreen.run();
+  if (reset) {
+    toys.resetToy(this, 'rising');
+  }
+
+  gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+  toys.logos.linear(this, 'rising', {
+    image: 'logo',
+    sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    sy:    gbox.getScreenH(),
+    x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
+    y:     20,
+    speed: 1
+  });
+};
+
+function loadMap() {
+  return help.asciiArtToMap([
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"x                  xx                  x",
+"x                  xx                  x",
+"xxxxxxxx      x    xx                  x",
+"x             x    xxxxxxxxxx          x",
+"x             x                        x",
+"x             x                        x",
+"x     xxxx  xxxxxxxxx           xxxxxxxx",
+"x                  xx                  x",
+"x                  xx                  x",
+"xxxx               xx                  x",
+"x      xxxxxxxxx   xx                  x",
+"x                  xx                  x",
+"x                  xx        x         x",
+"xxxxxxx  xxxxxxxxxxxx        x         x",
+"xxxxxxx  xxxxxxxxxxxx        x         x",
+"x                  xx      xxxx        x",
+"x                  xx        x         x",
+"xxxxxxxx      x    xx        x         x",
+"x             x    xx                  x",
+"x             x    xx                  x",
+"x             x    xx                  x",
+"x     xxxx  xxxxxxxxx                  x",
+"x                  xx                  x",
+"xxxx                                   x",
+"x                                      x",
+"x      xxxxxxxxx   xx                  x",
+"x                  xx                  x",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    ], [ [null, ' '], [0, 'x'] ])
+}
+
+function gameOverWin() {
+  //maingame.setState(801);
+}
+
+function callWhenColliding(obj,group,call) {
+  for (var i in gbox._objects[group])
+    if ((!gbox._objects[group][i].initialize) && toys.topview.collides(obj, gbox._objects[group][i]))
+      if (gbox._objects[group][i][call]) {
+        gbox._objects[group][i][call](obj);
+        return i;
+      }
+  return false;
+}
+
+// This is our function for adding the map object -- this keeps our main game code nice and clean
+function addMap() {
+  gbox.addObject({
+    id:    'background_id', // This is the object ID.
+    group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
+
+
+    first: function() {
+      // Increment the global frame counter.
+      frameCount++;
+    },
+
+    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+    blit: function() {
+      // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+
+      gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+
+      // Figure out how many seconds have elapsed since the game started
+      //  we divide by 1000 because the number given is in milliseconds
+      secondsElapsed = ((new Date()).getTime() - timeStarted) / 1000;
+
+      // Calculate the number of full seconds that have passed, subtract that
+      //  from the total number of seconds the player must survive, and
+      //  update the timer HUD element with that value, then tell the HUD to redraw
+      maingame.hud.setValue('time_left', 'value', Math.ceil(TIME_LIMIT - secondsElapsed));
+      maingame.hud.setValue('mouse_pos', 'value', 'x: ' + parseInt(mouse.x) + ' y: ' + parseInt(mouse.y));
+      maingame.hud.redraw();
+
+      // If we're reached our TIME_LIMIT, show the victory screen
+      if (secondsElapsed >= TIME_LIMIT)
+        gameOverWin();
+
+      if ((frameCount % (25*6)) == 0) addEnemy(16*(Math.floor(Math.random()*10)+20),16*(Math.floor(Math.random()*10)+20),frameCount);
+
+      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
+      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('los_canvas'), { alpha:0.5,dx: 0, dy: 0, dw: gbox.getCanvas('los_canvas').width, dh: gbox.getCanvas('los_canvas').height, sourcecamera: true });
+    }
+  });
+}
+
+function addEnemy(xx, yy, enemy_id) {
+  gbox.addObject({
+    id:          'enemy_id' + enemy_id, // id refers to the specific object, here we concatenate a unique id so enemy 2 would be 'enemy_id2'
+    group:      'enemy',               // The rendering group
+    tileset:     'enemy_tiles',         // tileset is where the graphics come from
+    colh:        gbox.getTiles('enemy_tiles').tileh,
+    speed:       2, // needs to be a power of 2 (2, 4, 8, 16)
+
+    initialize: function() {
+    // First we initialize this like any other topview object.
+      toys.topview.initialize(this, {});
+
+      // Set the starting position of the object to the x/y coordinates that we passed in.
+      this.x = xx;
+      this.y = yy;
+
+            this.animList = {
+        still:     { speed: 1, frames: [0]     },
+        right:     { speed: 3, frames: [1, 11] },
+        rightdown: { speed: 3, frames: [2, 12] },
+        down:      { speed: 3, frames: [3, 13] },
+        leftdown:  { speed: 3, frames: [4, 14] },
+        left:      { speed: 3, frames: [5, 15] },
+        leftup:    { speed: 3, frames: [6, 16] },
+        up:        { speed: 3, frames: [7, 17] },
+        rightup:   { speed: 3, frames: [8, 18] }
+      };
+
+      // Set the starting animation for the player object.
+      this.animIndex = 'still';
+
+
+      // Set the initial waypoint count to 0, our max to 5
+      this.waypointCount = 0;
+      this.waypointMax = 5;
+
+    // Calculate our initial A* path to the player. We grab the player object and then run the A* function to
+    //  populate this.nodes with a set of nodes comprising the path, setting our waypoint to the 2nd x/y pair in the path.
+    //  The first x/y pair, at this.nodes[0], is our current node, which isn't a valid waypoint for us.
+      this.obj = gbox.getObject('player','player_id');
+      this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
+      //console.log(this.nodes.length + " " + this.id);
+      if (this.nodes.length > 0) this.waypoint = [16*this.nodes[1].x, 16*this.nodes[1].y]; // multiply by 16 to get the true pixel coord of each pair
+        else this.waypoint = [this.x,this.y];
+    },
+
+    first: function() {
+      if (mouse.isClicked && mouse.isColliding(this)) {
+        gbox.trashObject(this);
+      }
+   /* d = trigo.getDistance(this,this.obj);
+    theta = 3.14+trigo.getAngle(this,this.obj);
+    ptheta = this.obj.theta;
+    if (d < 200 && (theta > ptheta-.314) && (theta < ptheta+.314))
+      {
+      xtp  = 1*Math.cos(theta);
+      ytp  = 1*Math.sin(theta);
+      i=0;
+      xt = i*xtp;
+      yt = i*ytp;
+      hitWall = false;
+       while ((help.getTileInMap(this.x+8+xt, this.y+8+yt, map) != 0) && i < d)
+        {
+        i++;
+        xt = i*xtp;
+        yt = i*ytp;
+        }
+      if (i >= d) this.hitByBullet();
+      }
+    */
+    // If we've reached the next waypoint...
+    if (this.x == this.waypoint[0] && this.y == this.waypoint[1]) {
+        // ...and if we haven't gone through enough waypoints to recalculate the path yet...
+        if (this.waypointCount < this.waypointMax) {
+          // ...then increase the waypoint count
+          this.waypointCount++;
+
+          // However, if the number of nodes in our path is less than or equal to our current waypoint count (i.e., we're
+          //  going to try and move 3 more nodes when there's only 2 left)...
+          if (this.nodes.length <= this.waypointCount) {
+            // ...then re-run our A*.
+            this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
+            // If it turns out we're AT our destination, just stay in our current location...
+            if (this.nodes.length == 1)
+              this.waypointCount = 0;
+            else // ...otherwise, start moving to the next location.
+              this.waypointCount = 1;
+          }
+
+          if (this.nodes.length != 0)
+            // Set this.waypoint to the next waypoint that we determined above
+            this.waypoint = [16 * this.nodes[this.waypointCount].x, 16 * this.nodes[this.waypointCount].y];
+
+        } else {
+          // if we've reached the next waypoint and we've gone through enough waypoints that we need to recalculate...
+          // reset our waypoint counter
+            if (this.nodes.length == 1)
+              this.waypointCount = 0;
+            else
+              this.waypointCount = 1;
+
+
+          // grab the player object and calculate our A* path to the player, and set the next waypoint
+          this.obj = gbox.getObject('player','player_id');
+          this.nodes = a_star([Math.floor(this.x/16),Math.floor(this.y/16)],[Math.floor(this.obj.x/16),Math.floor(this.obj.y/16)],pathMap,40,30);
+          this.waypoint = [16*this.nodes[this.waypointCount].x, 16*this.nodes[this.waypointCount].y];
+        }
+      }
+
+      temph = "";
+      tempv = "";
+
+      // Move toward our new waypoint
+      if (this.x < this.waypoint[0]) {this.x += this.speed; temph = "right";}
+      if (this.x > this.waypoint[0]) {this.x -= this.speed; temph = "left";}
+      if (this.y < this.waypoint[1]) {this.y += this.speed; tempv = "down";}
+      if (this.y > this.waypoint[1]) {this.y -= this.speed; tempv = "up";}
+
+
+      // The if statements check for accelerations in the x and y directions and whether they are positive or negative. It then sets the animation index to the keyword corresponding to that direction.
+      tempanim = temph + tempv;
+      if (tempanim == "") tempanim = "still";
+      this.animIndex = tempanim;
+
+      // Set the animation.
+      if (frameCount%this.animList[this.animIndex].speed == 0)
+      this.frame = help.decideFrame(frameCount, this.animList[this.animIndex]);
+
+    },
+
+    blit: function() {
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+
+
+    },
+
+    gameOverFail: function() {
+      maingame.setState(700);
+    },
+
+    hitByBullet: function() {
+      toys.generate.sparks.simple(this,"background",null,{animspeed:2,tileset:"explosion",accx:0,accy:0});
+
+      gbox.playAudio('explosion');
+
+      gbox.trashObject(this);
+    }
+  });
+}
+
+// This is our function for adding the player object -- this keeps our main game code nice and clean
+function addPlayer() {
+  gbox.addObject({
+    id:      'player_id',    // id refers to the specific object.
+    group:   'player',       // The rendering group
+    tileset: 'player_tiles', // tileset is where the graphics come from.
+    colh: gbox.getTiles('player_tiles').tileh,
+
+    initialize: function() {
+      toys.topview.initialize(this, {});
+      this.x = 20;
+      this.y = 20;
+      this.mx = 0;
+      this.my = 0;
+      this.theta = 0;
+
+      // Here we define the list of animations. We can name these whatever we want.
+      // These are referenced with this.animList[id].
+      // So for example, this.animList[rightDown].frames[1] would return 12.
+      this.animList = {
+        still:     { speed: 1, frames: [0]     },
+        right:     { speed: 3, frames: [1, 11] },
+        rightDown: { speed: 3, frames: [2, 12] },
+        down:      { speed: 3, frames: [3, 13] },
+        downLeft:  { speed: 3, frames: [4, 14] },
+        left:      { speed: 3, frames: [5, 15] },
+        leftUp:    { speed: 3, frames: [6, 16] },
+        up:        { speed: 3, frames: [7, 17] },
+        upRight:   { speed: 3, frames: [8, 18] }
+      };
+
+      // Set the starting animation for the player object.
+      this.animIndex = 'still';
+
+     // this adds an event listener to the canvas for mousedown events
+    // whenever your mouse button goes down inside the area of the canvas the goToClick function will be called
+    // "CANVAS" is the default name for the canvas element and there's only one so we grab the zero index of the array returned by getElementsByTagName
+    // using gbox.getCanvas(canvasID) doesn't seem to allow us to add event listeners so we can't use that to access the canvas for this purpose -Nick
+    //document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', goToClick, false);
+
+    document.getElementsByTagName("CANVAS")[0].addEventListener('mousedown', shootAtClick, false);
+    document.getElementsByTagName("CANVAS")[0].addEventListener('mousemove', ev_mousemove, false);
+
+    },
+    first: function() {
+      toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
+
+      // The if statements check for accelerations in the x and y directions and whether they are positive or negative. It then sets the animation index to the keyword corresponding to that direction.
+      if (this.accx == 0 && this.accy == 0) this.animIndex = 'still';
+      if (this.accx > 0 && this.accy == 0)  this.animIndex = 'right';
+      if (this.accx > 0 && this.accy > 0)   this.animIndex = 'rightDown';
+      if (this.accx == 0 && this.accy > 0)  this.animIndex = 'down';
+      if (this.accx < 0 && this.accy > 0)   this.animIndex = 'downLeft';
+      if (this.accx < 0 && this.accy == 0)  this.animIndex = 'left';
+      if (this.accx < 0 && this.accy < 0)   this.animIndex = 'leftUp';
+      if (this.accx == 0 && this.accy < 0)  this.animIndex = 'up';
+      if (this.accx > 0 && this.accy < 0)   this.animIndex = "upRight";
+
+      // Set the animation.
+      if (frameCount%this.animList[this.animIndex].speed == 0)
+      this.frame = help.decideFrame(frameCount, this.animList[this.animIndex]);
+
+      toys.topview.handleAccellerations(this);
+      toys.topview.applyForces(this);
+      toys.topview.tileCollision(this, map, 'map', null, { tollerance: 6, approximation: 3 });
+
+      callWhenColliding(this, 'enemy', 'gameOverFail');
+    },
+
+    blit: function() {
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+      gbox.blitClear(gbox.getCanvasContext('los_canvas'), {x:0,y:0});
+
+          ctx = gbox.getCanvasContext('los_canvas');
+
+      this.theta = trigo.getAngle({x:this.x+8,y:this.y+8},{x:this.mx+8,y:this.my+8});
+
+      xp = [];
+      yp = [];
+
+      if (help.geturlparameter("precision")) precision = help.geturlparameter("precision");
+        else precision = 4;
+      if (help.geturlparameter("ang")) ang = help.geturlparameter("ang");
+        else ang = 0.314;
+      points = precision*2+1;
+      inc = ang/precision;
+      startAng = this.theta-ang;
+      if (help.geturlparameter("dist")) dist = help.geturlparameter("dist");
+        else dist=200;
+      for (c=0;c<points;c++)
+      {
+      xtp  = 1*Math.cos(startAng+(inc*c));
+      ytp  = 1*Math.sin(startAng+(inc*c));
+      i=0;
+      xt = i*xtp;
+      yt = i*ytp;
+      while ((help.getTileInMap(this.x+8+xt, this.y+8+yt, map) != 0) && i < dist)
+        {
+        for (var q in gbox._objects['enemy'])
+          if ((!gbox._objects['enemy'][q].initialize)&&gbox.pixelcollides({x:this.x+8+xt,y:this.y+8+yt},gbox._objects['enemy'][q])) gbox._objects['enemy'][q].hitByBullet();
+        i++;
+        xt = i*xtp;
+        yt = i*ytp;
+        }
+      xp[c] = xt;
+      yp[c] = yt;
+      }
+    // Draw shapes
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.fillStyle = "#FFFFFF";
+    ctx.beginPath();
+    ctx.moveTo(this.x+8,this.y+8);
+
+    for (c=0;c<points;c++)
+        ctx.lineTo(this.x+8+xp[c],this.y+8+yp[c]);
+
+    ctx.fill();
+
+    },
+  });
+}
+
+function ev_mousemove (ev) {
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+  var thePlayer = gbox.getObject('player', 'player_id');
+  var cam = gbox.getCamera();
+
+  thePlayer.mx = (event.layerX - tempCanvas.offsetLeft) + cam.x;
+  thePlayer.my = (event.layerY - tempCanvas.offsetTop) + cam.y;
+}
+
+function goToClick(event) {
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+  var thePlayer = gbox.getObject('player', 'player_id');
+  var cam = gbox.getCamera();
+
+  thePlayer.x = (event.layerX - tempCanvas.offsetLeft) + cam.x;
+  thePlayer.y = (event.layerY - tempCanvas.offsetTop) + cam.y;
+}
+
+function shootAtClick(event) {
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+  var thePlayer = gbox.getObject('player', 'player_id');
+  var cam = gbox.getCamera();
+
+  var xPos = (event.layerX - tempCanvas.offsetLeft) + cam.x;
+  var yPos = (event.layerY - tempCanvas.offsetTop) + cam.y;
+
+  var ang = Math.atan2(yPos-(thePlayer.y+8),xPos-(thePlayer.x+8));
+
+  toys.topview.fireBullet("bullets", null,
+      {
+        tileset:    "player_shot",
+        collidegroup:  "enemy",
+        from:      thePlayer,
+        x:      thePlayer.x+thePlayer.colhw-2,
+        y:      thePlayer.y+thePlayer.colhh-2,
+        accx:      8 * Math.cos(ang),
+        accy:      8 * Math.sin(ang),
+        maxacc:    8,
+        frames:    { speed: 2, frames: [0, 1] },
+        upper:     true,
+        camera:    true,
+        map:      map,
+        mapindex:    'map'
+      });
+}
+
+function changeCursor() {
+  var tempCanvas = document.getElementsByTagName("CANVAS")[0];
+
+  tempCanvas.style.cursor = "url('targeter.cur'), crosshair";
+}
+</script>
+</head><body></body></html>

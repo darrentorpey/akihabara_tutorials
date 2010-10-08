@@ -8,11 +8,13 @@
   <script type="text/javascript" src="akihabara/gamecycle.js"></script>
   <script type="text/javascript" src="a_star.js"></script>
   <script type="text/javascript" src="lib/jquery-1.4.2.js"></script>
+  <script type="text/javascript" src="lib/jquery.lowpro.js"></script>
   <script type="text/javascript" src="lib/screen.js"></script>
   <script type="text/javascript" src="lib/base64.js"></script>
   <script type="text/javascript" src="lib/canvas2image.js"></script>
   <script type="text/javascript" src="lib/darren_tools.js"></script>
   <script type="text/javascript" src="lib/actors/basic_box.js"></script>
+  <script type="text/javascript" src="lib/mouse.js"></script>
 
   <link rel="stylesheet" href="resources/style.css">
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
@@ -46,7 +48,7 @@ function loadResources() {
 };
 
 function setup() {
-  gbox.setGroups(['background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
+  gbox.setGroups(['mouse', 'background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
 
   maingame = gamecycle.createMaingame('game', 'game');
 
@@ -54,6 +56,8 @@ function setup() {
   maingame.gameIntroAnimation = function() { return true; };
   maingame.gameTitleIntroAnimation = introScreenAnimation;
   maingame.initializeGame = function() {
+    addMouseControl();
+
     addPlayer();
 
     addMap();
@@ -275,6 +279,9 @@ function addEnemy(xx, yy, enemy_id) {
     },
 
     first: function() {
+      if (mouse.isClicked && mouse.isColliding(this)) {
+        gbox.trashObject(this);
+      }
    /* d = trigo.getDistance(this,this.obj);
     theta = 3.14+trigo.getAngle(this,this.obj);
     ptheta = this.obj.theta;

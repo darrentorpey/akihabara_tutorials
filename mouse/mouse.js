@@ -25,7 +25,7 @@ mouse = gbox.addObject({
     },
     
     blit: function() {
-    if (this.upCount > 0) {mouse.isClicked = false; this.upCount = 0;}
+    if (this.upCount > 1) {mouse.isClicked = false; this.upCount = 0;}
     if (mouse.isClicked) this.upCount += 1;
     },
     

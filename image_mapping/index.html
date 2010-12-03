@@ -1,0 +1,176 @@
+<html><head>
+	<script type="text/javascript" src="akihabara/gbox.js"></script>
+	<script type="text/javascript" src="akihabara/iphopad.js"></script>
+	<script type="text/javascript" src="akihabara/trigo.js"></script>
+	<script type="text/javascript" src="akihabara/toys.js"></script>
+	<script type="text/javascript" src="akihabara/help.js"></script>
+	<script type="text/javascript" src="akihabara/tool.js"></script>
+	<script type="text/javascript" src="akihabara/gamecycle.js"></script>
+  <script type="text/javascript" src="parts/background.js"></script>
+  <script type="text/javascript" src="parts/overrides.js"></script>
+
+  <link rel="stylesheet" href="resources/style.css">
+  <style>BODY { -webkit-user-select: none; margin: 0px }</style>
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+</head><body><script>
+var maingame;
+var map;
+// This keeps track of how many frames have been rendered in total
+var frameCount = 0;
+var timeStarted;     // This will record the current time when the game started
+var pathMap;
+var mx, my;
+
+window.addEventListener('load', loadResources, false);
+
+function loadResources() {
+  help.akihabaraInit({
+    title:  '8by5',
+    width:  640,
+    height: 480,
+    zoom:   1
+  });
+
+  gbox.addBundle({ file: 'resources/bundle.js' });
+
+  gbox.setAudioChannels({ bgmusic: { volume: 0.5 }, sfx: { volume: 1.0 }});
+
+  gbox.loadAll(setup);
+};
+
+function setup() {
+  gbox.setGroups(['mouse', 'background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
+
+  maingame = gamecycle.createMaingame('game', 'game');
+
+  maingame.gameMenu = function() { return true; }
+  maingame.gameIntroAnimation = function() { return true; }
+  maingame.gameTitleIntroAnimation = function () {
+    // Fill this in if you want an intro animation
+  }
+  maingame.initializeGame = function() {
+    addBackground();
+
+    // addMoon();
+
+    timeStarted = (new Date()).getTime();
+
+    // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
+    addMap();
+  }
+
+  // patchIt(maingame);
+
+  // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
+  map = help.finalizeTilemap({
+    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+
+    // This loads an ASCII-definition of all the 'pieces' of the map as an array of integers specifying a type for each map tile
+    // Each 'type' corresponds to a sprite in our tileset. For example, if a map tile has type 0, then it uses the first sprite in the
+    //  map's tile set ('map_pieces', as defined above) and if a map tile has type 1, it uses the second sprite in the tile set, etc.
+    // Also note that null is an allowed type for a map tile, and uses no sprite from the tile set
+    map: loadMap(),
+
+    // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
+    tileIsSolid: function(obj, t) {
+      return t != null; // Is a wall if is not an empty space
+    }
+  });
+
+  // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
+  gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
+
+  // We draw the map onto our 'map_canvas' canvas that we created above.
+  // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map
+  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+
+  gbox.go();
+}
+
+// This is our function for adding the map object -- this keeps our main game code nice and clean
+function addMap() {
+  gbox.addObject({    
+    id:    'background_id', // This is the object ID
+    group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
+
+    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+    blit: function() {
+      // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+      gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+
+      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
+      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+    }
+  });
+}
+
+function addMoon() {
+  gbox.addObject({
+    id:       'the_moon',
+    group:    'player',
+    tileset:  'moon_hold',
+    colh:     gbox.getTiles('moon_hold').tileh,
+
+    initialize: function() {      
+      toys.topview.initialize(this, {});
+
+      this.x = 120;
+      this.y = 120;
+    },
+
+    first: function() {
+    },
+
+    blit: function() {
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    }
+  });
+
+  gbox.addImage('levelmap', 'resources/map.png');
+}
+
+function loadMap() {
+  return help.asciiArtToMap([
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xxxxxxxxxxxxxxxx            xx        xx",
+"xxxxxxxxxxxxxxxx            xx        xx",
+"xx                          xx        xx",
+"xx                          xx        xx",
+"xx                          xx        xx",
+"xx                          xx        xx",
+"xx                          xx        xx",
+"xx                          xx        xx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxx",
+"xx          xxxxxxxx   xxxxxxxxxxxxxxxxx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xxxxxxxx                              xx",
+"xxxxxxxx                              xx",
+"xx                                    xx",
+"xx            xxxxxxxxxxxxxxxxxx      xx",
+"xx            xxxxxxxxxxxxxxxxxx      xx",
+"xx                                    xx",
+"xx                                    xx",
+"xx                                    xx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    ], [ [null, ' '], [0, 'x'] ])
+}
+
+</script></body></html>

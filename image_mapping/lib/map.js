@@ -13,4 +13,16 @@ function addMap() {
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
     }
   });
+
+  loadMap();
+}
+
+function loadMap(map_path) {
+  if (!map_path) {
+    map_path = 'resources/map_hd.png?' + timestamp();
+  }
+
+  var image = loadImage(map_path, function() {
+    drawOutMap(image);
+  });
 }

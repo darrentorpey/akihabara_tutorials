@@ -6,9 +6,9 @@
 	<script type="text/javascript" src="akihabara/help.js"></script>
 	<script type="text/javascript" src="akihabara/tool.js"></script>
 	<script type="text/javascript" src="akihabara/gamecycle.js"></script>
-  <script type="text/javascript" src="parts/core.js"></script>
-  <script type="text/javascript" src="parts/map.js"></script>
-  <script type="text/javascript" src="parts/image_mapping.js"></script>
+  <script type="text/javascript" src="lib/core.js"></script>
+  <script type="text/javascript" src="lib/map.js"></script>
+  <script type="text/javascript" src="lib/image_mapping.js"></script>
 
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
@@ -31,29 +31,17 @@ function loadResources() {
 };
 
 function setup() {
-  gbox.setGroups(['mouse', 'background', 'bullets', 'player', 'boxes', 'enemy', 'game']);
+  gbox.setGroups(['background', 'game']);
 
   maingame = gamecycle.createMaingame('game', 'game');
 
-  maingame.gameMenu = function() { return true; }
-  maingame.gameIntroAnimation = function() { return true; }
+  maingame.gameMenu                = function() { return true; }
+  maingame.gameIntroAnimation      = function() { return true; }
   maingame.gameTitleIntroAnimation = function () {}
-  maingame.initializeGame = function() {
+  maingame.initializeGame          = function() {
     addMap();
   }
 
-  load_map();
-
   gbox.go();
-}
-
-function load_map(map_path) {
-  if (!map_path) {
-    map_path = 'resources/map_hd.png?' + timestamp();
-  }
-
-  var image = loadImage(map_path, function() {
-    drawOutMap(image);
-  });
 }
 </script></body></html>

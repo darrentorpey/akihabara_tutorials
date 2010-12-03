@@ -5,7 +5,8 @@
     ['stars_background', 'resources/star_background.png'],
     ['moon_hold',        'resources/moon_hold.png'],
     ['cels',             'resources/cels.png'],
-    ['map_spritesheet',  'resources/map_pieces.png']
+    ['map_spritesheet',  'resources/map_pieces.png'],
+    ['map_image',        'resources/map.png']
   ],
 
   addFont: [
@@ -42,7 +43,7 @@
     },
     {
       id:      'map_pieces',
-      image:   'map_spritesheet',
+      image:   'map_image',
       tileh:   8,
       tilew:   8,
       tilerow: 1,

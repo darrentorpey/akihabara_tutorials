@@ -8,8 +8,8 @@
 	<script type="text/javascript" src="akihabara/gamecycle.js"></script>
   <script type="text/javascript" src="parts/background.js"></script>
   <script type="text/javascript" src="parts/overrides.js"></script>
+  <script type="text/javascript" src="parts/image_mapping.js"></script>
 
-  <link rel="stylesheet" href="resources/style.css">
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 </head><body><script>
@@ -59,32 +59,28 @@ function setup() {
     addMap();
   }
 
-  // patchIt(maingame);
-
-  // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
-  map = help.finalizeTilemap({
-    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-
-    // This loads an ASCII-definition of all the 'pieces' of the map as an array of integers specifying a type for each map tile
-    // Each 'type' corresponds to a sprite in our tileset. For example, if a map tile has type 0, then it uses the first sprite in the
-    //  map's tile set ('map_pieces', as defined above) and if a map tile has type 1, it uses the second sprite in the tile set, etc.
-    // Also note that null is an allowed type for a map tile, and uses no sprite from the tile set
-    map: loadMap(),
-
-    // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
-    tileIsSolid: function(obj, t) {
-      return t != null; // Is a wall if is not an empty space
-    }
-  });
-
-  // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
-  gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
-
-  // We draw the map onto our 'map_canvas' canvas that we created above.
-  // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map
-  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+  reload_map();
 
   gbox.go();
+}
+
+function reload_map(map_path) {
+  if (!map_path) {
+    map_path = 'resources/map.png?' + timestamp();
+  }
+
+  var the_map_image = load_image(map_path, function() {
+    set_on_map(the_map_image);
+  });
+}
+
+function load_image(path, callback) {
+  var image = new Image();
+  image.src = path;
+  if (callback) {
+    image.onload = callback;
+  }
+  return image;
 }
 
 // This is our function for adding the map object -- this keeps our main game code nice and clean
@@ -135,8 +131,6 @@ function addMoon() {
       });
     }
   });
-
-  gbox.addImage('levelmap', 'resources/map.png');
 }
 
 function loadMap() {
@@ -173,4 +167,7 @@ function loadMap() {
     ], [ [null, ' '], [0, 'x'] ])
 }
 
+function timestamp() {
+  return new Date().getTime();
+}
 </script></body></html>

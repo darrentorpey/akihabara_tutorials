@@ -27,6 +27,15 @@ function drawGuiActions() {
     var id = $(this).parent().attr('data-button-id');
     return buttons_hash[id].func();
   });
+
+  $('<div id="drop_area">DROP AREA</div>').appendTo('body').bind('drop', function(event) {
+    console.log('Dropped!');
+    return false;
+  }).bind('dragenter', function(event) {
+    event.stopPropagation(); event.preventDefault();
+  }).bind('dragover', function(event) {
+    event.stopPropagation(); event.preventDefault();
+  });
 }
 
 function flash_message(message) {

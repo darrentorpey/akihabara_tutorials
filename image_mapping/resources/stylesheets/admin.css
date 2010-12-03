@@ -1,3 +1,15 @@
+#drop_area {
+  position: absolute;
+  right: 10px;
+  top: 150px;
+
+  color: white;
+  padding: 20px;
+  border: 2px solid white;
+  width: 200px;
+  margin: 0px auto;
+}
+
 a {
   color: #5CACFF;
   text-decoration: none;

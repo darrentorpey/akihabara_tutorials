@@ -31,7 +31,7 @@ function loadResources() {
     zoom:   1
   });
 
-  gbox.addBundle({ file: 'resources/bundle.js' });
+  gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 
   gbox.setAudioChannels({ bgmusic: { volume: 0.5 }, sfx: { volume: 1.0 }});
 
@@ -66,7 +66,7 @@ function setup() {
 
 function reload_map(map_path) {
   if (!map_path) {
-    map_path = 'resources/map.png?' + timestamp();
+    map_path = 'resources/map_hd.png?' + timestamp();
   }
 
   var the_map_image = load_image(map_path, function() {

@@ -5,8 +5,7 @@
     ['stars_background', 'resources/star_background.png'],
     ['moon_hold',        'resources/moon_hold.png'],
     ['cels',             'resources/cels.png'],
-    ['map_spritesheet',  'resources/map_pieces.png'],
-    ['map_image',        'resources/map.png']
+    ['map_spritesheet',  'resources/map_pieces.png']
   ],
 
   addFont: [
@@ -33,17 +32,8 @@
       gapy:    0
     },
     {
-      id:      'maze',
-      image:   'cels',
-      tileh:   4,
-      tilew:   4,
-      tilerow: 10,
-      gapx:    0,
-      gapy:    36
-    },
-    {
       id:      'map_pieces',
-      image:   'map_image',
+      image:   'map_spritesheet',
       tileh:   8,
       tilew:   8,
       tilerow: 1,

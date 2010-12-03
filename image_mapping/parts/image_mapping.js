@@ -1,4 +1,4 @@
-function set_on_map(levelMapImage) {
+function drawOutMap(levelMapImage) {
   // Set the size of my level's tileset dynamically
   var levelMapWidth = parseInt(levelMapImage.width);
   var levelMapHeight = parseInt(levelMapImage.height);

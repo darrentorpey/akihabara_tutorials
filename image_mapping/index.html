@@ -9,6 +9,10 @@
   <script type="text/javascript" src="lib/core.js"></script>
   <script type="text/javascript" src="lib/map.js"></script>
   <script type="text/javascript" src="lib/image_mapping.js"></script>
+  <script type="text/javascript" src="lib/gui.js"></script>
+
+  <link rel="stylesheet" href="resources/stylesheets/reset.css">
+  <link rel="stylesheet" href="resources/stylesheets/admin.css">
 
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
@@ -44,4 +48,10 @@ function setup() {
 
   gbox.go();
 }
+
+drawGuiActions([
+  {
+    'reload map': 'loadMap()'
+  }
+]);
 </script></body></html>

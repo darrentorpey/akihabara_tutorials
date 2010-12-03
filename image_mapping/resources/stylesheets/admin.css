@@ -1,0 +1,32 @@
+a {
+  color: #5CACFF;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#admin_buttons {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  padding: 10px 20px;
+  background-color: #191919;
+}
+
+#admin_buttons h4 {
+  color: #164799;
+  font-size: 18px;
+  font-weight: bold;
+
+  padding-bottom: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #164799;
+}
+
+#flash {
+  color: #D8D24E;
+  padding: 10px;
+}

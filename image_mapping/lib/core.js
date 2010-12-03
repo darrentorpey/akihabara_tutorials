@@ -10,3 +10,7 @@ function loadImage(path, callback) {
 function timestamp() {
   return new Date().getTime();
 }
+
+function requireLib(libraryName) {
+  document.write('<script type="text/javascript" src="' + libraryName + '"><\/script>');
+}

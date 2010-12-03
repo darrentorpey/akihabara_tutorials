@@ -6,7 +6,8 @@ AkiActor = $.klass({
   },
 
   commonAdd: function(options) {
-    var obj = gbox.addObject({
+    var obj = gbox.addObject(this);
+    {
       id:    options.id + akiActorCount++,
       group: options.group,
       speed: 2,

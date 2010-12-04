@@ -6,7 +6,7 @@ $('body').mouseup(function() {
   }
 });
 
-$('<label id="toggle_autoupdate"><input type="checkbox" />auto-update</label>').appendTo('#admin_buttons').find('input').change(function() {
+$('<label id="toggle_autoupdate"><input type="checkbox" checked = "checked"/>auto-update</label>').appendTo('#admin_buttons').find('input').change(function() {
   if ($(this).attr('checked')) {
     redrawMap();
   }

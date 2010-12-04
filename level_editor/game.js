@@ -56,9 +56,14 @@ function main() {
     map: loadMap(),
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
-    tileIsSolid: function(obj, t) {
-      return t != null; // Is a wall if is not an empty space
-    }
+    tileIsSolidCeil: function(obj, t) {
+      if (t != null && t != 3) return true;
+        else return false; // Is a wall if is not an empty space
+      },
+    tileIsSolidFloor: function(obj, t) {
+      if (t != null && t != 3) return true;
+        else return false; // Is a wall if is not an empty space
+      }
   }
  //debugger
   // This function calculates the overall height and width of the map and puts them into the 'x' and 'y' fields of the object
@@ -100,35 +105,28 @@ function addPlayer() {
       //  but in this case we don't have any, so we just pass an empty hash
       toys.topview.initialize(this, {});
 
-      // And we set the starting position for our player.
+      // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
+      this.jumpaccy = 11;
+      this.maxaccx = 7;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
 
-  if (gbox.keyIsHit("a")) {
-    redrawMap();
-  }
-
-
-      // Toys.topview.controlKeys sets the main key controls. In this case we want to use the arrow keys which
-      //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
-      toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
-
-      // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
-      toys.topview.handleAccellerations(this);
-
-      // This tells the physics engine to apply those forces
-      toys.topview.applyForces(this);
-
-      // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 6
-      //  because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
-      //  feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
-      //  be somewhere between 0 and half your sprite width or height.
-      toys.topview.tileCollision(this, map, 'map', null, { tolerance: 6, approximation: 3 });
+      if (gbox.keyIsHit("b")) {
+        this.x = 20;
+        this.y = 20;
+      }
+     
+      toys.platformer.applyGravity(this); // Apply gravity
+					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
+					toys.platformer.verticalTileCollision(this,map,"map",5); // vertical tile collision (i.e. floor)
+					toys.platformer.horizontalTileCollision(this,map,"map",5); // horizontal tile collision (i.e. walls)
+					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
+					toys.platformer.handleAccellerations(this); // gravity/attrito
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

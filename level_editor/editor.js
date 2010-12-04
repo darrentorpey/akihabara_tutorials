@@ -30,7 +30,6 @@ window.addEventListener('load', function () {
 	for (var i = 0; i < 30; i++) {
 		level[i] = "0000000000000000000000000000000000000000";
 		}
-			
 	
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');

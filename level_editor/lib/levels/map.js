@@ -25,7 +25,11 @@ function redrawMap() {
     {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
     map: loadMap(),
-    tileIsSolid: function(obj, t) {
+    tileIsSolidCeil: function(obj, t) {
+      if (t != null && t != 3) return true;
+        else return false; // Is a wall if is not an empty space
+      },
+    tileIsSolidFloor: function(obj, t) {
       if (t != null && t != 3) return true;
         else return false; // Is a wall if is not an empty space
       }

@@ -30,6 +30,6 @@ function redrawMap() {
       }
     }
   map = help.finalizeTilemap(map);
-  gbox.blitFade(gbox.getBufferContext(), { alpha: 1, color:gbox.COLOR_WHITE });
+  gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 1, color:gbox.COLOR_WHITE });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 }

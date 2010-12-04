@@ -3,7 +3,7 @@ var level = new Array(30);
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, context, tool, px, py, tcolor, brush;
+  var canvas, context, tool, px, py, tcolor, brush, insp;
   var tool_default = 'black';
   // Create a new image.
   var img = new Image();
@@ -72,7 +72,10 @@ console.log(this.value);
   brush = this.value;
 	//else tcolor = '#808';
 }
-  
+ 
+function ev_brush1 (ev) {
+}
+ 
   // This painting tool works like a drawing pencil which tracks the mouse 
   // movements.
   function tool_pencil () {

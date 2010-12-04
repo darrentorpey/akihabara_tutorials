@@ -30,7 +30,9 @@ function main() {
 
   // Disable the default "get ready" screen; we don't need it for our tutorial
   maingame.gameIntroAnimation = function() { return true; };
-
+  
+  maingame.pressStartIntroAnimation = function() { return true; };
+  
   // Set our intro screen animation
   maingame.gameTitleIntroAnimation = function(reset) {
     if (reset) {

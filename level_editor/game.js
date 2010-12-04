@@ -34,22 +34,7 @@ function main() {
   maingame.pressStartIntroAnimation = function() { return true; };
   
   // Set our intro screen animation
-  maingame.gameTitleIntroAnimation = function(reset) {
-    if (reset) {
-      toys.resetToy(this, 'rising');
-    }
-
-    gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
-
-    toys.logos.linear(this, 'rising', {
-      image: 'logo',
-      sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      sy:    gbox.getScreenH(),
-      x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      y:     20,
-      speed: 1
-    });
-  };
+  maingame.gameTitleIntroAnimation = function() { return true; };
 
   // This function will be called before the game starts running, so here is where we add our game elements
   maingame.initializeGame = function() {

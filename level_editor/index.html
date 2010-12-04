@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://devfiles.myopera.com/articles/649/example2.html -->
+<html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Canvas Paint - Example 2</title>
+    <style type="text/css">
+      #container { position: relative; cursor: url(blank.png), default;}
+      #imageView { border: 1px solid #000; }
+    </style>
+</head>
+  <body>
+    <p>Hold down the mouse button to draw in the rectangle below. Right now the "rock" tool will generate walls in the Aki game on the right. Draw something on the left and press "Z" to load the map (<strong>you don't even need to click for focus on the game!</strong>). Try erasing too! "Urn" does nothing right now, sorry. Also, the scale is screwed up so you only draw to the upper left quadrant of the map.</p>
+	<p><strong>Best run on a widescreen monitor!</strong>
+	<p><label>Drawing tool: <select id="dtool">
+		<option value="1">rock</option>
+		<option value="2">urn</option>
+		<option value="0">erase!</option>
+	</select></label></p>
+    <div id="container">
+      <canvas id="imageView" width="640" height="480">
+        <p>Unfortunately, your browser is currently unsupported by our web 
+        application.  We are sorry for the inconvenience. Please use one of the 
+        supported browsers listed below, or draw the image you want using an 
+        offline tool.</p>
+        <p>Supported browsers: <a href="http://www.opera.com/">Opera</a>, <a href="http://www.mozilla.com/">Firefox</a>, <a href="http://www.apple.com/safari">Safari</a>, and <a href="http://www.konqueror.org/">Konqueror</a>.</p>
+      </canvas>
+    </div>
+
+    <script type="text/javascript" src="example2.js"></script>
+    <script type="text/javascript" src="akihabara/gbox.js"></script> 
+    <script type="text/javascript" src="akihabara/iphopad.js"></script> 
+    <script type="text/javascript" src="akihabara/trigo.js"></script> 
+    <script type="text/javascript" src="akihabara/toys.js"></script> 
+    <script type="text/javascript" src="akihabara/help.js"></script> 
+    <script type="text/javascript" src="akihabara/tool.js"></script> 
+    <script type="text/javascript" src="akihabara/gamecycle.js"></script> 
+	<script type="text/javascript" src="tut1.js"></script> 
+	
+  
+
+
+</body></html>

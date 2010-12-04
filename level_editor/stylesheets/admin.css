@@ -43,6 +43,12 @@ a:hover {
   border-bottom: 1px solid #164799;
 }
 
+#admin_buttons #toggle_autoupdate {
+  position: absolute;
+  bottom: -20px;
+  left: 0px;
+}
+
 #flash {
   background-color: #EEE;
   color: #D8D24E;
@@ -50,4 +56,8 @@ a:hover {
   position: fixed;
   top: 10px;
   left: 20px;
+}
+
+#imageView {
+  background-color: white;
 }

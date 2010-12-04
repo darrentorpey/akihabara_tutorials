@@ -19,3 +19,17 @@ function addMap() {
 function loadMap() {
   return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'] ])
 }
+
+function redrawMap() {
+  map =
+    {
+    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+    map: loadMap(),
+    tileIsSolid: function(obj, t) {
+      return t != null; // Is a wall if is not an empty space
+      }
+    }
+  map = help.finalizeTilemap(map);
+  gbox.blitFade(gbox.getBufferContext(), { alpha: 1, color:gbox.COLOR_WHITE });
+  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+}

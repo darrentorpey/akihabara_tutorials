@@ -1,0 +1,5 @@
+drawGuiActions([
+  {
+    'reload map': 'redrawMap()'
+  }
+]);

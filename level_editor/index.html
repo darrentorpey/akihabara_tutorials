@@ -2,6 +2,10 @@
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Akihabara Live Level Editor Demo</title>
+
+    <link rel="stylesheet" href="stylesheets/reset.css">
+    <link rel="stylesheet" href="stylesheets/admin.css">
+
     <style type="text/css">
       #container { position: relative; cursor: url(blank.png), default;}
       #imageView { border: 1px solid #000; }
@@ -9,10 +13,7 @@
 </head>
 <body>
   <img src="2.png" id="brush1">
-  <p>Hold down the mouse button to draw in the rectangle below. Right now the "rock" tool will generate walls in the Aki game on the right. Draw something on the left and press "Z" to load the map (<strong>you don't even need to click for focus on the game!</strong>). Try erasing too! "Urn" does nothing right now, sorry. Also, the scale is screwed up so you only draw to the upper left quadrant of the map.</p>
-  <p>
-    <strong>Best run on a widescreen monitor!</strong>
-  <p>
+
     <label>Drawing tool:
       <select id="dtool">
         <option value="1">rock</option>
@@ -26,6 +27,12 @@
     <canvas id="imageView" width="640" height="480">
     </canvas>
   </div>
+  <p>
+    Hold down the mouse button to draw in the rectangle below. Right now the "rock" tool will generate walls in the Aki game on the right. Draw something on the left and press "Z" to load the map (<strong>you don't even need to click for focus on the game!</strong>). Try erasing too! "Urn" does nothing right now, sorry. Also, the scale is screwed up so you only draw to the upper left quadrant of the map.
+  </p>
+  <p>
+    <strong>Best run on a widescreen monitor!</strong>
+  <p>
 
   <script type="text/javascript" src="akihabara/gbox.js"></script>
   <script type="text/javascript" src="akihabara/iphopad.js"></script>
@@ -37,6 +44,7 @@
   <script type="text/javascript" src="game.js"></script>
   <script type="text/javascript" src="editor.js"></script>
   <script type="text/javascript" src="lib/core.js"></script>
-  <script type="text/javascript" src="lib/admin/gui.js"></script>
   <script type="text/javascript" src="lib/levels/map.js"></script>
+  <script type="text/javascript" src="lib/admin/gui.js"></script>
+  <script type="text/javascript" src="lib/admin/init.js"></script>
 </body></html>

@@ -8,7 +8,7 @@ function drawGuiActions() {
       ID: 'first',
       Name: 'reload map',
       func: function() {
-        loadMap();
+        redrawMap();
         flash_message('map updated');
         return false;
       }
@@ -21,7 +21,7 @@ function drawGuiActions() {
 
   $.template('button', '<div id="admin_button_${ID}" data-button-id="${ID}"><a href="#" style="">${Name}</a></div>');
 
-  $('body').append('<div id="flash">&nbsp;</div>');
+  $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
   $('body').append('<div id="admin_buttons"><h4>Admin</h4></div>');
   $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
     var id = $(this).parent().attr('data-button-id');
@@ -39,5 +39,5 @@ function drawGuiActions() {
 }
 
 function flash_message(message) {
-  $('#flash').html(message).css('opacity', 1).fadeTo(1000, 0);
+  $('#flash').html(message).css('opacity', 1).show().fadeTo(1500, 0);
 }

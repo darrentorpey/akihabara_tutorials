@@ -1,9 +1,10 @@
 var level = new Array(30);
- 
+var insp;
+
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, context, tool, px, py, tcolor, brush, insp;
+  var canvas, context, tool, px, py, tcolor, brush;
   var tool_default = 'black';
   // Create a new image.
   var img = new Image();
@@ -52,7 +53,7 @@ window.addEventListener('load', function () {
   }
   tool_select.addEventListener('change', ev_tool_change, false);
   
-  brush1.addEventListener('onclick', ev_brush1, false);
+  brush1.addEventListener('mousedown', ev_brush1, false);
 	
     // Attach the mousedown, mousemove and mouseup event listeners.
     canvas.addEventListener('mousedown', ev_canvas, false);
@@ -74,6 +75,7 @@ console.log(this.value);
 }
  
 function ev_brush1 (ev) {
+img.src = this.src;
 }
  
   // This painting tool works like a drawing pencil which tracks the mouse 

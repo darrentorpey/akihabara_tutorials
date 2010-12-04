@@ -6,7 +6,7 @@ window.addEventListener('load', loadResources, false);
 function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
-  help.akihabaraInit('8by5');
+  help.akihabaraInit({width:640, height:480, zoom:1});
  
   // Here we tell the game to look for an image called 'font.png' in the same directory as this HTML file and call it 'font' internally
   gbox.addImage('font', 'font.png');
@@ -35,9 +35,9 @@ function loadResources() {
   gbox.addTiles({
     id:      'map_pieces',
     image:   'map_spritesheet',
-    tileh:   8,
-    tilew:   8,
-    tilerow: 1,
+    tileh:   32,
+    tilew:   32,
+    tilerow: 2,
     gapx:    0,
     gapy:    0
   });

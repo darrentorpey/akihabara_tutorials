@@ -1,7 +1,4 @@
-/* © 2009 ROBO Design
- * http://www.robodesign.ro
- */
- var level = new Array(30);
+var level = new Array(30);
  
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {

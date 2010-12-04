@@ -6,7 +6,7 @@ if(window.addEventListener) {
 window.addEventListener('load', function () {
   var canvas, context, tool, px, py, tcolor, brush;
   var tool_default = 'rock';
-  var total_brushes = 3;
+  var total_brushes = 4;
   var brushes = new Array(total_brushes);
   
   // Load the default brush, #1

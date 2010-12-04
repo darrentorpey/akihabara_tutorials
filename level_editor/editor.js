@@ -9,14 +9,16 @@ window.addEventListener('load', function () {
   var img = new Image();
   img.src = '1.png';
   brush = '1';
- 
+  
   
   px = -100;
   py = -100;
   function init () {
-    // Find the canvas element.
+    // Find the elements.
+    var tool_select = document.getElementById('dtool');
     canvas = document.getElementById('imageView');
-	
+    var brush1 = document.getElementById('brush1');
+  
 	// init the global level data structure
 	for (var i = 0; i < 30; i++) {
 		level[i] = "0000000000000000000000000000000000000000";
@@ -43,12 +45,14 @@ window.addEventListener('load', function () {
     // Pencil tool instance.
     tool = new tool_pencil();
 
-	var tool_select = document.getElementById('dtool');
+
   if (!tool_select) {
     alert('Error: failed to get the dtool element!');
     return;
   }
   tool_select.addEventListener('change', ev_tool_change, false);
+  
+  brush1.addEventListener('onclick', ev_brush1, false);
 	
     // Attach the mousedown, mousemove and mouseup event listeners.
     canvas.addEventListener('mousedown', ev_canvas, false);

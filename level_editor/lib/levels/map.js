@@ -17,5 +17,5 @@ function addMap() {
 }
 
 function loadMap() {
-  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'] ])
+  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'] ])
 }

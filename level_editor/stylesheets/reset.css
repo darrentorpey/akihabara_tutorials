@@ -1,0 +1,15 @@
+html, body, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; outline: 0; background: transparent; }
+
+ol, ul { list-style: none; }
+
+body { margin: 0px; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+
+caption, th, td { text-align: left; }
+
+blockquote, q { quotes: none; }
+
+:focus { outline: 0; }
+
+a img { border: none; }

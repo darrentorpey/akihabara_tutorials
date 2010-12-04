@@ -17,7 +17,7 @@ function addMap() {
 }
 
 function loadMap() {
-  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'] ])
+  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A'] ])
 }
 
 function redrawMap() {
@@ -26,11 +26,11 @@ function redrawMap() {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
     map: loadMap(),
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 3) return true;
+      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 3) return true;
+      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       }
     }

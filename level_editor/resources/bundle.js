@@ -16,7 +16,7 @@
       image:   'map_spritesheet',
       tileh:   32,
       tilew:   32,
-      tilerow: 4,
+      tilerow: 9,
       gapx:    0,
       gapy:    0
     },

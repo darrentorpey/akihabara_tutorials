@@ -57,11 +57,11 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 3) return true;
+      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 3) return true;
+      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
@@ -123,8 +123,8 @@ function addPlayer() {
      
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
-					toys.platformer.verticalTileCollision(this,map,"map",5); // vertical tile collision (i.e. floor)
-					toys.platformer.horizontalTileCollision(this,map,"map",5); // horizontal tile collision (i.e. walls)
+					toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
+					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
 					toys.platformer.handleAccellerations(this); // gravity/attrito
     },

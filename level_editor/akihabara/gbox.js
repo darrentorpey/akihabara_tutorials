@@ -394,7 +394,7 @@ var gbox={
 		this._camera.w=w;
 		this._box.appendChild(this._screen);
 		container.appendChild(this._box);
-		document.all.container.appendChild(container);
+		document.getElementById("container").appendChild(container);
 
 		this.createCanvas("_buffer");
 		gbox.addEventListener(window,'keydown', this._keydown);

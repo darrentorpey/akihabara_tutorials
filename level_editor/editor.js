@@ -51,9 +51,6 @@ window.addEventListener('load', function () {
 
     // Pencil tool instance.
     tool = new tool_pencil();
-
-
-  
 	
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
@@ -65,17 +62,11 @@ window.addEventListener('load', function () {
 return s.join('');
 };
   
- // The event handler for any changes made to the tool selector.
-function ev_tool_change (ev) {
-console.log(this.value);
-  img.src = this.value + '.png';
-  brush = this.value;
-	//else tcolor = '#808';
-}
- 
+
 function ev_brush (ev) {
 img.src = this.src;
-brush = this.src.substr(0,1);
+brush = this.src.substr(img.src.length-5,1);
+console.log(brush);
 }
  
   // This painting tool works like a drawing pencil which tracks the mouse 

@@ -5,8 +5,11 @@ var insp;
 if(window.addEventListener) {
 window.addEventListener('load', function () {
   var canvas, context, tool, px, py, tcolor, brush;
-  var tool_default = 'black';
-  // Create a new image.
+  var tool_default = 'rock';
+  var total_brushes = 3;
+  var brushes = new Array(total_brushes);
+  
+  // Load the default brush, #1
   var img = new Image();
   img.src = '1.png';
   brush = '1';
@@ -14,11 +17,15 @@ window.addEventListener('load', function () {
   
   px = -100;
   py = -100;
+  
   function init () {
     // Find the elements.
     var tool_select = document.getElementById('dtool');
     canvas = document.getElementById('imageView');
-    var brush1 = document.getElementById('brush1');
+    for (var i = 0; i < total_brushes; i++) {
+      brushes[i] = document.getElementById('brush'+i);
+      brushes[i].addEventListener('mousedown', ev_brush, false);
+      }
   
 	// init the global level data structure
 	for (var i = 0; i < 30; i++) {
@@ -51,11 +58,11 @@ window.addEventListener('load', function () {
     alert('Error: failed to get the dtool element!');
     return;
   }
+  
   tool_select.addEventListener('change', ev_tool_change, false);
   
-  brush1.addEventListener('mousedown', ev_brush1, false);
+  
 	
-    // Attach the mousedown, mousemove and mouseup event listeners.
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
@@ -74,8 +81,9 @@ console.log(this.value);
 	//else tcolor = '#808';
 }
  
-function ev_brush1 (ev) {
+function ev_brush (ev) {
 img.src = this.src;
+brush = this.src.substr(0,1);
 }
  
   // This painting tool works like a drawing pencil which tracks the mouse 

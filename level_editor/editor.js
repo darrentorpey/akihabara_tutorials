@@ -19,8 +19,7 @@ window.addEventListener('load', function () {
   py = -100;
   
   function init () {
-    // Find the elements.
-    var tool_select = document.getElementById('dtool');
+    // Find the elements
     canvas = document.getElementById('imageView');
     for (var i = 0; i < total_brushes; i++) {
       brushes[i] = document.getElementById('brush'+i);
@@ -54,13 +53,6 @@ window.addEventListener('load', function () {
     tool = new tool_pencil();
 
 
-  if (!tool_select) {
-    alert('Error: failed to get the dtool element!');
-    return;
-  }
-  
-  tool_select.addEventListener('change', ev_tool_change, false);
-  
   
 	
     canvas.addEventListener('mousedown', ev_canvas, false);

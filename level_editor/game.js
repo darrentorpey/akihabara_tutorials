@@ -80,6 +80,19 @@ function main() {
   gbox.go();
 }
 
+function followCamera(obj, viewdata) {
+  xbuf = 160;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
+  ybuf = 160;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
+  xcam = gbox.getCamera().x; // The current x-coordinate of the camera
+  ycam = gbox.getCamera().y; // The current y-coordinate of the camera
+
+  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
+  if ((obj.x - xcam) < (xbuf))                 gbox.setCameraX(xcam + (obj.x - xcam) - xbuf,                   viewdata);
+  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
+  if ((obj.y - ycam) < (ybuf))                 gbox.setCameraY(ycam + (obj.y - ycam) - ybuf,                   viewdata);
+}
+
+
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
   gbox.addObject({
@@ -124,6 +137,9 @@ function addPlayer() {
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+    
+    // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
+    followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
 
       if (gbox.keyIsHit("b")) {
         this.x = 20;

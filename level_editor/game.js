@@ -93,6 +93,7 @@ function addPlayer() {
     // We have to do this because topview is normally used for Zelda-style games where the hitbox is considered to be the bottom half
     //  of the sprite so the top half can "overlap" scenery that's "behind" it. In this case we're just setting colh to the default tile height.
     colh: gbox.getTiles('player_tiles').tileh,
+    
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
@@ -104,11 +105,19 @@ function addPlayer() {
       //  The second argument provides data to initialize the object with,
       //  but in this case we don't have any, so we just pass an empty hash
       toys.topview.initialize(this, {});
-
+      
+      //Overriding the gravity function to double the usual gravity (from 1 to 2).
+      toys.platformer.handleAccellerations = function(th) {
+			// Gravity
+			if (!th.touchedfloor) th.accy += 2;
+			// Attrito
+			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
+		},
+      
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 11;
+      this.jumpaccy = 16;
       this.maxaccx = 7;
     },
 

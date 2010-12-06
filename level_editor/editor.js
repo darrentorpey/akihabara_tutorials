@@ -1,6 +1,7 @@
 var level = new Array(30);
 var insp;
 var shortURL;
+var longURL;
 levelParam = gup("level");
 
 
@@ -19,7 +20,11 @@ var bitly_link = null;
 shortURL = bitly_link;
 }
 
-
+function genURL (s) {
+callBitly(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL);
+document.getElementById("share").value = shortURL;
+		
+}
 
 
 function gup( name )
@@ -117,10 +122,8 @@ for (var y = cy; y < cy+15; y++)
 		for (var i = 0; i < 30; i++) {
 			levelParam += level[i];
 		}
-		var insp = "?level=" + levelParam;
-		console.log(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + insp);
-		callBitly(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + insp);
-		document.getElementById("share").href = shortURL;
+		var longURL = "?level=" + levelParam;
+		longURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL;
 		
 }
 

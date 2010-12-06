@@ -1,7 +1,7 @@
 var level = new Array(30);
 var insp;
 var shortURL;
-var longURL;
+var longURL ="";
 levelParam = gup("level");
 
 
@@ -22,6 +22,7 @@ shortURL = bitly_link;
 
 function genURL (s) {
 callBitly(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL);
+//callBitly(longURL);
 document.getElementById("share").value = shortURL;
 		
 }
@@ -122,8 +123,9 @@ for (var y = cy; y < cy+15; y++)
 		for (var i = 0; i < 30; i++) {
 			levelParam += level[i];
 		}
-		var longURL = "?level=" + levelParam;
+		longURL = "?level=" + levelParam;
 		longURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL;
+		//longURL = "http://google.com";
 		
 }
 

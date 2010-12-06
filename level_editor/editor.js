@@ -83,9 +83,9 @@ brush = this.src.substr(this.src.length-5,1);
 
     // This is called when you start holding down the mouse button.
     this.mousedown = function (ev) {
-        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)+camx]);
+        level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
-        drawCanvas(camx,0);
+        drawCanvas(camx,camy);
     };
 
     // This function is called every time you move the mouse. Obviously, it only 
@@ -104,17 +104,25 @@ brush = this.src.substr(this.src.length-5,1);
     // move the camera when you hit the edge of the screen
       if (ev._x > 600 && camx < 20) {
         camx += 1;
-        drawCanvas(camx,0);
+        drawCanvas(camx,camy);
       }
       else if (ev._x < 40 && camx > 0) {
           camx -= 1;
-          drawCanvas(camx,0);
+          drawCanvas(camx,camy);
+        }
+      if (ev._y > 440 && camy < 15) {
+        camy += 1;
+        drawCanvas(camx,camy);
+      }
+      else if (ev._y < 40 && camy > 0) {
+          camy -= 1;
+          drawCanvas(camx,camy);
         }
         
         
       if (tool.started) {
-        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)+camx]);
-        drawCanvas(camx,0);
+        level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
+        drawCanvas(camx,camy);
         }
     };
 

@@ -1,6 +1,22 @@
 var level = new Array(30);
 var insp;
 
+levelParam = gup("level");
+
+
+
+function gup( name )
+{
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
@@ -35,6 +51,15 @@ window.addEventListener('load', function () {
 		level[i] = "0000000000000000000000000000000000000000";
 		}
 	
+	if(levelParam.length == 1200)
+	{
+	for (var c = 0; c < 1200; c += 40)
+		{
+		level[c/40] = levelParam.substr(c,40);
+		}
+	}
+	
+	
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
       return;
@@ -58,6 +83,7 @@ window.addEventListener('load', function () {
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
+	drawCanvas(camx,camy);
   }
 
  function replaceOneChar(s,c,n){

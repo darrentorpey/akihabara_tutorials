@@ -4,7 +4,7 @@ var insp;
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, context, tool, px, py, tcolor, brush;
+  var canvas, context, tool, px, py, tcolor, brush, camx, camy;
   var tool_default = 'rock';
   var total_brushes = 10;
   var brushes = new Array(total_brushes);
@@ -15,7 +15,8 @@ window.addEventListener('load', function () {
   //img.src = '1.png';
   brush = '1';
   
-  
+  camx = 0;
+  camy = 0;
   px = -100;
   py = -100;
   
@@ -64,14 +65,13 @@ window.addEventListener('load', function () {
 return s.join('');
 };
 
-function drawCanvas() {
-for (var y = 0; y < 15; y++) 
-          for (var x = 0; x < 20; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
+function drawCanvas(cx, cy) {
+for (var y = cy; y < cy+15; y++) 
+          for (var x = cx; x < cx+20; x++)
+            context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32); 
 }
 
 function ev_brush (ev) {
-//img.src = this.src;
 brush = this.src.substr(this.src.length-5,1);
 }
  
@@ -82,12 +82,10 @@ brush = this.src.substr(this.src.length-5,1);
     this.started = false;
 
     // This is called when you start holding down the mouse button.
-    // This starts the pencil drawing.
     this.mousedown = function (ev) {
-        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
-        //console.log(Math.floor(ev._x/32));
+        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
-        drawCanvas();
+        drawCanvas(camx,0);
     };
 
     // This function is called every time you move the mouse. Obviously, it only 
@@ -102,9 +100,21 @@ brush = this.src.substr(this.src.length-5,1);
 		context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
 		px = ev._x;
 		py = ev._y;
+    
+    // move the camera when you hit the edge of the screen
+      if (ev._x > 600 && camx < 20) {
+        camx += 1;
+        drawCanvas(camx,0);
+      }
+      else if (ev._x < 40 && camx > 0) {
+          camx -= 1;
+          drawCanvas(camx,0);
+        }
+        
+        
       if (tool.started) {
-        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
-        drawCanvas();
+        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)+camx]);
+        drawCanvas(camx,0);
         }
     };
 

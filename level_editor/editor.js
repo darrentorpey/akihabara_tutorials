@@ -1,10 +1,24 @@
 var level = new Array(30);
 var insp;
-
-
-//var urlBase = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
-
+var shortURL;
 levelParam = gup("level");
+
+
+function callBitly(s) {
+data = BitlyClient.shorten(s,'myShort');
+
+}
+
+
+function myShort (data) {
+var bitly_link = null;
+        for (var r in data.results) {
+            bitly_link = data.results[r]['shortUrl']; 
+            break;
+        }
+shortURL = bitly_link;
+}
+
 
 
 
@@ -98,6 +112,16 @@ function drawCanvas(cx, cy) {
 for (var y = cy; y < cy+15; y++) 
           for (var x = cx; x < cx+20; x++)
             context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32); 
+			
+		levelParam = "";
+		for (var i = 0; i < 30; i++) {
+			levelParam += level[i];
+		}
+		var insp = "?level=" + levelParam;
+		console.log(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + insp);
+		callBitly(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + insp);
+		document.getElementById("share").href = shortURL;
+		
 }
 
 function ev_brush (ev) {
@@ -115,12 +139,7 @@ brush = this.src.substr(this.src.length-5,1);
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
-		
-		levelParam = "";
-		for (var i = 0; i < 30; i++) {
-			levelParam += level[i];
-		}
-		document.getElementById("share").href = "?level=" + levelParam;
+	
 		
     };
 
@@ -162,6 +181,7 @@ brush = this.src.substr(this.src.length-5,1);
       if (tool.started) {
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         drawCanvas(camx,camy);
+
         }
     };
 

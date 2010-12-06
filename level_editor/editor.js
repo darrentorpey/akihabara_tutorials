@@ -101,6 +101,8 @@ brush = this.src.substr(this.src.length-5,1);
 		px = ev._x;
 		py = ev._y;
     
+    if (!tool.started)
+    {
     // move the camera when you hit the edge of the screen
       if (ev._x > 600 && camx < 20) {
         camx += 1;
@@ -118,6 +120,7 @@ brush = this.src.substr(this.src.length-5,1);
           camy -= 1;
           drawCanvas(camx,camy);
         }
+     }
         
         
       if (tool.started) {

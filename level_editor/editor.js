@@ -18,12 +18,11 @@ var bitly_link = null;
             break;
         }
 shortURL = bitly_link;
+document.getElementById("share").value = shortURL;
 }
 
-function genURL (s) {
+function genURL () {
 callBitly(longURL);
-document.getElementById("share").value = shortURL;
-		
 }
 
 
@@ -124,7 +123,6 @@ for (var y = cy; y < cy+15; y++)
 		}
 		longURL = "?level=" + levelParam;
 		longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-		console.log(longURL);
 		//longURL = "http://google.com";
 		
 }

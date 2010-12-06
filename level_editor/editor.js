@@ -124,7 +124,7 @@ for (var y = cy; y < cy+15; y++)
 			levelParam += level[i];
 		}
 		longURL = "?level=" + levelParam;
-		longURL = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL;
+		longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
 		//longURL = "http://google.com";
 		
 }

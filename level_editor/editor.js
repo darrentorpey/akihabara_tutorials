@@ -1,6 +1,9 @@
 var level = new Array(30);
 var insp;
 
+
+//var urlBase = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname;
+
 levelParam = gup("level");
 
 
@@ -27,8 +30,8 @@ window.addEventListener('load', function () {
   var brushes_img = new Array(total_brushes);
   
   // Load the default brush, #1
-  //var img = new Image();
   //img.src = '1.png';
+  //var img = new Image();
   brush = '1';
   
   camx = 0;
@@ -112,6 +115,13 @@ brush = this.src.substr(this.src.length-5,1);
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
+		
+		levelParam = "";
+		for (var i = 0; i < 30; i++) {
+			levelParam += level[i];
+		}
+		document.getElementById("share").href = "?level=" + levelParam;
+		
     };
 
     // This function is called every time you move the mouse. Obviously, it only 

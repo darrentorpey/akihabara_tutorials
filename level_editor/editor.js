@@ -8,10 +8,11 @@ window.addEventListener('load', function () {
   var tool_default = 'rock';
   var total_brushes = 10;
   var brushes = new Array(total_brushes);
+  var brushes_img = new Array(total_brushes);
   
   // Load the default brush, #1
-  var img = new Image();
-  img.src = '1.png';
+  //var img = new Image();
+  //img.src = '1.png';
   brush = '1';
   
   
@@ -24,6 +25,8 @@ window.addEventListener('load', function () {
     for (var i = 0; i < total_brushes; i++) {
       brushes[i] = document.getElementById('brush'+i);
       brushes[i].addEventListener('mousedown', ev_brush, false);
+      brushes_img[i] = new Image();
+      brushes_img[i].src = i + '.png';
       }
   
 	// init the global level data structure
@@ -63,9 +66,8 @@ return s.join('');
   
 
 function ev_brush (ev) {
-img.src = this.src;
-brush = this.src.substr(img.src.length-5,1);
-console.log(brush);
+//img.src = this.src;
+brush = this.src.substr(this.src.length-5,1);
 }
  
   // This painting tool works like a drawing pencil which tracks the mouse 
@@ -77,34 +79,32 @@ console.log(brush);
     // This is called when you start holding down the mouse button.
     // This starts the pencil drawing.
     this.mousedown = function (ev) {
-        //context.beginPath();
-        //context.moveTo(ev._x, ev._y);
-		//context.fillStyle = '#000';
-		//context.fillRect(Math.floor(px/32)*32, Math.floor(py/32)*32, 32, 32)
-		context.drawImage(img, Math.floor(px/32)*32, Math.floor(py/32)*32);
-		level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
+        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
         tool.started = true;
+        for (var y = 0; y < 30; y++) 
+          for (var x = 0; x < 40; x++)
+            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
     };
 
     // This function is called every time you move the mouse. Obviously, it only 
     // draws if the tool.started state is set to true (when you are holding down 
     // the mouse button).
-    this.mousemove = function (ev) {
+    this.mousemove = function (ev) {  
+
 		context.lineWidth = 2;
 		context.strokeStyle = '#fff';
-		context.strokeRect(Math.floor(px/32)*32, Math.floor(py/32)*32, 32, 32);
+		context.strokeRect((Math.floor(px/32)-1)*32, Math.floor(py/32)*32, 32, 32);
 		context.strokeStyle = '#800';
-		context.strokeRect(Math.floor(ev._x/32)*32, Math.floor(ev._y/32)*32, 32, 32);
+		context.strokeRect((Math.floor(ev._x/32)-1)*32, Math.floor(ev._y/32)*32, 32, 32);
 		px = ev._x;
 		py = ev._y;
       if (tool.started) {
-        context.fillStyle = tcolor;
-		//context.fillRect(Math.floor(px/32)*32, Math.floor(py/32)*32, 32, 32)
-		context.drawImage(img, Math.floor(ev._x/32)*32, Math.floor(ev._y/32)*32);
-		level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
-		//context.lineTo(ev._x, ev._y);
-        //context.stroke();
-      }
+        //context.drawImage(img, Math.floor(ev._x/32)*32, Math.floor(ev._y/32)*32);
+        level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
+        for (var y = 0; y < 30; y++) 
+          for (var x = 0; x < 40; x++)
+            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
+        }
     };
 
     // This is called when you release the mouse button.
@@ -132,6 +132,7 @@ console.log(brush);
     if (func) {
       func(ev);
     }
+    
   }
 
   init();

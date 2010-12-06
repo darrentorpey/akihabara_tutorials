@@ -60,10 +60,15 @@ window.addEventListener('load', function () {
   }
 
  function replaceOneChar(s,c,n){
-(s = s.split(''))[--n] = c;
+(s = s.split(''))[n] = c;
 return s.join('');
 };
-  
+
+function drawCanvas() {
+for (var y = 0; y < 15; y++) 
+          for (var x = 0; x < 20; x++)
+            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
+}
 
 function ev_brush (ev) {
 //img.src = this.src;
@@ -80,10 +85,9 @@ brush = this.src.substr(this.src.length-5,1);
     // This starts the pencil drawing.
     this.mousedown = function (ev) {
         level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
+        //console.log(Math.floor(ev._x/32));
         tool.started = true;
-        for (var y = 0; y < 30; y++) 
-          for (var x = 0; x < 40; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
+        drawCanvas();
     };
 
     // This function is called every time you move the mouse. Obviously, it only 
@@ -93,17 +97,14 @@ brush = this.src.substr(this.src.length-5,1);
 
 		context.lineWidth = 2;
 		context.strokeStyle = '#fff';
-		context.strokeRect((Math.floor(px/32)-1)*32, Math.floor(py/32)*32, 32, 32);
+		context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
 		context.strokeStyle = '#800';
-		context.strokeRect((Math.floor(ev._x/32)-1)*32, Math.floor(ev._y/32)*32, 32, 32);
+		context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
 		px = ev._x;
 		py = ev._y;
       if (tool.started) {
-        //context.drawImage(img, Math.floor(ev._x/32)*32, Math.floor(ev._y/32)*32);
         level[Math.floor(ev._y/32)] = replaceOneChar(level[Math.floor(ev._y/32)], brush, [Math.floor(ev._x/32)]);
-        for (var y = 0; y < 30; y++) 
-          for (var x = 0; x < 40; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], x*32, y*32); 
+        drawCanvas();
         }
     };
 

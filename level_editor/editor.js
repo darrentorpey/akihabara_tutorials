@@ -21,8 +21,7 @@ shortURL = bitly_link;
 }
 
 function genURL (s) {
-callBitly(window.location.protocol + "//" + window.location.host + "/" + window.location.pathname + longURL);
-//callBitly(longURL);
+callBitly(longURL);
 document.getElementById("share").value = shortURL;
 		
 }

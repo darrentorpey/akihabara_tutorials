@@ -20,7 +20,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'player', 'game']);
+  gbox.setGroups(['background', 'enemies', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -35,11 +35,12 @@ function main() {
   
   // Set our intro screen animation
   maingame.gameTitleIntroAnimation = function() { return true; };
-
+  
   // This function will be called before the game starts running, so here is where we add our game elements
   maingame.initializeGame = function() {
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     addPlayer();
+    addEnemy({x:100,y:20,side:true});
 
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
@@ -92,7 +93,74 @@ function followCamera(obj, viewdata) {
   if ((obj.y - ycam) < (ybuf))                 gbox.setCameraY(ycam + (obj.y - ycam) - ybuf,                   viewdata);
 }
 
+function addEnemy(data) {
+			
+					    gbox.addObject({
+							group:"enemies",
+							tileset:"player_tiles",
+							initialize:function() {
+								toys.platformer.initialize(this,{
+									frames:{
+										still:{ speed:1, frames:[0] },
+										walking:{ speed:4, frames:[0] },
+										jumping:{ speed:1, frames:[0] },
+										falling:{ speed:1, frames:[0] },
+										die: { speed:1,frames:[0] }
+									},
+									x:data.x,
+									y:data.y,
+									jumpaccy:10,
+									side:data.side
+									
+								});
+							},
+							first:function() {
+								if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
+                console.log("hi");
+									// Counter
+									this.counter=(this.counter+1)%10;
 
+									toys.platformer.applyGravity(this); // Apply gravity
+									toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
+                  console.log("hi2");
+									if (this.touchedfloor) // If touching the floor...
+										toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:2}); // goomba movement
+									else // Else...
+										this.accx=0; // Stay still (i.e. jump only vertically)
+									toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
+									toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
+									toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
+                  console.log("hi3");
+									if (toys.platformer.canJump(this)&&toys.timer.randomly(this,"jumper",{base:50,range:50})) this.accy=-this.jumpaccy; // Jump randomly (the toy is resetted the first call)
+									toys.platformer.handleAccellerations(this); // gravity/attrito
+									toys.platformer.setFrame(this); // set the right animation frame
+									var pl=gbox.getObject("player","player_id");
+                  console.log("hi4");
+                  if (help.isSquished(this,pl)) {
+                    //gbox.hitAudio("hit");
+                    //pl.multiplier++;
+                    //var mp=help.multiplier(pl.multiplier);
+                    //maingame.hud.addValue("score","value",this.score*mp);
+                    console.log("hi5");
+                    gbox.trashObject(this);
+                    toys.platformer.bounce(pl,{jumpsize:10});
+                    //toys.generate.sparks.bounceDie(this,"sparks",null,{jump:6,flipv:true});
+                    //toys.generate.sparks.popupText(this,"sparks",null,{font:"big",jump:6,text:this.score+(mp>1?"x"+mp:"")+" pts.",keep:10});
+                  } else
+                    if (gbox.collides(this,pl,2) && pl.x)
+                      {
+                      debugger
+                      gbox.trashObject(pl); }
+								}
+								console.log("hi6");
+							},
+							blit:function() {
+								if (gbox.objectIsVisible(this))
+									gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+							}
+					  });
+  }
+      
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
   gbox.addObject({
@@ -144,6 +212,7 @@ function addPlayer() {
       if (gbox.keyIsHit("b")) {
         this.x = 20;
         this.y = 20;
+        addEnemy({x:100,y:20,side:true});
       }
      
       toys.platformer.applyGravity(this); // Apply gravity

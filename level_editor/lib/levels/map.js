@@ -12,6 +12,9 @@ function addMap() {
       // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
       //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+      
+      // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
+      canvasContext = gbox.getCanvasContext('map_canvas');
     }
   });
 }

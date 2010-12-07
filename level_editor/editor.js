@@ -3,7 +3,9 @@ var insp;
 var shortURL;
 var longURL ="";
 levelParam = gup("level");
-
+var canvasContext;
+var minimap;
+var context;
 
 function callBitly(s) {
 data = BitlyClient.shorten(s,'myShort');
@@ -41,7 +43,7 @@ function gup( name )
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, context, tool, px, py, tcolor, brush, camx, camy;
+  var canvas, tool, px, py, tcolor, brush, camx, camy;
   var tool_default = 'rock';
   var total_brushes = 10;
   var brushes = new Array(total_brushes);
@@ -113,17 +115,23 @@ return s.join('');
 };
 
 function drawCanvas(cx, cy) {
-for (var y = cy; y < cy+15; y++) 
-          for (var x = cx; x < cx+20; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32); 
+  for (var y = cy; y < cy+15; y++) 
+    for (var x = cx; x < cx+20; x++)
+      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32); 
 			
 		levelParam = "";
 		for (var i = 0; i < 30; i++) {
 			levelParam += level[i];
 		}
-		longURL = "?level=" + levelParam;
+		
+    longURL = "?level=" + levelParam;
 		longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-		//longURL = "http://google.com";
+		//longURL = "http://google.com"; // (for testing locally)
+    if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
+
+    
+    
+
 		
 }
 
@@ -143,7 +151,9 @@ brush = this.src.substr(this.src.length-5,1);
         tool.started = true;
         drawCanvas(camx,camy);
 	
+    
 		
+    
     };
 
     // This function is called every time you move the mouse. Obviously, it only 
@@ -190,6 +200,23 @@ brush = this.src.substr(this.src.length-5,1);
 
     // This is called when you release the mouse button.
     this.mouseup = function (ev) {
+      minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
+      var pix = minimap.data;
+// pix2 = new Array(minimap.data.length/2);
+      
+
+      // Loop over each pixel and invert the color.
+      for (var i = 0, n = pix.length; i < n; i += 4) 
+          if (i % 32 == 0)
+          {
+          pix[(i/8)  ] = pix[i  ]; // r
+          pix[(i/8)+1] = pix[i+1]; // g
+          pix[(i/8)+2] = pix[i+2]; // b
+          pix[(i/8)+3] = pix[i+3]; // a
+          }   
+      
+      
+      
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;

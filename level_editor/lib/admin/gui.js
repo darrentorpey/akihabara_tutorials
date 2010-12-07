@@ -1,6 +1,3 @@
-requireLib('lib/jquery/jquery-1.4.4.js');
-requireLib('lib/jquery/jquery.tmpl.js');
-
 var buttons_hash = {};
 function drawGuiActions() {
   var buttons = [

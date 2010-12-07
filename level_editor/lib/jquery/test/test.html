@@ -1,0 +1,73 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html> 
+	<head> 
+		<title>Undo with jQuery</title> 
+		<style> 
+			.sample { height: 150px; width: 150px; border: 3px solid #247; padding: 15px; float: left; margin: 20px; }
+			#sample1 { background-color: #fff; }
+			#sample2 { background-color: #ffd; }
+			#sample3 { background-color: #fdd; }
+			#sample4 { background-color: #ddd; }
+			#sample5 { background-color: #ddf; }
+			#sample6 { background-color: #dff; }
+		</style> 
+	</head> 
+	<body> 
+	
+		<p><strong>Use CTRL-Z to undo actions on this page, CTRL-Y to redo actions</strong></p> 
+ 
+		<p> 
+			Toggle: 
+			<a href="#" onclick="closeSample(1); return false;">#1</a> 
+			<a href="#" onclick="closeSample(2); return false;">#2</a> 
+			<a href="#" onclick="closeSample(3); return false;">#3</a> 
+			<a href="#" onclick="closeSample(4); return false;">#4</a> 
+			<a href="#" onclick="closeSample(5); return false;">#5</a> 
+			<a href="#" onclick="closeSample(6); return false;">#6</a> 
+		</p> 
+ 
+		<p> 
+			Toggle Slide: 
+			<a href="#" onclick="slideSample(1); return false;">#1</a> 
+			<a href="#" onclick="slideSample(2); return false;">#2</a> 
+			<a href="#" onclick="slideSample(3); return false;">#3</a> 
+			<a href="#" onclick="slideSample(4); return false;">#4</a> 
+			<a href="#" onclick="slideSample(5); return false;">#5</a> 
+			<a href="#" onclick="slideSample(6); return false;">#6</a> 
+		</p> 
+ 
+		<div class="sample" id="sample1">SAMPLE #1</div> 
+		<div class="sample" id="sample2">SAMPLE #2</div> 
+		<div class="sample" id="sample3">SAMPLE #3</div> 
+		<div class="sample" id="sample4">SAMPLE #4</div> 
+		<div class="sample" id="sample5">SAMPLE #5</div> 
+		<div class="sample" id="sample6">SAMPLE #6</div> 
+ 
+		<script type="text/javascript" src="../jquery-1.4.4.js"></script>  
+    <script type="text/javascript" src="../jquery/jquery.klass.js"></script>
+		<script type="text/javascript" src="../jquery.undoable.js"></script> 
+		<script type="text/javascript"> 
+			var closeSample = function(n) {
+				jQuery().undoable(function(){ jQuery('#sample' + n).toggle(); console.log('hiding #'+n); }, function(){ jQuery('#sample' + n).toggle(); console.log('showing #'+n); });
+			};
+			var slideSample = function(n) {
+				jQuery().undoable(function(){ jQuery('#sample' + n).slideToggle(); console.log('hiding (via slide) #'+n); }, function(){ jQuery('#sample' + n).slideToggle(); console.log('showing (via slide) #'+n); });
+			};
+ 
+			jQuery(function(){
+				jQuery().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+			});
+		</script> 
+		<script type="text/javascript"> 
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+ 
+		</script> 
+		<script type="text/javascript"> 
+		var pageTracker = _gat._getTracker("UA-4510508-4");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		</script> 
+	</body> 
+</html> 

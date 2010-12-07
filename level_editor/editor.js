@@ -1,3 +1,76 @@
+
+/*
+ *
+ * jQuery.undoable()
+ *
+ * Copyright (c) 2009 Jared Mellentine - jared(at)mellentine(dot)com | http://design.mellentine.com
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ * Date: 3/9/2009
+ *
+ * Full documentation coming soon (or you can read the 55 lines below)
+ *
+ */
+;(function($) {
+  $.fn.undoable = function(redo) {
+    var undo = (typeof arguments[1] == 'function') ? arguments[1] : redo;
+    redo();
+    var uf = jQuery('body').data('undoFunctions');
+    if (typeof uf == 'object') uf.push([redo,undo]); else uf = [[redo,undo]];
+    if (jQuery('body').data('undoEnabled') !== true) $().enableUndo();
+    jQuery('body').data('undoFunctions', uf);
+    jQuery('body').data('redoFunctions', []); // reset the redo queue
+  };
+
+  $.fn.enableUndo = function(params){
+    var defaults = {
+      undoCtrlChar : 'z',
+      redoCtrlChar : 'z',
+      redoShiftReq : true
+    };
+    var settings = jQuery.extend(defaults, params);
+    var undoChar = settings.undoCtrlChar.toUpperCase().charCodeAt();
+    var redoChar = settings.redoCtrlChar.toUpperCase().charCodeAt();
+
+    jQuery(document).keydown(function(e){
+      // UNDO
+      if (e.ctrlKey && !e.shiftKey && e.which == undoChar) {
+        var uf = jQuery('body').data('undoFunctions');
+        if (typeof uf == 'object') {
+          var lf = uf.pop();
+          jQuery('body').data('undoFunctions', uf);
+
+          if (lf) {
+            var rf = jQuery('body').data('redoFunctions');
+            if (rf) rf.push(lf); else rf = [lf];
+            jQuery('body').data('redoFunctions', rf);
+
+            lf[1](); // undo is index 1
+          }
+        }
+      }
+      // REDO
+      if (e.ctrlKey && (e.shiftKey || !settings.redoShiftReq) && e.which == redoChar) {
+        var rf = jQuery('body').data('redoFunctions');
+        if (typeof rf == 'object') {
+          var lf = rf.pop();
+          jQuery('body').data('redoFunctions', rf);
+
+          if (lf) {
+            var uf = jQuery('body').data('undoFunctions');
+            if (uf) uf.push(lf); else uf = [lf];
+            jQuery('body').data('undoFunctions', uf);
+
+            lf[0](); // redo is index 0
+          }
+        }
+      }
+    });
+    jQuery('body').data('undoEnabled', true);
+  };
+})(jQuery);
+
+
 var level = new Array(30);
 var insp;
 var shortURL;
@@ -14,7 +87,7 @@ data = BitlyClient.shorten(s,'myShort');
 function myShort (data) {
 var bitly_link = null;
         for (var r in data.results) {
-            bitly_link = data.results[r]['shortUrl']; 
+            bitly_link = data.results[r]['shortUrl'];
             break;
         }
 shortURL = bitly_link;
@@ -46,17 +119,17 @@ window.addEventListener('load', function () {
   var total_brushes = 10;
   var brushes = new Array(total_brushes);
   var brushes_img = new Array(total_brushes);
-  
+
   // Load the default brush, #1
   //img.src = '1.png';
   //var img = new Image();
   brush = '1';
-  
+
   camx = 0;
   camy = 0;
   px = -100;
   py = -100;
-  
+
   function init () {
     // Find the elements
     canvas = document.getElementById('imageView');
@@ -66,21 +139,21 @@ window.addEventListener('load', function () {
       brushes_img[i] = new Image();
       brushes_img[i].src = i + '.png';
       }
-  
-	// init the global level data structure
-	for (var i = 0; i < 30; i++) {
-		level[i] = "0000000000000000000000000000000000000000";
-		}
-	
-	if(levelParam.length == 1200)
-	{
-	for (var c = 0; c < 1200; c += 40)
-		{
-		level[c/40] = levelParam.substr(c,40);
-		}
-	}
-	
-	
+
+  // init the global level data structure
+  for (var i = 0; i < 30; i++) {
+    level[i] = "0000000000000000000000000000000000000000";
+    }
+
+  if(levelParam.length == 1200)
+  {
+  for (var c = 0; c < 1200; c += 40)
+    {
+    level[c/40] = levelParam.substr(c,40);
+    }
+  }
+
+
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
       return;
@@ -100,11 +173,11 @@ window.addEventListener('load', function () {
 
     // Pencil tool instance.
     tool = new tool_pencil();
-	
+
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
-	drawCanvas(camx,camy);
+  drawCanvas(camx,camy);
   }
 
  function replaceOneChar(s,c,n){
@@ -113,25 +186,25 @@ return s.join('');
 };
 
 function drawCanvas(cx, cy) {
-for (var y = cy; y < cy+15; y++) 
+for (var y = cy; y < cy+15; y++)
           for (var x = cx; x < cx+20; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32); 
-			
-		levelParam = "";
-		for (var i = 0; i < 30; i++) {
-			levelParam += level[i];
-		}
-		longURL = "?level=" + levelParam;
-		longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-		//longURL = "http://google.com";
-		
+            context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+
+    levelParam = "";
+    for (var i = 0; i < 30; i++) {
+      levelParam += level[i];
+    }
+    longURL = "?level=" + levelParam;
+    longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
+    //longURL = "http://google.com";
+
 }
 
 function ev_brush (ev) {
 brush = this.src.substr(this.src.length-5,1);
 }
- 
-  // This painting tool works like a drawing pencil which tracks the mouse 
+
+  // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
   function tool_pencil () {
     var tool = this;
@@ -142,23 +215,23 @@ brush = this.src.substr(this.src.length-5,1);
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
-	
-		
+
+
     };
 
-    // This function is called every time you move the mouse. Obviously, it only 
-    // draws if the tool.started state is set to true (when you are holding down 
+    // This function is called every time you move the mouse. Obviously, it only
+    // draws if the tool.started state is set to true (when you are holding down
     // the mouse button).
-    this.mousemove = function (ev) {  
+    this.mousemove = function (ev) {
 
-		context.lineWidth = 2;
-		context.strokeStyle = '#fff';
-		context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
-		context.strokeStyle = '#800';
-		context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
-		px = ev._x;
-		py = ev._y;
-    
+    context.lineWidth = 2;
+    context.strokeStyle = '#fff';
+    context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
+    context.strokeStyle = '#800';
+    context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+    px = ev._x;
+    py = ev._y;
+
     if (!tool.started)
     {
     // move the camera when you hit the edge of the screen
@@ -179,8 +252,8 @@ brush = this.src.substr(this.src.length-5,1);
           drawCanvas(camx,camy);
         }
      }
-        
-        
+
+
       if (tool.started) {
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         drawCanvas(camx,camy);
@@ -197,7 +270,7 @@ brush = this.src.substr(this.src.length-5,1);
     };
   }
 
-  // The general-purpose event handler. This function just determines the mouse 
+  // The general-purpose event handler. This function just determines the mouse
   // position relative to the canvas element.
   function ev_canvas (ev) {
     if (ev.layerX || ev.layerX == 0) { // Firefox
@@ -213,7 +286,7 @@ brush = this.src.substr(this.src.length-5,1);
     if (func) {
       func(ev);
     }
-    
+
   }
 
   init();
@@ -222,3 +295,65 @@ brush = this.src.substr(this.src.length-5,1);
 
 // vim:set spell spl=en fo=wan1croql tw=80 ts=2 sw=2 sts=2 sta et ai cin fenc=utf-8 ff=unix:
 
+var undoCounter = 0;
+
+var UndoableAction = Klass.extend({
+  init: function(do_func, undo_func, options){
+    // this.parent = jQuery(parent);
+    this.options   = options || {};
+    this.do_func   = do_func;
+    this.undo_func = undo_func;
+    this.counter = 0;
+  },
+
+  do: function() {
+    var action = this;
+    this.counter++;
+    var my_num = this.counter;
+    console.log('making ' + my_num);
+
+    $().undoable(function() {
+      console.log('doing #' + my_num);
+      action.do_func();
+      Undos.updateCounter();
+    }, function() {
+      console.log('undoing #' + my_num);
+      action.undo_func();
+      Undos.updateCounter();
+    });
+
+    Undos.updateCounter();
+  },
+
+  undo: function() {
+    console.log('un-doing');
+  }
+});
+
+var UpdateMap = UndoableAction.extend({
+  init: function(options) {
+    this._super(function() {
+      console.log('my func');
+    }, function() {
+      console.log('my func DOWN');
+    });
+
+    this.do();
+  }
+});
+
+var Undos = {
+  updateCounter: function() {
+    $('#undo_counter span').text(Undos.getNumUndoFunctions());
+  },
+
+  getNumUndoFunctions: function() {
+    var allUndoFuncs = jQuery('body').data('undoFunctions');
+
+    if (allUndoFuncs) {
+      return undoCounter = allUndoFuncs.length;
+    } else {
+      return undoCounter = 0;
+    }
+  }
+}

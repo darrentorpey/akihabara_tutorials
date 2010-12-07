@@ -1,6 +1,6 @@
 body {
   padding-bottom: 100px;
-  background-color: #EEE;
+  background-color: #D4D4D4;
 }
 
 #drop_area {
@@ -30,11 +30,11 @@ a:hover {
   right: 0px;
 
   padding: 10px 20px;
-  background-color: #191919;
+  background-color: #A1A1A1;
 }
 
 #admin_buttons h4 {
-  color: #164799;
+  color: #0B2757;
   font-size: 18px;
   font-weight: bold;
 

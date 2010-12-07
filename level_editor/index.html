@@ -39,6 +39,8 @@
   <p>
   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=dariusk&apiKey=R_cad108c6c5806c23c41b32dfc5c670da"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
   <script type="text/javascript" src="akihabara/gbox.js"></script>
   <script type="text/javascript" src="akihabara/iphopad.js"></script>
   <script type="text/javascript" src="akihabara/trigo.js"></script>
@@ -53,4 +55,11 @@
   <script type="text/javascript" src="lib/admin/gui.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
 
+  <script>
+jQuery(function(){
+  // console.log($);
+  // console.log($().undoable);
+	$().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+});
+  </script>
 </body></html>

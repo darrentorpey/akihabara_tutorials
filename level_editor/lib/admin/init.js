@@ -1,4 +1,4 @@
-drawGuiActions();
+if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 
 $('body').mouseup(function() {
   if ($('#toggle_autoupdate input:checked').length) {

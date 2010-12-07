@@ -23,21 +23,61 @@ function loadMap() {
   return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A'] ])
 }
 
+var UpdateMap = UndoableAction.extend({
+  init: function(options) {
+    this._super(function() {
+      console.log('saving old map and reloading map...');
+      saveOldMap();
+      reloadMap();
+      theOldMap = getLevelCopy();
+    }, function() {
+      console.log('reloading from old map...');
+      loadOldMap();
+      reloadMap();
+    });
+
+    this.do();
+  }
+});
+
 function redrawMap() {
-  map =
-    {
+  // new UpdateMap();
+  reloadMap();
+}
+
+function reloadMap() {
+  map = help.finalizeTilemap({
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
     map: loadMap(),
+
     tileIsSolidCeil: function(obj, t) {
       if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
-        else return false; // Is a wall if is not an empty space
-      },
+      else return false; // Is a wall if is not an empty space
+    },
+
     tileIsSolidFloor: function(obj, t) {
       if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
-        else return false; // Is a wall if is not an empty space
-      }
+      else return false; // Is a wall if is not an empty space
     }
-  map = help.finalizeTilemap(map);
+  });
   gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 1, color:gbox.COLOR_WHITE });
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+}
+
+// theOldMap = getLevelCopy();
+
+function saveOldMap() {
+  // var level_copy = theOldMap.slice(0);
+  oldMaps.push(theOldMap);
+  // console.log($(oldMaps).last());
+  console.log(theOldMap);
+  console.log(oldMaps);
+}
+
+function loadOldMap() {
+  level = oldMaps.pop();
+}
+
+function getLevelCopy() {
+  return $.extend(true, [], level);
 }

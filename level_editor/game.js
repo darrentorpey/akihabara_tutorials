@@ -3,6 +3,9 @@ var map;
 
 window.addEventListener('load', loadResources, false);
 
+var bg = new Image();
+bg.src = 'resources/bg0.png'
+
 function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
@@ -72,7 +75,10 @@ function main() {
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
-
+  
+  gbox.createCanvas('bg_canvas', { w: map.w, h: map.h });
+  gbox.blitAll(gbox.getCanvasContext('bg_canvas'),bg,{dx:0,dy:0}); //gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'map_pieces',tile:2,dx:0,dy:0,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+  
   // We draw the map onto our 'map_canvas' canvas that we created above.
   // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);

@@ -7,11 +7,15 @@ function addMap() {
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
-      gbox.blitFade(gbox.getBufferContext(), { alpha: 1, color:gbox.COLOR_WHITE });
- 
-      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
-      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
-      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+  //gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 0, color:gbox.COLOR_WHITE });
+
+      //write the background image
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
+      
+      
+        gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
+gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
+
       
       // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
       canvasContext = gbox.getCanvasContext('map_canvas');
@@ -38,6 +42,16 @@ function redrawMap() {
       }
     }
   map = help.finalizeTilemap(map);
-  gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 1, color:gbox.COLOR_WHITE });
-  gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
+      //write the background image
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
+      
+      
+        gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
+gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
+
+      
+      // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
+      canvasContext = gbox.getCanvasContext('map_canvas');
+
+  
 }

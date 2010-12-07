@@ -206,9 +206,10 @@ function addPlayer() {
       }
       
       if (gbox.keyIsHit("c")) {
+      gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
-            if (level[y][x] == '8') addEnemy({x:x*32,y:y*32,side:true}, 0);
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
       }      
      
       toys.platformer.applyGravity(this); // Apply gravity

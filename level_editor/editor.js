@@ -1,5 +1,5 @@
 
-
+var clip = new ZeroClipboard.Client();
 var level = new Array(30);
 var insp;
 var shortURL;
@@ -8,6 +8,10 @@ levelParam = gup("level");
 var canvasContext;
 var minimap;
 var context;
+
+clip.setHandCursor( false );
+clip.glue( 'd_clip_button', 'd_clip_container' );
+
 
 function callBitly(s) {
 data = BitlyClient.shorten(s,'myShort');
@@ -23,6 +27,7 @@ var bitly_link = null;
         }
 shortURL = bitly_link;
 document.getElementById("share").value = shortURL;
+clip.setText(shortURL);
 }
 
 function genURL () {

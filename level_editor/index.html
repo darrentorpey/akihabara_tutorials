@@ -9,6 +9,15 @@
     <style type="text/css">
       #container { position: relative; cursor: url(blank.png), default;}
       #imageView { border: 1px solid #000; }
+      #d_clip_button {
+                width:150px; 
+                text-align:center; 
+                border:1px solid black; 
+                background-color:#ccc; 
+                margin:10px; padding:10px; 
+        }
+        #d_clip_button.hover { background-color:#eee; }
+        #d_clip_button.active { background-color:#aaa; }
     </style>
 </head>
 <body>
@@ -25,6 +34,9 @@
     <img src="9.png" id="brush9">
   <a onClick = "genURL();">Generate a URL to share</a>
   <input type="text" size="50" value="click that link to make a URL" id="share">
+  <div id="d_clip_container" style="position:relative">
+   <div id="d_clip_button">Copy to Clipboard</div>
+</div>
   </p>
 
   <div id="container">
@@ -49,14 +61,14 @@
   <script type="text/javascript" src="akihabara/help.js"></script>
   <script type="text/javascript" src="akihabara/tool.js"></script>
   <script type="text/javascript" src="akihabara/gamecycle.js"></script>
-  <script type="text/javascript" src="game.js"></script>
+  <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
+    <script type="text/javascript" src="game.js"></script>
   <script type="text/javascript" src="editor.js"></script>
   <script type="text/javascript" src="lib/core.js"></script>
   <script type="text/javascript" src="lib/levels/map.js"></script>
   <script type="text/javascript" src="lib/admin/gui.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
-
-  <script>
+  
 jQuery(function(){
   // console.log($);
   // console.log($().undoable);

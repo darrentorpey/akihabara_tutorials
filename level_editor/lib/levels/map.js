@@ -29,11 +29,11 @@ function redrawMap() {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
     map: loadMap(),
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 3 && t != 5 && t != 6 && t!= 8) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 3 && t != 5 && t != 6 && t!= 8) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
         else return false; // Is a wall if is not an empty space
       }
     }

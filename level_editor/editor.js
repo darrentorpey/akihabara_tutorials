@@ -8,6 +8,7 @@ levelParam = gup("level");
 var canvasContext;
 var minimap;
 var context;
+var tool;
 
 clip.setHandCursor( false );
 clip.glue( 'd_clip_button', 'd_clip_container' );
@@ -147,10 +148,11 @@ function ev_brush (ev) {
   brush = this.src.substr(this.src.length - 5, 1);
 }
 
+
   // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
   function tool_pencil () {
-    var tool = this;
+    tool = this;
     this.started = false;
 
     // This is called when you start holding down the mouse button.
@@ -194,8 +196,6 @@ function ev_brush (ev) {
 
       if (tool.started) {
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
-        //drawCanvas(camx,camy);
-
         }
        drawCanvas(camx,camy);
        context.lineWidth = 2;

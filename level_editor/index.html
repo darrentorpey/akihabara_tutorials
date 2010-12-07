@@ -10,7 +10,7 @@
       #container { position: relative; cursor: url(blank.png), default;}
       #imageView { border: 1px solid #000; }
       #d_clip_button {
-                width:150px; 
+                width:150px;             
                 text-align:center; 
                 border:1px solid black; 
                 background-color:#ccc; 
@@ -32,11 +32,11 @@
     <img src="7.png" id="brush7">
     <img src="8.png" id="brush8">
     <img src="9.png" id="brush9">
-  <a onClick = "genURL();">Generate a URL to share</a>
-  <input type="text" size="50" value="click that link to make a URL" id="share">
-  <div id="d_clip_container" style="position:relative">
-   <div id="d_clip_button">Copy to Clipboard</div>
-</div>
+  <div style="height:50px; padding:10px"><div><a onClick = "genURL();">Generate a URL to share</a></div>
+  <input type="text" size="50" value="click the above link to make a URL" id="share">
+  <span id="d_clip_container" style="display:inline">
+   <span id="d_clip_button">Copy to Clipboard</span>
+</span></div>
   </p>
 
   <div id="container">
@@ -68,7 +68,7 @@
   <script type="text/javascript" src="lib/levels/map.js"></script>
   <script type="text/javascript" src="lib/admin/gui.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
-  
+  <script>
 jQuery(function(){
   // console.log($);
   // console.log($().undoable);

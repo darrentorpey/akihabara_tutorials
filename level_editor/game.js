@@ -203,11 +203,12 @@ function addPlayer() {
       if (gbox.keyIsHit("b")) {
         this.x = 20;
         this.y = 20;
-        addEnemy({x:100,y:19,side:true}, 1);
       }
       
       if (gbox.keyIsHit("c")) {
-        addEnemy({x:100,y:19,side:true}, 0);
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '8') addEnemy({x:x*32,y:y*32,side:true}, 0);
       }      
      
       toys.platformer.applyGravity(this); // Apply gravity

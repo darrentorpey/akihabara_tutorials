@@ -212,7 +212,7 @@ function addPlayer() {
       if (gbox.keyIsHit("b")) {
         this.x = 20;
         this.y = 20;
-        addEnemy({x:100,y:20,side:true});
+        addEnemy({x:100,y:19,side:true});
       }
      
       toys.platformer.applyGravity(this); // Apply gravity

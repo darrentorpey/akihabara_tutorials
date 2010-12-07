@@ -134,6 +134,8 @@ function drawCanvas(cx, cy) {
     context.strokeStyle = '#000';
     context.strokeRect(480,360,160,120);
     context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
+    
+    
 }
 
 function ev_brush (ev) {
@@ -158,11 +160,10 @@ function ev_brush (ev) {
     // the mouse button).
     this.mousemove = function (ev) {
 
-    context.lineWidth = 2;
-    context.strokeStyle = '#fff';
-    context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
-    context.strokeStyle = '#800';
-    context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+    
+    //context.strokeStyle = '#fff';
+    //context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
+    
     px = ev._x;
     py = ev._y;
 
@@ -170,32 +171,37 @@ function ev_brush (ev) {
     // move the camera when you hit the edge of the screen
       if (ev._x > 600 && camx < 20) {
         camx += 1;
-        drawCanvas(camx,camy);
+        //drawCanvas(camx,camy);
       }
       else if (ev._x < 40 && camx > 0) {
           camx -= 1;
-          drawCanvas(camx,camy);
+         // drawCanvas(camx,camy);
         }
       if (ev._y > 440 && camy < 15) {
         camy += 1;
-        drawCanvas(camx,camy);
+       // drawCanvas(camx,camy);
       }
       else if (ev._y < 40 && camy > 0) {
           camy -= 1;
-          drawCanvas(camx,camy);
+         // drawCanvas(camx,camy);
         }
      }
 
       if (tool.started) {
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
-        drawCanvas(camx,camy);
+        //drawCanvas(camx,camy);
 
         }
+       drawCanvas(camx,camy);
+       context.lineWidth = 2;
+    context.strokeStyle = '#800';
+    context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+       
     };
 
     // This is called when you release the mouse button.
     this.mouseup = function (ev) {
-      genMiniMap();
+      if (canvasContext) genMiniMap();
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;

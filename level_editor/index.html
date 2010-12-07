@@ -23,8 +23,8 @@
     <img src="7.png" id="brush7">
     <img src="8.png" id="brush8">
     <img src="9.png" id="brush9">
-	<a onClick = "genURL();">Generate a URL to share</a>
-	<input type="text" size="50" value="click that link to make a URL" id="share">
+  <a onClick = "genURL();">Generate a URL to share</a>
+  <input type="text" size="50" value="click that link to make a URL" id="share">
   </p>
 
   <div id="container">
@@ -38,7 +38,8 @@
     Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
   <p>
   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
   <script type="text/javascript" src="akihabara/gbox.js"></script>
@@ -59,7 +60,7 @@
 jQuery(function(){
   // console.log($);
   // console.log($().undoable);
-	$().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
 });
   </script>
 </body></html>

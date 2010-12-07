@@ -97,7 +97,7 @@ function addEnemy(data, type) {
 			
 					    gbox.addObject({
 							group:"enemies",
-							tileset:"player_tiles",
+							tileset:"enemy_tiles",
 							initialize:function() {
 								toys.platformer.initialize(this,{
 									frames:{
@@ -141,8 +141,9 @@ function addEnemy(data, type) {
                   } else
                     if (gbox.collides(this,pl,2) && pl.x)
                       {
-                      debugger
-                      gbox.trashObject(pl); }
+                      pl.x = 20;
+                      pl.y = 20;
+                      }
 								}
 							},
 							blit:function() {

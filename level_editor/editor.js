@@ -126,9 +126,13 @@ function drawCanvas(cx, cy) {
 		
     longURL = "?level=" + levelParam;
 		longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-		//longURL = "http://google.com"; // (for testing locally)
+		   
+    
     if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
-
+    context.strokeStyle = '#000';
+		context.strokeRect(480,360,160,120);
+    context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
+    
     
     
 
@@ -160,7 +164,7 @@ brush = this.src.substr(this.src.length-5,1);
     // draws if the tool.started state is set to true (when you are holding down 
     // the mouse button).
     this.mousemove = function (ev) {  
-
+    
 		context.lineWidth = 2;
 		context.strokeStyle = '#fff';
 		context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
@@ -200,23 +204,7 @@ brush = this.src.substr(this.src.length-5,1);
 
     // This is called when you release the mouse button.
     this.mouseup = function (ev) {
-      minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
-      var pix = minimap.data;
-// pix2 = new Array(minimap.data.length/2);
-      
-
-      // Loop over each pixel and invert the color.
-      for (var i = 0, n = pix.length; i < n; i += 4) 
-          if (i % 32 == 0)
-          {
-          pix[(i/8)  ] = pix[i  ]; // r
-          pix[(i/8)+1] = pix[i+1]; // g
-          pix[(i/8)+2] = pix[i+2]; // b
-          pix[(i/8)+3] = pix[i+3]; // a
-          }   
-      
-      
-      
+      genMiniMap();
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;
@@ -241,6 +229,21 @@ brush = this.src.substr(this.src.length-5,1);
       func(ev);
     }
     
+  }
+  
+  function genMiniMap () {
+      minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
+      var pix = minimap.data;     
+
+      // Loop over pixels, skipping every Nth since we're shrinking the image
+      for (var i = 0, n = pix.length; i < n; i += 4) 
+          if (i % 32 == 0)
+          {
+          pix[(i/8)  ] = pix[i  ]; // r
+          pix[(i/8)+1] = pix[i+1]; // g
+          pix[(i/8)+2] = pix[i+2]; // b
+          pix[(i/8)+3] = pix[i+3]; // a
+          }   
   }
 
   init();

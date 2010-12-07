@@ -76,7 +76,9 @@ var insp;
 var shortURL;
 var longURL ="";
 levelParam = gup("level");
-
+var canvasContext;
+var minimap;
+var context;
 
 function callBitly(s) {
 data = BitlyClient.shorten(s,'myShort');
@@ -114,7 +116,7 @@ function gup( name )
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, context, tool, px, py, tcolor, brush, camx, camy;
+  var canvas, tool, px, py, tcolor, brush, camx, camy;
   var tool_default = 'rock';
   var total_brushes = 10;
   var brushes = new Array(total_brushes);
@@ -186,22 +188,27 @@ return s.join('');
 };
 
 function drawCanvas(cx, cy) {
-for (var y = cy; y < cy+15; y++)
-          for (var x = cx; x < cx+20; x++)
-            context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+  for (var y = cy; y < cy+15; y++)
+    for (var x = cx; x < cx+20; x++)
+      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
 
     levelParam = "";
     for (var i = 0; i < 30; i++) {
       levelParam += level[i];
     }
+
     longURL = "?level=" + levelParam;
     longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-    //longURL = "http://google.com";
 
+
+    if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
+    context.strokeStyle = '#000';
+    context.strokeRect(480,360,160,120);
+    context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
 }
 
 function ev_brush (ev) {
-brush = this.src.substr(this.src.length-5,1);
+  brush = this.src.substr(this.src.length - 5, 1);
 }
 
   // This painting tool works like a drawing pencil which tracks the mouse
@@ -215,8 +222,6 @@ brush = this.src.substr(this.src.length-5,1);
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
-
-
     };
 
     // This function is called every time you move the mouse. Obviously, it only
@@ -232,8 +237,7 @@ brush = this.src.substr(this.src.length-5,1);
     px = ev._x;
     py = ev._y;
 
-    if (!tool.started)
-    {
+    if (!tool.started) {
     // move the camera when you hit the edge of the screen
       if (ev._x > 600 && camx < 20) {
         camx += 1;
@@ -253,7 +257,6 @@ brush = this.src.substr(this.src.length-5,1);
         }
      }
 
-
       if (tool.started) {
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         drawCanvas(camx,camy);
@@ -263,6 +266,7 @@ brush = this.src.substr(this.src.length-5,1);
 
     // This is called when you release the mouse button.
     this.mouseup = function (ev) {
+      genMiniMap();
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;
@@ -287,6 +291,21 @@ brush = this.src.substr(this.src.length-5,1);
       func(ev);
     }
 
+  }
+
+  function genMiniMap () {
+      minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
+      var pix = minimap.data;
+
+      // Loop over pixels, skipping every Nth since we're shrinking the image
+      for (var i = 0, n = pix.length; i < n; i += 4)
+          if (i % 32 == 0)
+          {
+          pix[(i/8)  ] = pix[i  ]; // r
+          pix[(i/8)+1] = pix[i+1]; // g
+          pix[(i/8)+2] = pix[i+2]; // b
+          pix[(i/8)+3] = pix[i+3]; // a
+          }
   }
 
   init();

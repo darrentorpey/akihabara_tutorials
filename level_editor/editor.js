@@ -150,6 +150,11 @@ function ev_brush (ev) {
 
     // This is called when you start holding down the mouse button.
     this.mousedown = function (ev) {
+
+      // if (!UpdateMap.priorOldValue) {
+      //   UpdateMap.priorOldValue = getLevelCopy();
+      // }
+
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);

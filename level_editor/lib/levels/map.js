@@ -24,24 +24,37 @@ function loadMap() {
 }
 
 var UpdateMap = UndoableAction.extend({
-  init: function(options) {
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+
     this._super(function() {
-      console.log('saving old map and reloading map...');
-      saveOldMap();
+      // console.log('saving old map and reloading map...');
+      // self.oldValue = UpdateMap.priorOldValue;
       reloadMap();
-      theOldMap = getLevelCopy();
+      // reportLevel(self.value);
+      // console.log(self.oldValue);
+      // UpdateMap.priorOldValue = self.value;
     }, function() {
       console.log('reloading from old map...');
-      loadOldMap();
+      level = self.oldValue;
+      reportLevel(self.oldValue);
+      reportLevel(level);
       reloadMap();
+      // loadValue(self.oldValue);
+      UpdateMap.priorOldValue = self.oldValue;
     });
 
-    this.do();
+    self.do();
   }
 });
 
+function reportLevel(lvl) {
+  console.log(lvl);
+}
+
 function redrawMap() {
-  // new UpdateMap();
+  // new UpdateMap(getLevelCopy());
   reloadMap();
 }
 

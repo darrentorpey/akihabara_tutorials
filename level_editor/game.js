@@ -203,7 +203,7 @@ function addBlock(data) {
 									toys.platformer.setFrame(this); // set the right animation frame
 									var pl=gbox.getObject("player","player_id");
                   
-                  if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))) {
+                  if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4)){
                     //pl.accy = 0;
                     pl.onBox = true;
                     pl.y=help.yPixelToTile(map,this.y-1)+1;
@@ -218,6 +218,8 @@ function addBlock(data) {
                       if ((pl.accx > 1 && pl.x < this.x) || (pl.accx < 1 && pl.x > this.x)) {
                       pl.accx = Math.floor(pl.accx/2);
                       this.accx = pl.accx;
+                      if (pl.accx>0) pl.x=this.x+1-pl.w;
+                      if (pl.accx<0) pl.x=this.x+this.w-1;
                       }
                       
                       }

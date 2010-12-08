@@ -8,7 +8,7 @@ function addMap() {
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
   //gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 0, color:gbox.COLOR_WHITE });
-
+  gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);
       //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
       
@@ -42,7 +42,8 @@ function redrawMap() {
       }
     }
   map = help.finalizeTilemap(map);
-      //write the background image
+    gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
+    //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
       
       

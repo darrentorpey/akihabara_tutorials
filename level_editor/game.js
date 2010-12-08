@@ -229,18 +229,40 @@ function addBlock(data) {
             if (pl.accx<0) pl.x=this.x+this.w-1;
             }
           }
-      
-      // being pushed left/right by another box
-      var other = collideGroup(this,'boxes');
-      if (other) 
-        {
-        other.accx = 0;
-        this.accx = 0;
-        //if (other.x<this.x) other.x=this.x-other.w;
-        //if (other.x>this.x) other.x=this.x+this.w;
-        }
-        
+
     var group = 'boxes';
+    
+      // being pushed left/right by another box
+    for (var i in gbox._objects[group])
+      if ((!gbox._objects[group][i].initialize)&&gbox.collides(this,gbox._objects[group][i]))
+        {
+        if (gbox._objects[group][i] != this)
+          {
+          other = gbox._objects[group][i];
+          other.accx = 0;
+          if ((this.accx<0)) {
+					this.accx=0;
+					this.x=other.x+other.w;
+					this.touchedleftwall=true;
+				} 
+				if ((this.accx>0)) {
+					this.accx=0;
+					this.x=other.x-this.w;
+					this.touchedrightwall=true;
+				}
+          }
+      }
+      
+      // var other = collideGroup(this,'boxes');
+      // if (other) 
+        // {
+        // other.accx = 0;
+        // this.accx = 0;
+        // //if (other.x<this.x) other.x=this.x-other.w;
+        // //if (other.x>this.x) other.x=this.x+this.w;
+        // }
+        
+
       // being landed on by another box
     for (var i in gbox._objects[group])
       if ((!gbox._objects[group][i].initialize)&&gbox.collides(this,gbox._objects[group][i]))
@@ -280,6 +302,9 @@ function addBlock(data) {
           this.y=help.yPixelToTile(map,this.y)+3;
           }
       if (!collideGroup(this,'boxes')) this.onBox = false;
+      
+      if (this.onBox && this.touchedfloor) this.y=help.yPixelToTile(map,this.y);
+
       
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
       toys.platformer.handleAccellerations(this); // gravity/attrito
@@ -359,7 +384,7 @@ function addPlayer() {
           if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
-          this.y=help.yPixelToTile(map,this.y)+2;
+          this.y=help.yPixelToTile(map,this.y)+3;
           }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping

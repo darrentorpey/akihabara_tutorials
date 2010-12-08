@@ -201,6 +201,9 @@ function addBlock(data) {
                 
     if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
     
+
+      
+      
       // Counter
       this.counter=(this.counter+1)%10;
       
@@ -261,13 +264,22 @@ function addBlock(data) {
       toys.platformer.applyGravity(this); // Apply gravity
       
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
+ 
       
-      if (!collideGroup(this,'boxes')) this.onBox = false;
+      // if (this.id == 'obj-2') {
+      // console.log(this.touchedfloor);
+      // console.log(this.onBox);
+      // console.log(this.accy);
+      // console.log(this.y);
+      // console.log(collideGroup(this,'boxes'));
+      // } 
+      
       if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
-          this.y=help.yPixelToTile(map,this.y)+1;
+          this.y=help.yPixelToTile(map,this.y)+3;
           }
+      if (!collideGroup(this,'boxes')) this.onBox = false;
       
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
       toys.platformer.handleAccellerations(this); // gravity/attrito

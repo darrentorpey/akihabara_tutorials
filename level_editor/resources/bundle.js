@@ -4,7 +4,8 @@
     ['logo',             'resources/logo.png'],
     ['player_sprite',    'resources/player_sprite.png'],
     ['map_spritesheet',  'resources/map_pieces.png'],
-    ['enemy_sprite',  'resources/enemy_sprite.png']
+    ['enemy_sprite',  'resources/enemy_sprite.png'],
+    ['background_tilesheet',  'resources/bg1.png']
   ],
 
   addFont: [
@@ -27,6 +28,15 @@
       tileh:   32,
       tilew:   32,
       tilerow: 1,
+      gapx:    0,
+      gapy:    0
+    },
+    {
+      id:      'background_tiles',  // Set a unique ID for future reference
+      image:   'background_tilesheet', // Use the 'player_sprite' image, as loaded above
+      tileh:   32,
+      tilew:   32,
+      tilerow: 3,
       gapx:    0,
       gapy:    0
     },

@@ -77,7 +77,15 @@ function main() {
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
   
   gbox.createCanvas('bg_canvas', { w: map.w, h: map.h });
-  gbox.blitAll(gbox.getCanvasContext('bg_canvas'),bg,{dx:0,dy:0}); //gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'map_pieces',tile:2,dx:0,dy:0,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+  //gbox.blitAll(gbox.getCanvasContext('bg_canvas'),bg,{dx:0,dy:0});
+  for (var tx=0;tx<40;tx++)
+    for(var ty=0;ty<30;ty++)
+      {
+      gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:0,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+      var rnd = Math.random();
+      if (rnd < 0.05) gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:1,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+        else if (rnd >= 0.05 && rnd < 0.1) gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:2,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+      }
   
   // We draw the map onto our 'map_canvas' canvas that we created above.
   // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map

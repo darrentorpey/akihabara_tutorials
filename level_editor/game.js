@@ -3,6 +3,9 @@ var map;
 
 window.addEventListener('load', loadResources, false);
 
+var bg = new Image();
+bg.src = 'resources/bg0.png'
+
 function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
@@ -20,7 +23,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'player', 'game']);
+  gbox.setGroups(['background', 'enemies', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -35,11 +38,12 @@ function main() {
   
   // Set our intro screen animation
   maingame.gameTitleIntroAnimation = function() { return true; };
-
+  
   // This function will be called before the game starts running, so here is where we add our game elements
   maingame.initializeGame = function() {
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     addPlayer();
+    //addEnemy({x:100,y:20,side:true});
 
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
@@ -57,11 +61,11 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 3 && t != 5 && t != 6 && t!= 7) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
@@ -71,7 +75,18 @@ function main() {
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
-
+  
+  gbox.createCanvas('bg_canvas', { w: map.w, h: map.h });
+  //gbox.blitAll(gbox.getCanvasContext('bg_canvas'),bg,{dx:0,dy:0});
+  for (var tx=0;tx<40;tx++)
+    for(var ty=0;ty<30;ty++)
+      {
+      gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:0,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+      var rnd = Math.random();
+      if (rnd < 0.05) gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:1,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+        else if (rnd >= 0.05 && rnd < 0.1) gbox.blitTile(gbox.getCanvasContext('bg_canvas'),{tileset:'background_tiles',tile:2,dx:tx*32,dy:ty*32,fliph:0,flipv:0,camera:gbox.getCamera(),alpha:1});
+      }
+  
   // We draw the map onto our 'map_canvas' canvas that we created above.
   // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
@@ -92,7 +107,66 @@ function followCamera(obj, viewdata) {
   if ((obj.y - ycam) < (ybuf))                 gbox.setCameraY(ycam + (obj.y - ycam) - ybuf,                   viewdata);
 }
 
+function addEnemy(data, type) {
+			
+					    gbox.addObject({
+							group:"enemies",
+							tileset:"enemy_tiles",
+							initialize:function() {
+								toys.platformer.initialize(this,{
+									frames:{
+										still:{ speed:1, frames:[0] },
+										walking:{ speed:4, frames:[0] },
+										jumping:{ speed:1, frames:[0] },
+										falling:{ speed:1, frames:[0] },
+										die: { speed:1,frames:[0] }
+									},
+									x:data.x,
+									y:data.y,
+									jumpaccy:10,
+									side:data.side
+									
+								});
+							},
+							first:function() {
+              if (!type) type = 0;
+              
+								if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
+                console.log("hi");
+									// Counter
+									this.counter=(this.counter+1)%10;
 
+									toys.platformer.applyGravity(this); // Apply gravity
+									toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
+									if (this.touchedfloor) // If touching the floor...
+										toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:2}); // goomba movement
+									else // Else...
+										this.accx=0; // Stay still (i.e. jump only vertically)
+									if (type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
+									toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
+									toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
+									//if (toys.platformer.canJump(this)&&toys.timer.randomly(this,"jumper",{base:50,range:50})) this.accy=-this.jumpaccy; // Jump randomly (the toy is resetted the first call)
+									toys.platformer.handleAccellerations(this); // gravity/attrito
+									toys.platformer.setFrame(this); // set the right animation frame
+									var pl=gbox.getObject("player","player_id");
+                  if (help.isSquished(this,pl)) {
+                    gbox.trashObject(this);
+                    toys.platformer.bounce(pl,{jumpsize:10});
+                  } else
+                    if (gbox.collides(this,pl,2) && pl.x)
+                      {
+                      pl.x = 20;
+                      pl.y = 20;
+                      }
+								}
+							},
+							blit:function() {
+								if (gbox.objectIsVisible(this))
+									gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+							}
+					  });
+  }
+      
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
   gbox.addObject({
@@ -145,6 +219,13 @@ function addPlayer() {
         this.x = 20;
         this.y = 20;
       }
+      
+      if (gbox.keyIsHit("c")) {
+      gbox.trashGroup('enemies');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+      }      
      
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally

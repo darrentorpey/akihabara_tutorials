@@ -248,6 +248,8 @@ function addBlock(data) {
           if (((other.accy>=0)&&(Math.abs(this.y-(other.y+other.h))<(this.h)))&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
             {
             other.onBox = true;
+            other.accy = 0;
+            other.y=help.yPixelToTile(map,other.y)+1;
             }
             //else other.onBox = false;
           }

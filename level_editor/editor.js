@@ -282,10 +282,11 @@ function drawCanvas(cx, cy) {
   longURL = "?level=" + levelParam;
   longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
 
-  if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
+  if (minimap) context.putImageData(minimap,480,0,0,0,160,120);
+  
   context.strokeStyle = '#000';
-  context.strokeRect(480,360,160,120);
-  context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
+  context.strokeRect(480,0,160,120);
+  context.strokeRect(480+((camx*32)/8),0+((camy*32)/8),640/8,480/8);
 }
 
 function redrawMap() {

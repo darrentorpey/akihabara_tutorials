@@ -1343,6 +1343,7 @@ var toys={
 				th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
 				th.touchedfloor=true;
 			}
+      
 		},
 		
 		/**

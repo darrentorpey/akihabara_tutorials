@@ -132,7 +132,7 @@ function addEnemy(data, type) {
               if (!type) type = 0;
               
 								if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
-                console.log("hi");
+                
 									// Counter
 									this.counter=(this.counter+1)%10;
 
@@ -166,7 +166,71 @@ function addEnemy(data, type) {
 							}
 					  });
   }
-      
+
+function addBlock(data) {
+			
+					    gbox.addObject({
+							group:"enemies",
+							tileset:"map_pieces",
+							initialize:function() {
+								toys.platformer.initialize(this,{
+									frames:{
+										still:{ speed:1, frames:[2] },
+										walking:{ speed:1, frames:[2] },
+										jumping:{ speed:1, frames:[2] },
+										falling:{ speed:1, frames:[2] },
+										die: { speed:1,frames:[2] }
+									},
+									x:data.x,
+									y:data.y,
+									jumpaccy:10,
+									side:data.side
+									
+								});
+							},
+							first:function() {
+                            
+								if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
+                
+									// Counter
+									this.counter=(this.counter+1)%10;
+
+									toys.platformer.applyGravity(this); // Apply gravity
+									
+									toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
+									toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
+									toys.platformer.handleAccellerations(this); // gravity/attrito
+									toys.platformer.setFrame(this); // set the right animation frame
+									var pl=gbox.getObject("player","player_id");
+                  
+                  if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))) {
+                    //pl.accy = 0;
+                    pl.onBox = true;
+                    pl.y=help.yPixelToTile(map,this.y-1)+1;
+                    //pl.touchedfloor = true;
+                  }
+                  else if (!gbox.collides(this,pl)) pl.onBox = false;
+                  
+                  
+                  
+                  if (gbox.collides(this,pl,2) && pl.x)
+                      {
+                      if ((pl.accx > 1 && pl.x < this.x) || (pl.accx < 1 && pl.x > this.x)) {
+                      pl.accx = Math.floor(pl.accx/2);
+                      this.accx = pl.accx;
+                      }
+                      
+                      }
+								}
+							},
+							blit:function() {
+								if (gbox.objectIsVisible(this))
+									gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+							}
+					  });
+  }
+
+  
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
   gbox.addObject({
@@ -180,17 +244,11 @@ function addPlayer() {
     // We have to do this because topview is normally used for Zelda-style games where the hitbox is considered to be the bottom half
     //  of the sprite so the top half can "overlap" scenery that's "behind" it. In this case we're just setting colh to the default tile height.
     colh: gbox.getTiles('player_tiles').tileh,
-    
+    onBox: false,
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
     initialize: function() {
-      // Toys are helper functions that are specific to certain genres.
-      // We're using the "topview" toys because we're creating a game with a top view and Akihabara provides convenient helper functions for that.
-
-      // Here we're just telling it to initialize the object, in this case our player.
-      //  The second argument provides data to initialize the object with,
-      //  but in this case we don't have any, so we just pass an empty hash
       toys.topview.initialize(this, {});
       
       //Overriding the gravity function to double the usual gravity (from 1 to 2).
@@ -225,13 +283,21 @@ function addPlayer() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+            
+      addBlock({x:4*32,y:0*32,side:true});
       }      
      
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
 					toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
+          if (this.onBox) {
+          this.touchedfloor = true;
+          this.accy = 0;
+          this.y=help.yPixelToTile(map,this.y)+1;
+          }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
+          if (this.accy <= 0) this.onBox = false;
 					toys.platformer.handleAccellerations(this); // gravity/attrito
     },
 

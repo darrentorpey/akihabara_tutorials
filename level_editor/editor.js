@@ -157,6 +157,11 @@ function ev_brush (ev) {
 
     // This is called when you start holding down the mouse button.
     this.mousedown = function (ev) {
+
+      // if (!UpdateMap.priorOldValue) {
+      //   UpdateMap.priorOldValue = getLevelCopy();
+      // }
+
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
@@ -253,66 +258,3 @@ function ev_brush (ev) {
 }, false); }
 
 // vim:set spell spl=en fo=wan1croql tw=80 ts=2 sw=2 sts=2 sta et ai cin fenc=utf-8 ff=unix:
-
-var undoCounter = 0;
-
-var UndoableAction = Klass.extend({
-  init: function(do_func, undo_func, options){
-    // this.parent = jQuery(parent);
-    this.options   = options || {};
-    this.do_func   = do_func;
-    this.undo_func = undo_func;
-    this.counter = 0;
-  },
-
-  do: function() {
-    var action = this;
-    this.counter++;
-    var my_num = this.counter;
-    console.log('making ' + my_num);
-
-    $().undoable(function() {
-      console.log('doing #' + my_num);
-      action.do_func();
-      Undos.updateCounter();
-    }, function() {
-      console.log('undoing #' + my_num);
-      action.undo_func();
-      Undos.updateCounter();
-    });
-
-    Undos.updateCounter();
-  },
-
-  undo: function() {
-    console.log('un-doing');
-  }
-});
-
-var UpdateMap = UndoableAction.extend({
-  init: function(options) {
-    this._super(function() {
-      console.log('my func');
-    }, function() {
-      console.log('my func DOWN');
-    });
-
-    this.do();
-  }
-});
-
-var Undos = {
-  updateCounter: function() {
-    $('#undo_counter span').text(Undos.getNumUndoFunctions());
-  },
-
-  getNumUndoFunctions: function() {
-    var allUndoFuncs = jQuery('body').data('undoFunctions');
-
-    if (allUndoFuncs) {
-      return undoCounter = allUndoFuncs.length;
-    } else {
-      return undoCounter = 0;
-    }
-  }
-}

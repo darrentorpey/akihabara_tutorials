@@ -23,50 +23,60 @@
     jQuery('body').data('redoFunctions', []); // reset the redo queue
   };
 
+  $.fn.undo = function() {
+    var uf = $('body').data('undoFunctions');
+    if (typeof uf == 'object') {
+      var lf = uf.pop();
+      $('body').data('undoFunctions', uf);
+
+      if (lf) {
+        var rf = $('body').data('redoFunctions');
+        if (rf) rf.push(lf); else rf = [lf];
+        $('body').data('redoFunctions', rf);
+
+        lf[1](); // undo is index 1
+      }
+    }
+  };
+
+  $.fn.redo = function() {
+    var rf = $('body').data('redoFunctions');
+    if (typeof rf == 'object') {
+      var lf = rf.pop();
+      $('body').data('redoFunctions', rf);
+
+      if (lf) {
+        var uf = $('body').data('undoFunctions');
+        if (uf) uf.push(lf); else uf = [lf];
+        $('body').data('undoFunctions', uf);
+
+        lf[0](); // redo is index 0
+      }
+    }
+  };
+
   $.fn.enableUndo = function(params){
     var defaults = {
       undoCtrlChar : 'z',
       redoCtrlChar : 'z',
       redoShiftReq : true
     };
+
     var settings = jQuery.extend(defaults, params);
     var undoChar = settings.undoCtrlChar.toUpperCase().charCodeAt();
     var redoChar = settings.redoCtrlChar.toUpperCase().charCodeAt();
 
-    jQuery(document).keydown(function(e){
+    $(document).keydown(function(e){
       // UNDO
       if (e.ctrlKey && !e.shiftKey && e.which == undoChar) {
-        var uf = jQuery('body').data('undoFunctions');
-        if (typeof uf == 'object') {
-          var lf = uf.pop();
-          jQuery('body').data('undoFunctions', uf);
-
-          if (lf) {
-            var rf = jQuery('body').data('redoFunctions');
-            if (rf) rf.push(lf); else rf = [lf];
-            jQuery('body').data('redoFunctions', rf);
-
-            lf[1](); // undo is index 1
-          }
-        }
+        $().undo();
       }
       // REDO
       if (e.ctrlKey && (e.shiftKey || !settings.redoShiftReq) && e.which == redoChar) {
-        var rf = jQuery('body').data('redoFunctions');
-        if (typeof rf == 'object') {
-          var lf = rf.pop();
-          jQuery('body').data('redoFunctions', rf);
-
-          if (lf) {
-            var uf = jQuery('body').data('undoFunctions');
-            if (uf) uf.push(lf); else uf = [lf];
-            jQuery('body').data('undoFunctions', uf);
-
-            lf[0](); // redo is index 0
-          }
-        }
+        $().redo();
       }
     });
+
     jQuery('body').data('undoEnabled', true);
   };
 })(jQuery);

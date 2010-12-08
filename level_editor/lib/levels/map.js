@@ -24,14 +24,49 @@ gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0,
 }
 
 function loadMap() {
-  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9']])
+  return help.asciiArtToMap(level, [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A'] ])
+}
+
+var UpdateMap = UndoableAction.extend({
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+
+    this._super(function() {
+      // console.log('saving old map and reloading map...');
+      // self.oldValue = UpdateMap.priorOldValue;
+      reloadMap();
+      // reportLevel(self.value);
+      // console.log(self.oldValue);
+      // UpdateMap.priorOldValue = self.value;
+    }, function() {
+      console.log('reloading from old map...');
+      level = self.oldValue;
+      reportLevel(self.oldValue);
+      reportLevel(level);
+      reloadMap();
+      // loadValue(self.oldValue);
+      UpdateMap.priorOldValue = self.oldValue;
+    });
+
+    self.do();
+  }
+});
+
+function reportLevel(lvl) {
+  console.log(lvl);
 }
 
 function redrawMap() {
-  map =
-    {
+  // new UpdateMap(getLevelCopy());
+  reloadMap();
+}
+
+function reloadMap() {
+  map = help.finalizeTilemap({
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
     map: loadMap(),
+
     tileIsSolidCeil: function(obj, t) {
       if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
         else return false; // Is a wall if is not an empty space
@@ -40,8 +75,8 @@ function redrawMap() {
       if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
         else return false; // Is a wall if is not an empty space
       }
-    }
-  map = help.finalizeTilemap(map);
+    })
+
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
     //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
@@ -53,6 +88,22 @@ gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0,
       
       // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
       canvasContext = gbox.getCanvasContext('map_canvas');
+}
 
-  
+// theOldMap = getLevelCopy();
+
+function saveOldMap() {
+  // var level_copy = theOldMap.slice(0);
+  oldMaps.push(theOldMap);
+  // console.log($(oldMaps).last());
+  console.log(theOldMap);
+  console.log(oldMaps);
+}
+
+function loadOldMap() {
+  level = oldMaps.pop();
+}
+
+function getLevelCopy() {
+  return $.extend(true, [], level);
 }

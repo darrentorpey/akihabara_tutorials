@@ -1,24 +1,34 @@
 <!DOCTYPE html><html lang="en">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>Akihabara Live Level Editor Demo</title>
+  <meta charset="utf-8">
+  <title>Akihabara Live Level Editor Demo</title>
 
-    <link rel="stylesheet" href="stylesheets/reset.css">
-    <link rel="stylesheet" href="stylesheets/admin.css">
+  <link rel="stylesheet" href="stylesheets/reset.css">
+  <link rel="stylesheet" href="stylesheets/admin.css">
 
-    <style type="text/css">
-      #container { position: relative; cursor: url(blank.png), default;}
-      #imageView { border: 1px solid #000; }
-      #d_clip_button {
-                width:150px;             
-                text-align:center; 
-                border:1px solid black; 
-                background-color:#ccc; 
-                margin:10px; padding:10px; 
-        }
-        #d_clip_button.hover { background-color:#eee; }
-        #d_clip_button.active { background-color:#aaa; }
-    </style>
+  <style type="text/css">
+    #container { position: relative; cursor: url(blank.png), default; }
+    #imageView { border: 1px solid #000; }
+    #d_clip_button {
+      width: 150px;
+      text-align: center;
+      border: 1px solid black;
+      background-color: #ccc;
+      margin: 10px;
+      padding: 10px;
+    }
+    #d_clip_button.hover { background-color: #eee; }
+    #d_clip_button.active { background-color: #aaa; }
+  </style>
+  <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
+  <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
+  <script type="text/javascript" src="lib/core.js"></script>
+  <script type="text/javascript" src="editor.js"></script>
+  <script type="text/javascript" src="lib/admin/gui.js"></script>
+  <script type="text/javascript" src="lib/admin/init.js"></script>
 </head>
 <body>
   <p>
@@ -32,6 +42,21 @@
     <img src="7.png" id="brush7">
     <img src="8.png" id="brush8">
     <img src="9.png" id="brush9">
+  </p>
+
+  <div id="container">
+    <canvas id="imageView" width="640" height="480">
+    </canvas>
+  </div>
+
+  <p>
+    Paint a level in the left box, watch it show up in the game in the right box. <strong>Best run on a widescreen monitor!</strong>
+  </p>
+
+  <p>
+    Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
+  <p>
+
   <div style="height:50px; padding:10px"><div><a onClick = "genURL();">Generate a URL to share</a></div>
   <input type="text" size="50" value="click the above link to make a URL" id="share">
   <span id="d_clip_container" style="display:inline">
@@ -39,21 +64,7 @@
 </span></div>
   </p>
 
-  <div id="container">
-    <canvas id="imageView" width="640" height="480">
-    </canvas>
-  </div>
-  <p>
-    Paint a level in the left box, watch it show up in the game in the right box. <strong>Best run on a widescreen monitor!</strong>
-  </p>
-  <p>
-    Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
-  <p>
   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6"></script>
-  <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
   <script type="text/javascript" src="akihabara/gbox.js"></script>
   <script type="text/javascript" src="akihabara/iphopad.js"></script>
   <script type="text/javascript" src="akihabara/trigo.js"></script>
@@ -61,18 +72,13 @@
   <script type="text/javascript" src="akihabara/help.js"></script>
   <script type="text/javascript" src="akihabara/tool.js"></script>
   <script type="text/javascript" src="akihabara/gamecycle.js"></script>
-  <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
-    <script type="text/javascript" src="game.js"></script>
-  <script type="text/javascript" src="editor.js"></script>
-  <script type="text/javascript" src="lib/core.js"></script>
+  <script type="text/javascript" src="game.js"></script>
   <script type="text/javascript" src="lib/levels/map.js"></script>
-  <script type="text/javascript" src="lib/admin/gui.js"></script>
-  <script type="text/javascript" src="lib/admin/init.js"></script>
 <script>
-jQuery(function(){
-  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
-});
+  $(function(){
+    $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+  });
 
-// UpdateMap.priorOldValue = getLevelCopy();
+  if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 </script>
 </body></html>

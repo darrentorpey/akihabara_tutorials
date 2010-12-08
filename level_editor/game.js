@@ -392,17 +392,9 @@ function addPlayer() {
     
     // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
-
-      if (gbox.keyIsHit("b")) {
-        this.x = 20;
-        this.y = 20;
-      }
       
       if (gbox.keyIsHit("c")) {
-      gbox.trashGroup('enemies');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+      this.resetGame();
       }      
      
      var gp = 'boxes';
@@ -413,7 +405,7 @@ function addPlayer() {
       // check to see if you're being squished by this blocks
       if ((!block.initialize)&&help.isSquished(this,block))
           {
-          this.gameOver();
+          this.resetGame();
           toys.platformer.bounce(block,{jumpsize:10});
           }
      }
@@ -449,7 +441,7 @@ function addPlayer() {
       });
     },
     
-    gameOver: function() {
+    resetGame: function() {
       this.x = 20;
       this.y = 20;
       gbox.trashGroup('enemies');

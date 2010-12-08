@@ -9,6 +9,10 @@ function addMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0); 
+      gbox.trashGroup('enemies');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
     },
  
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
@@ -59,7 +63,10 @@ function reloadMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0);
-
+      gbox.trashGroup('enemies');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
     
     
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  

@@ -405,6 +405,18 @@ function addPlayer() {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
       }      
      
+     var gp = 'boxes';
+    // iterate through each pushblock
+    for (var i in gbox._objects[gp])
+      {
+      var block = gbox._objects[gp][i];
+      // check to see if you're being squished by this blocks
+      if ((!block.initialize)&&help.isSquished(this,block))
+          {
+          this.gameOver();
+          toys.platformer.bounce(block,{jumpsize:10});
+          }
+     }
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
 					toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
@@ -435,6 +447,19 @@ function addPlayer() {
         camera:  this.camera,
         alpha:   1.0
       });
+    },
+    
+    gameOver: function() {
+      this.x = 20;
+      this.y = 20;
+      gbox.trashGroup('enemies');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+      gbox.trashGroup('boxes');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0); 
     },
   });
 }

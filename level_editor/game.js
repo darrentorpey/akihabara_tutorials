@@ -76,6 +76,10 @@ function main() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0); 
+      gbox.trashGroup('enemies');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });

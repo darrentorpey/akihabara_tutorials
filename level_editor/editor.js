@@ -1,61 +1,87 @@
-
 var clip = new ZeroClipboard.Client();
 var level = new Array(30);
 var insp;
 var shortURL;
-var longURL ="";
-levelParam = gup("level");
+var longURL = '';
+var levelParam;
+var afterEditorLoad;
 var canvasContext;
 var minimap;
 var context;
 var tool;
 
-clip.setHandCursor( false );
-clip.glue( 'd_clip_button', 'd_clip_container' );
+function setLevel(lvl) {
+  level = lvl;
 
+  drawCanvas(camx, camy);
+}
 
 function callBitly(s) {
-data = BitlyClient.shorten(s,'myShort');
-
+  data = BitlyClient.shorten(s, 'myShort');
 }
 
-
-function myShort (data) {
-var bitly_link = null;
-        for (var r in data.results) {
-            bitly_link = data.results[r]['shortUrl'];
-            break;
-        }
-shortURL = bitly_link;
-document.getElementById("share").value = shortURL;
-clip.setText(shortURL);
+function myShort(data) {
+  var bitly_link = null;
+  for (var r in data.results) {
+      bitly_link = data.results[r]['shortUrl'];
+      break;
+  }
+  shortURL = bitly_link;
+  document.getElementById("share").value = shortURL;
+  clip.setText(shortURL);
 }
 
-function genURL () {
-callBitly(longURL);
+function genURL() {
+  callBitly(longURL);
 }
 
-
-function gup( name )
-{
+function gup( name ) {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp( regexS );
   var results = regex.exec( window.location.href );
-  if( results == null )
+  if (null == results)
     return "";
   else
     return results[1];
 }
 
+var UpdateMap = UndoableAction.extend({
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+    // console.log('Redrawing map...');
+
+    this._super(function() {
+      // console.log('map up');
+      self.oldValue = UpdateMap.priorOldValue;
+      setLevel(getLevelCopy(self.value));
+      reloadMap();
+      UpdateMap.priorOldValue = self.value;
+
+      // reportLevel(self.value, 'new');
+      // reportLevel(level, 'current');
+      // reportLevel(self.oldValue, 'old');
+    }, function() {
+      // console.log('map down');
+      setLevel(self.oldValue); // setLevel(getLevelCopy(self.oldValue));
+      reloadMap();
+      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
+    });
+
+    self.do();
+  }
+});
+
+var canvas, tool, px, py, tcolor, brush, camx, camy;
+var tool_default = 'rock';
+var total_brushes = 10;
+var brushes = new Array(total_brushes);
+var brushes_img = new Array(total_brushes);
+
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
-  var canvas, tool, px, py, tcolor, brush, camx, camy;
-  var tool_default = 'rock';
-  var total_brushes = 10;
-  var brushes = new Array(total_brushes);
-  var brushes_img = new Array(total_brushes);
 
   // Load the default brush, #1
   //img.src = '1.png';
@@ -66,6 +92,10 @@ window.addEventListener('load', function () {
   camy = 0;
   px = -100;
   py = -100;
+
+  levelParam = gup("level");
+  clip.setHandCursor( false );
+  clip.glue('d_clip_button', 'd_clip_container');
 
   function init () {
     // Find the elements
@@ -114,35 +144,14 @@ window.addEventListener('load', function () {
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     canvas.addEventListener('mouseup',   ev_canvas, false);
-  drawCanvas(camx,camy);
+
+    drawCanvas(camx,camy);
   }
 
- function replaceOneChar(s,c,n){
-(s = s.split(''))[n] = c;
-return s.join('');
-};
-
-function drawCanvas(cx, cy) {
-  for (var y = cy; y < cy+15; y++)
-    for (var x = cx; x < cx+20; x++)
-      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
-
-    levelParam = "";
-    for (var i = 0; i < 30; i++) {
-      levelParam += level[i];
-    }
-
-    longURL = "?level=" + levelParam;
-    longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
-
-
-    if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
-    context.strokeStyle = '#000';
-    context.strokeRect(480,360,160,120);
-    context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
-    
-    
-}
+  function replaceOneChar(s, c, n) {
+    (s = s.split(''))[n] = c;
+    return s.join('');
+  };
 
 function ev_brush (ev) {
   brush = this.src.substr(this.src.length - 5, 1);
@@ -157,11 +166,6 @@ function ev_brush (ev) {
 
     // This is called when you start holding down the mouse button.
     this.mousedown = function (ev) {
-
-      // if (!UpdateMap.priorOldValue) {
-      //   UpdateMap.priorOldValue = getLevelCopy();
-      // }
-
         level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
         tool.started = true;
         drawCanvas(camx,camy);
@@ -255,6 +259,37 @@ function ev_brush (ev) {
 
   init();
 
+  if (!UpdateMap.priorOldValue) {
+    UpdateMap.priorOldValue = getLevelCopy();
+  }
+
+  if (afterEditorLoad) {
+    afterEditorLoad();
+  }
+
 }, false); }
+
+function drawCanvas(cx, cy) {
+  for (var y = cy; y < cy+15; y++)
+    for (var x = cx; x < cx+20; x++)
+      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+
+  levelParam = "";
+  for (var i = 0; i < 30; i++) {
+    levelParam += level[i];
+  }
+
+  longURL = "?level=" + levelParam;
+  longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
+
+  if (minimap) context.putImageData(minimap,480,360,0,0,160,120);
+  context.strokeStyle = '#000';
+  context.strokeRect(480,360,160,120);
+  context.strokeRect(480+((camx*32)/8),360+((camy*32)/8),640/8,480/8);
+}
+
+function redrawMap() {
+  new UpdateMap(getLevelCopy());
+}
 
 // vim:set spell spl=en fo=wan1croql tw=80 ts=2 sw=2 sts=2 sta et ai cin fenc=utf-8 ff=unix:

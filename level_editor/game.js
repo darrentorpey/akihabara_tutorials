@@ -377,8 +377,6 @@ function addPlayer() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-            
-      addBlock({x:4*32,y:0*32,side:true});
       }      
      
       toys.platformer.applyGravity(this); // Apply gravity

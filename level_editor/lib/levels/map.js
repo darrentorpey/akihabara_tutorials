@@ -38,15 +38,23 @@ function reloadMap() {
     map: loadMap(),
 
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2) return true;
         else return false; // Is a wall if is not an empty space
       }
     })
 
+    
+     gbox.trashGroup('boxes');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0);
+
+    
+    
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
     //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })

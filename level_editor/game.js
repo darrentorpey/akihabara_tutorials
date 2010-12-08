@@ -43,7 +43,6 @@ function main() {
   maingame.initializeGame = function() {
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     addPlayer();
-    //addEnemy({x:100,y:20,side:true});
 
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
@@ -61,17 +60,22 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
- //debugger
+ 
   // This function calculates the overall height and width of the map and puts them into the 'x' and 'y' fields of the object
   map = help.finalizeTilemap(map);
+  
+      gbox.trashGroup('boxes');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0); 
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
@@ -180,15 +184,15 @@ function addBlock(data) {
 			
   gbox.addObject({
   group:"boxes",
-  tileset:"map_pieces",
+  tileset:"block_tiles",
   initialize:function() {
     toys.platformer.initialize(this,{
       frames:{
-        still:{ speed:1, frames:[2] },
-        walking:{ speed:1, frames:[2] },
-        jumping:{ speed:1, frames:[2] },
-        falling:{ speed:1, frames:[2] },
-        die: { speed:1,frames:[2] }
+        still:{ speed:1, frames:[0] },
+        walking:{ speed:1, frames:[0] },
+        jumping:{ speed:1, frames:[0] },
+        falling:{ speed:1, frames:[0] },
+        die: { speed:1,frames:[0] }
       },
       x:data.x,
       y:data.y,

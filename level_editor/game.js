@@ -148,6 +148,29 @@ function addEnemy(data, type) {
                 
 									// Counter
 									this.counter=(this.counter+1)%10;
+                  
+                  var gp = 'boxes';
+                  // iterate through each pushblock
+                  for (var i in gbox._objects[gp])
+                    {
+                    var block = gbox._objects[gp][i];
+                    // check to see if you're being squished by this blocks
+                    if ((!block.initialize)&&help.isSquished(this,block))
+                        {
+                        gbox.trashObject(this);
+                        toys.platformer.bounce(block,{jumpsize:10});
+                        }
+                    // check to see if you're touching it on the left or right
+                    if (gbox.collides(this,block,2) && this.x)
+                      {
+                      if ((this.accx > 1 && block.x > this.x) || (this.accx < 1 && block.x < this.x)) 
+                        {
+                        if (this.accx>0) this.touchedrightwall = true;
+                        if (this.accx<0) this.touchedleftwall = true;
+                        }
+                      }
+                      
+                    }
 
 									toys.platformer.applyGravity(this); // Apply gravity
 									toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
@@ -165,12 +188,15 @@ function addEnemy(data, type) {
                   if (help.isSquished(this,pl)) {
                     gbox.trashObject(this);
                     toys.platformer.bounce(pl,{jumpsize:10});
-                  } else
-                    if (gbox.collides(this,pl,2) && pl.x)
+                  } 
+                  else if (gbox.collides(this,pl,2) && pl.x)
                       {
                       pl.x = 20;
                       pl.y = 20;
                       }
+                      
+                  
+                  
 								}
 							},
 							blit:function() {

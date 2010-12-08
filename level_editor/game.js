@@ -245,9 +245,10 @@ function addBlock(data) {
         if (gbox._objects[group][i] != this)
           {
           other = gbox._objects[group][i];
-          if (((other.accy>=0)&&(Math.abs(this.y-(other.y+other.h))<(this.h)))&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
+          if (((other.accy>=0)&&(Math.abs(this.y-(other.y+other.h))<(this.h)))&&(other.x+other.w>this.x+1)&&(other.x<this.x+this.w-1))
             {
             other.onBox = true;
+            other.touchedfloor = true;
             other.accy = 0;
             other.y=help.yPixelToTile(map,other.y)+1;
             }

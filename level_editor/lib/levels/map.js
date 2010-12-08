@@ -4,6 +4,13 @@ function addMap() {
     id:    'background_id', // This is the object ID
     group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
  
+    initialize: function() {
+      gbox.trashGroup('boxes');
+        for (var y = 0; y < 30; y++)
+          for (var x = 0; x < 40; x++)
+            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}, 0); 
+    },
+ 
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)

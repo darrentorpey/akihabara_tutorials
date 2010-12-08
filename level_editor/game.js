@@ -23,7 +23,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'enemies', 'player', 'game']);
+  gbox.setGroups(['background', 'boxes', 'enemies', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -93,6 +93,15 @@ function main() {
 
   // Now that we've set up our game's elements, this tells the game to run
   gbox.go();
+}
+
+// if the object is colliding with another object of a given group (do not count the object we're testing), return the object
+// otherwise return false
+function collideGroup(obj,group) {
+  for (var i in gbox._objects[group])
+    if ((!gbox._objects[group][i].initialize)&&gbox.collides(obj,gbox._objects[group][i]))
+      if (gbox._objects[group][i] != obj) return gbox._objects[group][i];
+  return false;
 }
 
 function followCamera(obj, viewdata) {
@@ -169,67 +178,106 @@ function addEnemy(data, type) {
 
 function addBlock(data) {
 			
-					    gbox.addObject({
-							group:"enemies",
-							tileset:"map_pieces",
-							initialize:function() {
-								toys.platformer.initialize(this,{
-									frames:{
-										still:{ speed:1, frames:[2] },
-										walking:{ speed:1, frames:[2] },
-										jumping:{ speed:1, frames:[2] },
-										falling:{ speed:1, frames:[2] },
-										die: { speed:1,frames:[2] }
-									},
-									x:data.x,
-									y:data.y,
-									jumpaccy:10,
-									side:data.side
-									
-								});
-							},
-							first:function() {
-                            
-								if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
+  gbox.addObject({
+  group:"boxes",
+  tileset:"map_pieces",
+  initialize:function() {
+    toys.platformer.initialize(this,{
+      frames:{
+        still:{ speed:1, frames:[2] },
+        walking:{ speed:1, frames:[2] },
+        jumping:{ speed:1, frames:[2] },
+        falling:{ speed:1, frames:[2] },
+        die: { speed:1,frames:[2] }
+      },
+      x:data.x,
+      y:data.y,
+      jumpaccy:10,
+      side:data.side
+      
+    });
+  },
+  first:function() {
                 
-									// Counter
-									this.counter=(this.counter+1)%10;
+    if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
+    
+      // Counter
+      this.counter=(this.counter+1)%10;
+      
+      
+      
+      var pl=gbox.getObject("player","player_id");
+      
+      // being jumped on by player
+      if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4))
+      {
+        pl.onBox = true;
+      }
+      else if (!collideGroup(pl,'boxes')) pl.onBox = false;
+      
+      // being pushed left/right by player
+      if (gbox.collides(this,pl,2) && pl.x)
+          {
+          if ((pl.accx > 1 && pl.x < this.x) || (pl.accx < 1 && pl.x > this.x)) 
+            {
+            pl.accx = Math.floor(pl.accx/2);
+            this.accx = pl.accx;
+            if (pl.accx>0) pl.x=this.x+1-pl.w;
+            if (pl.accx<0) pl.x=this.x+this.w-1;
+            }
+          }
+      
+      // being pushed left/right by another box
+      var other = collideGroup(this,'boxes');
+      if (other) 
+        {
+        other.accx = 0;
+        this.accx = 0;
+        //if (other.x<this.x) other.x=this.x-other.w;
+        //if (other.x>this.x) other.x=this.x+this.w;
+        }
+        
+    var group = 'boxes';
+      // being landed on by another box
+    for (var i in gbox._objects[group])
+      if ((!gbox._objects[group][i].initialize)&&gbox.collides(this,gbox._objects[group][i]))
+        {
+        if (gbox._objects[group][i] != this)
+          {
+          other = gbox._objects[group][i];
+          if (((other.accy>=0)&&(Math.abs(this.y-(other.y+other.h))<(this.h)))&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
+            {
+            other.onBox = true;
+            }
+            //else other.onBox = false;
+          }
+      }
+      
+      
 
-									toys.platformer.applyGravity(this); // Apply gravity
-									
-									toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
-									toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
-									toys.platformer.handleAccellerations(this); // gravity/attrito
-									toys.platformer.setFrame(this); // set the right animation frame
-									var pl=gbox.getObject("player","player_id");
-                  
-                  if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4)){
-                    //pl.accy = 0;
-                    pl.onBox = true;
-                    pl.y=help.yPixelToTile(map,this.y-1)+1;
-                    //pl.touchedfloor = true;
-                  }
-                  else if (!gbox.collides(this,pl)) pl.onBox = false;
-                  
-                  
-                  
-                  if (gbox.collides(this,pl,2) && pl.x)
-                      {
-                      if ((pl.accx > 1 && pl.x < this.x) || (pl.accx < 1 && pl.x > this.x)) {
-                      pl.accx = Math.floor(pl.accx/2);
-                      this.accx = pl.accx;
-                      if (pl.accx>0) pl.x=this.x+1-pl.w;
-                      if (pl.accx<0) pl.x=this.x+this.w-1;
-                      }
-                      
-                      }
-								}
-							},
-							blit:function() {
-								if (gbox.objectIsVisible(this))
-									gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
-							}
-					  });
+      toys.platformer.applyGravity(this); // Apply gravity
+      
+      toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
+      
+      if (!collideGroup(this,'boxes')) this.onBox = false;
+      if (this.onBox) {
+          this.touchedfloor = true;
+          this.accy = 0;
+          this.y=help.yPixelToTile(map,this.y)+1;
+          }
+      
+      toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
+      toys.platformer.handleAccellerations(this); // gravity/attrito
+      toys.platformer.setFrame(this); // set the right animation frame
+ 
+      
+    }
+  },
+  blit:function() {
+    if (gbox.objectIsVisible(this))
+      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+  }
+  });
   }
 
   
@@ -292,10 +340,11 @@ function addPlayer() {
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
 					toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
+          
           if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
-          this.y=help.yPixelToTile(map,this.y)+1;
+          this.y=help.yPixelToTile(map,this.y)+2;
           }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping

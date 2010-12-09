@@ -518,7 +518,7 @@ var help={
 		if ((typeof data).toLowerCase() == "string") data={title:data};
 		var device=this.getDeviceConfig();
 		var footnotes=["MADE WITH AKIHABARA (C)2010 - GPL2/MIT","Project: www.kesiev.com/akihabara","Sources: github.com/kesiev/akihabara"];
-		
+		document.title=(data.title?data.title:"Akihabara");
 		if (data.splash) {
 			if (data.splash.footnotes) 
 				for (var i=0;i<footnotes.length;i++) data.splash.footnotes.push(footnotes[i]);
@@ -543,7 +543,7 @@ var help={
 		if (!data.splash||(data.splash.minimalTime==null)) gbox.setSplashSettings({minimalTime:3000});
 		if (!data.splash||(data.splash.footnotes==null)) gbox.setSplashSettings({footnotes:footnotes});
 		if (!data||!data.hardwareonly) {
-			//document.body.style.backgroundColor="#000000";
+			document.body.style.backgroundColor="#000000";
 			gbox.setScreenBorder(false);
 		}
 		if (help.geturlparameter("statusbar")) gbox.setStatusBar(1);

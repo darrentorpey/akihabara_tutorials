@@ -10,7 +10,8 @@ function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
   help.akihabaraInit({ width: 640, height: 480, zoom: 1 });
-
+  document.body.style.backgroundColor="#D4D4D4";
+  
   gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 
   // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
@@ -47,7 +48,7 @@ function main() {
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
   };
-
+  
   // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
   map = {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
@@ -286,16 +287,6 @@ function addBlock(data) {
 				}
           }
       }
-      
-      // var other = collideGroup(this,'boxes');
-      // if (other) 
-        // {
-        // other.accx = 0;
-        // this.accx = 0;
-        // //if (other.x<this.x) other.x=this.x-other.w;
-        // //if (other.x>this.x) other.x=this.x+this.w;
-        // }
-        
 
       // being landed on by another box
     for (var i in gbox._objects[group])
@@ -320,15 +311,6 @@ function addBlock(data) {
       toys.platformer.applyGravity(this); // Apply gravity
       
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
- 
-      
-      // if (this.id == 'obj-2') {
-      // console.log(this.touchedfloor);
-      // console.log(this.onBox);
-      // console.log(this.accy);
-      // console.log(this.y);
-      // console.log(collideGroup(this,'boxes'));
-      // } 
       
       if (this.onBox) {
           this.touchedfloor = true;
@@ -386,8 +368,9 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 16;
+      this.jumpaccy = 15;
       this.maxaccx = 7;
+      this.maxaccy = 60;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'

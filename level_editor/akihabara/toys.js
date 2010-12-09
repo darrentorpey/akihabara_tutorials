@@ -1326,24 +1326,21 @@ var toys={
 		* 
 		*/
 		verticalTileCollision:function(th,map,tilemap) {
-			var bottom1=help.getTileInMap(th.x+8,th.y+th.h,map,0,tilemap);
-			var top1=help.getTileInMap(th.x+8,th.y,map,0,tilemap);
-      var bottom2=help.getTileInMap(th.x+th.w-8,th.y+th.h,map,0,tilemap);
-			var top2=help.getTileInMap(th.x+th.w-8,th.y,map,0,tilemap);
+			var bottom=help.getTileInMap(th.x+(th.w/2),th.y+th.h,map,0,tilemap);
+			var top=help.getTileInMap(th.x+(th.w/2),th.y,map,0,tilemap);
 			th.touchedfloor=false;
 			th.touchedceil=false;
 	
-			if (map.tileIsSolidCeil(th,top1) || map.tileIsSolidCeil(th,top2)) {
+			if (map.tileIsSolidCeil(th,top)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y,1);
 				th.touchedceil=true;
 			}
-			if (map.tileIsSolidFloor(th,bottom1) || map.tileIsSolidFloor(th,bottom2)) {
+			if (map.tileIsSolidFloor(th,bottom)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
 				th.touchedfloor=true;
 			}
-      
 		},
 		
 		/**

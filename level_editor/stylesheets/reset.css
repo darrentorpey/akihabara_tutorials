@@ -13,3 +13,5 @@ blockquote, q { quotes: none; }
 :focus { outline: 0; }
 
 a img { border: none; }
+
+section { display: block; }

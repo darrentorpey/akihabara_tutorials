@@ -1,0 +1,343 @@
+@import common
+@import compass/css3/gradient
+@import compass/css3/box-shadow
+@import compass/utilities
+@import compass/css3/box-sizing
+@import partials/buttons
+
+ol, ul, li
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0
+  font-weight: inherit
+  font-style: inherit
+  font-size: 100%
+  font-family: inherit
+  vertical-align: baseline
+
+/*
+ *File:			custom.css
+ *Description:	Custom styles for Thesis
+ *
+ *BASIC USAGE:
+ *
+ *If you have enabled the custom stylesheet in the Thesis options panel, the <body> tag 
+ *will be appended with the "custom" class, like so: <body class="custom">. You can use 
+ *the "custom" class to override *any* CSS declarations contained in the style.css file.
+ *
+ *For example, if you wish to change the default link color to green, you would add the 
+ *following declarations to this file:
+ *
+ *	.custom a, .custom a:visited { color: #090; }	<--- This makes links green
+ *	.custom a:hover { color: #00f; }	<--- This makes links blue when you mouse over them
+ *
+ *WHY THIS WORKS:
+ *
+ *By using the "custom" class, you are creating more specific CSS declarations for HTML
+ *elements. CSS styling is applied through rules of specificity, and because declarations
+ *prepended with .custom are more specific, they get applied when the page is rendered!
+ *
+ *More information about styling your Thesis installation using this file can be found
+ *in the User's Guide:
+ *	http://diythemes.com/thesis/rtfm/customizing-thesis-with-customcss/
+
+/* ======
+/* Thesis
+/* ======
+
+.custom
+  li.widget
+    margin-bottom: 15px
+  #page
+    position: relative
+  .social
+    color: #111
+    float: right
+    position: absolute
+    right: 35px
+    top: 75px
+  .headline_area
+    margin-bottom: 25px
+    .headline_meta
+      float: left
+  .format_text
+    .fb_share_button
+      // float: left
+      position: absolute
+      top: -20px
+      right: 0px
+      margin-left: 0px
+      margin-right: 10px
+      line-height: 18px
+    .to_comments span
+      color: #333
+  .format_text
+    position: relative
+
+.intro, img.first_image
+  float: left
+
+.jam_wrapup
+  div.authors
+    float: left
+    width: 400px
+  h4
+    &.about
+      clear: left
+    padding-top: 5px
+
+ol.reset, ul.reset
+  list-style: none
+  padding: 0px
+  margin: 0px
+  margin-left: 10px
+
+.images
+  display: inline-block
+
+/* Thesis overrides
+
+.custom #header
+  border-bottom: 1px solid #C66832
+  border-top: 1px solid #C66832
+  // border-top: none
+
+.menu
+  border-color: #C66832
+  a, li ul
+    border-color: #C66832
+  a, .current ul a, .current-cat ul a
+    background-color: #F3A56D
+  a:hover, .current ul a:hover, .current-cat ul a:hover
+    background-color: #FCAC73
+  a
+    line-height: 14px
+    padding: 7px 9px 4px
+  ul.submenu a, .current ul.submenu ul a, .current-cat ul.submenu ul a
+    background-color: #FEB884
+    &:hover
+      background-color: lighten(#FCAC73, 10%)
+  // .current-cat-parent > a
+    // background-color: lighten(#FCAC73, 10%)
+  .current-parent > a, .menu .current-cat-parent > a, .menu .current-menu-ancestor > a
+    background-color: lighten(#FCAC73, 10%)
+
+.custom_box
+  background-color: #FFBC8B
+  strong
+    color: #C0673B
+
+.post_box h1
+  color: #1D5336
+
+.headline_area h2 a
+  color: #1D5336
+  &:hover
+    text-decoration: underline
+
+/* ===========
+/* Google Docs
+/* ===========
+
+table.gdocs
+  a
+    text-decoration: none
+    &:hover
+      text-decoration: underline
+  th
+    text-align: left
+    text-decoration: underline
+  td.col_0
+    width: 240px
+    padding-right: 20px
+    /*  font-weight: bold;
+
+/* ===========
+/* -----------
+/* ===========
+
+/* =====
+/* Basic
+/* =====
+
+.c_left
+  clear: left
+
+.f_left
+  float: left
+
+/* ===========
+/* -----------
+/* ===========
+
+/* =======
+/* Plugins
+/* =======
+
+.custom .sm_button
+  padding-top: 10px
+
+/* ===========
+/* -----------
+/* ===========
+
+/* ====
+/* Misc
+/* ====
+
+#email_subscribe_form
+  p
+    margin-top: 5px
+    margin-bottom: 5px
+  input
+    background-color: #DDD
+    &:hover
+      background-color: #EEE
+    &:active
+      background-color: #CCC
+
+.update
+  label
+    font-weight: bold
+  .signature
+    color: #666
+
+/* ===========
+/* -----------
+/* ===========
+
+/* ==============
+/* Specific Pages
+/* ==============
+
+body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area
+  .headline_meta
+    float: none
+  h1
+    display: inline-block
+    clear: left
+    border-bottom: 1px solid #CCC
+    margin-bottom: 10px
+
+body.game_jams
+  .whats_a_jam
+    clear: both
+    border: 1px solid #CCC
+    padding: 10px
+    margin: 20px
+    +border-radius(8px)
+    max-width: 700px
+    background-color: #F5E9BF
+    +linear-gradient(color-stops(#F5DAA2, lighten(#F5DAA2, 10%)))
+  h3
+    margin: 0px 0px 10px
+    text-align: center
+
+  p
+    margin: 5px 0px
+
+  .jam_game_intro
+    clear: both
+    +clearfix
+
+  .jam_games_overview
+    h3
+      border-bottom: 1px solid #999
+      display: inline-block
+
+    p
+      padding: 5px 0px
+    .team_links, .download_links
+      list-style: none
+      padding-left: 0px
+
+    a
+      text-decoration: none
+      color: #2C42C4
+      &:hover
+        text-decoration: underline
+    .team_links .roles
+      color: #666
+    .download_links li
+      background: transparent url(http://bostongamejams.com/images/icon_arrow_down.jpg) no-repeat left 3px
+      padding-left: 20px
+    .team_links .roles:before
+      content: '-- '
+
+    h4
+      &.game, &.team
+        margin: 5px 0px
+      &.game
+        background: transparent url(http://bostongamejams.com/images/icon_game_b_16x.jpg) no-repeat left 3px
+        padding-left: 20px
+      &.team
+        background: transparent url(http://bostongamejams.com/images/icon_team_16x.jpg) no-repeat left 3px
+        padding-left: 20px
+      &.tools
+        background: transparent url(http://bostongamejams.com/images/icon_tools_16x.jpg) no-repeat left 3px
+        padding-left: 20px
+
+    .game_listing
+      +clearfix
+      margin-top: 20px
+      +border-radius(8px)
+      +box-shadow(#DDD, 0px, 0px, 15px)
+      margin-top: 20px
+      padding: 10px
+      position: relative
+      .screenie
+        position: absolute
+        right: 10px
+        top: 10px
+        img
+          // border: 1px solid #B8AAA3
+          +box-shadow(#B8AAA3, 0px, 0px, 5px)
+
+    .quick_links
+      +horizontal-list
+      li
+        border-right: 1px solid #999
+        padding-right: 8px
+        margin-right: 3px
+        &:last-child
+          border-right: none
+        a
+          color: #222
+
+  .photo_splash
+    position: relative
+    ul
+      +horizontal-list
+      // li
+        position: relative
+        img
+          position: absolute
+          left: 0px
+          top: 0px
+          float: left
+
+body.about_page
+  p.intro
+    img
+      border: 1px solid #999
+      +box-shadow(#988D86, 1px, 1px, 5px)
+/* ===========
+/* -----------
+/* ===========
+
+.mailing_list
+  #mailing_list_subscribe_box
+    background-color: #fff
+    padding: 5px
+    h3
+      margin: 5px 0px 10px
+    .subscibe_button
+      // +link_button
+      +invitation_button_link(#5291C5, 20px)
+      width: 100px
+    .email
+      width: 200px
+      margin:
+        left: 5px
+        right: 10px

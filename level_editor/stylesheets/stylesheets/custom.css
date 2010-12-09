@@ -1,0 +1,479 @@
+ol, ul, li {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+/*File:			custom.css
+ *Description:	Custom styles for Thesis
+ *
+ *BASIC USAGE:
+ *
+ *If you have enabled the custom stylesheet in the Thesis options panel, the <body> tag 
+ *will be appended with the "custom" class, like so: <body class="custom">. You can use 
+ *the "custom" class to override *any* CSS declarations contained in the style.css file.
+ *
+ *For example, if you wish to change the default link color to green, you would add the 
+ *following declarations to this file:
+ *
+ *	.custom a, .custom a:visited { color: #090; }	<--- This makes links green
+ *	.custom a:hover { color: #00f; }	<--- This makes links blue when you mouse over them
+ *
+ *WHY THIS WORKS:
+ *
+ *By using the "custom" class, you are creating more specific CSS declarations for HTML
+ *elements. CSS styling is applied through rules of specificity, and because declarations
+ *prepended with .custom are more specific, they get applied when the page is rendered!
+ *
+ *More information about styling your Thesis installation using this file can be found
+ *in the User's Guide:
+ *	http://diythemes.com/thesis/rtfm/customizing-thesis-with-customcss/ */
+/* ====== */
+/* Thesis */
+/* ====== */
+.custom li.widget {
+  margin-bottom: 15px;
+}
+.custom #page {
+  position: relative;
+}
+.custom .social {
+  color: #111111;
+  float: right;
+  position: absolute;
+  right: 35px;
+  top: 75px;
+}
+.custom .headline_area {
+  margin-bottom: 25px;
+}
+.custom .headline_area .headline_meta {
+  float: left;
+}
+.custom .format_text .fb_share_button {
+  position: absolute;
+  top: -20px;
+  right: 0px;
+  margin-left: 0px;
+  margin-right: 10px;
+  line-height: 18px;
+}
+.custom .format_text .to_comments span {
+  color: #333333;
+}
+.custom .format_text {
+  position: relative;
+}
+
+.intro, img.first_image {
+  float: left;
+}
+
+.jam_wrapup div.authors {
+  float: left;
+  width: 400px;
+}
+.jam_wrapup h4 {
+  padding-top: 5px;
+}
+.jam_wrapup h4.about {
+  clear: left;
+}
+
+ol.reset, ul.reset {
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-left: 10px;
+}
+
+.images {
+  display: inline-block;
+}
+
+/* Thesis overrides */
+.custom #header {
+  border-bottom: 1px solid #c66832;
+  border-top: 1px solid #c66832;
+}
+
+.menu {
+  border-color: #c66832;
+}
+.menu a, .menu li ul {
+  border-color: #c66832;
+}
+.menu a, .menu .current ul a, .menu .current-cat ul a {
+  background-color: #f3a56d;
+}
+.menu a:hover, .menu .current ul a:hover, .menu .current-cat ul a:hover {
+  background-color: #fcac73;
+}
+.menu a {
+  line-height: 14px;
+  padding: 7px 9px 4px;
+}
+.menu ul.submenu a, .menu .current ul.submenu ul a, .menu .current-cat ul.submenu ul a {
+  background-color: #feb884;
+}
+.menu ul.submenu a:hover, .menu .current ul.submenu ul a:hover, .menu .current-cat ul.submenu ul a:hover {
+  background-color: #fdcaa5;
+}
+.menu .current-parent > a, .menu .menu .current-cat-parent > a, .menu .menu .current-menu-ancestor > a {
+  background-color: #fdcaa5;
+}
+
+.custom_box {
+  background-color: #ffbc8b;
+}
+.custom_box strong {
+  color: #c0673b;
+}
+
+.post_box h1 {
+  color: #1d5336;
+}
+
+.headline_area h2 a {
+  color: #1d5336;
+}
+.headline_area h2 a:hover {
+  text-decoration: underline;
+}
+
+/* =========== */
+/* Google Docs */
+/* =========== */
+table.gdocs a {
+  text-decoration: none;
+}
+table.gdocs a:hover {
+  text-decoration: underline;
+}
+table.gdocs th {
+  text-align: left;
+  text-decoration: underline;
+}
+table.gdocs td.col_0 {
+  width: 240px;
+  padding-right: 20px;
+  /*  font-weight: bold; */
+}
+
+/* =========== */
+/* ----------- */
+/* =========== */
+/* ===== */
+/* Basic */
+/* ===== */
+.c_left {
+  clear: left;
+}
+
+.f_left {
+  float: left;
+}
+
+/* =========== */
+/* ----------- */
+/* =========== */
+/* ======= */
+/* Plugins */
+/* ======= */
+.custom .sm_button {
+  padding-top: 10px;
+}
+
+/* =========== */
+/* ----------- */
+/* =========== */
+/* ==== */
+/* Misc */
+/* ==== */
+#email_subscribe_form p {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#email_subscribe_form input {
+  background-color: #dddddd;
+}
+#email_subscribe_form input:hover {
+  background-color: #eeeeee;
+}
+#email_subscribe_form input:active {
+  background-color: #cccccc;
+}
+
+.update label {
+  font-weight: bold;
+}
+.update .signature {
+  color: #666666;
+}
+
+/* =========== */
+/* ----------- */
+/* =========== */
+/* ============== */
+/* Specific Pages */
+/* ============== */
+body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area .headline_meta {
+  float: none;
+}
+body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area h1 {
+  display: inline-block;
+  clear: left;
+  border-bottom: 1px solid #cccccc;
+  margin-bottom: 10px;
+}
+
+body.game_jams .whats_a_jam {
+  clear: both;
+  border: 1px solid #cccccc;
+  padding: 10px;
+  margin: 20px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  max-width: 700px;
+  background-color: #f5e9bf;
+  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#f5daa2, #faecd0)));
+  background-image: -moz-linear-gradient(top, color-stops(#f5daa2, #faecd0));
+}
+body.game_jams h3 {
+  margin: 0px 0px 10px;
+  text-align: center;
+}
+body.game_jams p {
+  margin: 5px 0px;
+}
+body.game_jams .jam_game_intro {
+  clear: both;
+  overflow: hidden;
+  display: inline-block;
+}
+body.game_jams .jam_game_intro {
+  display: block;
+}
+body.game_jams .jam_games_overview h3 {
+  border-bottom: 1px solid #999999;
+  display: inline-block;
+}
+body.game_jams .jam_games_overview p {
+  padding: 5px 0px;
+}
+body.game_jams .jam_games_overview .team_links, body.game_jams .jam_games_overview .download_links {
+  list-style: none;
+  padding-left: 0px;
+}
+body.game_jams .jam_games_overview a {
+  text-decoration: none;
+  color: #2c42c4;
+}
+body.game_jams .jam_games_overview a:hover {
+  text-decoration: underline;
+}
+body.game_jams .jam_games_overview .team_links .roles {
+  color: #666666;
+}
+body.game_jams .jam_games_overview .download_links li {
+  background: transparent url(http://bostongamejams.com/images/icon_arrow_down.jpg) no-repeat left 3px;
+  padding-left: 20px;
+}
+body.game_jams .jam_games_overview .team_links .roles:before {
+  content: "-- ";
+}
+body.game_jams .jam_games_overview h4.game, body.game_jams .jam_games_overview h4.team {
+  margin: 5px 0px;
+}
+body.game_jams .jam_games_overview h4.game {
+  background: transparent url(http://bostongamejams.com/images/icon_game_b_16x.jpg) no-repeat left 3px;
+  padding-left: 20px;
+}
+body.game_jams .jam_games_overview h4.team {
+  background: transparent url(http://bostongamejams.com/images/icon_team_16x.jpg) no-repeat left 3px;
+  padding-left: 20px;
+}
+body.game_jams .jam_games_overview h4.tools {
+  background: transparent url(http://bostongamejams.com/images/icon_tools_16x.jpg) no-repeat left 3px;
+  padding-left: 20px;
+}
+body.game_jams .jam_games_overview .game_listing {
+  overflow: hidden;
+  display: inline-block;
+  margin-top: 20px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  -moz-box-shadow: #dddddd 0px 0px 15px;
+  -webkit-box-shadow: #dddddd 0px 0px 15px;
+  -o-box-shadow: #dddddd 0px 0px 15px;
+  box-shadow: #dddddd 0px 0px 15px;
+  margin-top: 20px;
+  padding: 10px;
+  position: relative;
+}
+body.game_jams .jam_games_overview .game_listing {
+  display: block;
+}
+body.game_jams .jam_games_overview .game_listing .screenie {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+body.game_jams .jam_games_overview .game_listing .screenie img {
+  -moz-box-shadow: #b8aaa3 0px 0px 5px;
+  -webkit-box-shadow: #b8aaa3 0px 0px 5px;
+  -o-box-shadow: #b8aaa3 0px 0px 5px;
+  box-shadow: #b8aaa3 0px 0px 5px;
+}
+body.game_jams .jam_games_overview .quick_links {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  display: inline-block;
+}
+body.game_jams .jam_games_overview .quick_links {
+  display: block;
+}
+body.game_jams .jam_games_overview .quick_links li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+body.game_jams .jam_games_overview .quick_links li:first-child, body.game_jams .jam_games_overview .quick_links li.first {
+  padding-left: 0px;
+}
+body.game_jams .jam_games_overview .quick_links li:last-child, body.game_jams .jam_games_overview .quick_links li.last {
+  padding-right: 0px;
+}
+body.game_jams .jam_games_overview .quick_links li {
+  border-right: 1px solid #999999;
+  padding-right: 8px;
+  margin-right: 3px;
+}
+body.game_jams .jam_games_overview .quick_links li:last-child {
+  border-right: none;
+}
+body.game_jams .jam_games_overview .quick_links li a {
+  color: #222222;
+}
+body.game_jams .photo_splash {
+  position: relative;
+}
+body.game_jams .photo_splash ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  overflow: hidden;
+  display: inline-block;
+}
+body.game_jams .photo_splash ul {
+  display: block;
+}
+body.game_jams .photo_splash ul li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  white-space: nowrap;
+  display: inline;
+  float: left;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+body.game_jams .photo_splash ul li:first-child, body.game_jams .photo_splash ul li.first {
+  padding-left: 0px;
+}
+body.game_jams .photo_splash ul li:last-child, body.game_jams .photo_splash ul li.last {
+  padding-right: 0px;
+}
+
+body.about_page p.intro img {
+  border: 1px solid #999999;
+  -moz-box-shadow: #988d86 1px 1px 5px;
+  -webkit-box-shadow: #988d86 1px 1px 5px;
+  -o-box-shadow: #988d86 1px 1px 5px;
+  box-shadow: #988d86 1px 1px 5px;
+}
+
+/* =========== */
+/* ----------- */
+/* =========== */
+.mailing_list #mailing_list_subscribe_box {
+  background-color: white;
+  padding: 5px;
+}
+.mailing_list #mailing_list_subscribe_box h3 {
+  margin: 5px 0px 10px;
+}
+.mailing_list #mailing_list_subscribe_box .subscibe_button {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+  font-family: Arial;
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  line-height: 20px;
+  padding: 0 6.667px;
+  height: 20px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -o-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
+  border: 1px solid #3977ab;
+  background-color: #5291c5;
+  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#c5daeb, #8bb5d8 4%, #5291c5)));
+  background-image: -moz-linear-gradient(top, color-stops(#c5daeb, #8bb5d8 4%, #5291c5));
+  text-shadow: #3977ab 0 -1px 0;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100px;
+}
+.mailing_list #mailing_list_subscribe_box .subscibe_button:hover {
+  text-decoration: none;
+}
+.mailing_list #mailing_list_subscribe_box .subscibe_button.disabled, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:active, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:hover, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:visited {
+  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#d8d8d8, #d8d8d8 4%, #d8d8d8)));
+  background-image: -moz-linear-gradient(top, color-stops(#d8d8d8, #d8d8d8 4%, #d8d8d8));
+  color: #fdfdfd;
+  border-color: #bfbfbf;
+  text-shadow: none;
+  cursor: default;
+}
+.mailing_list #mailing_list_subscribe_box .subscibe_button:active {
+  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#20425e, #336a98 4%, #3d7fb6)));
+  background-image: -moz-linear-gradient(top, color-stops(#20425e, #336a98 4%, #3d7fb6));
+}
+.mailing_list #mailing_list_subscribe_box .subscibe_button:hover {
+  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#d8e6f2, #9ec2df 4%, #659dcb)));
+  background-image: -moz-linear-gradient(top, color-stops(#d8e6f2, #9ec2df 4%, #659dcb));
+}
+.mailing_list #mailing_list_subscribe_box .email {
+  width: 200px;
+  margin-left: 5px;
+  margin-right: 10px;
+}

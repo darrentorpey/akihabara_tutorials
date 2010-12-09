@@ -369,17 +369,25 @@ var gbox={
   * @param {Integer} w The width of the main canvas.
   * @param {Integer} h The height of the main canvas.
   */	
-	initScreen:function(w,h) {
+  initScreen:function(w,h) {
+		document.body.style.textAlign="center";
+		document.body.style.height="100%";
+		document.body.style.margin="0px";
+		document.body.style.padding="0px";			
+		document.getElementsByTagName("html")[0].style.height="100%";
 		
-		
-		var container=document.createElement("a");
-		container.style.width=640;
-		container.style.height=480;
-		//container.style.display="table";
-		this._box=document.createElement("a");
+		var container=document.createElement("div");
+		container.style.width="100%";
+		container.style.height="100%";
+		container.style.display="table";
+		this._box=document.createElement("div");
+		this._box.style.display="table-cell";
+		this._box.style.width="100%";
+		this._box.style.textAlign="center";
+		this._box.style.verticalAlign="middle";
 		
 		this._screen=document.createElement("canvas");
-		this._screen.style.border="1px solid black";
+		if (this._border) this._screen.style.border="1px solid black";
 		this._screen.setAttribute('height',h);
 		this._screen.setAttribute('width',w);
 		this._screen.style.width=(w*this._zoom)+"px";
@@ -394,7 +402,7 @@ var gbox={
 		this._camera.w=w;
 		this._box.appendChild(this._screen);
 		container.appendChild(this._box);
-		document.getElementById("container").appendChild(container);
+		document.body.appendChild(container);
 
 		this.createCanvas("_buffer");
 		gbox.addEventListener(window,'keydown', this._keydown);

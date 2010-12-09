@@ -368,9 +368,9 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 16;
+      this.jumpaccy = 15;
       this.maxaccx = 7;
-      this.maxaccy = 30;
+      this.maxaccy = 60;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'

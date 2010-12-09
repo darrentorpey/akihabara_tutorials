@@ -1,7 +1,7 @@
 var maingame;
 var map;
 
-window.addEventListener('load', loadResources, false);
+window.addEventListener('load', function() { if (start_akihabara) { loadResources() } }, false);
 
 var bg = new Image();
 bg.src = 'resources/bg0.png'

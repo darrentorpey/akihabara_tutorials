@@ -5,21 +5,8 @@
 
   <link rel="stylesheet" href="stylesheets/reset.css">
   <link rel="stylesheet" href="stylesheets/admin.css">
+  <link rel="stylesheet" href="stylesheets/plain.css">
 
-  <style type="text/css">
-    #container { position: relative; cursor: url(blank.png), default; }
-    #imageView { border: 1px solid #000; }
-    #d_clip_button {
-      width: 150px;
-      text-align: center;
-      border: 1px solid black;
-      background-color: #ccc;
-      margin: 10px;
-      padding: 10px;
-    }
-    #d_clip_button.hover { background-color: #eee; }
-    #d_clip_button.active { background-color: #aaa; }
-  </style>
   <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
@@ -31,38 +18,44 @@
   <script type="text/javascript" src="lib/admin/init.js"></script>
 </head>
 <body>
-  <p>
-    <img src="0.png" id="brush0">
-    <img src="1.png" id="brush1">
-    <img src="2.png" id="brush2">
-    <img src="3.png" id="brush3">
-    <img src="4.png" id="brush4">
-    <img src="5.png" id="brush5">
-    <img src="6.png" id="brush6">
-    <img src="7.png" id="brush7">
-    <img src="8.png" id="brush8">
-    <img src="9.png" id="brush9">
-  </p>
+  <section id="top_tools">
+    <div id="pallete">
+      <img src="0.png" id="brush0">
+      <img src="1.png" id="brush1">
+      <img src="2.png" id="brush2">
+      <img src="3.png" id="brush3">
+      <img src="4.png" id="brush4">
+      <img src="5.png" id="brush5">
+      <img src="6.png" id="brush6">
+      <img src="7.png" id="brush7">
+      <img src="8.png" id="brush8">
+      <img src="9.png" id="brush9">
+    </div>
+
+    <div id="level_sharing">
+      <a href="#" id="generate_url">Generate a URL to share &raquo;</a>
+      <input type="text" size="20" placeholder="Click generate link" id="share">
+      <span id="d_clip_container" style="display:inline"></span>
+      <span id="d_clip_button">Copy to Clipboard</span>
+    </div>
+  </section>
 
   <div id="container">
     <canvas id="imageView" width="640" height="480">
     </canvas>
   </div>
 
-  <p>
-    Paint a level in the left box, watch it show up in the game in the right box. <strong>Best run on a widescreen monitor!</strong>
-  </p>
+  <section class="intro">
+    <div class="holder">
+      <p>
+        Paint a level in the left box, watch it show up in the game in the right box. <strong>Best run on a widescreen monitor!</strong>
+      </p>
 
-  <p>
-    Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
-  <p>
-
-  <div style="height:50px; padding:10px"><div><a onClick = "genURL();">Generate a URL to share</a></div>
-  <input type="text" size="50" value="click the above link to make a URL" id="share">
-  <span id="d_clip_container" style="display:inline">
-   <span id="d_clip_button">Copy to Clipboard</span>
-</span></div>
-  </p>
+      <p>
+        Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
+      </p>
+    </div>
+  </section>
 
   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6"></script>
   <script type="text/javascript" src="akihabara/gbox.js"></script>
@@ -80,5 +73,8 @@
   });
 
   if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+
+  var start_akihabara = true;
 </script>
+<output id="list"></output>
 </body></html>

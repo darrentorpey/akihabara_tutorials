@@ -1,0 +1,116 @@
+$small_button_highlight: #111111
+
+$px_std_button_height_medium: 25px
+
+=rect_button
+  font-size: 14px
+  padding: 2px 6px 4px
+  height: $px_std_button_height_medium
+  font-weight: bold
+
+=rect_button_smalltext
+  +rect_button
+  font-size: 12px
+
+=mpb_blue_box_button_link
+  +rect_button_smalltext
+  border-color: #dddddd
+  +button_link_background_color(#506c82)
+  color: white
+  &:active
+    background-color: darken(#506c82, 5%)
+
+=image_background($image_name, $width, $height)
+  display: block
+  width: $width
+  height: $height
+  border: none
+  background: transparent url($image_name) no-repeat scroll left top
+
+=image_block($image_name, $width, $height)
+  +image_background($image_name, $width, $height)
+  text-indent: -9999px
+  padding: 0px
+  border: none
+
+=image_buttonize($image_name, $width, $height)
+  +image_block($image_name, $width, $height)
+  cursor: pointer
+  &:hover
+    background-image: hover_image($image_name)
+  // &:active
+    background-position: 1px 1px
+
+=link_button($base_color: #3C6E91, $button_size: 20px, $rounding: $button_size/4, $text_color: #fff)
+  +box-sizing('content-box')
+  font-family: Arial
+  display: inline-block
+  color: $text_color
+  text-decoration: none
+  line-height: $button_size
+  padding: 0 $button_size/3
+  height: $button_size
+  +border-radius($rounding)
+  border: 1px solid darken($base_color, 10%)
+  background-color: $base_color
+  // +linear-gradient(color-stops(lighten($base_color, 30%), lighten($base_color, 15%) 4%, $base_color))
+  +linear-gradient(color-stops(lighten($base_color, 20%), lighten($base_color, 10%) 40%, $base_color))
+  text-shadow: darken($base_color, 10%) 0 -1px 0
+  cursor: pointer
+  &:hover
+    text-decoration: none
+  &.disabled, &.disabled:active, &.disabled:hover, &.disabled:visited
+    +linear-gradient(color-stops(lighten(desaturate($base_color, 80%), 30%), lighten(desaturate($base_color, 80%), 30%) 4%, lighten(desaturate($base_color, 80%), 30%)))
+    color: mix($text_color, #EEE, 90%)
+    border-color: lighten(grayscale($base_color), 20%)
+    text-shadow: none
+    cursor: default
+  &:active
+    +linear-gradient(color-stops(darken($base_color, 30%), darken($base_color, 15%) 4%, darken($base_color, 7%)))
+  &:hover
+    +linear-gradient(color-stops(lighten($base_color, 15%), lighten($base_color, 5%) 40%, darken($base_color, 5%)))
+
+=button_common_no_hover($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)
+  +box-sizing('content-box')
+  font-family: Arial
+  display: inline-block
+  color: $text_color
+  text-decoration: none
+  line-height: $button_size
+  padding: 0 $button_size/3
+  height: $button_size
+  +border-radius($rounding)
+  border: 1px solid darken($base_color, 10%)
+  background-color: $base_color
+  +linear-gradient(color-stops(lighten($base_color, 30%), lighten($base_color, 15%) 4%, $base_color))
+  text-shadow: darken($base_color, 10%) 0 -1px 0
+  cursor: pointer
+  &:hover
+    text-decoration: none
+  &.disabled, &.disabled:active, &.disabled:hover, &.disabled:visited
+    +linear-gradient(color-stops(lighten(desaturate($base_color, 80%), 30%), lighten(desaturate($base_color, 80%), 30%) 4%, lighten(desaturate($base_color, 80%), 30%)))
+    color: mix($text_color, #EEE, 90%)
+    border-color: lighten(grayscale($base_color), 20%)
+    text-shadow: none
+    cursor: default
+
+=button_common($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)
+  +button_common_no_hover($base_color, $button_size, $rounding, $text_color)
+  &:active
+    +linear-gradient(color-stops(darken($base_color, 30%), darken($base_color, 15%) 4%, darken($base_color, 7%)))
+  &:hover
+    +linear-gradient(color-stops(lighten($base_color, 35%), lighten($base_color, 20%) 4%, lighten($base_color, 5%)))
+
+=invitation_button($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)
+  +invitation_button_link($base_color, $button_size, $rounding, $text_color)
+  padding-bottom: 2px
+  height: $button_size - 2px
+  // line-height: $button_size - 2px
+
+=invitation_button_link_no_hover($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)
+  +button_common_no_hover($base_color, $button_size, $rounding, $text_color)
+  font-size: 14px
+
+=invitation_button_link($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)
+  +button_common($base_color, $button_size, $rounding, $text_color)
+  font-size: 14px

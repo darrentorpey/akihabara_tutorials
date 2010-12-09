@@ -1,0 +1,90 @@
+@import core
+
+body
+  padding-bottom: 100px
+  background-color: #EAEAEA
+  font-size: 14px
+
+#drop_area
+  position: absolute
+  right: 140px
+  top: 10px
+  padding: 10px
+  text-align: center
+  border: 2px solid $c_primary_5
+  color: darken($c_primary_5, 30%)
+  margin: 0px auto
+
+a
+  color: #4481C0
+  +hover-link
+
+#admin_sidebar
+  #admin_buttons
+    position: absolute
+    top: 0px
+    right: 0px
+    +admin_box
+    padding: 10px 20px
+    h4
+      color: #0B2757
+      font-size: 18px
+      font-weight: bold
+      padding-bottom: 2px
+      margin-bottom: 10px
+      border-bottom: 1px solid #164799
+      text-align: center
+    #toggle_autoupdate
+      position: absolute
+      bottom: -20px
+      left: 0px
+
+  #undone_admin
+    position: fixed
+    top: 0px
+    right: 0px
+    +discrete_links
+
+
+#flash
+  background-color: #EEE
+  color: #D8D24E
+  padding: 10px
+  position: fixed
+  top: 10px
+  left: 20px
+
+#imageView
+  background-color: white
+
+
+#top_tools
+  +clearfix
+  padding: 10px 5px
+  #pallete
+    float: left
+    +admin_box
+    margin-right: 10px
+  #level_sharing
+    float: left
+    +admin_box
+    display: inline-block
+    #d_clip_button
+      font-size: 13px
+      text-align: center
+      +link_button
+      padding-bottom: 1px
+
+#container
+  position: relative
+  cursor: url(../blank.png), default
+
+#imageView
+  border: 1px solid #000
+
+section.intro
+  margin: 5px
+  text-align: center
+  .holder
+    +help_box
+    display: inline-block

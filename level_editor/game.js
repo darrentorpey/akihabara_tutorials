@@ -356,8 +356,8 @@ function addDisBlock(data) {
       x:data.x,
       y:data.y,
       jumpaccy:10,
-      side:data.side
-      
+      side:data.side,
+      alpha:0.5
     });
   },
   first:function() {

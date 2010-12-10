@@ -63,9 +63,7 @@ if(window.addEventListener) {
 window.addEventListener('load', function () {
 
   // Load the default brush, #1
-  //img.src = '1.png';
-  //var img = new Image();
-  brush = '1';
+  brush = '4';
 
   camx = 0;
   camy = 0;

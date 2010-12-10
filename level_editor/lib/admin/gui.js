@@ -31,40 +31,24 @@ function drawGuiActions() {
     return buttons_hash[id].func();
   });
 
-  $('<div id="drop_area">DROP AREA</div>').appendTo('body').bind('drop', function(event) {
-    console.log('Dropped!');
-    // debugger
-    // handleFile(event);
+  $('<div id="drop_area">DROP AREA</div>').appendTo('body').bind('drop', function(evt) {
+    var files = evt.dataTransfer.files; // FileList object.
+
+    readTextFile(files[0], function(evt, file) {
+      var level_data = jQuery.parseJSON(evt.target.result);
+      // console.log('Loaded level data:'); console.log(level_data);
+      setLevel(level_data);
+      reloadMap();
+    })
+
+    evt.stopPropagation();
+    evt.preventDefault();
     return false;
   }).bind('dragenter', function(event) {
     event.stopPropagation(); event.preventDefault();
   }).bind('dragover', function(event) {
     event.stopPropagation(); event.preventDefault();
   });
-
-  // Setup the dnd listeners.
-  var dropZone = document.getElementById('drop_area');
-  dropZone.addEventListener('drop', handleFileSelect, false);
-}
-
-function handleFileSelect(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-
-  var files = evt.dataTransfer.files; // FileList object.
-
-  // files is a FileList of File objects. List some properties.
-  var output = [];
-  for (var i = 0, f; f = files[i]; i++) {
-    output.push('<li><strong>', f.name, '</strong> (', f.type || 'n/a', ') - ',
-                f.size, ' bytes</li>');
-  }
-  $('#drop_area').append('<ul>' + output.join('') + '</ul>');
-}
-
-function handleDragOver(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
 }
 
 function flash_message(message) {

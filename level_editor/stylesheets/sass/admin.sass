@@ -27,6 +27,7 @@ a
     +admin_box
     padding: 10px 20px
     h4
+      cursor: pointer
       color: #0B2757
       font-size: 18px
       font-weight: bold
@@ -38,9 +39,9 @@ a
       position: absolute
       bottom: -20px
       left: 0px
-
   #undone_admin
     position: fixed
+    cursor: pointer
     top: 0px
     right: 0px
     +discrete_links
@@ -74,10 +75,16 @@ a
       text-align: center
       +link_button
       padding-bottom: 1px
+    #d_clip_container
+      cursor: pointer
+      div
+        cursor: pointer
+        embed
+          cursor: pointer
 
 #container
   position: relative
-  cursor: url(../blank.png), default
+  cursor: url(../resources/palettes/default/blank.png), default
 
 #imageView
   border: 1px solid #000

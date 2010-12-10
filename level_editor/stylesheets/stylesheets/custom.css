@@ -1,3 +1,4 @@
+/* line 8, ../sass/stylesheets/custom.sass */
 ol, ul, li {
   margin: 0;
   padding: 0;
@@ -37,12 +38,15 @@ ol, ul, li {
 /* ====== */
 /* Thesis */
 /* ====== */
+/* line 50, ../sass/stylesheets/custom.sass */
 .custom li.widget {
   margin-bottom: 15px;
 }
+/* line 52, ../sass/stylesheets/custom.sass */
 .custom #page {
   position: relative;
 }
+/* line 54, ../sass/stylesheets/custom.sass */
 .custom .social {
   color: #111111;
   float: right;
@@ -50,12 +54,15 @@ ol, ul, li {
   right: 35px;
   top: 75px;
 }
+/* line 60, ../sass/stylesheets/custom.sass */
 .custom .headline_area {
   margin-bottom: 25px;
 }
+/* line 62, ../sass/stylesheets/custom.sass */
 .custom .headline_area .headline_meta {
   float: left;
 }
+/* line 65, ../sass/stylesheets/custom.sass */
 .custom .format_text .fb_share_button {
   position: absolute;
   top: -20px;
@@ -64,28 +71,35 @@ ol, ul, li {
   margin-right: 10px;
   line-height: 18px;
 }
+/* line 73, ../sass/stylesheets/custom.sass */
 .custom .format_text .to_comments span {
   color: #333333;
 }
+/* line 75, ../sass/stylesheets/custom.sass */
 .custom .format_text {
   position: relative;
 }
 
+/* line 78, ../sass/stylesheets/custom.sass */
 .intro, img.first_image {
   float: left;
 }
 
+/* line 82, ../sass/stylesheets/custom.sass */
 .jam_wrapup div.authors {
   float: left;
   width: 400px;
 }
+/* line 85, ../sass/stylesheets/custom.sass */
 .jam_wrapup h4 {
   padding-top: 5px;
 }
+/* line 86, ../sass/stylesheets/custom.sass */
 .jam_wrapup h4.about {
   clear: left;
 }
 
+/* line 90, ../sass/stylesheets/custom.sass */
 ol.reset, ul.reset {
   list-style: none;
   padding: 0px;
@@ -93,56 +107,71 @@ ol.reset, ul.reset {
   margin-left: 10px;
 }
 
+/* line 96, ../sass/stylesheets/custom.sass */
 .images {
   display: inline-block;
 }
 
 /* Thesis overrides */
+/* line 101, ../sass/stylesheets/custom.sass */
 .custom #header {
   border-bottom: 1px solid #c66832;
   border-top: 1px solid #c66832;
 }
 
+/* line 106, ../sass/stylesheets/custom.sass */
 .menu {
   border-color: #c66832;
 }
+/* line 108, ../sass/stylesheets/custom.sass */
 .menu a, .menu li ul {
   border-color: #c66832;
 }
+/* line 110, ../sass/stylesheets/custom.sass */
 .menu a, .menu .current ul a, .menu .current-cat ul a {
   background-color: #f3a56d;
 }
+/* line 112, ../sass/stylesheets/custom.sass */
 .menu a:hover, .menu .current ul a:hover, .menu .current-cat ul a:hover {
   background-color: #fcac73;
 }
+/* line 114, ../sass/stylesheets/custom.sass */
 .menu a {
   line-height: 14px;
   padding: 7px 9px 4px;
 }
+/* line 117, ../sass/stylesheets/custom.sass */
 .menu ul.submenu a, .menu .current ul.submenu ul a, .menu .current-cat ul.submenu ul a {
   background-color: #feb884;
 }
+/* line 119, ../sass/stylesheets/custom.sass */
 .menu ul.submenu a:hover, .menu .current ul.submenu ul a:hover, .menu .current-cat ul.submenu ul a:hover {
   background-color: #fdcaa5;
 }
+/* line 123, ../sass/stylesheets/custom.sass */
 .menu .current-parent > a, .menu .menu .current-cat-parent > a, .menu .menu .current-menu-ancestor > a {
   background-color: #fdcaa5;
 }
 
+/* line 126, ../sass/stylesheets/custom.sass */
 .custom_box {
   background-color: #ffbc8b;
 }
+/* line 128, ../sass/stylesheets/custom.sass */
 .custom_box strong {
   color: #c0673b;
 }
 
+/* line 131, ../sass/stylesheets/custom.sass */
 .post_box h1 {
   color: #1d5336;
 }
 
+/* line 134, ../sass/stylesheets/custom.sass */
 .headline_area h2 a {
   color: #1d5336;
 }
+/* line 136, ../sass/stylesheets/custom.sass */
 .headline_area h2 a:hover {
   text-decoration: underline;
 }
@@ -150,16 +179,20 @@ ol.reset, ul.reset {
 /* =========== */
 /* Google Docs */
 /* =========== */
+/* line 144, ../sass/stylesheets/custom.sass */
 table.gdocs a {
   text-decoration: none;
 }
+/* line 146, ../sass/stylesheets/custom.sass */
 table.gdocs a:hover {
   text-decoration: underline;
 }
+/* line 148, ../sass/stylesheets/custom.sass */
 table.gdocs th {
   text-align: left;
   text-decoration: underline;
 }
+/* line 151, ../sass/stylesheets/custom.sass */
 table.gdocs td.col_0 {
   width: 240px;
   padding-right: 20px;
@@ -172,10 +205,12 @@ table.gdocs td.col_0 {
 /* ===== */
 /* Basic */
 /* ===== */
+/* line 164, ../sass/stylesheets/custom.sass */
 .c_left {
   clear: left;
 }
 
+/* line 167, ../sass/stylesheets/custom.sass */
 .f_left {
   float: left;
 }
@@ -186,6 +221,7 @@ table.gdocs td.col_0 {
 /* ======= */
 /* Plugins */
 /* ======= */
+/* line 178, ../sass/stylesheets/custom.sass */
 .custom .sm_button {
   padding-top: 10px;
 }
@@ -196,23 +232,29 @@ table.gdocs td.col_0 {
 /* ==== */
 /* Misc */
 /* ==== */
+/* line 190, ../sass/stylesheets/custom.sass */
 #email_subscribe_form p {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+/* line 193, ../sass/stylesheets/custom.sass */
 #email_subscribe_form input {
   background-color: #dddddd;
 }
+/* line 195, ../sass/stylesheets/custom.sass */
 #email_subscribe_form input:hover {
   background-color: #eeeeee;
 }
+/* line 197, ../sass/stylesheets/custom.sass */
 #email_subscribe_form input:active {
   background-color: #cccccc;
 }
 
+/* line 201, ../sass/stylesheets/custom.sass */
 .update label {
   font-weight: bold;
 }
+/* line 203, ../sass/stylesheets/custom.sass */
 .update .signature {
   color: #666666;
 }
@@ -223,9 +265,11 @@ table.gdocs td.col_0 {
 /* ============== */
 /* Specific Pages */
 /* ============== */
+/* line 215, ../sass/stylesheets/custom.sass */
 body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area .headline_meta {
   float: none;
 }
+/* line 217, ../sass/stylesheets/custom.sass */
 body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area h1 {
   display: inline-block;
   clear: left;
@@ -233,6 +277,7 @@ body.akihabara-tutorial-part-3-basic-mapping.custom .headline_area h1 {
   margin-bottom: 10px;
 }
 
+/* line 224, ../sass/stylesheets/custom.sass */
 body.game_jams .whats_a_jam {
   clear: both;
   border: 1px solid #cccccc;
@@ -246,67 +291,84 @@ body.game_jams .whats_a_jam {
   border-radius: 8px;
   max-width: 700px;
   background-color: #f5e9bf;
-  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#f5daa2, #faecd0)));
-  background-image: -moz-linear-gradient(top, color-stops(#f5daa2, #faecd0));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #f5daa2), color-stop(100%, #faecd0));
+  background-image: -moz-linear-gradient(top, #f5daa2 0%, #faecd0 100%);
 }
+/* line 233, ../sass/stylesheets/custom.sass */
 body.game_jams h3 {
   margin: 0px 0px 10px;
   text-align: center;
 }
+/* line 237, ../sass/stylesheets/custom.sass */
 body.game_jams p {
   margin: 5px 0px;
 }
+/* line 240, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_game_intro {
   clear: both;
   overflow: hidden;
   display: inline-block;
 }
+/* line 8, ../sass/compass/utilities/general/_hacks.scss */
 body.game_jams .jam_game_intro {
   display: block;
 }
+/* line 245, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview h3 {
   border-bottom: 1px solid #999999;
   display: inline-block;
 }
+/* line 249, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview p {
   padding: 5px 0px;
 }
+/* line 251, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .team_links, body.game_jams .jam_games_overview .download_links {
   list-style: none;
   padding-left: 0px;
 }
+/* line 255, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview a {
   text-decoration: none;
   color: #2c42c4;
 }
+/* line 258, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview a:hover {
   text-decoration: underline;
 }
+/* line 260, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .team_links .roles {
   color: #666666;
 }
+/* line 262, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .download_links li {
   background: transparent url(http://bostongamejams.com/images/icon_arrow_down.jpg) no-repeat left 3px;
   padding-left: 20px;
 }
+/* line 265, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .team_links .roles:before {
   content: "-- ";
 }
+/* line 269, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview h4.game, body.game_jams .jam_games_overview h4.team {
   margin: 5px 0px;
 }
+/* line 271, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview h4.game {
   background: transparent url(http://bostongamejams.com/images/icon_game_b_16x.jpg) no-repeat left 3px;
   padding-left: 20px;
 }
+/* line 274, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview h4.team {
   background: transparent url(http://bostongamejams.com/images/icon_team_16x.jpg) no-repeat left 3px;
   padding-left: 20px;
 }
+/* line 277, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview h4.tools {
   background: transparent url(http://bostongamejams.com/images/icon_tools_16x.jpg) no-repeat left 3px;
   padding-left: 20px;
 }
+/* line 281, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .game_listing {
   overflow: hidden;
   display: inline-block;
@@ -325,20 +387,24 @@ body.game_jams .jam_games_overview .game_listing {
   padding: 10px;
   position: relative;
 }
+/* line 8, ../sass/compass/utilities/general/_hacks.scss */
 body.game_jams .jam_games_overview .game_listing {
   display: block;
 }
+/* line 289, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .game_listing .screenie {
   position: absolute;
   right: 10px;
   top: 10px;
 }
+/* line 293, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .game_listing .screenie img {
   -moz-box-shadow: #b8aaa3 0px 0px 5px;
   -webkit-box-shadow: #b8aaa3 0px 0px 5px;
   -o-box-shadow: #b8aaa3 0px 0px 5px;
   box-shadow: #b8aaa3 0px 0px 5px;
 }
+/* line 297, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .quick_links {
   margin: 0;
   padding: 0;
@@ -347,9 +413,11 @@ body.game_jams .jam_games_overview .quick_links {
   overflow: hidden;
   display: inline-block;
 }
+/* line 8, ../sass/compass/utilities/general/_hacks.scss */
 body.game_jams .jam_games_overview .quick_links {
   display: block;
 }
+/* line 50, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .jam_games_overview .quick_links li {
   list-style-image: none;
   list-style-type: none;
@@ -360,26 +428,33 @@ body.game_jams .jam_games_overview .quick_links li {
   padding-left: 4px;
   padding-right: 4px;
 }
+/* line 41, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .jam_games_overview .quick_links li:first-child, body.game_jams .jam_games_overview .quick_links li.first {
   padding-left: 0px;
 }
+/* line 43, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .jam_games_overview .quick_links li:last-child, body.game_jams .jam_games_overview .quick_links li.last {
   padding-right: 0px;
 }
+/* line 299, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .quick_links li {
   border-right: 1px solid #999999;
   padding-right: 8px;
   margin-right: 3px;
 }
+/* line 303, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .quick_links li:last-child {
   border-right: none;
 }
+/* line 305, ../sass/stylesheets/custom.sass */
 body.game_jams .jam_games_overview .quick_links li a {
   color: #222222;
 }
+/* line 308, ../sass/stylesheets/custom.sass */
 body.game_jams .photo_splash {
   position: relative;
 }
+/* line 310, ../sass/stylesheets/custom.sass */
 body.game_jams .photo_splash ul {
   margin: 0;
   padding: 0;
@@ -388,9 +463,11 @@ body.game_jams .photo_splash ul {
   overflow: hidden;
   display: inline-block;
 }
+/* line 8, ../sass/compass/utilities/general/_hacks.scss */
 body.game_jams .photo_splash ul {
   display: block;
 }
+/* line 50, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .photo_splash ul li {
   list-style-image: none;
   list-style-type: none;
@@ -401,13 +478,16 @@ body.game_jams .photo_splash ul li {
   padding-left: 4px;
   padding-right: 4px;
 }
+/* line 41, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .photo_splash ul li:first-child, body.game_jams .photo_splash ul li.first {
   padding-left: 0px;
 }
+/* line 43, ../sass/compass/utilities/lists/_horizontal-list.scss */
 body.game_jams .photo_splash ul li:last-child, body.game_jams .photo_splash ul li.last {
   padding-right: 0px;
 }
 
+/* line 322, ../sass/stylesheets/custom.sass */
 body.about_page p.intro img {
   border: 1px solid #999999;
   -moz-box-shadow: #988d86 1px 1px 5px;
@@ -419,13 +499,16 @@ body.about_page p.intro img {
 /* =========== */
 /* ----------- */
 /* =========== */
+/* line 330, ../sass/stylesheets/custom.sass */
 .mailing_list #mailing_list_subscribe_box {
   background-color: white;
   padding: 5px;
 }
+/* line 333, ../sass/stylesheets/custom.sass */
 .mailing_list #mailing_list_subscribe_box h3 {
   margin: 5px 0px 10px;
 }
+/* line 335, ../sass/stylesheets/custom.sass */
 .mailing_list #mailing_list_subscribe_box .subscibe_button {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -446,32 +529,37 @@ body.about_page p.intro img {
   border-radius: 10px;
   border: 1px solid #3977ab;
   background-color: #5291c5;
-  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#c5daeb, #8bb5d8 4%, #5291c5)));
-  background-image: -moz-linear-gradient(top, color-stops(#c5daeb, #8bb5d8 4%, #5291c5));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #c5daeb), color-stop(4%, #8bb5d8), color-stop(100%, #5291c5));
+  background-image: -moz-linear-gradient(top, #c5daeb 0%, #8bb5d8 4%, #5291c5 100%);
   text-shadow: #3977ab 0 -1px 0;
   cursor: pointer;
   font-size: 14px;
   width: 100px;
 }
+/* line 89, ../sass/partials/_buttons.sass */
 .mailing_list #mailing_list_subscribe_box .subscibe_button:hover {
   text-decoration: none;
 }
+/* line 91, ../sass/partials/_buttons.sass */
 .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:active, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:hover, .mailing_list #mailing_list_subscribe_box .subscibe_button.disabled:visited {
-  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#d8d8d8, #d8d8d8 4%, #d8d8d8)));
-  background-image: -moz-linear-gradient(top, color-stops(#d8d8d8, #d8d8d8 4%, #d8d8d8));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #d8d8d8), color-stop(4%, #d8d8d8), color-stop(100%, #d8d8d8));
+  background-image: -moz-linear-gradient(top, #d8d8d8 0%, #d8d8d8 4%, #d8d8d8 100%);
   color: #fdfdfd;
   border-color: #bfbfbf;
   text-shadow: none;
   cursor: default;
 }
+/* line 100, ../sass/partials/_buttons.sass */
 .mailing_list #mailing_list_subscribe_box .subscibe_button:active {
-  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#20425e, #336a98 4%, #3d7fb6)));
-  background-image: -moz-linear-gradient(top, color-stops(#20425e, #336a98 4%, #3d7fb6));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #20425e), color-stop(4%, #336a98), color-stop(100%, #3d7fb6));
+  background-image: -moz-linear-gradient(top, #20425e 0%, #336a98 4%, #3d7fb6 100%);
 }
+/* line 102, ../sass/partials/_buttons.sass */
 .mailing_list #mailing_list_subscribe_box .subscibe_button:hover {
-  background-image: -webkit-gradient(linear, grad-point(top), grad-point(grad-opposite-position(top)), grad-color-stops(color-stops(#d8e6f2, #9ec2df 4%, #659dcb)));
-  background-image: -moz-linear-gradient(top, color-stops(#d8e6f2, #9ec2df 4%, #659dcb));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #d8e6f2), color-stop(4%, #9ec2df), color-stop(100%, #659dcb));
+  background-image: -moz-linear-gradient(top, #d8e6f2 0%, #9ec2df 4%, #659dcb 100%);
 }
+/* line 339, ../sass/stylesheets/custom.sass */
 .mailing_list #mailing_list_subscribe_box .email {
   width: 200px;
   margin-left: 5px;

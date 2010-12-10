@@ -83,3 +83,17 @@ var Undos = {
     }
   }
 }
+
+function readTextFile(file, callback) {
+  var reader = new FileReader();
+
+  // Closure to capture the file information.
+  reader.onload = (function(theFile) {
+    return function(e) {
+      callback(e, theFile);
+    };
+  })(file);
+
+  // Read in the image file as a data URL.
+  return reader.readAsText(file);
+}

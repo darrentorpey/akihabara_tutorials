@@ -83,7 +83,7 @@ window.addEventListener('load', function () {
       brushes[i] = document.getElementById('brush'+i);
       brushes[i].addEventListener('mousedown', ev_brush, false);
       brushes_img[i] = new Image();
-      brushes_img[i].src = i + '.png';
+      brushes_img[i].src = brushes[i].src;
       }
 
   // init the global level data structure

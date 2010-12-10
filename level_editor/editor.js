@@ -153,10 +153,6 @@ function ev_brush (ev) {
     // the mouse button).
     this.mousemove = function (ev) {
 
-    
-    //context.strokeStyle = '#fff';
-    //context.strokeRect((Math.floor(px/32))*32, Math.floor(py/32)*32, 32, 32);
-    
     px = ev._x;
     py = ev._y;
 
@@ -220,6 +216,7 @@ function ev_brush (ev) {
   }
 
   function genMiniMap () {
+      reloadMap();
       minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
       var pix = minimap.data;
 

@@ -145,7 +145,7 @@ a:hover {
   display: block;
 }
 /* line 65, sass/admin.sass */
-#top_tools #pallete {
+#top_tools #palette {
   float: left;
   background-color: #e1e9f6;
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
@@ -165,7 +165,7 @@ a:hover {
   margin-right: 10px;
 }
 /* line 72, sass/_core.sass */
-#top_tools #pallete a {
+#top_tools #palette a {
   color: #2f5a86;
 }
 /* line 69, sass/admin.sass */
@@ -227,7 +227,7 @@ a:hover {
   text-decoration: none;
 }
 /* line 63, sass/partials/_buttons.sass */
-#top_tools #level_sharing #d_clip_button.disabled, #top_tools #level_sharing #d_clip_button.disabled:active, #top_tools #level_sharing #d_clip_button.disabled:hover, #top_tools #level_sharing #d_clip_button.disabled:visited {
+#top_tools #level_sharing #d_clip_button.disabled, #top_tools #level_sharing #d_clip_button.disabled:active, #top_tools #level_sharing #d_clip_button.disabled:hover, #top_tools #level_sharing #d_clip_button.disabled.hover, #top_tools #level_sharing #d_clip_button.disabled:visited {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b3b3b3), color-stop(4%, #b3b3b3), color-stop(100%, #b3b3b3));
   background-image: -moz-linear-gradient(top, #b3b3b3 0%, #b3b3b3 4%, #b3b3b3 100%);
   color: #fdfdfd;
@@ -241,7 +241,7 @@ a:hover {
   background-image: -moz-linear-gradient(top, #0f1c25 0%, #26455b 4%, #325b78 100%);
 }
 /* line 71, sass/partials/_buttons.sass */
-#top_tools #level_sharing #d_clip_button:hover {
+#top_tools #level_sharing #d_clip_button:hover, #top_tools #level_sharing #d_clip_button.hover {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #5d95bc), color-stop(40%, #437ca3), color-stop(100%, #35607f));
   background-image: -moz-linear-gradient(top, #5d95bc 0%, #437ca3 40%, #35607f 100%);
 }

@@ -20,10 +20,14 @@ $(function() {
   $('<p id="undo_counter">Undos: <span class="num">None</span></p>').appendTo('#admin_buttons');
 
   $('#generate_url').click(function() {
-    genURL();
+    generateShortURL();
 
     return false;
   });
+
+  if ($('#share').val() == '') {
+    $('#d_clip_button').addClass('disabled');
+  }
 })
 
 var testAction = new UndoableAction(function() {}, function() {});

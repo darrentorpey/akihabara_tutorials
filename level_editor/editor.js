@@ -1,8 +1,6 @@
 var clip = new ZeroClipboard.Client();
 var level = new Array(30);
 var insp;
-var shortURL;
-var longURL = '';
 var levelParam;
 var afterEditorLoad;
 var canvasContext;
@@ -14,25 +12,6 @@ function setLevel(lvl) {
   level = lvl;
 
   drawCanvas(camx, camy);
-}
-
-function callBitly(s) {
-  data = BitlyClient.shorten(s, 'myShort');
-}
-
-function myShort(data) {
-  var bitly_link = null;
-  for (var r in data.results) {
-      bitly_link = data.results[r]['shortUrl'];
-      break;
-  }
-  shortURL = bitly_link;
-  document.getElementById("share").value = shortURL;
-  clip.setText(shortURL);
-}
-
-function genURL() {
-  callBitly(longURL);
 }
 
 function gup( name ) {
@@ -94,7 +73,7 @@ window.addEventListener('load', function () {
   py = -100;
 
   levelParam = gup("level");
-  clip.setHandCursor( false );
+  clip.setHandCursor(true);
   clip.glue('d_clip_button', 'd_clip_container');
 
   function init () {
@@ -279,8 +258,7 @@ function drawCanvas(cx, cy) {
     levelParam += level[i];
   }
 
-  longURL = "?level=" + levelParam;
-  longURL = window.location.protocol + "//" + window.location.host + window.location.pathname + longURL;
+  setLongURL(window.location.protocol + "//" + window.location.host + window.location.pathname + "?level=" + levelParam);
 
   if (minimap) context.putImageData(minimap,480,0,0,0,160,120);
   

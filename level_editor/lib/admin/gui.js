@@ -1,4 +1,6 @@
+var longURL;
 var buttons_hash = {};
+
 function drawGuiActions() {
   var buttons = [
     // {
@@ -53,4 +55,30 @@ function drawGuiActions() {
 
 function flash_message(message) {
   $('#flash').html(message).css('opacity', 1).show().fadeTo(1500, 0);
+}
+
+function setLongURL(long_url) {
+  longURL = long_url;
+}
+
+function callBitly(long_url) {
+  data = BitlyClient.shorten(long_url, 'receiveShortURL');
+}
+
+function receiveShortURL(data) {
+  var bitly_link = null;
+
+  for (var r in data.results) {
+    bitly_link = data.results[r]['shortUrl'];
+    break;
+  }
+
+  $('#share').val(bitly_link);
+  $('#share').attr('readonly', 'readonly').click(function() { this.select() });
+  clip.setText(bitly_link);
+  $('#d_clip_button').removeClass('disabled');
+}
+
+function generateShortURL() {
+  callBitly(longURL);
 }

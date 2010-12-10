@@ -60,7 +60,7 @@ $px_std_button_height_medium: 25px
   cursor: pointer
   &:hover
     text-decoration: none
-  &.disabled, &.disabled:active, &.disabled:hover, &.disabled:visited
+  &.disabled, &.disabled:active, &.disabled:hover, &.disabled.hover, &.disabled:visited
     +linear-gradient(color-stops(lighten(desaturate($base_color, 80%), 30%), lighten(desaturate($base_color, 80%), 30%) 4%, lighten(desaturate($base_color, 80%), 30%)))
     color: mix($text_color, #EEE, 90%)
     border-color: lighten(grayscale($base_color), 20%)
@@ -68,7 +68,7 @@ $px_std_button_height_medium: 25px
     cursor: default
   &:active
     +linear-gradient(color-stops(darken($base_color, 30%), darken($base_color, 15%) 4%, darken($base_color, 7%)))
-  &:hover
+  &:hover, &.hover
     +linear-gradient(color-stops(lighten($base_color, 15%), lighten($base_color, 5%) 40%, darken($base_color, 5%)))
 
 =button_common_no_hover($base_color: #5291C5, $button_size: 30px, $rounding: $button_size/2, $text_color: #fff)

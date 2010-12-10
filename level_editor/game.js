@@ -232,7 +232,6 @@ function addBlock(data) {
       y:data.y,
       jumpaccy:10,
       side:data.side
-      
     });
   },
   first:function() {
@@ -334,7 +333,7 @@ function addBlock(data) {
   },
   blit:function() {
     if (gbox.objectIsVisible(this))
-      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv,alpha:this.alpha});
   }
   });
   }
@@ -357,7 +356,6 @@ function addDisBlock(data) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
-      alpha:0.5
     });
   },
   first:function() {
@@ -389,15 +387,11 @@ function addDisBlock(data) {
           gbox.trashObject(this);
           pl.onBox = false;
           }
+        if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
       }
             
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
-      
- 
-
-      
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
-      //toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.setFrame(this); // set the right animation frame
  
       
@@ -405,7 +399,7 @@ function addDisBlock(data) {
   },
   blit:function() {
     if (gbox.objectIsVisible(this))
-      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv,alpha:this.alpha});
   }
   });
   }

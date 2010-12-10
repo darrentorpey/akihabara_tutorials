@@ -104,3 +104,97 @@
 			}
 		}
 	};
+  
+  // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
+ 	help.akihabaraInit = function(data) {
+		if ((typeof data).toLowerCase() == "string") data={title:data};
+		var device=this.getDeviceConfig();
+		var footnotes=["MADE WITH AKIHABARA (C)2010 - GPL2/MIT","Project: www.kesiev.com/akihabara","Sources: github.com/kesiev/akihabara"];
+		if (data.title) document.title = data.title;
+      else if (!document.title) document.title = "Akihabara";
+		if (data.splash) {
+			if (data.splash.footnotes) 
+				for (var i=0;i<footnotes.length;i++) data.splash.footnotes.push(footnotes[i]);
+			gbox.setSplashSettings(data.splash);
+		}
+		var screenwidth=(data.width?data.width:(data.portrait?240:320));
+		var screenheight=(data.height?data.height:(data.portrait?320:240));
+		if (device.iswii) {
+			gbox._keymap={
+				left:175,
+				right:176,
+				up:177,
+				down:178,
+				a:173,
+				b:172,
+				c:13
+			};
+			document.onkeypress= function(e){ if (e.preventDefault) e.preventDefault(); return false};
+		}
+		if (!data.splash||(data.splash.minilogo==null)) gbox.setSplashSettings({minilogo:"logo"});
+		if (!data.splash||(data.splash.background==null)) gbox.setSplashSettings({background:"akihabara/splash.png"});
+		if (!data.splash||(data.splash.minimalTime==null)) gbox.setSplashSettings({minimalTime:3000});
+		if (!data.splash||(data.splash.footnotes==null)) gbox.setSplashSettings({footnotes:footnotes});
+		if (!data||!data.hardwareonly) {
+			document.body.style.backgroundColor="#000000";
+			gbox.setScreenBorder(false);
+		}
+		if (help.geturlparameter("statusbar")) gbox.setStatusBar(1);
+		if (help.geturlparameter("db")||device.doublebuffering) gbox.setDoubleBuffering(true);
+		if (help.geturlparameter("noautoskip")) gbox.setAutoskip(null);
+		if (help.geturlparameter("zoom")) gbox.setZoom(help.geturlparameter("zoom")); else
+	     	if (help.isDefined(data.zoom)) gbox.setZoom(data.zoom); else
+			if (help.isDefined(device.zoom)) gbox.setZoom(device.zoom); else
+			if (help.isDefined(device.width)) gbox.setZoom(device.width/screenwidth); else
+			if (help.isDefined(device.height)) gbox.setZoom(device.height/screenheight);
+			
+		if (help.geturlparameter("fps")) gbox.setFps(help.geturlparameter("fps")*1);
+			else gbox.setFps((data.fps?data.fps:25));
+		if (help.geturlparameter("fskip")) gbox.setFrameskip(help.geturlparameter("fskip"));
+		if (help.geturlparameter("forcedidle")) gbox.setForcedIdle(help.geturlparameter("forcedidle")*1);
+			else if (help.isDefined(device.forcedidle)) gbox.setForcedIdle(device.forcedidle);
+		if (help.geturlparameter("canlog")) gbox.setCanLog(true);
+
+		if (!data||!data.hardwareonly) gbox.initScreen(screenwidth,screenheight);
+
+		if (help.geturlparameter("showplayers")) gbox.setShowPlayers(help.geturlparameter("showplayers")=="yes");
+		if (help.geturlparameter("canaudio")) gbox.setCanAudio(help.geturlparameter("canaudio")=="yes"); else
+			gbox.setCanAudio(device.canaudio&&(!device.audioisexperimental||gbox.getFlag("experimental")));
+		if (help.geturlparameter("audiocompatmode")) gbox.setAudioCompatMode(help.geturlparameter("audiocompatmode")*1); else
+			if (help.isDefined(device.audiocompatmode)) gbox.setAudioCompatMode(device.audiocompatmode);
+		if (help.geturlparameter("audioteam")) gbox.setAudioTeam(help.geturlparameter("audioteam")*1); else
+			if (help.isDefined(device.audioteam)) gbox.setAudioTeam(device.audioteam);
+		if (help.geturlparameter("loweraudioteam")) gbox.setLowerAudioTeam(help.geturlparameter("loweraudioteam")*1); else
+			if (help.isDefined(device.loweraudioteam)) gbox.setLowerAudioTeam(device.loweraudioteam);			
+		if (help.geturlparameter("audiocreatemode")) gbox.setAudioCreateMode(help.geturlparameter("audiocreatemode")*1); else
+			if (help.isDefined(device.audiocreatemode)) gbox.setAudioCreateMode(device.audiocreatemode);
+		if (help.geturlparameter("audiodequeuetime")) gbox.setAudioDequeueTime(help.geturlparameter("audiodequeuetime")*1); else
+			if (help.isDefined(device.audiodequeuetime)) gbox.setAudioDequeueTime(device.audiodequeuetime);
+		if (help.geturlparameter("audiopositiondelay")) gbox.setAudioPositionDelay(help.geturlparameter("audiopositiondelay")*1); else
+			if (help.isDefined(device.audiopositiondelay)) gbox.setAudioPositionDelay(device.audiopositiondelay);
+		if (help.geturlparameter("forcedmimeaudio")) gbox.setForcedMimeAudio(help.geturlparameter("forcedmimeaudio")); else
+			if (help.isDefined(device.forcedmimeaudio)) gbox.setForcedMimeAudio(device.forcedmimeaudio);
+		if (help.geturlparameter("audioissinglechannel")) gbox.setAudioIsSingleChannel(help.geturlparameter("audioissinglechannel")=="yes"); else
+			if (help.isDefined(device.audioissinglechannel)) gbox.setAudioIsSingleChannel(device.audioissinglechannel);
+			
+			
+		if (!data||!data.hardwareonly) {
+			if (help.geturlparameter("touch")=="no");
+				else if ((help.geturlparameter("touch")=="yes")||device.touch)
+					switch (data.padmode) {
+						case "fretboard": {
+							iphofretboard.initialize({h:100,bg:"akihabara/fretboard.png"});		
+							break;
+						}
+						case "none": {
+							break;
+						}
+						default: {
+							iphopad.initialize({h:100,dpad:"akihabara/dpad.png",buttons:"akihabara/buttons.png",bg:"akihabara/padbg.png"});		
+							break;
+						}
+					}
+		}
+
+		return device;
+	};

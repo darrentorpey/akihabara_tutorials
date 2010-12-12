@@ -370,7 +370,6 @@ function addBlock(data) {
       
       if (this.onBox) {
           this.touchedfloor = true;
-          
           this.accy = 0;
           this.y=help.yPixelToTile(map,this.y)+3;
           }
@@ -387,9 +386,10 @@ function addBlock(data) {
       if (this.touchedfloor && !this.prevtouchedfloor) gbox.hitAudio("hit");
       if (this.touchedfloor) this.prevtouchedfloor = true;
       if (!this.touchedfloor) this.prevtouchedfloor = false;
-        
       
-      
+      // snap the block if it's overlapping a solid tile
+      if (map.tileIsSolidFloor(1,help.getTileInMap(this.x+this.w,this.y+this.h/2,map,null,'map'))) this.x = help.xPixelToTile(map,this.x);
+      if (map.tileIsSolidFloor(1,help.getTileInMap(this.x,this.y+this.h/2,map,null,'map'))) this.x = help.xPixelToTile(map,this.x+this.w);
     }
   },
   blit:function() {

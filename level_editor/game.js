@@ -521,6 +521,7 @@ function addPlayer() {
       {
       this.finished = true;
       maingame.gameIsCompleted();
+      help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
       }
     
     // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.

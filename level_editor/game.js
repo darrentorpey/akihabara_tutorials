@@ -197,6 +197,7 @@ function addEnemy(data, type) {
           {
           gbox.trashObject(this);
           toys.platformer.bounce(block,{jumpsize:10});
+          gbox.hitAudio("squish");
           }
       // check to see if you're touching it on the left or right
       if (gbox.collides(this,block,2) && this.x)
@@ -213,7 +214,7 @@ function addEnemy(data, type) {
       toys.platformer.applyGravity(this); // Apply gravity
       toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
       if (this.touchedfloor) // If touching the floor...
-        toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:2}); // goomba movement
+        toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:1.5}); // goomba movement
       else // Else...
         this.accx=0; // Stay still (i.e. jump only vertically)
       if (type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
@@ -230,6 +231,7 @@ function addEnemy(data, type) {
       if (help.isSquished(this,pl)) {
         gbox.trashObject(this);
         toys.platformer.bounce(pl,{jumpsize:10});
+        gbox.hitAudio("squish");
       } 
       else if (gbox.collides(this,pl,2) && pl.x)
           {
@@ -412,6 +414,7 @@ function addDisBlock(data) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
+      onMe:null,
     });
     help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
@@ -420,7 +423,7 @@ function addDisBlock(data) {
 
     // Counter, required for setFrame
     this.counter=(this.counter+1)%10;
-    
+
     for (var j in gbox._groups)
       for (var i in gbox._objects[gbox._groups[j]])
       {
@@ -430,12 +433,16 @@ function addDisBlock(data) {
         var other = gbox._objects[group][i];
         if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
           {
+            this.onMe = other;
             if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
               {
-              gbox.trashObject(this);
               help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
+              gbox.trashObject(this);
               }
             if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
+          } else if (this.toys && other == this.onMe) {
+          this.toys['fall'].timer = 0;
+          this.alpha = 1;
           }
         }
       }

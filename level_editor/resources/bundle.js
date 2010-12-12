@@ -64,6 +64,7 @@
 	// Audio resources	
 	addAudio:[
 		["jump",["resources/jump.mp3","resources/jump.ogg"],{channel:"jump"}],	
-    ["hit",["resources/hit.mp3","resources/hit.ogg"],{channel:"hit"}]
+    ["hit",["resources/hit.mp3","resources/hit.ogg"],{channel:"hit"}],
+    ["squish",["resources/sword.mp3","resources/sword.ogg"],{channel:"hit"}]
 	]
 }

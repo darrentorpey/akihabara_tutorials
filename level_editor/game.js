@@ -24,7 +24,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'boxes', 'enemies', 'player', 'game']);
+  gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'game']);
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -61,11 +61,11 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t!= 0) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 ) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t!= 0) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 ) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
@@ -74,6 +74,7 @@ function main() {
   map = help.finalizeTilemap(map);
   
       gbox.trashGroup('boxes');
+      gbox.trashGroup('disboxs');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             {
@@ -362,7 +363,7 @@ function addBlock(data) {
 function addDisBlock(data) {
 			
   gbox.addObject({
-  group:"boxes",
+  group:"disboxes",
   tileset:"block_tiles",
   initialize:function() {
     toys.platformer.initialize(this,{
@@ -378,6 +379,7 @@ function addDisBlock(data) {
       jumpaccy:10,
       side:data.side,
     });
+    help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
   first:function() {
     this.accx = 0;
@@ -388,49 +390,48 @@ function addDisBlock(data) {
     this.counter=(this.counter+1)%10;
     var pl=gbox.getObject("player","player_id");
 
-    // being pushed left/right by player
-    if (gbox.collides(this,pl) && pl.x && pl.y > this.y-4)
-        {
-        if ((pl.accx > 0 && pl.x < this.x) || (pl.accx < 0 && pl.x > this.x)) 
-          {
-          pl.accx = 0;
-          if (pl.accx>0) pl.x=this.x-pl.w;
-          if (pl.accx<0) pl.x=this.x+this.w;
-          }
-        }
-    
-    // being jumped on by player
-    if (((pl.accy>=0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(this.h)))&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4))
+
+    // being stood on by player
+    if ((pl.accy>=0)&&(pl.y==this.y-pl.h)&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4))
     {
-      pl.onBox = true;
       if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
         {
         gbox.trashObject(this);
-        pl.onBox = false;
+        help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
         }
       if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
     }
+    
+    for (var i in gbox._objects['enemies'])
+    {
+      // being stood on by enemy
+      var other = gbox._objects['enemies'][i];
+      if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
+      {
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+          {
+          gbox.trashObject(this);
+          help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
+          }
+        if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
+      }
+    }
+    
+    for (var i in gbox._objects['boxes'])
+    {
+      // being stood on by enemy
+      var other = gbox._objects['boxes'][i];
+      if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
+      {
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+          {
+          gbox.trashObject(this);
+          help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
+          }
+        if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
+      }
+    }
             
-    // // being landed on by an enemy
-    // for (var i in gbox._objects[group])
-      // if ((!gbox._objects[group][i].initialize)&&gbox.collides(this,gbox._objects[group][i]))
-        // {
-        // if (gbox._objects[group][i] != this)
-          // {
-          // other = gbox._objects[group][i];
-          // if (((other.accy>=0)&&(Math.abs(this.y-(other.y+other.h))<(this.h)))&&(other.x+other.w>this.x+1)&&(other.x<this.x+this.w-1))
-            // {
-            // other.onBox = true;
-            // other.touchedfloor = true;
-            // other.accy = 0;
-            // other.y=help.yPixelToTile(map,other.y)+1;
-            // }
-            // //else other.onBox = false;
-          // }
-      // }     
-       
-      toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
-      toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
       toys.platformer.setFrame(this); // set the right animation frame
  
       
@@ -549,6 +550,7 @@ function addPlayer() {
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
       gbox.trashGroup('boxes');
+      gbox.trashGroup('disboxes');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             {

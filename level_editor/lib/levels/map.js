@@ -5,6 +5,7 @@ function addMap() {
     group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
  
     initialize: function() {
+      gbox.trashGroup('disboxes');
       gbox.trashGroup('boxes');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
@@ -52,16 +53,16 @@ function reloadMap() {
     map: loadMap(),
 
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t!= 0) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 ) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t!= 0) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 ) return true;
         else return false; // Is a wall if is not an empty space
       }
     })
 
-    
+      gbox.trashGroup('disboxes');
       gbox.trashGroup('boxes');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)

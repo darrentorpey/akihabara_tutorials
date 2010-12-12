@@ -120,7 +120,7 @@ window.addEventListener('load', function () {
 
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
-    canvas.addEventListener('mouseup',   ev_canvas, false);
+    document.body.addEventListener('mouseup',   ev_canvas, false);
 
     drawCanvas(camx,camy);
   }

@@ -1,4 +1,5 @@
 var clip = new ZeroClipboard.Client();
+var saving_clipboard = new ZeroClipboard.Client();
 var level = new Array(30);
 var insp;
 var levelParam;
@@ -58,6 +59,18 @@ var total_brushes = 10;
 var brushes = new Array(total_brushes);
 var brushes_img = new Array(total_brushes);
 
+function getLevelDataForSaveFile() {
+  return JSON.stringify(level);
+}
+
+function getLevelName() {
+  return $('#level_name input').val();
+}
+
+function getFilenameForSave() {
+  return getLevelName().toLowerCase().replace(/ /g, '_') + '.json';
+}
+
 // Keep everything in anonymous function, called on window load.
 if(window.addEventListener) {
 window.addEventListener('load', function () {
@@ -73,6 +86,17 @@ window.addEventListener('load', function () {
   levelParam = gup("level");
   clip.setHandCursor(true);
   clip.glue('d_clip_button', 'd_clip_container');
+  // saving_clipboard.setHandCursor(true);
+  // saving_clipboard.glue('d_clip_button', 'd_clip_container');
+
+  $('#level_saving').downloadify({
+    swf:           'resources/flash/downloadify.swf',
+    downloadImage: 'images/save_level_92x64t.png',
+    width:         92,
+    height:        32,
+    filename:      getFilenameForSave,
+    data:          getLevelDataForSaveFile
+  });
 
   function init () {
     // Find the elements

@@ -1,5 +1,12 @@
 @import core
 
+=top_box
+  float: left
+  +admin_box
+  margin-left: 10px
+  &:first-child
+    margin-left: 0px
+
 body
   padding-bottom: 100px
   background-color: #EAEAEA
@@ -63,12 +70,9 @@ a
   +clearfix
   padding: 10px 5px
   #palette
-    float: left
-    +admin_box
-    margin-right: 10px
+    +top_box
   #level_sharing
-    float: left
-    +admin_box
+    +top_box
     display: inline-block
     #d_clip_button
       font-size: 13px
@@ -81,6 +85,22 @@ a
         cursor: pointer
         embed
           cursor: pointer
+  #level_loading
+    +top_box
+    #upload_to_load
+      input
+        width: 80px
+    #drag_to_load
+      padding: 3px
+      a.inline_help
+        cursor: help
+        &:hover
+          text-decoration: none
+  #level_saving
+    +top_box
+    padding: 5px 6px 1px
+  #level_name
+    +top_box
 
 #container
   position: relative
@@ -95,3 +115,16 @@ section.intro
   .holder
     +help_box
     display: inline-block
+
+
+#button_testing
+  padding: 5px
+  #button_one
+    +link_button(#B3E8F8, 30px, 5px, #394D60)
+    font-size: 14px
+    // width: 90px
+    float: left
+    clear: left
+    display: block
+    &.hover
+      +link_button(lighten(#B3E8F8, 10%), 30px, 5px, #394D60)

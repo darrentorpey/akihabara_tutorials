@@ -7,11 +7,14 @@
   <link rel="stylesheet" href="stylesheets/admin.css">
   <link rel="stylesheet" href="stylesheets/plain.css">
 
+  <script type="text/javascript" src="lib/swfobject.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.ndd.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.jqupload.js"></script>
+  <script type="text/javascript" src="lib/downloadify.min.js"></script>
   <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
   <script type="text/javascript" src="lib/core.js"></script>
   <script type="text/javascript" src="editor.js"></script>
@@ -33,11 +36,37 @@
       <img src="resources/palettes/default/9.png" id="brush9">
     </div>
 
+    <div id="level_name">
+      <label for="level_name">Level Name</label>
+      <input name="level_name" value="Akihabara Live Edit" size="30">
+    </div>
+
     <div id="level_sharing">
       <a href="#" id="generate_url">Generate a URL to share &raquo;</a>
       <input type="text" size="20" placeholder="Click generate link" id="share">
       <span id="d_clip_container" style="display:inline"></span>
       <span id="d_clip_button">Copy to Clipboard</span>
+    </div>
+
+    <div id="level_loading">
+      <!-- <p id="upload_to_load">
+          <form action="" method="get" id="upload_to_load_form">
+            <label>
+              Upload a level to load
+              <input type="file" name="upload_level" value="">
+            </label>
+          </form>
+      </p> -->
+      <p id="save_level">
+        <a href="#"></a>
+      </p>
+
+      <p id="drag_to_load">
+        Drag here load <a href="#" class="inline_help">(?)</a>
+      </p>
+    </div>
+
+    <div id="level_saving">
     </div>
   </section>
 
@@ -53,7 +82,7 @@
       </p>
 
       <p>
-        Game controls: left/right arrow keys to move, Z to jump, X to respawn near the top-left of the screen.
+        Game controls: left/right arrow keys to move, Z to jump, C to respawn near the top-left of the screen.
       </p>
     </div>
   </section>
@@ -75,6 +104,8 @@
   });
 
   if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+
+  gbox._passKeysThrough = 1;
 
   var start_akihabara = true;
 </script>

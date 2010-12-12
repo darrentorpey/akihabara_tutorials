@@ -278,6 +278,7 @@ var gbox={
 		footnotes:null,
 		footnotesSpacing:1
 	},
+	_passKeysThrough:0,
 	_minimalexpired:0, // 0: not triggered, 1: triggered, 2: done
 	setCanLog:function(c) { this._canlog=c&&window.console; },
 	canLog:function() { return this._canlog},
@@ -291,12 +292,12 @@ var gbox={
 		try { if ((sh>0)&&(sw>0)&&(sx<img.width)&&(sy<img.height)) tox.drawImage(img, sx,sy,sw,sh,dx,dy,dw,dh); } catch(e){}
 	},
 	_keydown:function(e){
-		if (e.preventDefault) e.preventDefault();
+    if (!gbox._passKeysThrough && e.preventDefault) e.preventDefault();
 		var key=(e.fake||window.event?e.keyCode:e.which);
 		if (!gbox._keyboard[key]) gbox._keyboard[key]=1;
 	},
 	_keyup:function(e){
-		if (e.preventDefault) e.preventDefault();
+    if (!gbox._passKeysThrough && e.preventDefault) e.preventDefault();
 		var key=(e.fake||window.event?e.keyCode:e.which);
 		gbox._keyboard[key]=-1;
 	},

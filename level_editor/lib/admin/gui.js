@@ -33,7 +33,7 @@ function drawGuiActions() {
     return buttons_hash[id].func();
   });
 
-  $('<div id="drop_area">DROP AREA</div>').appendTo('body').bind('drop', function(evt) {
+  $('#drag_to_load').bind('drop', function(evt) {
     var files = evt.dataTransfer.files; // FileList object.
 
     readTextFile(files[0], function(evt, file) {

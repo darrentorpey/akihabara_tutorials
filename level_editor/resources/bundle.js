@@ -59,5 +59,11 @@
       gapx:    0,
       gapy:    0
     }
-  ]
+  ],
+  
+	// Audio resources	
+	addAudio:[
+		["jump",["resources/jump.mp3","resources/jump.ogg"],{channel:"jump"}],	
+    ["hit",["resources/hit.mp3","resources/hit.ogg"],{channel:"hit"}]
+	]
 }

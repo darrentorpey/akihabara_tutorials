@@ -25,7 +25,8 @@ function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
   gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'game']);
-
+  gbox.setAudioChannels({jump:{volume:0.3},hit:{volume:1.0}});
+  
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
 
@@ -264,6 +265,7 @@ function addBlock(data) {
       x:data.x,
       y:data.y,
       jumpaccy:10,
+      prevtouchedfloor:false,
       side:data.side
     });
   },
@@ -276,8 +278,6 @@ function addBlock(data) {
       
       // Counter
       this.counter=(this.counter+1)%10;
-      
-      
       
       var pl=gbox.getObject("player","player_id");
       
@@ -365,6 +365,7 @@ function addBlock(data) {
       
       if (this.onBox) {
           this.touchedfloor = true;
+          
           this.accy = 0;
           this.y=help.yPixelToTile(map,this.y)+3;
           }
@@ -372,11 +373,17 @@ function addBlock(data) {
       
       if (this.onBox && this.touchedfloor) this.y=help.yPixelToTile(map,this.y);
 
+    
       
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
       toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.setFrame(this); // set the right animation frame
  
+      if (this.touchedfloor && !this.prevtouchedfloor) gbox.hitAudio("hit");
+      if (this.touchedfloor) this.prevtouchedfloor = true;
+      if (!this.touchedfloor) this.prevtouchedfloor = false;
+        
+      
       
     }
   },
@@ -497,7 +504,7 @@ function addPlayer() {
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
       if (gbox.keyIsHit("b")) {
-      addDisBlock({x:64,y:64});
+      
       }      
       
       if (gbox.keyIsHit("c")) {

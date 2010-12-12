@@ -521,7 +521,7 @@ function addPlayer() {
           }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
-          if (this.accy <= 0) this.onBox = false;
+          if (this.accy < 0) this.onBox = false;
 					toys.platformer.handleAccellerations(this); // gravity/attrito
     },
 

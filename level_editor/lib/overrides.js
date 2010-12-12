@@ -2,7 +2,7 @@
   
   // overriding help.isSquished with a collision fix
   help.isSquished = function(th,by) {
-		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(th.h)))
+		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
 	};
   
   // overriding toys.platformer.verticalTileCollision to make a four-point collision check

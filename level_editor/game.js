@@ -265,7 +265,7 @@ function addBlock(data) {
       x:data.x,
       y:data.y,
       jumpaccy:10,
-      prevtouchedfloor:false,
+      prevtouchedfloor:true,
       side:data.side
     });
   },

@@ -40,6 +40,33 @@ function main() {
   // Set our intro screen animation
   maingame.gameTitleIntroAnimation = function() { return true; };
   
+  maingame.endlevelIntroAnimation = function(reset) {
+			 if (reset) {
+				 toys.resetToy(this,"default-blinker");
+			} else {
+				return toys.text.blink(this,"default-blinker",gbox.getBufferContext(),{font:"small",text:"WELL DONE!",valign:gbox.ALIGN_MIDDLE,halign:gbox.ALIGN_CENTER,dx:0,dy:0,dw:gbox.getScreenW(),dh:gbox.getScreenH(),blinkspeed:5,times:10});
+			}
+		};
+  
+		// Game ending
+		maingame.gameEndingIntroAnimation = function(reset) {
+			if (reset) {
+				toys.resetToy(this,"default-blinker");
+			} else {
+				gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+        return toys.TOY_DONE;
+			}		  	
+		};
+    
+    maingame.gameoverIntroAnimation = function(reset) {
+			 if (reset) {
+				gbox.stopChannel("bgmusic");
+				toys.resetToy(this,"default-blinker");
+			} else {
+				return toys.TOY_DONE;
+			}
+		};
+    
   // This function will be called before the game starts running, so here is where we add our game elements
   maingame.initializeGame = function() {
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
@@ -61,11 +88,11 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 ) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 ) return true;
+      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
@@ -382,36 +409,31 @@ function addDisBlock(data) {
     help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
   first:function() {
-    this.accx = 0;
-    this.accy = 0;
     if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
 
-    // Counter
+    // Counter, required for setFrame
     this.counter=(this.counter+1)%10;
     
-    
     for (var j in gbox._groups)
-    for (var i in gbox._objects[gbox._groups[j]])
-    {
-      var group = gbox._groups[j];
-      if (group == 'enemies' || group == 'player' || group == 'boxes')
+      for (var i in gbox._objects[gbox._groups[j]])
       {
-      
-      var other = gbox._objects[group][i];
-      if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
-      {
-        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+        var group = gbox._groups[j];
+        if (group == 'enemies' || group == 'player' || group == 'boxes')
+        {
+        var other = gbox._objects[group][i];
+        if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
           {
-          gbox.trashObject(this);
-          help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
+            if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+              {
+              gbox.trashObject(this);
+              help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
+              }
+            if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
           }
-        if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
+        }
       }
-      }
-    }
-    
-            
-      toys.platformer.setFrame(this); // set the right animation frame
+
+    toys.platformer.setFrame(this); // set the right animation frame
  
       
     }
@@ -438,6 +460,7 @@ function addPlayer() {
     //  of the sprite so the top half can "overlap" scenery that's "behind" it. In this case we're just setting colh to the default tile height.
     colh: gbox.getTiles('player_tiles').tileh,
     onBox: false,
+    finished: false,
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
@@ -463,6 +486,12 @@ function addPlayer() {
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+    
+    if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
+      {
+      this.finished = true;
+      maingame.gameIsCompleted();
+      }
     
     // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });

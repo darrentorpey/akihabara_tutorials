@@ -53,11 +53,11 @@ function reloadMap() {
     map: loadMap(),
 
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 ) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 ) return true;
+      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       }
     })

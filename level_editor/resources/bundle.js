@@ -1,6 +1,6 @@
 {
   addImage: [
-    ['font',             'resources/font.png'],
+    ['font',             'resources/CasualEncounter.png'],
     ['logo',             'resources/logo.png'],
     ['player_sprite',    'resources/player_sprite.png'],
     ['map_spritesheet',  'resources/map_pieces.png'],
@@ -10,7 +10,7 @@
   ],
 
   addFont: [
-    { id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 }
+    { id: 'small', image: 'font', firstletter: ' ', tileh: 20, tilew: 14, tilerow: 255, gapx: 0, gapy: 0 }
   ],
 
   addTiles: [

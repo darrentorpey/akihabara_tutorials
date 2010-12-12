@@ -2,7 +2,7 @@
   addImage: [
     ['font',             'resources/CasualEncounter.png'],
     ['logo',             'resources/logo.png'],
-    ['player_sprite',    'resources/player_sprite.png'],
+    ['player_sprite',    'resources/walk.png'],
     ['map_spritesheet',  'resources/map_pieces.png'],
     ['enemy_sprite',  'resources/enemy_sprite.png'],
     ['block_sprite',  'resources/block_sprite.png'],
@@ -26,9 +26,9 @@
     {
       id:      'player_tiles',  // Set a unique ID for future reference
       image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
-      tileh:   32,
-      tilew:   32,
-      tilerow: 1,
+      tileh:   41,
+      tilew:   23,
+      tilerow: 10,
       gapx:    0,
       gapy:    0
     },

@@ -472,9 +472,16 @@ function addPlayer() {
     // We're overriding colh from its default because by default in the toys.topview object, colh is set to half the height of the sprite.
     // We have to do this because topview is normally used for Zelda-style games where the hitbox is considered to be the bottom half
     //  of the sprite so the top half can "overlap" scenery that's "behind" it. In this case we're just setting colh to the default tile height.
-    colh: gbox.getTiles('player_tiles').tileh,
     onBox: false,
     finished: false,
+    frames:{
+        still:{ speed:1, frames:[1] },
+        jumping:{ speed:1, frames:[7] },
+        walking:{ speed:4, frames:[0,1,2,3,4,5] },
+        falling:{ speed:1, frames:[6] },
+        die: { speed:1,frames:[1] },
+        pushing: { speed:6,frames:[8,9] },
+      },
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
@@ -495,11 +502,16 @@ function addPlayer() {
       this.jumpaccy = 15;
       this.maxaccx = 7;
       this.maxaccy = 60;
+      this.h = 41;
+      this.w = 23;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+    
+    // Counter, required for setFrame
+    this.counter=(this.counter+1)%10;
     
     if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
       {
@@ -539,12 +551,19 @@ function addPlayer() {
           if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
-          this.y=help.yPixelToTile(map,this.y)+3;
+          this.y=help.yPixelToTile(map,this.y+9)-7;
           }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
           if (this.accy < 0) this.onBox = false;
 					toys.platformer.handleAccellerations(this); // gravity/attrito
+          
+          if (this.pushing == toys.PUSH_LEFT) this.fliph = 1;
+            else if (this.pushing == toys.PUSH_RIGHT) this.fliph = 0;
+          
+          this.frames.walking.speed = 20/(Math.abs(this.accx));
+          toys.platformer.setFrame(this);
+          if ((this.pushing == toys.PUSH_LEFT || this.pushing == toys.PUSH_RIGHT) && Math.abs(this.accx) <= 1) this.frame=help.decideFrame(this.counter,this.frames.pushing);
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

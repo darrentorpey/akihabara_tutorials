@@ -388,24 +388,16 @@ function addDisBlock(data) {
 
     // Counter
     this.counter=(this.counter+1)%10;
-    var pl=gbox.getObject("player","player_id");
-
-
-    // being stood on by player
-    if ((pl.accy>=0)&&(pl.y==this.y-pl.h)&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4))
-    {
-      if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
-        {
-        gbox.trashObject(this);
-        help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
-        }
-      if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
-    }
     
-    for (var i in gbox._objects['enemies'])
+    
+    for (var j in gbox._groups)
+    for (var i in gbox._objects[gbox._groups[j]])
     {
-      // being stood on by enemy
-      var other = gbox._objects['enemies'][i];
+      var group = gbox._groups[j];
+      if (group == 'enemies' || group == 'player' || group == 'boxes')
+      {
+      
+      var other = gbox._objects[group][i];
       if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
       {
         if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
@@ -415,22 +407,9 @@ function addDisBlock(data) {
           }
         if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
       }
-    }
-    
-    for (var i in gbox._objects['boxes'])
-    {
-      // being stood on by enemy
-      var other = gbox._objects['boxes'][i];
-      if ((other.accy>=0)&&(other.y==this.y-other.h)&&(other.x+other.w>this.x+4)&&(other.x<this.x+this.w-4))
-      {
-        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
-          {
-          gbox.trashObject(this);
-          help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,null,"map");
-          }
-        if (this.toys['fall'].timer > 0) this.alpha = 1-this.toys['fall'].timer/30.0;
       }
     }
+    
             
       toys.platformer.setFrame(this); // set the right animation frame
  

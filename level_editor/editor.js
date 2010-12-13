@@ -5,7 +5,7 @@ var insp;
 var levelParam;
 var afterEditorLoad;
 var canvasContext;
-var minimap, tc;
+var minimap;
 var context;
 var tool;
 
@@ -277,7 +277,7 @@ function drawCanvas(cx, cy) {
       context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
 
   if (minimap) {
-     tc = document.createElement('canvas');
+     var tc = document.createElement('canvas');
      tc.setAttribute('width',160);
      tc.setAttribute('height',120);
    

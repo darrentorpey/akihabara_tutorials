@@ -515,3 +515,53 @@ section.intro .holder p:last-child {
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #ffffff), color-stop(40%, #f9fdfe), color-stop(100%, #caeffa));
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f9fdfe 40%, #caeffa 100%);
 }
+/* line 131, sass/admin.sass */
+#button_testing #button_one.disabled {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+  font-family: Arial;
+  display: inline-block;
+  color: #394d60;
+  text-decoration: none;
+  line-height: 30px;
+  padding: 0 10px;
+  height: 30px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #27beeb;
+  background-color: #56ccef;
+  cursor: pointer;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #b3e8f8), color-stop(40%, #84daf4), color-stop(100%, #56ccef));
+  background-image: -moz-linear-gradient(top, #b3e8f8 0%, #84daf4 40%, #56ccef 100%);
+  text-shadow: #27beeb 0 -1px 0;
+  cursor: pointer;
+}
+/* line 61, sass/partials/_buttons.sass */
+#button_testing #button_one.disabled:hover {
+  text-decoration: none;
+}
+/* line 63, sass/partials/_buttons.sass */
+#button_testing #button_one.disabled.disabled, #button_testing #button_one.disabled.disabled:active, #button_testing #button_one.disabled.disabled:hover, #button_testing #button_one.disabled.disabled.hover, #button_testing #button_one.disabled.disabled:visited {
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #eeeff0), color-stop(4%, #eeeff0), color-stop(100%, #eeeff0));
+  background-image: -moz-linear-gradient(top, #eeeff0 0%, #eeeff0 4%, #eeeff0 100%);
+  color: #4b5d6e;
+  border-color: #d5d5d5;
+  text-shadow: none;
+  cursor: default;
+}
+/* line 69, sass/partials/_buttons.sass */
+#button_testing #button_one.disabled:active {
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #0f7c9d), color-stop(4%, #15b4e4), color-stop(100%, #35c2ec));
+  background-image: -moz-linear-gradient(top, #0f7c9d 0%, #15b4e4 4%, #35c2ec 100%);
+}
+/* line 71, sass/partials/_buttons.sass */
+#button_testing #button_one.disabled:hover, #button_testing #button_one.disabled.hover {
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(0%, #9ce1f6), color-stop(40%, #6dd3f2), color-stop(100%, #3ec5ed));
+  background-image: -moz-linear-gradient(top, #9ce1f6 0%, #6dd3f2 40%, #3ec5ed 100%);
+}

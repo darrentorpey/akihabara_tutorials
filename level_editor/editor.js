@@ -91,11 +91,11 @@ window.addEventListener('load', function () {
 
   $('#level_saving').downloadify({
     swf:           'resources/flash/downloadify.swf',
-    downloadImage: 'images/save_level_92x64t.png',
+    downloadImage: 'images/save_level_92x128.png',
     width:         92,
     height:        32,
-    filename:      getFilenameForSave,
-    data:          getLevelDataForSaveFile
+    filename:      'my_file.json',
+    data:          'hello'
   });
 
   function init () {

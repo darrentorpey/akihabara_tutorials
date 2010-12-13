@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Downloadify!</title>
+
+  <link rel="stylesheet" href="../stylesheets/reset.css">
+  <link rel="stylesheet" href="../stylesheets/admin.css">
+
+  <script type="text/javascript" src="../lib/swfobject.js"></script>
+  <script type="text/javascript" src="../lib/jquery/jquery-1.4.4.js"></script>
+  <script type="text/javascript" src="../lib/downloadify.min.js"></script>
+</head>
+<body id="button_testing">
+  <div id="downloadit">
+    Download It!
+  </div>
+
+<script>
+  // $('#downloadit').downloadify({
+  //   swf:           '../resources/flash/downloadify.swf',
+  //   downloadImage: '../images/save_level_92x64t.png',
+  //   width:         92,
+  //   height:        32,
+  //   filename:      'yo.txt',
+  //   data:          function() { return "teh_datas" }
+  // });
+  // 
+
+  $('#downloadit').downloadify({
+    swf: '../resources/flash/downloadify.swf',
+    downloadImage: '../images/download.png',
+    width:         175,
+    height:        30,
+    filname:       'my_file.json',
+    data:          'hello'
+  });
+
+  $('#downloadit').downloadify({
+    swf:           '../resources/flash/downloadify.swf',
+    downloadImage: '../images/download.png',
+    width:         92,
+    height:        32,
+    filename:      'my_file.json',
+    data:          'hello'
+  });
+</script>
+</body></html>

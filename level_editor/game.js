@@ -539,6 +539,7 @@ function addPlayer() {
         //maingame.gameIsCompleted();
         help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
         this.starsCollected++;
+        gbox.hitAudio("star");
         }
       
       if (this.starsCollected == this.starsTotal && !this.finished)

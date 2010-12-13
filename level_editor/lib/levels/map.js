@@ -3,7 +3,6 @@ function addMap() {
   gbox.addObject({    
     id:    'background_id', // This is the object ID
     group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
- 
     initialize: function() {
       gbox.trashGroup('disboxes');
       gbox.trashGroup('boxes');
@@ -17,19 +16,26 @@ function addMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+      
+
+      
+    },
+ 
+    first: function() {
+
     },
  
     // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
     blit: function() {
       // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
-  //gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 0, color:gbox.COLOR_WHITE });
-  gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);
+      //gbox.blitFade(gbox.getCanvasContext('map_canvas'), { alpha: 0, color:gbox.COLOR_WHITE });
+      gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);
       //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
       
       
-        gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
-gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
+      gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
+      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
 
       
       // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
@@ -74,7 +80,6 @@ function reloadMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
-    
     
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
     //write the background image

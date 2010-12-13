@@ -55,8 +55,11 @@ function main() {
 			if (reset) {
 				toys.resetToy(this,"default-blinker");
 			} else {
-				gbox.blitFade(gbox.getBufferContext(),{alpha:1});
-        return toys.TOY_DONE;
+          for (var y = 0; y < 30; y++)
+            for (var x = 0; x < 40; x++)
+              if (level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
+          gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+          return toys.TOY_DONE;
 			}		  	
 		};
     
@@ -71,11 +74,14 @@ function main() {
     
   // This function will be called before the game starts running, so here is where we add our game elements
   maingame.initializeGame = function() {
+ 
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     addPlayer();
 
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
+    
+    
   };
   
   // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
@@ -114,6 +120,7 @@ function main() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+       
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
@@ -470,7 +477,8 @@ function addPlayer() {
     id:      'player_id',    // id refers to the specific object
     group:   'player',       // The rendering group
     tileset: 'player_tiles', // tileset is where the graphics come from
-
+    starsTotal:0,
+    starsCollected:0,
     // We're overriding the default colh value for the object. "colh" stands for collision height, and it's the height of our collision box. Similarly,
     //  the object automatically has values for colw (collision box width) and colx and coly (the x/y offset of the collision box).
     // We're overriding colh from its default because by default in the toys.topview object, colh is set to half the height of the sprite.
@@ -499,8 +507,10 @@ function addPlayer() {
 			if (!th.touchedfloor) th.accy += 2;
 			// Attrito
 			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
-		},
-      
+		};
+     
+    this.resetHud();
+        
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
@@ -515,16 +525,29 @@ function addPlayer() {
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
     
+    if (this.starsTotal > 0) maingame.hud.setValue("total","value",this.starsTotal-this.starsCollected);
+    
     // Counter, required for setFrame
     this.counter=(this.counter+1)%10;
-    
-    if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
+
+    // if this is a level with stars, check to see if we've collected any
+    if (this.starsTotal > 0)
       {
-      this.finished = true;
-      maingame.gameIsCompleted();
-      help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
+      if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
+        {
+        //this.finished = true;
+        //maingame.gameIsCompleted();
+        help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
+        this.starsCollected++;
+        }
+      
+      if (this.starsCollected == this.starsTotal && !this.finished)
+        {
+        this.finished = true;
+        maingame.gameIsCompleted();
+        
+        }
       }
-    
     // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
@@ -591,6 +614,7 @@ function addPlayer() {
     resetGame: function() {
       this.x = 20;
       this.y = 20;
+      this.resetHud();
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
@@ -603,6 +627,26 @@ function addPlayer() {
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
             if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
             }
+            
     },
+    
+    resetHud: function() {
+      this.starsTotal = 0;
+      for (var y = 0; y < 30; y++)
+        for (var x = 0; x < 40; x++)
+          if (level[y][x] == '2') this.starsTotal++; 
+       
+      if (this.starsTotal > 0)
+        {
+        maingame.hud.setWidget("total",{widget:"label",font:"small",value:this.starsTotal-this.starsCollected,dx:32,dy:10,clear:true});
+        maingame.hud.setWidget("star",{widget:"stack",rightalign:true,tileset:"map_pieces",dx:0,dy:0,gapx:0,gapy:0,maxshown:1,value:[1]});
+        }
+        else
+        {
+        maingame.hud.setWidget("total",{widget:"label",font:"small",value:"",dx:32,dy:10,clear:true});
+        maingame.hud.setWidget("star",{widget:"stack",rightalign:true,tileset:"map_pieces",dx:0,dy:0,gapx:0,gapy:0,maxshown:1,value:[]});
+        maingame.hud.redraw();
+        }
+    }
   });
 }

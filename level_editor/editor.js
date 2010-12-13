@@ -68,7 +68,7 @@ function getLevelName() {
 }
 
 function getFilenameForSave() {
-  return getLevelName().toLowerCase().replace(/ /g, '_') + '.json';
+  return getLevelName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestamp() + '.json';
 }
 
 // Keep everything in anonymous function, called on window load.
@@ -94,8 +94,8 @@ window.addEventListener('load', function () {
     downloadImage: 'images/save_level_92x128.png',
     width:         92,
     height:        32,
-    filename:      'my_file.json',
-    data:          'hello'
+    filename:      getFilenameForSave,
+    data:          getLevelDataForSaveFile
   });
 
   function init () {

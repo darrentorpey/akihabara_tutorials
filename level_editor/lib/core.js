@@ -11,6 +11,10 @@ function timestamp() {
   return new Date().getTime();
 }
 
+function getCurrentTimestamp() {
+  return dateFormat(timestamp(), "yyyy-mm-dd__HH-MM-ss");
+}
+
 function requireLib(libraryName) {
   document.write('<script type="text/javascript" src="' + libraryName + '"><\/script>');
 }

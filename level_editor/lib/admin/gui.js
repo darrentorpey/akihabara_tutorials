@@ -1,4 +1,3 @@
-var longURL;
 var buttons_hash = {};
 
 function drawGuiActions() {
@@ -57,10 +56,6 @@ function flash_message(message) {
   $('#flash').html(message).css('opacity', 1).show().fadeTo(1500, 0);
 }
 
-function setLongURL(long_url) {
-  longURL = long_url;
-}
-
 function callBitly(long_url) {
   data = BitlyClient.shorten(long_url, 'receiveShortURL');
 }
@@ -80,5 +75,5 @@ function receiveShortURL(data) {
 }
 
 function generateShortURL() {
-  callBitly(longURL);
+  callBitly(getLongURL());
 }

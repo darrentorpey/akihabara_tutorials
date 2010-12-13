@@ -30,22 +30,16 @@ var UpdateMap = UndoableAction.extend({
   init: function(value, options) {
     var self = this;
     self.value = value;
-    // console.log('Redrawing map...');
 
     this._super(function() {
-      // console.log('map up');
       self.oldValue = UpdateMap.priorOldValue;
-      setLevel(getLevelCopy(self.value));
-      reloadMap();
+      loadLevelState(getLevelCopy(self.value));
       UpdateMap.priorOldValue = self.value;
-
       // reportLevel(self.value, 'new');
       // reportLevel(level, 'current');
       // reportLevel(self.oldValue, 'old');
     }, function() {
-      // console.log('map down');
-      setLevel(self.oldValue); // setLevel(getLevelCopy(self.oldValue));
-      reloadMap();
+      loadLevelState(self.oldValue);
       UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
     });
 
@@ -59,6 +53,12 @@ var total_brushes = 10;
 var brushes = new Array(total_brushes);
 var brushes_img = new Array(total_brushes);
 
+function loadLevelState(level) {
+  setLevel(level);
+  reloadMap();
+  $('#last_saved').text(getCurrentTimestamp());
+}
+
 function getLevelDataForSaveFile() {
   return JSON.stringify(level);
 }
@@ -68,7 +68,7 @@ function getLevelName() {
 }
 
 function getFilenameForSave() {
-  return getLevelName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestamp() + '.json';
+  return getLevelName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestampForFile() + '.json';
 }
 
 // Keep everything in anonymous function, called on window load.
@@ -207,7 +207,7 @@ function ev_brush (ev) {
        context.lineWidth = 2;
     context.strokeStyle = '#800';
     context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
-       
+
     };
 
     // This is called when you release the mouse button.
@@ -272,22 +272,29 @@ function drawCanvas(cx, cy) {
     for (var x = cx; x < cx+20; x++)
       context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
 
-  levelParam = "";
-  for (var i = 0; i < 30; i++) {
-    levelParam += level[i];
-  }
-
-  setLongURL(window.location.protocol + "//" + window.location.host + window.location.pathname + "?level=" + levelParam);
-
   if (minimap) context.putImageData(minimap,480,0,0,0,160,120);
-  
+
   context.strokeStyle = '#000';
   context.strokeRect(480,0,160,120);
   context.strokeRect(480+((camx*32)/8),0+((camy*32)/8),640/8,480/8);
+}
+
+function getLevelParams() {
+  var levelParam = '';
+  for (var i = 0; i < 30; i++) {
+    levelParam += level[i];
+  }
+  return levelParam;
 }
 
 function redrawMap() {
   new UpdateMap(getLevelCopy());
 }
 
-// vim:set spell spl=en fo=wan1croql tw=80 ts=2 sw=2 sts=2 sta et ai cin fenc=utf-8 ff=unix:
+function getLongURL() {
+  var params = {
+    name:  getLevelName(),
+    level: getLevelParams()
+  };
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + $.param(params, true)
+}

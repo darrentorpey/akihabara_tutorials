@@ -9,7 +9,8 @@ bg.src = 'resources/bg0.png'
 function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
-  help.akihabaraInit({width: 640, height: 480, zoom: 1 });
+
+  help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (params.name ? params.name : 'Akihabara Live Edit') });
   document.body.style.backgroundColor="#D4D4D4";
   
   gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });

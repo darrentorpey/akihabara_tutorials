@@ -1,3 +1,5 @@
+var params = $.deparam.querystring();
+
 $(function() {
   $('body').mouseup(function() {
     if ($('#toggle_autoupdate input:checked').length) {
@@ -27,6 +29,11 @@ $(function() {
 
   if ($('#share').val() == '') {
     $('#d_clip_button').addClass('disabled');
+  }
+
+  console.log(params);
+  if (params.name) {
+    $('#level_name input').val(params.name);
   }
 })
 

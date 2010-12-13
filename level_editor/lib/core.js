@@ -11,8 +11,12 @@ function timestamp() {
   return new Date().getTime();
 }
 
+function getCurrentTimestampForFile() {
+  return dateFormat(timestamp(), 'yyyy-mm-dd__HH-MM-ss');
+}
+
 function getCurrentTimestamp() {
-  return dateFormat(timestamp(), "yyyy-mm-dd__HH-MM-ss");
+  return dateFormat('ddd, mmm ddS, yyyy HH:MM:ss');
 }
 
 function requireLib(libraryName) {

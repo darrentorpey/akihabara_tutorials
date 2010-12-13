@@ -5,7 +5,7 @@ var insp;
 var levelParam;
 var afterEditorLoad;
 var canvasContext;
-var minimap;
+var minimap, tc;
 var context;
 var tool;
 
@@ -253,6 +253,10 @@ function ev_brush (ev) {
           pix[(i/8)+2] = pix[i+2]; // b
           pix[(i/8)+3] = pix[i+3]; // a
           }
+      
+
+      
+      
   }
 
   init();
@@ -272,7 +276,30 @@ function drawCanvas(cx, cy) {
     for (var x = cx; x < cx+20; x++)
       context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
 
-  if (minimap) context.putImageData(minimap,480,0,0,0,160,120);
+  if (minimap) {
+     tc = document.createElement('canvas');
+     tc.setAttribute('width',160);
+     tc.setAttribute('height',120);
+   
+    var pix = minimap.data;
+    var a = tc.getContext('2d').getImageData(0,0,160,120);
+    var apix = a.data;
+ 
+    for (var j = 0; j < pix.length/8; j += 640*2*4)
+    for (var i = j; i <  j+160*4; i += 4)
+         {
+         var b = (i-j)+(j/(640*2*4)*160*4);
+         apix[(b)  ] = pix[i  ]; // r
+         apix[(b)+1] = pix[i+1]; // g
+         apix[(b)+2] = pix[i+2]; // b
+         apix[(b)+3] = pix[i+3]; // a
+         }
+
+    //tc.getContext('2d').putImageData(a, 0, 0);          
+    //minimap = tc.getContext('2d');
+    
+    context.putImageData(a,480,0,0,0,160,120);
+    }
 
   context.strokeStyle = '#000';
   context.strokeRect(480,0,160,120);

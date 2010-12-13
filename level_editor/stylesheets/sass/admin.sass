@@ -8,7 +8,7 @@
     margin-left: 0px
 
 body
-  padding-bottom: 100px
+  padding: 0px 0px 50px 20px
   background-color: #EAEAEA
   font-size: 14px
 
@@ -116,13 +116,25 @@ section.intro
     +help_box
     display: inline-block
 
+section.credits
+  +admin_box
+  margin-top: 50px
+  h3
+    font-size: 18px
+    font-weight: bold
+  ul
+    li
+      margin: 10px 0px
+  p
+    margin: 5px 0px
+    line-height: 22px
+
 
 #button_testing
   padding: 5px
   #button_one
     +link_button(#B3E8F8, 30px, 5px, #394D60)
     font-size: 14px
-    // width: 90px
     float: left
     clear: left
     display: block
@@ -130,5 +142,3 @@ section.intro
       +link_button(lighten(#B3E8F8, 10%), 30px, 5px, #394D60)
     &.disabled
       +link_button(darken(#B3E8F8, 20%), 30px, 5px, #394D60)
-// #downloadit
-//   +top_box

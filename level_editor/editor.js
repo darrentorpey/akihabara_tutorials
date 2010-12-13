@@ -144,7 +144,7 @@ window.addEventListener('load', function () {
 
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
-    canvas.addEventListener('mouseup',   ev_canvas, false);
+    document.body.addEventListener('mouseup',   ev_canvas, false);
 
     drawCanvas(camx,camy);
   }
@@ -212,7 +212,7 @@ function ev_brush (ev) {
 
     // This is called when you release the mouse button.
     this.mouseup = function (ev) {
-      if (canvasContext) genMiniMap();
+      if (canvasContext) {genMiniMap();}
       if (tool.started) {
         tool.mousemove(ev);
         tool.started = false;

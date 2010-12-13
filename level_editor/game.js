@@ -291,16 +291,19 @@ function addBlock(data) {
       else if (!collideGroup(pl,'boxes')) pl.onBox = false;
       
       // being pushed left/right by player
-      if (gbox.collides(this,pl,2) && pl.x)
+      if (gbox.collides(this,pl,4) && pl.x)
           {
           if ((pl.accx > 1 && pl.x < this.x) || (pl.accx < 1 && pl.x > this.x)) 
             {
-            pl.accx = Math.floor(pl.accx/2);
+            if (pl.accx>0) pl.accx = Math.floor(pl.accx/2);
+            if (pl.accx<0) pl.accx = Math.ceil(pl.accx/2);
             this.accx = pl.accx;
-            if (pl.accx>0) pl.x=this.x+1-pl.w;
-            if (pl.accx<0) pl.x=this.x+this.w-1;
+            if (pl.accx>0) pl.x=this.x+7-pl.w;
+            if (pl.accx<0) pl.x=this.x+this.w-7;
+            //pl.pushblock = this;
             }
           }
+          //else if (pl.pushblock == this) pl.pushblock = false;
 
     var group = 'boxes';
     
@@ -367,7 +370,6 @@ function addBlock(data) {
       
       if (this.onBox) {
           this.touchedfloor = true;
-          
           this.accy = 0;
           this.y=help.yPixelToTile(map,this.y)+3;
           }
@@ -384,9 +386,10 @@ function addBlock(data) {
       if (this.touchedfloor && !this.prevtouchedfloor) gbox.hitAudio("hit");
       if (this.touchedfloor) this.prevtouchedfloor = true;
       if (!this.touchedfloor) this.prevtouchedfloor = false;
-        
       
-      
+      // snap the block if it's overlapping a solid tile
+      if (map.tileIsSolidFloor(1,help.getTileInMap(this.x+this.w,this.y+this.h/2,map,null,'map'))) this.x = help.xPixelToTile(map,this.x);
+      if (map.tileIsSolidFloor(1,help.getTileInMap(this.x,this.y+this.h/2,map,null,'map'))) this.x = help.xPixelToTile(map,this.x+this.w);
     }
   },
   blit:function() {
@@ -482,6 +485,7 @@ function addPlayer() {
         die: { speed:1,frames:[1] },
         pushing: { speed:6,frames:[8,9] },
       },
+    pushblock:false,
 
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
@@ -517,6 +521,7 @@ function addPlayer() {
       {
       this.finished = true;
       maingame.gameIsCompleted();
+      help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
       }
     
     // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
@@ -538,8 +543,6 @@ function addPlayer() {
       // check to see if you're being squished by this block
       if ((!block.initialize)&&help.isSquished(this,block))
           {
-          console.log(block.id);
-            console.log(block.accy);
           this.resetGame();
           toys.platformer.bounce(block,{jumpsize:10});
           }
@@ -563,7 +566,8 @@ function addPlayer() {
           
           this.frames.walking.speed = 20/(Math.abs(this.accx));
           toys.platformer.setFrame(this);
-          if ((this.pushing == toys.PUSH_LEFT || this.pushing == toys.PUSH_RIGHT) && Math.abs(this.accx) <= 1) this.frame=help.decideFrame(this.counter,this.frames.pushing);
+          if ((this.pushing == toys.PUSH_LEFT || this.pushing == toys.PUSH_RIGHT) && Math.abs(this.accx) <= 4) this.frame=help.decideFrame(this.counter,this.frames.pushing);
+          if (Math.abs(this.accx) <= 1) this.frame=help.decideFrame(this.counter,this.frames.still);
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

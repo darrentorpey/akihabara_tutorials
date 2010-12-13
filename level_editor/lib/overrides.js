@@ -2,16 +2,16 @@
   
   // overriding help.isSquished with a collision fix
   help.isSquished = function(th,by) {
-		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(th.h)))
+		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
 	};
   
   // overriding toys.platformer.verticalTileCollision to make a four-point collision check
   // (topleft, topright, bottomleft, bottomright) instead of a two-point collision check (top-middle, bottom-middle)
   toys.platformer.verticalTileCollision = function(th,map,tilemap) {
-			var bottomleft=help.getTileInMap(th.x+8,th.y+th.h,map,0,tilemap);
-			var topleft=help.getTileInMap(th.x+8,th.y,map,0,tilemap);
-      var bottomright=help.getTileInMap(th.x+th.w-8,th.y+th.h,map,0,tilemap);
-			var topright=help.getTileInMap(th.x+th.w-8,th.y,map,0,tilemap);
+			var bottomleft=help.getTileInMap(th.x+4,th.y+th.h,map,0,tilemap);
+			var topleft=help.getTileInMap(th.x+4,th.y,map,0,tilemap);
+      var bottomright=help.getTileInMap(th.x+th.w-4,th.y+th.h,map,0,tilemap);
+			var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
 			th.touchedfloor=false;
 			th.touchedceil=false;
 	

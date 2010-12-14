@@ -136,7 +136,9 @@
 		if (!data.splash||(data.splash.minimalTime==null)) gbox.setSplashSettings({minimalTime:3000});
 		if (!data.splash||(data.splash.footnotes==null)) gbox.setSplashSettings({footnotes:footnotes});
 		if (!data||!data.hardwareonly) {
-			document.body.style.backgroundColor="#000000";
+		  if ((typeof(jQuery) == 'undefined') || jQuery('body').css('backgroundColor') == '') {
+		    document.body.style.backgroundColor="#000000";
+		  }
 			gbox.setScreenBorder(false);
 		}
 		if (help.geturlparameter("statusbar")) gbox.setStatusBar(1);

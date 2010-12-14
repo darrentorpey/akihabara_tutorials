@@ -189,8 +189,8 @@ function addEnemy(data, type) {
       onBox:false,
       blink: false
     });
-    
-    if (type == 1)
+    this.type = type;
+    if (this.type == 1)
       {
       this.frames = {
         still:{ speed:1, frames:[1] },
@@ -203,7 +203,7 @@ function addEnemy(data, type) {
   },
 
   first:function() {
-  if (!type) type = 0;
+  if (!this.type) this.type = 0;
 
   if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
 
@@ -240,7 +240,7 @@ function addEnemy(data, type) {
         toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:1.5}); // goomba movement
       else // Else...
         this.accx=0; // Stay still (i.e. jump only vertically)
-      if (type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
+      if (this.type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
       // if (this.onBox) {
         // this.touchedfloor = true;
@@ -255,7 +255,7 @@ function addEnemy(data, type) {
         
         toys.platformer.bounce(pl,{jumpsize:10});
         gbox.hitAudio("squish");
-        if (type == 1)
+        if (this.type == 1)
           {
           this.blink = true;
           }
@@ -287,7 +287,11 @@ function addEnemy(data, type) {
         var other = gbox._objects[group][i];
         if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
           {
-            if (group != 'player') gbox.trashObject(other);
+            if (group != 'player') 
+              {
+              if (group == 'enemies' && other.type == 1) {other.blink = true; console.log("hi");}
+                else gbox.trashObject(other);
+              }
               else other.resetGame();
           }
         }

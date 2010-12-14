@@ -183,7 +183,8 @@ function addEnemy(data, type) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
-      onBox:false
+      onBox:false,
+      blink: false
     });
   },
 
@@ -221,7 +222,7 @@ function addEnemy(data, type) {
 
       toys.platformer.applyGravity(this); // Apply gravity
       toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
-      if (this.touchedfloor) // If touching the floor...
+      if (this.touchedfloor && !this.blink) // If touching the floor and not blinking (about to explode)
         toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:1.5}); // goomba movement
       else // Else...
         this.accx=0; // Stay still (i.e. jump only vertically)
@@ -237,23 +238,42 @@ function addEnemy(data, type) {
       toys.platformer.setFrame(this); // set the right animation frame
       var pl=gbox.getObject("player","player_id");
       if (help.isSquished(this,pl)) {
-        gbox.trashObject(this);
+        
         toys.platformer.bounce(pl,{jumpsize:10});
         gbox.hitAudio("squish");
+        if (type == 1)
+          {
+          this.blink = true;
+          }
+          else gbox.trashObject(this);
+        
       } 
       else if (gbox.collides(this,pl,2) && pl.x)
           {
           pl.x = 20;
           pl.y = 20;
           }
-          
+      
+      if (this.blink)
+        {
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+          {
+          for (var i = -1; i <= 1; i++)
+            for (var j = -1; j <= 1; j++)
+              help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*i,this.y+this.h/2+this.h*j,null,"map");
+          gbox.trashObject(this);
+          }
+        }
     
     
   }
   },
   blit:function() {
     if (gbox.objectIsVisible(this))
-      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      {
+      if (!this.blink || !(this.counter % 3))
+        gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      }
   }
   });
   }
@@ -553,7 +573,7 @@ function addPlayer() {
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
       if (gbox.keyIsHit("b")) {
-      
+      addEnemy({x:4*32,y:1*32,side:true}, 1); 
       }      
       
       if (gbox.keyIsHit("c")) {
@@ -633,6 +653,7 @@ function addPlayer() {
     
     resetHud: function() {
       this.starsTotal = 0;
+      this.starsCollected = 0;
       for (var y = 0; y < 30; y++)
         for (var x = 0; x < 40; x++)
           if (level[y][x] == '2') this.starsTotal++; 

@@ -27,6 +27,31 @@
 			}
       
 		};
+
+    // overriding toys.platformer.jumpKeys to NOT jump if the player is holding down Ctrl (so you don't jump on Undo)
+		toys.platformer.jumpKeys = function(th,key) {
+    if (gbox._keyboard[17] != 1)
+      {
+			if ((toys.platformer.canJump(th)||(key.doublejump&&(th.accy>=0)))&&gbox.keyIsHit(key.jump)&&(th.curjsize==0)) {
+				if (key.audiojump) gbox.hitAudio(key.audiojump);
+				th.accy=-th.jumpaccy;
+				th.curjsize=th.jumpsize;
+				return true;
+			} else if (th.curjsize&&gbox.keyIsHold(key.jump)) { // Jump modulation
+				th.accy--;
+				th.curjsize--;
+			} else
+				th.curjsize=0;
+			return false;
+      }
+		};
+    
+  // fixing a bug in gbox._keydown where some keys that are set to -1 won't ever register as down
+  gbox._keydown = function(e){
+    if (!gbox._passKeysThrough && e.preventDefault) e.preventDefault();
+		var key=(e.fake||window.event?e.keyCode:e.which);
+		gbox._keyboard[key]=1;
+	};
   
   // overriding gbox.initScreen to reposition akihabara frame
   gbox.initScreen = function(w,h) {

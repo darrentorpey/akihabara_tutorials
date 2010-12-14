@@ -623,6 +623,23 @@ function addPlayer() {
       if (gbox.keyIsHit("c")) {
       this.resetGame();
       }      
+      
+       if (gbox._keyboard[68] == 1 && camx < 20) {
+       camx += 1;
+       drawCanvas(camx,camy);
+       }
+       else if (gbox._keyboard[65] == 1 && camx > 0) {
+        camx -= 1;
+        drawCanvas(camx,camy);
+        }
+      if (gbox._keyboard[83] == 1 && camy < 15) {
+        camy += 1;
+        drawCanvas(camx,camy);
+      }
+      else if (gbox._keyboard[87] == 1 && camy > 0) {
+        camy -= 1;
+        drawCanvas(camx,camy);
+        }
      
      var gp = 'boxes';
     // iterate through each pushblock

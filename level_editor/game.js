@@ -270,11 +270,31 @@ function addEnemy(data, type) {
       
       if (this.blink)
         {
-        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE)
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
           {
-          for (var i = -1; i <= 1; i++)
-            for (var j = -1; j <= 1; j++)
-              help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*i,this.y+this.h/2+this.h*j,null,"map");
+          for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1; dy++)
+              {
+              help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
+              
+              
+    for (var j in gbox._groups)
+      for (var i in gbox._objects[gbox._groups[j]])
+      {
+        var group = gbox._groups[j];
+        if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes')
+        {
+        var other = gbox._objects[group][i];
+        if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
+          {
+            if (group != 'player') gbox.trashObject(other);
+              else other.resetGame();
+          }
+        }
+      }              
+              
+              
+              }
           gbox.trashObject(this);
           }
         }
@@ -459,7 +479,7 @@ function addDisBlock(data) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
-      onMe:null,
+      onMe:null
     });
     help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
@@ -649,6 +669,8 @@ function addPlayer() {
     resetGame: function() {
       this.x = 20;
       this.y = 20;
+      this.accx = 0;
+      this.accy = 0;
       this.resetHud();
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)

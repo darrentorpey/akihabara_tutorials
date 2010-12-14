@@ -118,7 +118,10 @@ function main() {
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
+            {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
        
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
@@ -182,12 +185,24 @@ function addEnemy(data, type) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
-      onBox:false
+      onBox:false,
+      blink: false
     });
+    this.type = type;
+    if (this.type == 1)
+      {
+      this.frames = {
+        still:{ speed:1, frames:[1] },
+        walking:{ speed:4, frames:[1] },
+        jumping:{ speed:1, frames:[1] },
+        falling:{ speed:1, frames:[1] },
+        die: { speed:1,frames:[1] }
+      };
+      }
   },
 
   first:function() {
-  if (!type) type = 0;
+  if (!this.type) this.type = 0;
 
   if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
 
@@ -199,12 +214,16 @@ function addEnemy(data, type) {
     for (var i in gbox._objects[gp])
       {
       var block = gbox._objects[gp][i];
-      // check to see if you're being squished by this blocks
+      // check to see if you're being squished by this block
       if ((!block.initialize)&&help.isSquished(this,block))
           {
-          gbox.trashObject(this);
           toys.platformer.bounce(block,{jumpsize:10});
           gbox.hitAudio("squish");
+          if (this.type == 1)
+            {
+            this.blink = true;
+            }
+            else gbox.trashObject(this);
           }
       // check to see if you're touching it on the left or right
       if (gbox.collides(this,block,2) && this.x)
@@ -220,11 +239,11 @@ function addEnemy(data, type) {
 
       toys.platformer.applyGravity(this); // Apply gravity
       toys.platformer.auto.horizontalBounce(this); // Bounces horizontally if hit the sideways walls
-      if (this.touchedfloor) // If touching the floor...
+      if (this.touchedfloor && !this.blink) // If touching the floor and not blinking (about to explode)
         toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:1.5}); // goomba movement
       else // Else...
         this.accx=0; // Stay still (i.e. jump only vertically)
-      if (type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
+      if (this.type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
       // if (this.onBox) {
         // this.touchedfloor = true;
@@ -236,23 +255,68 @@ function addEnemy(data, type) {
       toys.platformer.setFrame(this); // set the right animation frame
       var pl=gbox.getObject("player","player_id");
       if (help.isSquished(this,pl)) {
-        gbox.trashObject(this);
+        
         toys.platformer.bounce(pl,{jumpsize:10});
         gbox.hitAudio("squish");
+        if (this.type == 1)
+          {
+          this.blink = true;
+          }
+          else gbox.trashObject(this);
+        
       } 
       else if (gbox.collides(this,pl,2) && pl.x)
           {
           pl.x = 20;
           pl.y = 20;
           }
-          
+      
+      if (this.blink)
+        {
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
+          {
+          // loop through 9 quadrants around the enemy
+          for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1; dy++)
+              {
+              // remove the tile here
+              help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
+              
+              // check and see if there are dynamic objects here
+              for (var j in gbox._groups)
+                for (var i in gbox._objects[gbox._groups[j]])
+                {
+                  var group = gbox._groups[j];
+                  if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes')
+                  {
+                  var other = gbox._objects[group][i];
+                  if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
+                    {
+                      if (group != 'player') 
+                        {
+                        if (group == 'enemies' && other.type == 1) {other.blink = true; console.log("hi");}
+                          else gbox.trashObject(other);
+                        }
+                        else other.resetGame();
+                    }
+                  }
+                }              
+              
+              
+              }
+          gbox.trashObject(this);
+          }
+        }
     
     
   }
   },
   blit:function() {
     if (gbox.objectIsVisible(this))
-      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      {
+      if (!this.blink || !(this.counter % 3))
+        gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv});
+      }
   }
   });
   }
@@ -424,7 +488,7 @@ function addDisBlock(data) {
       y:data.y,
       jumpaccy:10,
       side:data.side,
-      onMe:null,
+      onMe:null
     });
     help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
@@ -552,12 +616,29 @@ function addPlayer() {
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
       if (gbox.keyIsHit("b")) {
-      
+      addEnemy({x:4*32,y:1*32,side:true}, 1); 
       }      
       
       if (gbox.keyIsHit("c")) {
       this.resetGame();
       }      
+      
+       if (gbox._keyboard[68] == 1 && camx < 20) {
+       camx += 1;
+       drawCanvas(camx,camy);
+       }
+       else if (gbox._keyboard[65] == 1 && camx > 0) {
+        camx -= 1;
+        drawCanvas(camx,camy);
+        }
+      if (gbox._keyboard[83] == 1 && camy < 15) {
+        camy += 1;
+        drawCanvas(camx,camy);
+      }
+      else if (gbox._keyboard[87] == 1 && camy > 0) {
+        camy -= 1;
+        drawCanvas(camx,camy);
+        }
      
      var gp = 'boxes';
     // iterate through each pushblock
@@ -612,13 +693,19 @@ function addPlayer() {
     },
     
     resetGame: function() {
+      reloadMap();
       this.x = 20;
       this.y = 20;
+      this.accx = 0;
+      this.accy = 0;
       this.resetHud();
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+            {
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
       gbox.trashGroup('boxes');
       gbox.trashGroup('disboxes');
         for (var y = 0; y < 30; y++)
@@ -632,6 +719,7 @@ function addPlayer() {
     
     resetHud: function() {
       this.starsTotal = 0;
+      this.starsCollected = 0;
       for (var y = 0; y < 30; y++)
         for (var x = 0; x < 40; x++)
           if (level[y][x] == '2') this.starsTotal++; 

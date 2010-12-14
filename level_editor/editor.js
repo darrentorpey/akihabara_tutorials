@@ -7,7 +7,7 @@ var afterEditorLoad;
 var canvasContext;
 var minimap;
 var context;
-var tool;
+var tool, mouseOverDelay, isMouseOut;
 
 function setLevel(lvl) {
   level = lvl;
@@ -82,6 +82,9 @@ window.addEventListener('load', function () {
   camy = 0;
   px = -100;
   py = -100;
+  
+  mouseOverDelay = 0;
+  isMouseOut = false;
 
   levelParam = gup("level");
   clip.setHandCursor(true);
@@ -145,6 +148,7 @@ window.addEventListener('load', function () {
     canvas.addEventListener('mousedown', ev_canvas, false);
     canvas.addEventListener('mousemove', ev_canvas, false);
     document.body.addEventListener('mouseup',   ev_canvas, false);
+    document.body.addEventListener('mouseout',   mouseOut, false);
 
     drawCanvas(camx,camy);
   }
@@ -179,24 +183,25 @@ function ev_brush (ev) {
 
     px = ev._x;
     py = ev._y;
+    isMouseOut = false;
+    
+    if (!tool.started && !isMouseOut) {
 
-    if (!tool.started) {
-    // move the camera when you hit the edge of the screen
+      if ( !((ev._x > 600 && camx < 20) || (ev._x < 40 && camx > 0) || (ev._y > 440 && camy < 15) || (ev._y < 40 && camy > 0)) )
+        mouseOverDelay = 0;
+
+      // move the camera when you hit the edge of the screen
       if (ev._x > 600 && camx < 20) {
-        camx += 1;
-        //drawCanvas(camx,camy);
+        if (mouseOverDelay >= 2) camx += 1;
       }
       else if (ev._x < 40 && camx > 0) {
-          camx -= 1;
-         // drawCanvas(camx,camy);
+        if (mouseOverDelay >= 2) camx -= 1;
         }
       if (ev._y > 440 && camy < 15) {
-        camy += 1;
-       // drawCanvas(camx,camy);
+        if (mouseOverDelay >= 2) camy += 1;
       }
       else if (ev._y < 40 && camy > 0) {
-          camy -= 1;
-         // drawCanvas(camx,camy);
+        if (mouseOverDelay >= 2) camy -= 1;
         }
      }
 
@@ -324,4 +329,17 @@ function getLongURL() {
     level: getLevelParams()
   };
   return window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + $.param(params, true)
+}
+
+setInterval ( "incMouseOverDelay()", 100 );
+
+function incMouseOverDelay ( )
+{
+  mouseOverDelay++;
+}
+
+function mouseOut ()
+{
+  isMouseOut = true;
+  mouseOverDelay = 0;
 }

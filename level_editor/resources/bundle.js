@@ -55,7 +55,7 @@
       image:   'enemy_sprite', // Use the 'player_sprite' image, as loaded above
       tileh:   32,
       tilew:   32,
-      tilerow: 1,
+      tilerow: 2,
       gapx:    0,
       gapy:    0
     }

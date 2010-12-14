@@ -215,12 +215,16 @@ function addEnemy(data, type) {
     for (var i in gbox._objects[gp])
       {
       var block = gbox._objects[gp][i];
-      // check to see if you're being squished by this blocks
+      // check to see if you're being squished by this block
       if ((!block.initialize)&&help.isSquished(this,block))
           {
-          gbox.trashObject(this);
           toys.platformer.bounce(block,{jumpsize:10});
           gbox.hitAudio("squish");
+          if (this.type == 1)
+            {
+            this.blink = true;
+            }
+            else gbox.trashObject(this);
           }
       // check to see if you're touching it on the left or right
       if (gbox.collides(this,block,2) && this.x)
@@ -272,30 +276,32 @@ function addEnemy(data, type) {
         {
         if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
           {
+          // loop through 9 quadrants around the enemy
           for (var dx = -1; dx <= 1; dx++)
             for (var dy = -1; dy <= 1; dy++)
               {
+              // remove the tile here
               help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
               
-              
-    for (var j in gbox._groups)
-      for (var i in gbox._objects[gbox._groups[j]])
-      {
-        var group = gbox._groups[j];
-        if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes')
-        {
-        var other = gbox._objects[group][i];
-        if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
-          {
-            if (group != 'player') 
-              {
-              if (group == 'enemies' && other.type == 1) {other.blink = true; console.log("hi");}
-                else gbox.trashObject(other);
-              }
-              else other.resetGame();
-          }
-        }
-      }              
+              // check and see if there are dynamic objects here
+              for (var j in gbox._groups)
+                for (var i in gbox._objects[gbox._groups[j]])
+                {
+                  var group = gbox._groups[j];
+                  if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes')
+                  {
+                  var other = gbox._objects[group][i];
+                  if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
+                    {
+                      if (group != 'player') 
+                        {
+                        if (group == 'enemies' && other.type == 1) {other.blink = true; console.log("hi");}
+                          else gbox.trashObject(other);
+                        }
+                        else other.resetGame();
+                    }
+                  }
+                }              
               
               
               }
@@ -671,6 +677,7 @@ function addPlayer() {
     },
     
     resetGame: function() {
+      reloadMap();
       this.x = 20;
       this.y = 20;
       this.accx = 0;

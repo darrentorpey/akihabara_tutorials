@@ -15,7 +15,10 @@ function addMap() {
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
+            {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
       
 
       
@@ -79,7 +82,10 @@ function reloadMap() {
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
+            {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
     
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
     //write the background image

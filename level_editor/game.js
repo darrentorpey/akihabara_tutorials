@@ -119,7 +119,10 @@ function main() {
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
+            {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
        
 
   // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
@@ -186,6 +189,17 @@ function addEnemy(data, type) {
       onBox:false,
       blink: false
     });
+    
+    if (type == 1)
+      {
+      this.frames = {
+        still:{ speed:1, frames:[1] },
+        walking:{ speed:4, frames:[1] },
+        jumping:{ speed:1, frames:[1] },
+        falling:{ speed:1, frames:[1] },
+        die: { speed:1,frames:[1] }
+      };
+      }
   },
 
   first:function() {
@@ -639,7 +653,10 @@ function addPlayer() {
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+            {
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            }
       gbox.trashGroup('boxes');
       gbox.trashGroup('disboxes');
         for (var y = 0; y < 30; y++)

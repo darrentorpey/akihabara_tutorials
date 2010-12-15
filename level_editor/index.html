@@ -15,13 +15,29 @@
   <script type="text/javascript" src="lib/jquery/jquery.ndd.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.jqupload.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.ba-bbq.js"></script>
+  <script type="text/javascript" src="lib/jstorage.js"></script>
   <script type="text/javascript" src="lib/downloadify.min.js"></script>
   <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
   <script type="text/javascript" src="lib/core.js"></script>
   <script type="text/javascript" src="lib/extensions/date_time.js"></script>
   <script type="text/javascript" src="editor.js"></script>
   <script type="text/javascript" src="lib/admin/gui.js"></script>
+  <script type="text/javascript" src="lib/history.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-16151239-1']);
+    _gaq.push(['_setDomainName', '.bostongamejams.com']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>  
 </head>
 <body>
   <section id="top_tools">
@@ -44,6 +60,9 @@
       <p>
         Last saved: <span id="last_saved"></span>
       </p>
+      <a href="" id="open_level_storage">
+        <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">">
+      </a>
     </div>
 
     <div id="level_sharing">
@@ -72,6 +91,12 @@
     </div>
 
     <div id="level_saving">
+    </div>
+
+    <div id="level_storage_pane" style="display: none">
+      <h3>Level History/Storage</h3>
+      <ul></ul>
+      <a href="" id="clear_level_storage">clear storage</a>
     </div>
   </section>
 

@@ -47,9 +47,12 @@ a
       border-bottom: 1px solid #164799
       text-align: center
     #toggle_autoupdate
+      display: none
       position: absolute
-      bottom: -20px
-      left: 0px
+      bottom: 5px
+      left: 15px
+    #undo_counter
+      margin-bottom: 5px
   #undone_admin
     position: fixed
     cursor: pointer
@@ -111,6 +114,13 @@ a
     padding: 5px 6px 1px
   #level_name
     +top_box
+    position: relative
+    #open_level_storage
+      position: absolute
+      bottom: 0px
+      right: 5px
+      img
+        width: 16px
 
 #container
   position: relative
@@ -139,7 +149,6 @@ section.credits
     margin: 5px 0px
     line-height: 22px
 
-
 #button_testing
   padding: 5px
   #button_one
@@ -152,3 +161,36 @@ section.credits
       +link_button(lighten(#B3E8F8, 10%), 30px, 5px, #394D60)
     &.disabled
       +link_button(darken(#B3E8F8, 20%), 30px, 5px, #394D60)
+
+#level_storage_pane
+  +admin_box(darken($c_primary_5, 5%))
+  width: 400px
+  padding: 10px
+    bottom: 30px
+  position: absolute
+  top: 5px
+  right: 5px
+  z-index: 5
+  +box-shadow(darken($c_primary_5, 10%), -1px, 2px, 4px)
+  h3
+    font-weight: bold
+    font-size: 18px
+  ul
+    margin-top: 10px
+    max-height: 400px
+    overflow: auto
+    li
+      cursor: pointer
+      padding: 5px 5px
+      background-color: lighten($c_primary_5, 10%)
+      line-height: 18px
+      &:nth-child(2n)
+        background-color: lighten($c_primary_5, 15%)
+      // &:first-child
+        margin-top: 0px
+      // &:last-child
+        margin-bottom: 0px
+  #clear_level_storage
+    position: absolute
+    bottom: 5px
+    right: 5px

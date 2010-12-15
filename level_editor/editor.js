@@ -59,6 +59,8 @@ var UpdateMap = UndoableAction.extend({
     self.value = value;
 
     this._super(function() {
+      // The "do" method:
+
       self.oldValue = UpdateMap.priorOldValue;
       loadLevelState(getLevelCopy(self.value));
       UpdateMap.priorOldValue = self.value;
@@ -66,6 +68,8 @@ var UpdateMap = UndoableAction.extend({
       // reportLevel(level, 'current');
       // reportLevel(self.oldValue, 'old');
     }, function() {
+      // The "undo" method:
+
       loadLevelState(self.oldValue);
       UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
     });
@@ -82,7 +86,11 @@ function loadLevelState(level) {
 }
 
 function getLevelDataForSaveFile() {
-  return JSON.stringify(level);
+  return JSON.stringify(getLevelData());
+}
+
+function getLevelData() {
+  return level;
 }
 
 function getLevelName() {
@@ -335,6 +343,7 @@ function getLevelParams() {
 
 function redrawMap() {
   new UpdateMap(getLevelCopy());
+  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: getLevelData() })
 }
 
 function getLongURL() {

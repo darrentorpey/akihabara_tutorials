@@ -287,6 +287,8 @@ a:hover {
   border-radius: 8px;
   padding: 10px;
   margin-left: 10px;
+  padding-right: 20px;
+  position: relative;
 }
 /* line 72, sass/_core.sass */
 #top_tools #level_loading a {
@@ -296,23 +298,27 @@ a:hover {
 #top_tools #level_loading:first-child {
   margin-left: 0px;
 }
-/* line 95, sass/admin.sass */
+/* line 97, sass/admin.sass */
 #top_tools #level_loading #upload_to_load input {
   width: 80px;
 }
-/* line 97, sass/admin.sass */
+/* line 99, sass/admin.sass */
 #top_tools #level_loading #drag_to_load {
   padding: 3px;
 }
-/* line 99, sass/admin.sass */
+/* line 101, sass/admin.sass */
 #top_tools #level_loading #drag_to_load a.inline_help {
   cursor: help;
+  position: absolute;
+  font-size: 12px;
+  top: 3px;
+  right: 5px;
 }
-/* line 101, sass/admin.sass */
+/* line 107, sass/admin.sass */
 #top_tools #level_loading #drag_to_load a.inline_help:hover {
   text-decoration: none;
 }
-/* line 103, sass/admin.sass */
+/* line 109, sass/admin.sass */
 #top_tools #level_saving {
   float: left;
   background-color: #e1e9f6;
@@ -341,7 +347,7 @@ a:hover {
 #top_tools #level_saving:first-child {
   margin-left: 0px;
 }
-/* line 106, sass/admin.sass */
+/* line 112, sass/admin.sass */
 #top_tools #level_name {
   float: left;
   background-color: #e1e9f6;
@@ -370,23 +376,23 @@ a:hover {
   margin-left: 0px;
 }
 
-/* line 109, sass/admin.sass */
+/* line 115, sass/admin.sass */
 #container {
   position: relative;
   cursor: url(../resources/palettes/default/blank.png), default;
 }
 
-/* line 113, sass/admin.sass */
+/* line 119, sass/admin.sass */
 #imageView {
   border: 1px solid black;
 }
 
-/* line 116, sass/admin.sass */
+/* line 122, sass/admin.sass */
 section.intro {
   margin: 5px;
   text-align: center;
 }
-/* line 119, sass/admin.sass */
+/* line 125, sass/admin.sass */
 section.intro .holder {
   padding: 5px 10px;
   background-color: #f0ec87;
@@ -409,7 +415,7 @@ section.intro .holder p:last-child {
   margin-bottom: 0px;
 }
 
-/* line 123, sass/admin.sass */
+/* line 129, sass/admin.sass */
 section.credits {
   background-color: #e1e9f6;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
@@ -432,26 +438,26 @@ section.credits {
 section.credits a {
   color: #2f5a86;
 }
-/* line 126, sass/admin.sass */
+/* line 132, sass/admin.sass */
 section.credits h3 {
   font-size: 18px;
   font-weight: bold;
 }
-/* line 130, sass/admin.sass */
+/* line 136, sass/admin.sass */
 section.credits ul li {
   margin: 10px 0px;
 }
-/* line 132, sass/admin.sass */
+/* line 138, sass/admin.sass */
 section.credits p {
   margin: 5px 0px;
   line-height: 22px;
 }
 
-/* line 137, sass/admin.sass */
+/* line 143, sass/admin.sass */
 #button_testing {
   padding: 5px;
 }
-/* line 139, sass/admin.sass */
+/* line 145, sass/admin.sass */
 #button_testing #button_one {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -505,7 +511,7 @@ section.credits p {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #f9fdfe), color-stop(40%, #caeffa), color-stop(100%, #9ce1f6));
   background-image: -moz-linear-gradient(top, #f9fdfe 0%, #caeffa 40%, #9ce1f6 100%);
 }
-/* line 145, sass/admin.sass */
+/* line 151, sass/admin.sass */
 #button_testing #button_one.hover {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -555,7 +561,7 @@ section.credits p {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #ffffff), color-stop(40%, #f9fdfe), color-stop(100%, #caeffa));
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f9fdfe 40%, #caeffa 100%);
 }
-/* line 147, sass/admin.sass */
+/* line 153, sass/admin.sass */
 #button_testing #button_one.disabled {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;

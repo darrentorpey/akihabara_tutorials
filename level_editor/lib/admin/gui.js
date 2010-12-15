@@ -26,6 +26,7 @@ function drawGuiActions() {
   $('#undone_admin, #admin_buttons h4').click(function() {
     $('#undone_admin').toggle();
     $('#admin_buttons').toggle();
+    // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
   })
   $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
     var id = $(this).parent().attr('data-button-id');

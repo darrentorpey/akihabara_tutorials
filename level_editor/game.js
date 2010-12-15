@@ -276,8 +276,9 @@ function addEnemy(data, type) {
         {
         if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
           {
-          // play explosion animation
+          // play explosion animation & sound
           toys.generate.sparks.simple(this,"particles",null,{animspeed:1.5,tileset:"explosion_tiles",accx:0,accy:0});
+          gbox.hitAudio("explode");
           // loop through 9 quadrants around the enemy
           for (var dx = -1; dx <= 1; dx++)
             for (var dy = -1; dy <= 1; dy++)

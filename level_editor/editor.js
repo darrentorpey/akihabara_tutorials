@@ -1,20 +1,3 @@
-var clip = new ZeroClipboard.Client();
-var saving_clipboard = new ZeroClipboard.Client();
-var level = new Array(30);
-var insp;
-var levelParam;
-var afterEditorLoad;
-var canvasContext;
-var minimap;
-var context;
-var tool, mouseOverDelay, isMouseOut;
-
-function setLevel(lvl) {
-  level = lvl;
-
-  drawCanvas(camx, camy);
-}
-
 function gup( name ) {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
@@ -24,6 +7,50 @@ function gup( name ) {
     return "";
   else
     return results[1];
+}
+
+if (!gup("g"))
+  {
+  var clip = new ZeroClipboard.Client();
+  var saving_clipboard = new ZeroClipboard.Client();
+  }
+  
+var insp;
+var levelParam = gup("level");
+var afterEditorLoad;
+var canvasContext;
+var minimap;
+var context;
+var tool, mouseOverDelay, isMouseOut;
+
+var canvas, tool, px, py, tcolor, brush, camx, camy;
+var tool_default = 'rock';
+var total_brushes = 10;
+var brushes = new Array(total_brushes);
+var brushes_img = new Array(total_brushes);
+
+var level = new Array(30);
+
+  // init the global level data structure
+  for (var i = 0; i < 30; i++) {
+    level[i] = "0000000000000000000000000000000000000000";
+    }
+
+  if(levelParam.length == 1200)
+  {
+  for (var c = 0; c < 1200; c += 40)
+    {
+    level[c/40] = levelParam.substr(c,40);
+    }
+  }
+
+if (!gup("g"))
+{
+
+function setLevel(lvl) {
+  level = lvl;
+
+  drawCanvas(camx, camy);
 }
 
 var UpdateMap = UndoableAction.extend({
@@ -47,11 +74,6 @@ var UpdateMap = UndoableAction.extend({
   }
 });
 
-var canvas, tool, px, py, tcolor, brush, camx, camy;
-var tool_default = 'rock';
-var total_brushes = 10;
-var brushes = new Array(total_brushes);
-var brushes_img = new Array(total_brushes);
 
 function loadLevelState(level) {
   setLevel(level);
@@ -87,10 +109,14 @@ window.addEventListener('load', function () {
   isMouseOut = false;
 
   levelParam = gup("level");
+
+
+    
   clip.setHandCursor(true);
   clip.glue('d_clip_button', 'd_clip_container');
   // saving_clipboard.setHandCursor(true);
   // saving_clipboard.glue('d_clip_button', 'd_clip_container');
+    
 
   $('#level_saving').downloadify({
     swf:           'resources/flash/downloadify.swf',
@@ -111,18 +137,6 @@ window.addEventListener('load', function () {
       brushes_img[i].src = brushes[i].src;
       }
 
-  // init the global level data structure
-  for (var i = 0; i < 30; i++) {
-    level[i] = "0000000000000000000000000000000000000000";
-    }
-
-  if(levelParam.length == 1200)
-  {
-  for (var c = 0; c < 1200; c += 40)
-    {
-    level[c/40] = levelParam.substr(c,40);
-    }
-  }
 
 
     if (!canvas) {
@@ -342,4 +356,6 @@ function mouseOut ()
 {
   isMouseOut = true;
   mouseOverDelay = 0;
+}
+
 }

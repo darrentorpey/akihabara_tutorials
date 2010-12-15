@@ -53,6 +53,7 @@
 		gbox._keyboard[key]=1;
 	};
   
+if (!help.geturlparameter("g"))
   // overriding gbox.initScreen to reposition akihabara frame
   gbox.initScreen = function(w,h) {
 		var container=document.createElement("a");
@@ -129,7 +130,8 @@
 			}
 		}
 	};
-  
+
+if (!help.geturlparameter("g"))  
   // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
  	help.akihabaraInit = function(data) {
 		if ((typeof data).toLowerCase() == "string") data={title:data};
@@ -225,3 +227,15 @@
 
 		return device;
 	};
+  
+  if (help.geturlparameter("g"))
+    {
+    el = document.getElementById("top_tools");
+    el.parentNode.removeChild(el);
+    el = document.getElementById("container");
+    el.parentNode.removeChild(el);
+    el = document.getElementById("credits");
+    el.parentNode.removeChild(el);
+    el = document.getElementById("intro");
+    el.parentNode.removeChild(el);
+    }

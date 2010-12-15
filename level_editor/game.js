@@ -25,7 +25,7 @@ function loadResources() {
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'game']);
+  gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'particles', 'game']);
   gbox.setAudioChannels({jump:{volume:0.3},hit:{volume:1.0}});
   
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
@@ -276,6 +276,8 @@ function addEnemy(data, type) {
         {
         if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
           {
+          // play explosion animation
+          toys.generate.sparks.simple(this,"particles",null,{animspeed:1.5,tileset:"explosion_tiles",accx:0,accy:0});
           // loop through 9 quadrants around the enemy
           for (var dx = -1; dx <= 1; dx++)
             for (var dy = -1; dy <= 1; dy++)
@@ -617,7 +619,7 @@ function addPlayer() {
     followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
       if (gbox.keyIsHit("b")) {
-      addEnemy({x:4*32,y:1*32,side:true}, 1); 
+      
       }      
       
       if (gbox.keyIsHit("c")) {

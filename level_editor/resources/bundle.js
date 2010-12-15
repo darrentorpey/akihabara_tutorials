@@ -6,7 +6,8 @@
     ['map_spritesheet',  'resources/map_pieces.png'],
     ['enemy_sprite',  'resources/enemy_sprite.png'],
     ['block_sprite',  'resources/block_sprite.png'],
-    ['background_tilesheet',  'resources/bg1.png']
+    ['background_tilesheet',  'resources/bg1.png'],
+    ['explosion_sprite',  'resources/Frk_Blast1.png']
   ],
 
   addFont: [
@@ -56,6 +57,15 @@
       tileh:   32,
       tilew:   32,
       tilerow: 2,
+      gapx:    0,
+      gapy:    0
+    },
+    {
+      id:      'explosion_tiles',  // Set a unique ID for future reference
+      image:   'explosion_sprite', // Use the 'player_sprite' image, as loaded above
+      tileh:   96,
+      tilew:   96,
+      tilerow: 14,
       gapx:    0,
       gapy:    0
     }

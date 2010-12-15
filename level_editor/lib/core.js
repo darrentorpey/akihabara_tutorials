@@ -11,6 +11,7 @@ function timestamp() {
   return new Date().getTime();
 }
 
+// i.e. 2010-12-15__23-14-03
 function getCurrentTimestampForFile() {
   return dateFormat(timestamp(), 'yyyy-mm-dd__HH-MM-ss');
 }

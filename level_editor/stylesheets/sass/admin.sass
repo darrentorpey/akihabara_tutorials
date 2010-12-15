@@ -47,9 +47,12 @@ a
       border-bottom: 1px solid #164799
       text-align: center
     #toggle_autoupdate
+      display: none
       position: absolute
-      bottom: -20px
-      left: 0px
+      bottom: 5px
+      left: 15px
+    #undo_counter
+      margin-bottom: 5px
   #undone_admin
     position: fixed
     cursor: pointer
@@ -161,8 +164,9 @@ section.credits
 
 #level_storage_pane
   +admin_box(darken($c_primary_5, 5%))
-  width: 300px
+  width: 400px
   padding: 10px
+    bottom: 30px
   position: absolute
   top: 5px
   right: 5px
@@ -176,8 +180,8 @@ section.credits
     max-height: 400px
     overflow: auto
     li
+      cursor: pointer
       padding: 5px 5px
-      // margin: 5px 0px
       background-color: lighten($c_primary_5, 10%)
       line-height: 18px
       &:nth-child(2n)
@@ -186,3 +190,7 @@ section.credits
         margin-top: 0px
       // &:last-child
         margin-bottom: 0px
+  #clear_level_storage
+    position: absolute
+    bottom: 5px
+    right: 5px

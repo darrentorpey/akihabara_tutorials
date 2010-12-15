@@ -1,5 +1,6 @@
 var buttons_hash = {};
 var historyManager;
+var thingy;
 
 function drawGuiActions() {
   var buttons = [
@@ -60,6 +61,25 @@ function drawGuiActions() {
   });
 
   historyManager = new HistoryManager($('#level_storage_pane'));
+
+  $('#clear_level_storage').click(function() {
+    if (confirm('Are you sure you want to permanently delete your level history?')) {
+      historyManager.clearStorage();
+    }
+
+    return false;
+  });
+
+  $('#level_storage_pane li').live('click', function() {
+    console.log('clicked!');
+    console.log(this);
+    thingy = this;
+    var id = this.id;
+    id = parseInt(id.replace(/history_row_/, ''))
+    var state = historyManager.getLevelState(id);
+    console.log(state);
+    loadLevelState(state.level);
+  });
 }
 
 function flash_message(message) {

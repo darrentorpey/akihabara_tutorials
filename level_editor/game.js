@@ -25,7 +25,7 @@ function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
   gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'particles', 'game']);
-  gbox.setAudioChannels({jump:{volume:0.3},hit:{volume:1.0}});
+  gbox.setAudioChannels({ jump: { volume: 0.1 }, hit: { volume: 0.3 }});
   
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');

@@ -157,7 +157,7 @@ function collideGroup(obj,group) {
 }
 
 function followCamera(obj, viewdata) {
-  xbuf = 160;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
+  xbuf = 256;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
   ybuf = 160;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
   xcam = gbox.getCamera().x; // The current x-coordinate of the camera
   ycam = gbox.getCamera().y; // The current y-coordinate of the camera

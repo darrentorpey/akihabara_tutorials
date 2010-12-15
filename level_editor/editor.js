@@ -43,7 +43,7 @@ var UpdateMap = UndoableAction.extend({
       UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
     });
 
-    self.do();
+    self.redo();
   }
 });
 

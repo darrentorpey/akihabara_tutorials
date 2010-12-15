@@ -26,7 +26,7 @@ function requireLib(libraryName) {
 var undoCounter = 0;
 
 var UndoableAction = Klass.extend({
-  init: function(do_func, undo_func, options){
+  init: function(do_func, undo_func, options) {
     // this.parent = jQuery(parent);
     this.options   = options || {};
     this.do_func   = do_func;
@@ -34,7 +34,7 @@ var UndoableAction = Klass.extend({
     this.counter = 0;
   },
 
-  do: function() {
+  redo: function() {
     var action = this;
     this.counter++;
     var my_num = this.counter;
@@ -72,7 +72,7 @@ var UpdateValue = UndoableAction.extend({
       UpdateValue.priorOldValue = self.oldValue;
     });
 
-    self.do();
+    self.redo();
   }
 });
 

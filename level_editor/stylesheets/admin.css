@@ -366,6 +366,7 @@ a:hover {
   border-radius: 8px;
   padding: 10px;
   margin-left: 10px;
+  position: relative;
 }
 /* line 72, sass/_core.sass */
 #top_tools #level_name a {
@@ -375,24 +376,34 @@ a:hover {
 #top_tools #level_name:first-child {
   margin-left: 0px;
 }
-
 /* line 115, sass/admin.sass */
+#top_tools #level_name #open_level_storage {
+  position: absolute;
+  bottom: 0px;
+  right: 5px;
+}
+/* line 119, sass/admin.sass */
+#top_tools #level_name #open_level_storage img {
+  width: 16px;
+}
+
+/* line 122, sass/admin.sass */
 #container {
   position: relative;
   cursor: url(../resources/palettes/default/blank.png), default;
 }
 
-/* line 119, sass/admin.sass */
+/* line 126, sass/admin.sass */
 #imageView {
   border: 1px solid black;
 }
 
-/* line 122, sass/admin.sass */
+/* line 129, sass/admin.sass */
 section.intro {
   margin: 5px;
   text-align: center;
 }
-/* line 125, sass/admin.sass */
+/* line 132, sass/admin.sass */
 section.intro .holder {
   padding: 5px 10px;
   background-color: #f0ec87;
@@ -415,7 +426,7 @@ section.intro .holder p:last-child {
   margin-bottom: 0px;
 }
 
-/* line 129, sass/admin.sass */
+/* line 136, sass/admin.sass */
 section.credits {
   background-color: #e1e9f6;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
@@ -438,26 +449,26 @@ section.credits {
 section.credits a {
   color: #2f5a86;
 }
-/* line 132, sass/admin.sass */
+/* line 139, sass/admin.sass */
 section.credits h3 {
   font-size: 18px;
   font-weight: bold;
 }
-/* line 136, sass/admin.sass */
+/* line 143, sass/admin.sass */
 section.credits ul li {
   margin: 10px 0px;
 }
-/* line 138, sass/admin.sass */
+/* line 145, sass/admin.sass */
 section.credits p {
   margin: 5px 0px;
   line-height: 22px;
 }
 
-/* line 143, sass/admin.sass */
+/* line 149, sass/admin.sass */
 #button_testing {
   padding: 5px;
 }
-/* line 145, sass/admin.sass */
+/* line 151, sass/admin.sass */
 #button_testing #button_one {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -511,7 +522,7 @@ section.credits p {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #f9fdfe), color-stop(40%, #caeffa), color-stop(100%, #9ce1f6));
   background-image: -moz-linear-gradient(top, #f9fdfe 0%, #caeffa 40%, #9ce1f6 100%);
 }
-/* line 151, sass/admin.sass */
+/* line 157, sass/admin.sass */
 #button_testing #button_one.hover {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -561,7 +572,7 @@ section.credits p {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #ffffff), color-stop(40%, #f9fdfe), color-stop(100%, #caeffa));
   background-image: -moz-linear-gradient(top, #ffffff 0%, #f9fdfe 40%, #caeffa 100%);
 }
-/* line 153, sass/admin.sass */
+/* line 159, sass/admin.sass */
 #button_testing #button_one.disabled {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -610,4 +621,58 @@ section.credits p {
 #button_testing #button_one.disabled:hover, #button_testing #button_one.disabled.hover {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #9ce1f6), color-stop(40%, #6dd3f2), color-stop(100%, #3ec5ed));
   background-image: -moz-linear-gradient(top, #9ce1f6 0%, #6dd3f2 40%, #3ec5ed 100%);
+}
+
+/* line 162, sass/admin.sass */
+#level_storage_pane {
+  background-color: #cddaf1;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
+  background-image: -moz-linear-gradient(top, #b9cceb 0%, #cddaf1 33%, #e1e9f6 67%);
+  border: 1px solid #b9cceb;
+  -moz-box-shadow: #2b5294 0px 1px 0px;
+  -webkit-box-shadow: #2b5294 0px 1px 0px;
+  -o-box-shadow: #2b5294 0px 1px 0px;
+  box-shadow: #2b5294 0px 1px 0px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  padding: 10px;
+  width: 300px;
+  padding: 10px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 5;
+  -moz-box-shadow: #4275c9 -1px 2px 4px;
+  -webkit-box-shadow: #4275c9 -1px 2px 4px;
+  -o-box-shadow: #4275c9 -1px 2px 4px;
+  box-shadow: #4275c9 -1px 2px 4px;
+}
+/* line 72, sass/_core.sass */
+#level_storage_pane a {
+  color: #2f5a86;
+}
+/* line 171, sass/admin.sass */
+#level_storage_pane h3 {
+  font-weight: bold;
+  font-size: 18px;
+}
+/* line 174, sass/admin.sass */
+#level_storage_pane ul {
+  margin-top: 10px;
+  max-height: 400px;
+  overflow: auto;
+}
+/* line 178, sass/admin.sass */
+#level_storage_pane ul li {
+  padding: 5px 5px;
+  background-color: #92afdf;
+  line-height: 18px;
+}
+/* line 183, sass/admin.sass */
+#level_storage_pane ul li:nth-child(2n) {
+  background-color: #a5bde5;
 }

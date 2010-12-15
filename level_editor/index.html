@@ -15,12 +15,14 @@
   <script type="text/javascript" src="lib/jquery/jquery.ndd.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.jqupload.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery.ba-bbq.js"></script>
+  <script type="text/javascript" src="lib/jstorage.js"></script>
   <script type="text/javascript" src="lib/downloadify.min.js"></script>
   <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
   <script type="text/javascript" src="lib/core.js"></script>
   <script type="text/javascript" src="lib/extensions/date_time.js"></script>
   <script type="text/javascript" src="editor.js"></script>
   <script type="text/javascript" src="lib/admin/gui.js"></script>
+  <script type="text/javascript" src="lib/history.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
 </head>
 <body>
@@ -44,6 +46,9 @@
       <p>
         Last saved: <span id="last_saved"></span>
       </p>
+      <a href="" id="open_level_storage">
+        <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">">
+      </a>
     </div>
 
     <div id="level_sharing">
@@ -72,6 +77,11 @@
     </div>
 
     <div id="level_saving">
+    </div>
+
+    <div id="level_storage_pane" style="display: none">
+      <h3>Level History/Storage</h3>
+      <ul></ul>
     </div>
   </section>
 

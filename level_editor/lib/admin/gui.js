@@ -1,4 +1,5 @@
 var buttons_hash = {};
+var historyManager;
 
 function drawGuiActions() {
   var buttons = [
@@ -51,6 +52,14 @@ function drawGuiActions() {
   }).bind('dragover', function(event) {
     event.stopPropagation(); event.preventDefault();
   });
+
+  $('#open_level_storage').click(function() {
+    $('#level_storage_pane').toggle();
+    $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
+    return false;
+  });
+
+  historyManager = new HistoryManager($('#level_storage_pane'));
 }
 
 function flash_message(message) {

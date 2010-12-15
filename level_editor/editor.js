@@ -351,7 +351,7 @@ function getLongURL() {
     name:  getLevelName(),
     level: getLevelParams()
   };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + $.param(params, true)
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?g=1&' + $.param(params, true)
 }
 
 setInterval ( "incMouseOverDelay()", 100 );

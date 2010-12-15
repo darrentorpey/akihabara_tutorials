@@ -234,8 +234,16 @@ if (!help.geturlparameter("g"))
     el.parentNode.removeChild(el);
     el = document.getElementById("container");
     el.parentNode.removeChild(el);
-    el = document.getElementById("credits");
-    el.parentNode.removeChild(el);
+    
     el = document.getElementById("intro");
+    el.parentNode.removeChild(el);
+    
+    var editText = document.createElement("a");
+    editText.textContent = "Click here to make more levels like this one!";
+    editText.style.backgroundColor="#ffffff";
+    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?level=' + levelParam;
+    
+    el = document.getElementById("credits");
+    el.parentNode.appendChild(editText);
     el.parentNode.removeChild(el);
     }

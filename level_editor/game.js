@@ -156,7 +156,7 @@ function collideGroup(obj,group) {
 }
 
 function followCamera(obj, viewdata) {
-  xbuf = 160;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
+  xbuf = 256;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
   ybuf = 160;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
   xcam = gbox.getCamera().x; // The current x-coordinate of the camera
   ycam = gbox.getCamera().y; // The current y-coordinate of the camera
@@ -245,11 +245,6 @@ function addEnemy(data, type) {
         this.accx=0; // Stay still (i.e. jump only vertically)
       if (this.type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
-      // if (this.onBox) {
-        // this.touchedfloor = true;
-        // this.accy = 0;
-        // this.y=help.yPixelToTile(map,this.y);
-        // }
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
       toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.setFrame(this); // set the right animation frame
@@ -282,8 +277,9 @@ function addEnemy(data, type) {
           for (var dx = -1; dx <= 1; dx++)
             for (var dy = -1; dy <= 1; dy++)
               {
-              // remove the tile here
-              help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
+              // remove the tile here, unless it's a star tile
+              if (help.getTileInMap(this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,map,null,"map") != 1)
+                help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
               
               // check and see if there are dynamic objects here
               for (var j in gbox._groups)

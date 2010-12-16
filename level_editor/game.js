@@ -249,11 +249,15 @@ function addEnemy(data, type) {
       toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.setFrame(this); // set the right animation frame
       var pl=gbox.getObject("player","player_id");
-      if (help.isSquished(this,pl)) {
+      
+      //player is squishing the enemy (second conditional is a hack for jumping on multiple enemies at once)
+      if (help.isSquished(this,pl) || ((pl.prevaccy>0)&&gbox.collides(this,pl)&&(Math.abs(this.y-(pl.y+pl.h))<(pl.h)))) {
         
-        if (gbox.keyIsHold("a")) toys.platformer.bounce(pl,{jumpsize:20});
-          else toys.platformer.bounce(pl,{jumpsize:10});
+        if (gbox.keyIsHold("a")) toys.platformer.bounce(pl,{jumpsize:25});
+          else toys.platformer.bounce(pl,{jumpsize:15});
+          
         gbox.hitAudio("squish");
+        
         if (this.type == 1)
           {
           this.blink = true;
@@ -261,8 +265,9 @@ function addEnemy(data, type) {
           else gbox.trashObject(this);
         
       } 
-      else if (gbox.collides(this,pl,2) && pl.x)
+      else if (gbox.collides(this,pl) && pl.x && pl.prevaccy <= 0)
           {
+          console.log(pl.prevaccy);
           pl.resetGame();
           }
       
@@ -575,11 +580,14 @@ function addPlayer() {
       this.h = 58;
       this.w = 32;
       this.bc = 0;
+      this.prevaccy = 0;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+    
+    this.prevaccy = this.accy;
     
     if (this.starsTotal > 0) maingame.hud.setValue("total","value",this.starsTotal-this.starsCollected);
     
@@ -717,7 +725,8 @@ function addPlayer() {
       if (this.starsTotal > 0)
         {
         maingame.hud.setWidget("total",{widget:"label",font:"small",value:this.starsTotal-this.starsCollected,dx:32,dy:10,clear:true});
-        maingame.hud.setWidget("star",{widget:"stack",rightalign:true,tileset:"map_pieces",dx:0,dy:0,gapx:0,gapy:0,maxshown:1,value:[1]});
+        maingame.hud.setWidget("star",{widget:"blit",rightalign:true,tileset:"map_pieces",dx:0,dy:0,gapx:0,gapy:0,maxshown:1,value:[1]});
+        maingame.hud.redraw();
         }
         else
         {

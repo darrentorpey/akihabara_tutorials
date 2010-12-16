@@ -357,6 +357,7 @@ function addBlock(data) {
       if ((help.isSquished(this,pl))&&(pl.x+pl.w>this.x+4)&&(pl.x<this.x+this.w-4))
       {
         pl.onBox = true;
+        pl.bc=help.yPixelToTile(map,this.y)-pl.h;
       }
       else if (!collideGroup(pl,'boxes')) pl.onBox = false;
       
@@ -562,25 +563,18 @@ function addPlayer() {
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
     initialize: function() {
       toys.topview.initialize(this, {});
-      
-      //Overriding the gravity function to double the usual gravity (from 1 to 2).
-      toys.platformer.handleAccellerations = function(th) {
-			// Gravity
-			if (!th.touchedfloor) th.accy += 2;
-			// Attrito
-			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
-		};
      
-    this.resetHud();
+      this.resetHud();
         
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 22; // this makes a 3-tile jump
+      this.jumpaccy = 22.5; // this makes a 3-tile jump
       this.maxaccx = 7;
       this.maxaccy = 60;
       this.h = 58;
       this.w = 32;
+      this.bc = 0;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -655,7 +649,7 @@ function addPlayer() {
           if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
-          this.y=help.yPixelToTile(map,this.y+9)-7;
+          this.y=this.bc+1;
           }
 					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping

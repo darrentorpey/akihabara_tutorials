@@ -4,6 +4,14 @@
   help.isSquished = function(th,by) {
 		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
 	};
+
+  //Overriding the gravity function to triple the usual gravity (from 1 to 3).
+      toys.platformer.handleAccellerations = function(th) {
+			// Gravity
+			if (!th.touchedfloor) th.accy += 3;
+			// Attrito
+			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
+		};
   
   // overriding toys.platformer.verticalTileCollision to make a four-point collision check
   // (topleft, topright, bottomleft, bottomright) instead of a two-point collision check (top-middle, bottom-middle)

@@ -576,7 +576,7 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 18.5; // this makes a 3-tile jump
+      this.jumpaccy = 22; // this makes a 3-tile jump
       this.maxaccx = 7;
       this.maxaccy = 60;
       this.h = 58;

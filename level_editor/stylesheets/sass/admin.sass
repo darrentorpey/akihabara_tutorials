@@ -1,5 +1,7 @@
 @import core
 
+$c_link = #4481C0
+
 =top_box
   float: left
   +admin_box
@@ -27,7 +29,7 @@ body
   margin: 0px auto
 
 a
-  color: #4481C0
+  color: $c_link
   +hover-link
 
 #admin_sidebar
@@ -72,6 +74,13 @@ a
 #imageView
   background-color: white
 
+#jam_teaser
+  display: inline-block
+  padding: 10px 15px
+  margin:
+    bottom: 10px
+  background-color: lighten($c_help_yellow, 10%)
+  color: darken($c_link, 20%)
 
 #top_tools
   +clearfix

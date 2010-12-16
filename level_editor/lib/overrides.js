@@ -62,6 +62,7 @@
 	};
   
 if (!help.geturlparameter("g"))
+{
   // overriding gbox.initScreen to reposition akihabara frame
   gbox.initScreen = function(w,h) {
 		var container=document.createElement("a");
@@ -137,7 +138,118 @@ if (!help.geturlparameter("g"))
 				break;
 			}
 		}
+    };
+ }
+    else {
+      gbox.initScreen = function(w,h) {
+		document.body.style.textAlign="center";
+		document.body.style.height="100%";
+		document.body.style.margin="0px";
+		document.body.style.padding="0px";			
+		document.getElementsByTagName("html")[0].style.height="100%";
+		
+		var container=document.createElement("div");
+		container.style.width="100%";
+		container.style.height="100%";
+		container.style.display="table";
+		this._box=document.createElement("div");
+		this._box.style.display="table-cell";
+		this._box.style.width="100%";
+		this._box.style.textAlign="center";
+		this._box.style.verticalAlign="middle";
+		
+		this._screen=document.createElement("canvas");
+		if (this._border) this._screen.style.border="1px solid black";
+		this._screen.setAttribute('height',h);
+		this._screen.setAttribute('width',w);
+		this._screen.style.width=(w*this._zoom)+"px";
+		this._screen.style.height=(h*this._zoom)+"px";
+    this._screen.setAttribute('id','aki');
+		this._screenh=h;
+		this._screenw=w;
+		this._screenhh=Math.floor(h/2);
+		this._screenhw=Math.floor(w/2);
+		this._camera.x=0;
+		this._camera.y=0;
+		this._camera.h=h;
+		this._camera.w=w;
+		this._box.appendChild(this._screen);
+		container.appendChild(this._box);
+		document.body.appendChild(container);
+
+       el = document.getElementById("top_tools");
+    el.parentNode.removeChild(el);
+    el = document.getElementById("container");
+    el.parentNode.removeChild(el);
+    
+    el = document.getElementById("credits");
+    el.parentNode.removeChild(el);
+    eintro = document.getElementById("intro");
+    eintro.parentNode.removeChild(eintro);
+    
+    //Paint a level in the left box, watch it show up in the game in the right box. Best run on a widescreen monitor! For extra awesome, try putting your browser in full screen mode.
+//Game controls: left/right arrow keys to move, Z to jump, C to respawn near the top-left of the screen.
+    
+    var editText = document.createElement("a");
+    editText.textContent = "Click here to make more levels like this one, right in your browser!";
+    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?level=' + levelParam;
+    eintro.childNodes[1].childNodes[1].textContent = "";
+    eintro.childNodes[1].childNodes[1].appendChild(editText);
+    el = document.getElementById("aki");
+    el.parentNode.appendChild(eintro);
+    
+    
+		this.createCanvas("_buffer");
+		gbox.addEventListener(window,'keydown', this._keydown);
+		gbox.addEventListener(window,'keyup', this._keyup);
+		if (this._statbar) {
+			this._statbar=document.createElement("div");
+			if (this._border) this._statbar.style.border="1px solid black";
+			this._statbar.style.margin="auto";
+			this._statbar.style.backgroundColor="#ffffff";
+			this._statbar.style.fontSize="10px";
+			this._statbar.style.fontFamily="sans-serif";
+			this._statbar.style.width=(w*this._zoom)+"px";
+			this._box.appendChild(this._statbar);
+		}
+		// Keyboard support on devices that needs focus (like iPad) - actually is not working for a bug on WebKit's "focus" command.
+		this._keyboardpicker=document.createElement("input");
+		this._keyboardpicker.onclick=function(evt) { gbox._hidekeyboardpicker();evt.preventDefault();evt.stopPropagation();};
+		this._hidekeyboardpicker(this._keyboardpicker);
+		
+		gbox._box.appendChild(this._keyboardpicker);
+		gbox._screen.ontouchstart=function(evt) { gbox._screenposition=gbox._domgetabsposition(gbox._screen);if (evt.touches[0].pageY-gbox._screenposition.y<30) gbox._showkeyboardpicker();else gbox._hidekeyboardpicker();evt.preventDefault();evt.stopPropagation();};
+		gbox._screen.ontouchend=function(evt) {evt.preventDefault();evt.stopPropagation();};
+		gbox._screen.ontouchmove=function(evt) { evt.preventDefault();evt.stopPropagation();};
+		gbox._screen.onmousedown=function(evt) {gbox._screenposition=gbox._domgetabsposition(gbox._screen);if (evt.pageY-gbox._screenposition.y<30)  gbox._showkeyboardpicker(); else gbox._hidekeyboardpicker();evt.preventDefault();evt.stopPropagation();};
+		
+		var d=new Date();
+		gbox._sessioncache=d.getDate()+"-"+d.getMonth()+"-"+d.getFullYear()+"-"+d.getHours()+"-"+d.getMinutes()+"-"+d.getSeconds();
+		
+		gbox._loadsettings(); // Load default configuration
+		gbox.setCanAudio(true); // Tries to enable audio by default
+		
+		switch (gbox._flags.fse) { // Initialize FSEs
+			case "scanlines": {
+				gbox.createCanvas("-gbox-fse",{w:w,h:h});
+				gbox.getCanvasContext("-gbox-fse").save();
+				gbox.getCanvasContext("-gbox-fse").globalAlpha=0.2;
+				gbox.getCanvasContext("-gbox-fse").fillStyle = gbox.COLOR_BLACK;
+				for (var j=0;j<h;j+=2)
+					gbox.getCanvasContext("-gbox-fse").fillRect(0,j,w,1);
+				gbox.getCanvasContext("-gbox-fse").restore();
+				gbox._localflags.fse=true;
+				break;
+			}
+			case "lcd":{
+				gbox.createCanvas("-gbox-fse-old",{w:w,h:h});
+				gbox.createCanvas("-gbox-fse-new",{w:w,h:h});
+				gbox._localflags.fse=true;
+				break;
+			}
+		}
 	};
+  }
 
 if (!help.geturlparameter("g"))  
   // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
@@ -235,23 +347,3 @@ if (!help.geturlparameter("g"))
 
 		return device;
 	};
-  
-  if (help.geturlparameter("g"))
-    {
-    el = document.getElementById("top_tools");
-    el.parentNode.removeChild(el);
-    el = document.getElementById("container");
-    el.parentNode.removeChild(el);
-    
-    el = document.getElementById("intro");
-    el.parentNode.removeChild(el);
-    
-    var editText = document.createElement("a");
-    editText.textContent = "Click here to make more levels like this one!";
-    editText.style.backgroundColor="#ffffff";
-    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?level=' + levelParam;
-    
-    el = document.getElementById("credits");
-    el.parentNode.appendChild(editText);
-    el.parentNode.removeChild(el);
-    }

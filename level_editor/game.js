@@ -301,7 +301,7 @@ function addEnemy(data, type) {
                         if ((group == 'enemies' && other.type == 1) || (group == 'disboxes' && other.type == 'TNT')) {other.blink = true;}
                           else gbox.trashObject(other);
                         }
-                        else other.resetGame();
+                        else other.killed = true;
                     }
                   }
                 }              
@@ -570,7 +570,7 @@ function addDisBlock(data) {
                         if ((group == 'enemies' && other.type == 1) || (group == 'disboxes' && other.type == 'TNT')) {other.blink = true;}
                           else gbox.trashObject(other);
                         }
-                        else other.resetGame();
+                        else other.killed = true;
                     }
                   }
                 }              
@@ -637,11 +637,14 @@ function addPlayer() {
       this.w = 32;
       this.bc = 0;
       this.prevaccy = 0;
+      this.killed = false;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+    
+    if (this.killed) this.resetGame();
     
     this.prevaccy = this.accy;
     
@@ -755,6 +758,7 @@ function addPlayer() {
       this.y = 20;
       this.accx = 0;
       this.accy = 0;
+      this.killed = false;
       this.resetHud();
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)

@@ -11,6 +11,7 @@ function addMap() {
             {
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
             if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
+            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
             }
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
@@ -62,11 +63,11 @@ function reloadMap() {
     map: loadMap(),
 
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t != 1) return true;
+      if (t != null && t != 7 && t != 5 && t!= 8 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 7 && t != 5 && t != 6 && t!= 8 && t != 2 && t != 1) return true;
+      if (t != null && t != 7 && t != 5 && t!= 8 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       }
     })
@@ -78,6 +79,7 @@ function reloadMap() {
             {
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
             if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
+            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
             }
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)

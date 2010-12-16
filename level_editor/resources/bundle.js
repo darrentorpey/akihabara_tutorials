@@ -38,7 +38,7 @@
       image:   'block_sprite', // Use the 'player_sprite' image, as loaded above
       tileh:   32,
       tilew:   32,
-      tilerow: 2,
+      tilerow: 3,
       gapx:    0,
       gapy:    0
     },

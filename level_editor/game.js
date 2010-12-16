@@ -95,11 +95,11 @@ function main() {
 
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t != 1) return true;
+      if (t != null && t != 8 && t != 5 && t!= 7 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       },
     tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t != 6 && t!= 7 && t != 2 && t != 1) return true;
+      if (t != null && t != 8 && t != 5 && t!= 7 && t != 2 && t != 1) return true;
         else return false; // Is a wall if is not an empty space
       }
   }
@@ -114,6 +114,7 @@ function main() {
             {
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
             if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
+            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
             }
       gbox.trashGroup('enemies');
         for (var y = 0; y < 30; y++)
@@ -267,7 +268,6 @@ function addEnemy(data, type) {
       } 
       else if (gbox.collides(this,pl) && pl.x && pl.prevaccy <= 0)
           {
-          console.log(pl.prevaccy);
           pl.resetGame();
           }
       
@@ -298,7 +298,7 @@ function addEnemy(data, type) {
                     {
                       if (group != 'player') 
                         {
-                        if (group == 'enemies' && other.type == 1) {other.blink = true; console.log("hi");}
+                        if ((group == 'enemies' && other.type == 1) || (group == 'disboxes' && other.type == 'TNT')) {other.blink = true;}
                           else gbox.trashObject(other);
                         }
                         else other.resetGame();
@@ -491,11 +491,23 @@ function addDisBlock(data) {
       },
       x:data.x,
       y:data.y,
-      jumpaccy:10,
+      blink:false,
       side:data.side,
-      onMe:null
+      onMe:null,
+      type:data.type,
     });
-    help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
+    if (this.type == 'TNT')
+      {
+      this.frames = {
+        still:{ speed:1, frames:[2] },
+        walking:{ speed:1, frames:[2] },
+        jumping:{ speed:1, frames:[2] },
+        falling:{ speed:1, frames:[2] },
+        die: { speed:1,frames:[2] }
+      };
+      help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,6,"map");
+      }
+    else help.setTileInMap(gbox.getCanvasContext("map_canvas"),map,this.x/this.w,this.y/this.h,0,"map");
   },
   first:function() {
     if (gbox.objectIsVisible(this) && gbox.getObject("player","player_id")) {
@@ -503,6 +515,8 @@ function addDisBlock(data) {
     // Counter, required for setFrame
     this.counter=(this.counter+1)%10;
 
+    if (data.type != 'TNT')
+    {
     for (var j in gbox._groups)
       for (var i in gbox._objects[gbox._groups[j]])
       {
@@ -525,7 +539,49 @@ function addDisBlock(data) {
           }
         }
       }
-
+    }
+     else if (this.blink)
+        {
+        if (toys.timer.every(this,'fall',30) == toys.TOY_DONE) // after a number of steps, explode!
+          {
+          // play explosion animation & sound
+          toys.generate.sparks.simple(this,"particles",null,{animspeed:1.5,tileset:"explosion_tiles",accx:0,accy:0});
+          gbox.hitAudio("explode");
+          // loop through 9 quadrants around the enemy
+          for (var dx = -1; dx <= 1; dx++)
+            for (var dy = -1; dy <= 1; dy++)
+              {
+              // remove the tile here, unless it's a star tile
+              if (help.getTileInMap(this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,map,null,"map") != 1)
+                help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
+              
+              // check and see if there are dynamic objects here
+              for (var j in gbox._groups)
+                for (var i in gbox._objects[gbox._groups[j]])
+                {
+                  var group = gbox._groups[j];
+                  if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes')
+                  {
+                  var other = gbox._objects[group][i];
+                  if (gbox.pixelcollides({x:this.x+this.w/2+this.w*dx,y:this.y+this.h/2+this.h*dy}, other))
+                    {
+                      if (group != 'player') 
+                        {
+                        if ((group == 'enemies' && other.type == 1) || (group == 'disboxes' && other.type == 'TNT')) {other.blink = true;}
+                          else gbox.trashObject(other);
+                        }
+                        else other.resetGame();
+                    }
+                  }
+                }              
+              
+              
+              }
+          gbox.trashObject(this);
+          }
+        }
+      
+      
     toys.platformer.setFrame(this); // set the right animation frame
  
       
@@ -533,11 +589,11 @@ function addDisBlock(data) {
   },
   blit:function() {
     if (gbox.objectIsVisible(this))
-      gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv,alpha:this.alpha});
+      if (!this.blink || !(this.counter % 3))
+        gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,camera:this.camera,fliph:this.side,flipv:this.flipv,alpha:this.alpha});
   }
   });
   }
-
   
 // This is our function for adding the player object -- this keeps our main game code nice and clean
 function addPlayer() {
@@ -597,9 +653,12 @@ function addPlayer() {
     // if this is a level with stars, check to see if we've collected any
     if (this.starsTotal > 0)
       {
-      if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
+      tilecheck1 = help.getTileInMap(this.x+this.w/2,this.y,map,null,'map');
+      tilecheck2 = help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map')
+      if ((tilecheck1 == 1 || tilecheck2 == 1) && !this.finished) 
         {
-        help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
+        if (tilecheck1 == 1) help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y,null,"map");
+        if (tilecheck2 == 1) help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
         this.starsCollected++;
         gbox.hitAudio("star");
         }
@@ -711,6 +770,7 @@ function addPlayer() {
             {
             if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
             if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
+            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
             }
             
     },

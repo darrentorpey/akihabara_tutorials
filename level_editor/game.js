@@ -251,7 +251,8 @@ function addEnemy(data, type) {
       var pl=gbox.getObject("player","player_id");
       if (help.isSquished(this,pl)) {
         
-        toys.platformer.bounce(pl,{jumpsize:10});
+        if (gbox.keyIsHold("a")) toys.platformer.bounce(pl,{jumpsize:20});
+          else toys.platformer.bounce(pl,{jumpsize:10});
         gbox.hitAudio("squish");
         if (this.type == 1)
           {
@@ -262,8 +263,7 @@ function addEnemy(data, type) {
       } 
       else if (gbox.collides(this,pl,2) && pl.x)
           {
-          pl.x = 20;
-          pl.y = 20;
+          pl.resetGame();
           }
       
       if (this.blink)
@@ -576,11 +576,11 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 15;
+      this.jumpaccy = 18.5; // this makes a 3-tile jump
       this.maxaccx = 7;
       this.maxaccy = 60;
-      this.h = 41;
-      this.w = 23;
+      this.h = 58;
+      this.w = 32;
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -597,22 +597,19 @@ function addPlayer() {
       {
       if (help.getTileInMap(this.x+this.w/2,this.y+this.h/2,map,null,'map') == 1 && !this.finished) 
         {
-        //this.finished = true;
-        //maingame.gameIsCompleted();
         help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2,this.y+this.h/2,null,"map");
         this.starsCollected++;
         gbox.hitAudio("star");
         }
-      
       if (this.starsCollected == this.starsTotal && !this.finished)
         {
         this.finished = true;
         maingame.gameIsCompleted();
-        
         }
       }
-    // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
-    followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
+
+      // Center the camera on the player object. The map.w and map.h data tells the camera when it's hit the edge of the map so it stops scrolling.
+      followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
       
       if (gbox.keyIsHit("b")) {
       

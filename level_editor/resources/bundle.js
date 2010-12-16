@@ -27,8 +27,8 @@
     {
       id:      'player_tiles',  // Set a unique ID for future reference
       image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
-      tileh:   41,
-      tilew:   23,
+      tileh:   64,
+      tilew:   32,
       tilerow: 10,
       gapx:    0,
       gapy:    0

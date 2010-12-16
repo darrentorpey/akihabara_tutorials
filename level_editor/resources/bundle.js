@@ -73,10 +73,10 @@
   
 	// Audio resources	
 	addAudio:[
-/*	["jump",["resources/jump.mp3","resources/jump.ogg"],{channel:"jump"}],	
+  	["jump",["resources/jump.mp3","resources/jump.ogg"],{channel:"jump"}],	
     ["hit",["resources/hit.mp3","resources/hit.ogg"],{channel:"hit"}],
     ["squish",["resources/sword.mp3","resources/sword.ogg"],{channel:"hit"}],
     ["explode",["resources/megaexplosion.mp3","resources/megaexplosion.ogg"],{channel:"boom"}],
     ["star",["resources/coin.mp3","resources/coin.ogg"],{channel:"hit"}]
-*/	]
+  	]
 }

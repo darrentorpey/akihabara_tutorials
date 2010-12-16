@@ -5,10 +5,10 @@
 		return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
 	};
 
-  //Overriding the gravity function to triple the usual gravity (from 1 to 3).
+  //Overriding the gravity function to increase the usual gravity (from 1 to 2.5).
       toys.platformer.handleAccellerations = function(th) {
 			// Gravity
-			if (!th.touchedfloor) th.accy += 3;
+			if (!th.touchedfloor) th.accy += 2.5;
 			// Attrito
 			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
 		};

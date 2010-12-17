@@ -8,7 +8,7 @@
   //Overriding the gravity function to increase the usual gravity (from 1 to 2.5).
       toys.platformer.handleAccellerations = function(th) {
 			// Gravity
-			if (!th.touchedfloor) th.accy += 2.5;
+			if (!th.touchedfloor) th.accy += 2.75;
 			// Attrito
 			if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
 		};
@@ -22,6 +22,7 @@
 			var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
 			th.touchedfloor=false;
 			th.touchedceil=false;
+            
 	
 			if (map.tileIsSolidCeil(th,topleft) || map.tileIsSolidCeil(th,topright)) {
 				th.accy=0;
@@ -31,7 +32,7 @@
 			if (map.tileIsSolidFloor(th,bottomleft) || map.tileIsSolidFloor(th,bottomright)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
-				th.touchedfloor=true;
+        th.touchedfloor=true;
 			}
       
 		};

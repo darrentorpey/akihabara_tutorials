@@ -714,14 +714,16 @@ function addPlayer() {
      }
       toys.platformer.applyGravity(this); // Apply gravity
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
-					toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
+          toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
+          toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
           
           if (this.onBox) {
           this.touchedfloor = true;
           this.accy = 0;
           this.y=this.bc+1;
           }
-					toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
+					
+          
 					toys.platformer.jumpKeys(this,{jump:"a",audiojump:"jump"}); // handle jumping
           if (this.accy < 0) this.onBox = false;
 					toys.platformer.handleAccellerations(this); // gravity/attrito

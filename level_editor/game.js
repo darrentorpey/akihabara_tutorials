@@ -632,7 +632,7 @@ function addPlayer() {
       this.y = 20;
       this.jumpaccy = 22.5; // this makes a 3-tile jump
       this.maxaccx = 7;
-      this.maxaccy = 60;
+      this.maxaccy = 20;
       this.h = 58;
       this.w = 32;
       this.bc = 0;

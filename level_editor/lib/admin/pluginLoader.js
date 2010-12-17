@@ -6,7 +6,7 @@ if(includedJS){
 	}
 }
 jQuery(document).ready(function() {
-	var drop = document.querySelector('#object_loding .drop');
+	var drop = document.querySelector('#object_loading .drop');
 
 	// Tells the browser that we *can* drop on this target
 	addEvent(drop, 'dragover', cancel);

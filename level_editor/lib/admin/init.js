@@ -40,6 +40,14 @@ $(function() {
   }
 })
 
+// This gets run first thing after all non-bottom-scripts static HTML content inside of body has been read
+function initBottom() {
+  $('.fulltext').hide();
+  $('.shorttext').click(function() {
+    $(this).hide().siblings('.fulltext').show();
+  });
+}
+
 var testAction = new UndoableAction(function() {}, function() {});
 
 afterEditorLoad = function() {

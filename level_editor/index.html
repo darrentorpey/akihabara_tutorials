@@ -46,7 +46,7 @@
   </script>
 </head>
 <body>
-  <h1 id="">ALES, the Akihabara Level Editor &amp; Sharer</h1>
+  <h1 id="">ALES &mdash; the Akihabara Level Editor &amp; Sharer</h1>
 
   <section id="top_tools">
     <div id="palette">
@@ -86,14 +86,6 @@
     </div>
 
     <div id="level_loading">
-      <!-- <p id="upload_to_load">
-          <form action="" method="get" id="upload_to_load_form">
-            <label>
-              Upload a level to load
-              <input type="file" name="upload_level" value="">
-            </label>
-          </form>
-      </p> -->
       <p id="save_level">
         <a href="#"></a>
       </p>
@@ -113,11 +105,10 @@
     </div>
   </section>
 
-  <a href="http://html5toolsjam2011.eventbrite.com/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, Jan 8+9, Boston/worldwide</a>
+  <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, Jan 8+9, Boston/worldwide &raquo;</a>
 
   <div id="container">
-    <canvas id="imageView" width="640" height="480">
-    </canvas>
+    <canvas id="imageView" width="640" height="480"></canvas>
   </div>
 
   <section class="intro" id="intro">
@@ -132,45 +123,78 @@
     </div>
   </section>
 
-  <section class="credits" id="credits">
-    <h3>Credits &amp; Special Thanks</h3>
-    <p>The Akihabara Level Editor & Sharer (ALES) was built by <a href="http://tinysubversions.com/" target="_blank">Darius Kazemi</a> and <a href="http://www.darrentorpey.com/" target="_blank">Darren Torpey</a>. For more on ALES, <a href = "http://bostongamejams.com/ales/">see here</a>.</p>
+  <footer>
+    <section class="credits" id="credits">
+      <h3>Credits &amp; Special Thanks</h3>
 
-    <p>
-      <ul>
-        <li>The star tile comes from Arachne on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=9147.0" target="_blank">http://forums.tigsource.com/index.php?topic=9147.0</a></li>
-        <li>The cloud tiles are from JR Hill on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8980.0" target="_blank">http://forums.tigsource.com/index.php?topic=8980.0</a></li>
-        <li>The explosion animation is from FrankieSmileShow on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8792.0" target="_blank">http://forums.tigsource.com/index.php?topic=8792.0</a></li>
-        <li>The rest of the tiles are from pgil on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8796.0" target="_blank">http://forums.tigsource.com/index.php?topic=8796.0</a></li>
-      </ul>
-    </p>
+      <section class="shorttext">
+        Click here to see all the folks who made this tool possible&hellip; <span class="fakelink">&or;</a>
+      </section>
 
-    <p>
-      All the above graphics are licensed as CC-BY-NC: <a href="http://creativecommons.org/licenses/by-nc/3.0/us/" target="_blank">http://creativecommons.org/licenses/by-nc/3.0/us/</a> and they come from the TIGSource Assemblee Compo
-    </p>
+      <section class="fulltext">
+        <section class="engineering_design">
+          <h4>Design &amp; Engineering</h4>
 
-    <p>
-      The sounds are from Kesiev (who made them with cfxr), and since they're distributed with <a href="http://www.kesiev.com/akihabara/" target="_blank">Akihabara</a> are covered under its MIT License.
-    </p>
+          <p>The Akihabara Level Editor &amp; Sharer (ALES) was designed and built by <a href="http://tinysubversions.com/" target="_blank">Darius Kazemi</a> and <a href="http://www.darrentorpey.com/" target="_blank">Darren Torpey</a>. Read <a href = "http://bostongamejams.com/ales/">more about ALES, here</a>.</p>
+          <p>
+            Additional code by:
+          </p>
+          <ul>
+            <li>
+              <a href="http://ryan-kahn.com" target="_blank">Ryan Kahn</a> - Initial plugin-loading admin code
+            </li>
+          </ul>
+        </section>
 
-    <p>
-      The player sprite is by Naruto[NU]: <a href="http://www.spriters-resource.com/custom_edited/mother/sheet/17317" target="_blank">http://www.spriters-resource.com/custom_edited/mother/sheet/17317</a> (and slightly altered by Darius)
-    </p>
-  </section>
+        <section class="graphics">
+          <h4>Graphics</h4>
 
-  <div id="admin_sidebar">
-    <div id="admin_buttons" style="display: none">
-      <h4>Admin</h4>
+          <p>
+            <ul>
+              <li>The star tile comes from Arachne on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=9147.0" target="_blank">http://forums.tigsource.com/index.php?topic=9147.0</a></li>
+              <li>The cloud tiles are from JR Hill on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8980.0" target="_blank">http://forums.tigsource.com/index.php?topic=8980.0</a></li>
+              <li>The explosion animation is from FrankieSmileShow on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8792.0" target="_blank">http://forums.tigsource.com/index.php?topic=8792.0</a></li>
+              <li>The rest of the tiles are from pgil on TIGSource: <a href="http://forums.tigsource.com/index.php?topic=8796.0" target="_blank">http://forums.tigsource.com/index.php?topic=8796.0</a></li>
+            </ul>
+          </p>
+          <p>
+            All the above graphics are licensed as CC-BY-NC: <a href="http://creativecommons.org/licenses/by-nc/3.0/us/" target="_blank">http://creativecommons.org/licenses/by-nc/3.0/us/</a> and they come from the TIGSource Assemblee Compo
+          </p>
+          <p>
+            The player sprite is by Naruto[NU]: <a href="http://www.spriters-resource.com/custom_edited/mother/sheet/17317" target="_blank">http://www.spriters-resource.com/custom_edited/mother/sheet/17317</a> (and slightly altered by Darius)
+          </p>
+        </section>
 
-      <div id="object_loding">
-        <h3>Plugins</h3>
-        <div class="drop">
-          Drop jQuery plugin URLs here to load them
+        <section class="audio">
+          <h4>Audio</h4>
+
+          <p>
+            The sounds are from Kesiev (who made them with cfxr), and since they're distributed with <a href="http://www.kesiev.com/akihabara/" target="_blank">Akihabara</a> are covered under its MIT License.
+          </p>
+        </section>
+
+        <!-- <section class="special_thanks">
+          <h4>Special Thanks</h4>
+        </section> -->
+      </section>
+    </section>
+  </footer>
+
+  <aside>
+    <div id="admin_sidebar">
+      <div id="admin_buttons" style="display: none">
+        <h4>Admin</h4>
+
+        <div id="object_loading">
+          <h3>Plugins</h3>
+          <div class="drop">
+            Drop jQuery plugin URLs here to load them
+          </div>
+          <a class="view_plugins" onclick="viewPlugins()">View Plugins</a>
         </div>
-        <a class="view_plugins" onclick="viewPlugins()">View Plugins</a>
       </div>
     </div>
-  </div>
+  </aside>
 
 
   <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6"></script>
@@ -188,6 +212,8 @@
   $(function(){
     $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
   });
+
+  initBottom();
 
   if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 

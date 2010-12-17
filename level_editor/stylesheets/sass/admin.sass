@@ -3,6 +3,12 @@
 $c_background: #F5F4DF
 $c_link: #4481C0
 
+=std_link
+  color: $c_link
+  +hover-link
+
+@import general
+
 =top_box
   float: left
   +admin_box
@@ -17,6 +23,7 @@ body
   // +linear-gradient(color-stops(red, lighten(red, 10%) 50%))
   // +linear-gradient(color-stops(#F5DAA2, lighten(#F5DAA2, 10%)))
   // +linear-gradient(color-stops(#c00, #fff, #00c))
+  color: #222
   font-size: 14px
 
 h1
@@ -161,12 +168,26 @@ section.credits
   h3
     font-size: 18px
     font-weight: bold
+    color: mix($c_primary_5, black, 20%)
+    margin-bottom: 5px
+    display: inline-block
+    border-bottom: 1px solid mix($c_primary_5, #222, 80%)
   ul
     li
       margin: 10px 0px
+      &:first-child
+        margin-top: 5px
+    margin-bottom: 10px
   p
     margin: 5px 0px
     line-height: 22px
+  section
+    padding-left: 5px
+    h4
+      font-weight: bold
+      font-size: 16px
+    margin:
+      top: 5px
 
 #button_testing
   padding: 5px
@@ -205,16 +226,12 @@ section.credits
       line-height: 18px
       &:nth-child(2n)
         background-color: lighten($c_primary_5, 15%)
-      // &:first-child
-        margin-top: 0px
-      // &:last-child
-        margin-bottom: 0px
   #clear_level_storage
     position: absolute
     bottom: 5px
     right: 5px
 
-#object_loding
+#object_loading
   margin-bottom: 15px
   .drop
     padding: 5px

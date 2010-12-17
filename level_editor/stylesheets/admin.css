@@ -43,6 +43,28 @@
   text-decoration: underline;
 }
 
+/* line 8, sass/_general.sass */
+.tooltip {
+  -moz-opacity: 0.9;
+  -webkit-opacity: 0.9;
+  -o-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+  background-color: #cccccc;
+  font-size: 14px;
+  width: 160px;
+  padding: 15px;
+  line-height: 18px;
+  color: #222222;
+  border: 1px solid #999999;
+  -moz-box-shadow: #444444 0px 0px 5px;
+  -webkit-box-shadow: #444444 0px 0px 5px;
+  -o-box-shadow: #444444 0px 0px 5px;
+  box-shadow: #444444 0px 0px 5px;
+}
+
 /* line 19, sass/admin.sass */
 body {
   padding: 10px 0px 50px 20px;
@@ -102,7 +124,7 @@ a:hover {
   width: 90px;
   text-align: center;
 }
-/* line 90, sass/_core.sass */
+/* line 91, sass/_core.sass */
 #admin_sidebar #undone_admin a {
   color: #2f5a86;
 }
@@ -135,7 +157,7 @@ a:hover {
   min-width: 200px;
   padding: 10px 20px;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #admin_sidebar #admin_buttons a {
   color: #2f5a86;
 }
@@ -216,7 +238,7 @@ a:hover {
   padding: 10px;
   margin-left: 10px;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #top_tools #palette a {
   color: #2f5a86;
 }
@@ -245,7 +267,7 @@ a:hover {
   margin-left: 10px;
   display: inline-block;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #top_tools #level_sharing a {
   color: #2f5a86;
 }
@@ -275,7 +297,7 @@ a:hover {
   padding-right: 20px;
   position: relative;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #top_tools #level_loading a {
   color: #2f5a86;
 }
@@ -324,7 +346,7 @@ a:hover {
   margin-left: 10px;
   padding: 5px 6px 1px;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #top_tools #level_saving a {
   color: #2f5a86;
 }
@@ -353,7 +375,7 @@ a:hover {
   margin-left: 10px;
   position: relative;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #top_tools #level_name a {
   color: #2f5a86;
 }
@@ -398,15 +420,15 @@ section.intro .holder {
   box-shadow: #f0ec87 0px 0px 5px;
   display: inline-block;
 }
-/* line 77, sass/_core.sass */
+/* line 78, sass/_core.sass */
 section.intro .holder p {
   margin: 5px 0px;
 }
-/* line 79, sass/_core.sass */
+/* line 80, sass/_core.sass */
 section.intro .holder p:first-child {
   margin-top: 0px;
 }
-/* line 81, sass/_core.sass */
+/* line 82, sass/_core.sass */
 section.intro .holder p:last-child {
   margin-bottom: 0px;
 }
@@ -430,7 +452,7 @@ section.credits {
   padding: 10px;
   margin-top: 50px;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 section.credits a {
   color: #2f5a86;
 }
@@ -659,7 +681,7 @@ section.credits section h4 {
   -o-box-shadow: #4367a4 -1px 2px 4px;
   box-shadow: #4367a4 -1px 2px 4px;
 }
-/* line 70, sass/_core.sass */
+/* line 71, sass/_core.sass */
 #level_storage_pane a {
   color: #2f5a86;
 }

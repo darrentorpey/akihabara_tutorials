@@ -77,7 +77,7 @@
 
     <div id="level_loading">
       <p id="drag_to_load">
-        Drag here to load <a href="#" class="inline_help">(?)</a>
+        Drag here to load <a href="#" title="Drag a level file (that was saved from this editor) onto this box to load it" class="inline_help">(?)</a>
       </p>
     </div>
 
@@ -88,7 +88,7 @@
     </div>
   </section>
 
-  <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, Jan 8+9, Boston/worldwide &raquo;</a>
+  <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
 
   <div id="container">
     <canvas id="imageView" width="640" height="480"></canvas>
@@ -192,6 +192,10 @@
   <script type="text/javascript" src="game.js"></script>
   <script type="text/javascript" src="lib/levels/map.js"></script>
 <script>
+  head.js('lib/jquery/jquery.tools_tooltips.min.js', function() {
+    $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+  });
+
   $(function(){
     $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
   });

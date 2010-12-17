@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="stylesheets/reset.css">
   <link rel="stylesheet" href="stylesheets/admin.css">
   <link rel="stylesheet" href="stylesheets/plain.css">
+  <link rel="stylesheet" href="stylesheets/jquery-ui.css">
 
   <script type="text/javascript" src="lib/swfobject.js"></script>
   <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
@@ -24,6 +25,11 @@
   <script type="text/javascript" src="lib/admin/gui.js"></script>
   <script type="text/javascript" src="lib/history.js"></script>
   <script type="text/javascript" src="lib/admin/init.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery-ui.js"></script>
+  <script type="text/javascript" src="lib/jquery/jquery.json-2.2.js"></script>
+  <script type="text/javascript" src="lib/h5utils.js"></script>
+  <script type="text/javascript" src="lib/head.js"></script>
+  <script type="text/javascript" src="lib/admin/pluginLoader.js"></script>
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -98,6 +104,13 @@
       <ul></ul>
       <a href="" id="clear_level_storage">clear storage</a>
     </div>
+	<div id="object_loding">
+		<a class="view_plugins" onclick="viewPlugins()">View Plugins</a>
+		<div class="drop">
+			Drop jQuery files here.
+		</div>
+
+	</div>
   </section>
 
   <a href="http://html5toolsjam2011.eventbrite.com/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, Jan 8+9, Boston/worldwide</a>

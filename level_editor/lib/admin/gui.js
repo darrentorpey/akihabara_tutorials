@@ -94,7 +94,6 @@ function receiveShortURL(data) {
   $('#share').val(bitly_link);
   $('#share').attr('readonly', 'readonly').click(function() { this.select() });
   clip.setText(bitly_link);
-  $('#d_clip_button').removeClass('disabled');
 }
 
 function generateShortURL() {

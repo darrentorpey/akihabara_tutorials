@@ -9,12 +9,6 @@ function gup( name ) {
     return results[1];
 }
 
-if (!gup("g"))
-  {
-  var clip = new ZeroClipboard.Client();
-  var saving_clipboard = new ZeroClipboard.Client();
-  }
-
 var insp;
 var levelParam = gup("level");
 var afterEditorLoad;
@@ -114,12 +108,6 @@ $(function() {
   isMouseOut = false;
 
   levelParam = gup("level");
-
-  clip.setHandCursor(true);
-  clip.glue('d_clip_button', 'd_clip_container');
-  // saving_clipboard.setHandCursor(true);
-  // saving_clipboard.glue('d_clip_button', 'd_clip_container');
-
 
   $('#level_saving').downloadify({
     swf:           'resources/flash/downloadify.swf',

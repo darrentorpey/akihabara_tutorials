@@ -31,10 +31,6 @@ $(function() {
     return false;
   });
 
-  if ($('#share').val() == '') {
-    $('#d_clip_button').addClass('disabled');
-  }
-
   if (params.name) {
     $('#level_name input').val(params.name);
   }

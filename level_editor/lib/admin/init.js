@@ -46,6 +46,18 @@ function initBottom() {
   $('.shorttext').click(function() {
     $(this).hide().siblings('.fulltext').show();
   });
+
+  loadPalette();
+}
+
+function loadPalette() {
+  imgs = [];
+  for(var i = 0; i < 10; i++) {
+    var img = new Image();
+    img.src = 'resources/palettes/default/' + i.toString() + '.png';
+    img.id = 'brush' + i;
+    $(img).appendTo('#palette');
+  }
 }
 
 var testAction = new UndoableAction(function() {}, function() {});

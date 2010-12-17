@@ -96,13 +96,22 @@ var Undos = {
 function readTextFile(file, callback) {
   var reader = new FileReader();
 
-  // Closure to capture the file information.
+  // Capture the file information and pass it to the callback function
   reader.onload = (function(theFile) {
     return function(e) {
       callback(e, theFile);
     };
   })(file);
 
-  // Read in the image file as a data URL.
+  // This causes the file to be read (and, eventually, the above-mentioned #onload to be called)
   return reader.readAsText(file);
+}
+
+function readFirstTextFile(event, teh_callback) {
+  var files = event.dataTransfer.files; // FileList object
+  if (!files) { return false; }
+
+  readTextFile(files[0], function(evt, file) {
+    teh_callback(evt.target.result);
+  })
 }

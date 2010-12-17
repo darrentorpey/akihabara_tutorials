@@ -126,7 +126,7 @@ $(function() {
 
       $(brushes[i]).click(function() {
         console.log(this);
-        brush = this.src.substr(this.src.length - 5, 1);
+        brush = this.id.substr(this.id.length - 1, 1);
       });
 
       brushes_img[i] = new Image();
@@ -280,10 +280,12 @@ $(function() {
 })
 
 function drawCanvas(cx, cy) {
+  
   for (var y = cy; y < cy+15; y++)
     for (var x = cx; x < cx+20; x++)
-      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
-
+      context.drawImage(document.querySelectorAll('img')[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+  
+      
   if (minimap) {
      var tc = document.createElement('canvas');
      tc.setAttribute('width',160);

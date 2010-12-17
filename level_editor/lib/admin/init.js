@@ -52,6 +52,7 @@ function loadPalette() {
     var img = new Image();
     img.src = 'resources/palettes/default/' + i.toString() + '.png';
     img.id = 'brush' + i;
+    img.setAttribute("class", "brush");
     $(img).appendTo('#palette');
   }
 }

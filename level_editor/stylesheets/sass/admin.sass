@@ -31,6 +31,8 @@ h1
   font-weight: bold
   text-align: center
   color: mix($c_background, black, 15%)
+  padding: 5px
+  background-color: darken($c_background, 10%)
 
 #drop_area
   position: absolute
@@ -47,12 +49,21 @@ a
   +hover-link
 
 #admin_sidebar
+  #undone_admin
+    position: fixed
+    cursor: pointer
+    top: 0px
+    right: 0px
+    +discrete_links
+    width: 90px
+    text-align: center
   #admin_buttons
-    min-width: 200px
+    +admin_box
+    +border-top-right-radius(0px)
     position: fixed
     top: 0px
     right: 0px
-    +admin_box
+    min-width: 200px
     padding: 10px 20px
     h4
       cursor: pointer
@@ -70,14 +81,6 @@ a
       left: 15px
     #undo_counter
       margin-bottom: 5px
-  #undone_admin
-    position: fixed
-    cursor: pointer
-    top: 0px
-    right: 0px
-    +discrete_links
-    width: 200px
-    text-align: center
 
 
 #flash

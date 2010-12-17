@@ -1,6 +1,7 @@
 @import core
 
-$c_link = #4481C0
+$c_background: #F5F4DF
+$c_link: #4481C0
 
 =top_box
   float: left
@@ -10,13 +11,19 @@ $c_link = #4481C0
     margin-left: 0px
 
 body
-  padding: 0px 0px 50px 20px
-  background-color: #F5F4DF
+  padding: 10px 0px 50px 20px
+  background-color: $c_background
   +linear-gradient(color-stops(#F5F4DF, lighten(#F5F4DF, 10%) 50%))
   // +linear-gradient(color-stops(red, lighten(red, 10%) 50%))
   // +linear-gradient(color-stops(#F5DAA2, lighten(#F5DAA2, 10%)))
   // +linear-gradient(color-stops(#c00, #fff, #00c))
   font-size: 14px
+
+h1
+  font-size: 20px
+  font-weight: bold
+  text-align: center
+  color: mix($c_background, black, 15%)
 
 #drop_area
   position: absolute
@@ -34,7 +41,8 @@ a
 
 #admin_sidebar
   #admin_buttons
-    position: absolute
+    min-width: 200px
+    position: fixed
     top: 0px
     right: 0px
     +admin_box
@@ -61,6 +69,8 @@ a
     top: 0px
     right: 0px
     +discrete_links
+    width: 200px
+    text-align: center
 
 
 #flash
@@ -203,3 +213,15 @@ section.credits
     position: absolute
     bottom: 5px
     right: 5px
+
+#object_loding
+  margin-bottom: 15px
+  .drop
+    padding: 5px
+    border: 1px solid #999
+  h3
+    font-weight: bold
+    font-size: 16px
+
+#undo_counter
+  margin-top: 10px

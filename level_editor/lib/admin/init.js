@@ -19,8 +19,7 @@ $(function() {
     }
   });
 
-  $('<p id="undo_counter">Undos: <span class="num">None</span></p>').appendTo('#admin_buttons');
-  $('<p><a href="#">Undo</a><a href="#" style="margin-left: 3px; padding-left: 4px; border-left: 1px solid #999">Redo</a></p>').appendTo('#admin_buttons').find("a:contains('Undo')").click(function() {
+  $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
     $().undo();
   }).parent().find("a:contains('Redo')").click(function() {
     $().redo();

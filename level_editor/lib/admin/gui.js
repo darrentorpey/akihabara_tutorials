@@ -21,10 +21,8 @@ function drawGuiActions() {
     buttons_hash[this.ID] = this;
   });
 
-  $('body').append('<div id="admin_sidebar"></div>');
   $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
   $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
-  $('<div id="admin_buttons"><h4>Admin</h4></div>').appendTo('#admin_sidebar').hide();
   $('#undone_admin, #admin_buttons h4').click(function() {
     $('#undone_admin').toggle();
     $('#admin_buttons').toggle();

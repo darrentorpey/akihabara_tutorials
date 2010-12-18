@@ -714,6 +714,49 @@ section.credits section h4 {
   right: 5px;
 }
 
+<<<<<<< HEAD
+#top_tools #object_loding .drop {
+  float: left;
+  background-color: #e1e9f6;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
+  background-image: -moz-linear-gradient(top, #b9cceb 0%, #cddaf1 33%, #e1e9f6 67%);
+  border: 1px solid #cddaf1;
+  -moz-box-shadow: #305da8 0px 1px 0px;
+  -webkit-box-shadow: #305da8 0px 1px 0px;
+  -o-box-shadow: #305da8 0px 1px 0px;
+  box-shadow: #305da8 0px 1px 0px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  padding: 10px;
+  margin-left: 10px;
+  position: relative;
+}
+
+#top_tools #object_loding .view_plugins {
+  float: left;
+  background-color: #e1e9f6;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #b9cceb), color-stop(49.254%, #cddaf1), color-stop(100%, #e1e9f6));
+  background-image: -moz-linear-gradient(top, #b9cceb 0%, #cddaf1 33%, #e1e9f6 67%);
+  border: 1px solid #cddaf1;
+  -moz-box-shadow: #305da8 0px 1px 0px;
+  -webkit-box-shadow: #305da8 0px 1px 0px;
+  -o-box-shadow: #305da8 0px 1px 0px;
+  box-shadow: #305da8 0px 1px 0px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  padding: 10px;
+  margin-left: 10px;
+  position: relative;
+}
+=======
 /* line 226, sass/admin.sass */
 #object_loading {
   margin-bottom: 15px;
@@ -733,3 +776,4 @@ section.credits section h4 {
 #undo_counter {
   margin-top: 10px;
 }
+>>>>>>> eb0cd44ec803a9a9332ad8b1ac5277e63860273d

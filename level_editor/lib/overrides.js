@@ -193,7 +193,10 @@ if (!help.geturlparameter("g"))
     
     var editText = document.createElement("a");
     editText.textContent = "Click here to make more levels like this one, right in your browser!";
-    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?level=' + levelParam;
+	levelParams = {
+		level: levelParam
+	};
+    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(levelParams);
     eintro.childNodes[1].childNodes[1].textContent = "";
     eintro.childNodes[1].childNodes[1].appendChild(editText);
     el = document.getElementById("aki");

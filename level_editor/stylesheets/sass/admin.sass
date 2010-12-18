@@ -1,6 +1,13 @@
 @import core
 
-$c_link = #4481C0
+$c_background: #F5F4DF
+$c_link: #4481C0
+
+=std_link
+  color: $c_link
+  +hover-link
+
+@import general
 
 =top_box
   float: left
@@ -10,13 +17,22 @@ $c_link = #4481C0
     margin-left: 0px
 
 body
-  padding: 0px 0px 50px 20px
-  background-color: #F5F4DF
+  padding: 10px 0px 50px 20px
+  background-color: $c_background
   +linear-gradient(color-stops(#F5F4DF, lighten(#F5F4DF, 10%) 50%))
   // +linear-gradient(color-stops(red, lighten(red, 10%) 50%))
   // +linear-gradient(color-stops(#F5DAA2, lighten(#F5DAA2, 10%)))
   // +linear-gradient(color-stops(#c00, #fff, #00c))
+  color: #222
   font-size: 14px
+
+h1
+  font-size: 20px
+  font-weight: bold
+  text-align: center
+  color: mix($c_background, black, 15%)
+  padding: 5px
+  background-color: darken($c_background, 10%)
 
 #drop_area
   position: absolute
@@ -33,11 +49,21 @@ a
   +hover-link
 
 #admin_sidebar
-  #admin_buttons
-    position: absolute
+  #undone_admin
+    position: fixed
+    cursor: pointer
     top: 0px
     right: 0px
+    +discrete_links
+    width: 90px
+    text-align: center
+  #admin_buttons
     +admin_box
+    +border-top-right-radius(0px)
+    position: fixed
+    top: 0px
+    right: 0px
+    min-width: 200px
     padding: 10px 20px
     h4
       cursor: pointer
@@ -55,12 +81,6 @@ a
       left: 15px
     #undo_counter
       margin-bottom: 5px
-  #undone_admin
-    position: fixed
-    cursor: pointer
-    top: 0px
-    right: 0px
-    +discrete_links
 
 
 #flash
@@ -90,17 +110,6 @@ a
   #level_sharing
     +top_box
     display: inline-block
-    #d_clip_button
-      font-size: 13px
-      text-align: center
-      +link_button
-      padding-bottom: 1px
-    #d_clip_container
-      cursor: pointer
-      div
-        cursor: pointer
-        embed
-          cursor: pointer
   #level_loading
     +top_box
     padding-right: 20px
@@ -151,12 +160,26 @@ section.credits
   h3
     font-size: 18px
     font-weight: bold
+    color: mix($c_primary_5, black, 20%)
+    margin-bottom: 5px
+    display: inline-block
+    border-bottom: 1px solid mix($c_primary_5, #222, 80%)
   ul
     li
       margin: 10px 0px
+      &:first-child
+        margin-top: 5px
+    margin-bottom: 10px
   p
     margin: 5px 0px
     line-height: 22px
+  section
+    padding-left: 5px
+    h4
+      font-weight: bold
+      font-size: 16px
+    margin:
+      top: 5px
 
 #button_testing
   padding: 5px
@@ -195,11 +218,19 @@ section.credits
       line-height: 18px
       &:nth-child(2n)
         background-color: lighten($c_primary_5, 15%)
-      // &:first-child
-        margin-top: 0px
-      // &:last-child
-        margin-bottom: 0px
   #clear_level_storage
     position: absolute
     bottom: 5px
     right: 5px
+
+#object_loading
+  margin-bottom: 15px
+  .drop
+    padding: 5px
+    border: 1px solid #999
+  h3
+    font-weight: bold
+    font-size: 16px
+
+#undo_counter
+  margin-top: 10px

@@ -12,12 +12,6 @@ function gup( name ) {
     return results[1];
 }
 
-if (!gup("g"))
-  {
-  var clip = new ZeroClipboard.Client();
-  var saving_clipboard = new ZeroClipboard.Client();
-  }
-  
 var insp;
 var levelParam = gup("level");
 var afterEditorLoad;
@@ -104,10 +98,7 @@ function getFilenameForSave() {
   return getLevelName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestampForFile() + '.json';
 }
 
-// Keep everything in anonymous function, called on window load.
-if(window.addEventListener) {
-window.addEventListener('load', function () {
-
+$(function() {
   // Load the default brush, #1
   brush = '4';
 
@@ -115,19 +106,11 @@ window.addEventListener('load', function () {
   camy = 0;
   px = -100;
   py = -100;
-  
+
   mouseOverDelay = 0;
   isMouseOut = false;
 
   levelParam = gup("level");
-
-
-    
-  clip.setHandCursor(true);
-  clip.glue('d_clip_button', 'd_clip_container');
-  // saving_clipboard.setHandCursor(true);
-  // saving_clipboard.glue('d_clip_button', 'd_clip_container');
-    
 
   $('#level_saving').downloadify({
     swf:           'resources/flash/downloadify.swf',
@@ -143,12 +126,15 @@ window.addEventListener('load', function () {
     canvas = document.getElementById('imageView');
     for (var i = 0; i < total_brushes; i++) {
       brushes[i] = document.getElementById('brush'+i);
-      brushes[i].addEventListener('mousedown', ev_brush, false);
+
+      $(brushes[i]).click(function() {
+        console.log(this);
+        brush = this.id.substr(this.id.length - 1, 1);
+      });
+
       brushes_img[i] = new Image();
       brushes_img[i].src = brushes[i].src;
-      }
-
-
+    }
 
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
@@ -183,10 +169,6 @@ window.addEventListener('load', function () {
     return s.join('');
   };
 
-function ev_brush (ev) {
-  brush = this.src.substr(this.src.length - 5, 1);
-}
-
 
   // This painting tool works like a drawing pencil which tracks the mouse
   // movements.
@@ -209,7 +191,7 @@ function ev_brush (ev) {
     px = ev._x;
     py = ev._y;
     isMouseOut = false;
-    
+
     if (!tool.started && !isMouseOut) {
 
       if ( !((ev._x > 600 && camx < 20) || (ev._x < 40 && camx > 0) || (ev._y > 440 && camy < 15) || (ev._y < 40 && camy > 0)) )
@@ -283,10 +265,10 @@ function ev_brush (ev) {
           pix[(i/8)+2] = pix[i+2]; // b
           pix[(i/8)+3] = pix[i+3]; // a
           }
-      
 
-      
-      
+
+
+
   }
 
   init();
@@ -298,23 +280,24 @@ function ev_brush (ev) {
   if (afterEditorLoad) {
     afterEditorLoad();
   }
-
-}, false); }
+})
 
 function drawCanvas(cx, cy) {
+  
   for (var y = cy; y < cy+15; y++)
     for (var x = cx; x < cx+20; x++)
-      context.drawImage(brushes_img[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
-
+      context.drawImage(document.querySelectorAll('img')[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+  
+      
   if (minimap) {
      var tc = document.createElement('canvas');
      tc.setAttribute('width',160);
      tc.setAttribute('height',120);
-   
+
     var pix = minimap.data;
     var a = tc.getContext('2d').getImageData(0,0,160,120);
     var apix = a.data;
- 
+
     for (var j = 0; j < pix.length/8; j += 640*2*4)
     for (var i = j; i <  j+160*4; i += 4)
          {
@@ -325,9 +308,9 @@ function drawCanvas(cx, cy) {
          apix[(b)+3] = pix[i+3]; // a
          }
 
-    //tc.getContext('2d').putImageData(a, 0, 0);          
+    //tc.getContext('2d').putImageData(a, 0, 0);
     //minimap = tc.getContext('2d');
-    
+
     context.putImageData(a,480,0,0,0,160,120);
     }
 

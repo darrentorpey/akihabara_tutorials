@@ -2,6 +2,8 @@ var buttons_hash = {};
 var historyManager;
 var thingy;
 
+$.template('button', '<div id="admin_button_${ID}" data-button-id="${ID}"><a href="#" style="">${Name}</a></div>');
+
 function drawGuiActions() {
   var buttons = [
     // {
@@ -19,12 +21,8 @@ function drawGuiActions() {
     buttons_hash[this.ID] = this;
   });
 
-  $.template('button', '<div id="admin_button_${ID}" data-button-id="${ID}"><a href="#" style="">${Name}</a></div>');
-
-  $('body').append('<div id="admin_sidebar"></div>');
   $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
   $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
-  $('<div id="admin_buttons"><h4>Admin</h4></div>').appendTo('#admin_sidebar').hide();
   $('#undone_admin, #admin_buttons h4').click(function() {
     $('#undone_admin').toggle();
     $('#admin_buttons').toggle();
@@ -35,23 +33,18 @@ function drawGuiActions() {
     return buttons_hash[id].func();
   });
 
-  $('#drag_to_load').bind('drop', function(evt) {
-    var files = evt.dataTransfer.files; // FileList object.
-
-    readTextFile(files[0], function(evt, file) {
-      var level_data = jQuery.parseJSON(evt.target.result);
-      // console.log('Loaded level data:'); console.log(level_data);
-      setLevel(level_data);
+  $('#drag_to_load').bind('drop', function(event) {
+    readFirstTextFile(event, function(levelData) {
+      // console.log('Loaded level data:'); console.log(levelData);
+      setLevel(jQuery.parseJSON(levelData));
       reloadMap();
-    })
+    });
 
-    evt.stopPropagation();
-    evt.preventDefault();
-    return false;
+    event.stopPropagation(); event.preventDefault(); return false;
   }).bind('dragenter', function(event) {
-    event.stopPropagation(); event.preventDefault();
+    event.stopPropagation(); event.preventDefault(); return false;
   }).bind('dragover', function(event) {
-    event.stopPropagation(); event.preventDefault();
+    event.stopPropagation(); event.preventDefault(); return false;
   });
 
   $('#open_level_storage').click(function() {
@@ -101,7 +94,6 @@ function receiveShortURL(data) {
   $('#share').val(bitly_link);
   $('#share').attr('readonly', 'readonly').click(function() { this.select() });
   clip.setText(bitly_link);
-  $('#d_clip_button').removeClass('disabled');
 }
 
 function generateShortURL() {

@@ -46,6 +46,7 @@ function initBottom() {
   });
 
   loadPalette();
+  initEditor();
 }
 
 function loadPalette() {

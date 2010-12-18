@@ -161,7 +161,9 @@
 
   head.js('akihabara/gbox.js', 'akihabara/iphopad.js', 'akihabara/trigo.js', 'akihabara/toys.js', 'akihabara/help.js', 'akihabara/tool.js', 'akihabara/gamecycle.js', 'lib/overrides.js', 'game.js', 'lib/levels/map.js');
 
-  head.js('lib/swfobject.js', 'lib/jquery/jquery-1.4.4.js', 'lib/jquery/jquery.tmpl.js', 'lib/jquery/jquery.klass.js', 'lib/jquery/jquery.undoable.js', 'lib/jquery/jquery.ndd.js', 'lib/jquery/jquery.jqupload.js', 'lib/jquery/jquery.ba-bbq.js', 'lib/jstorage.js', 'lib/downloadify.min.js', 'lib/clipboard/ZeroClipboard.js', 'lib/core.js', 'lib/extensions/date_time.js', 'editor.js', 'lib/admin/gui.js', 'lib/history.js', 'lib/admin/init.js', 'lib/jquery/jquery-ui.js', 'lib/jquery/jquery.json-2.2.js', 'lib/h5utils.js', 'lib/admin/pluginLoader.js', 'lib/admin/brushLoader.js', 'lib/jquery/jquery.tools_tooltips.min.js', function() {
+  head.js('lib/extensions/date_time.js');
+
+  head.js('lib/swfobject.js', 'lib/jquery/jquery-1.4.4.js', 'lib/jquery/jquery.tmpl.js', 'lib/jquery/jquery.klass.js', 'lib/jquery/jquery.undoable.js', 'lib/jquery/jquery.ndd.js', 'lib/jquery/jquery.jqupload.js', 'lib/jquery/jquery.ba-bbq.js', 'lib/jstorage.js', 'lib/jquery/jquery-ui.js', 'lib/jquery/jquery.json-2.2.js', 'lib/h5utils.js', 'lib/downloadify.min.js', 'lib/core.js', 'editor.js', 'lib/admin/gui.js', 'lib/history.js', 'lib/admin/init.js', 'lib/admin/pluginLoader.js', 'lib/admin/brushLoader.js', 'lib/jquery/jquery.tools_tooltips.min.js', function() {
     $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
     $(function(){
@@ -169,8 +171,6 @@
     });
 
     initBottom();
-
-    if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 
     gbox._passKeysThrough = 1;
   });

@@ -64,13 +64,10 @@ function drawGuiActions() {
   });
 
   $('#level_storage_pane li').live('click', function() {
-    console.log('clicked!');
-    console.log(this);
     thingy = this;
     var id = this.id;
     id = parseInt(id.replace(/history_row_/, ''))
     var state = historyManager.getLevelState(id);
-    console.log(state);
     loadLevelState(state.level);
   });
 }

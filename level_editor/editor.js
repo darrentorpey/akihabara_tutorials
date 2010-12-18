@@ -1,39 +1,3 @@
-function gup( name ) {
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec( window.location.href );
-  if (null == results)
-    return "";
-  else
-    return results[1];
-}
-
-var UpdateMap = UndoableAction.extend({
-  init: function(value, options) {
-    var self = this;
-    self.value = value;
-
-    this._super(function() {
-      // The "do" method:
-
-      self.oldValue = UpdateMap.priorOldValue;
-      loadLevelState(getLevelCopy(self.value));
-      UpdateMap.priorOldValue = self.value;
-      // reportLevel(self.value, 'new');
-      // reportLevel(level, 'current');
-      // reportLevel(self.oldValue, 'old');
-    }, function() {
-      // The "undo" method:
-
-      loadLevelState(self.oldValue);
-      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
-    });
-
-    self.redo();
-  }
-});
-
 var insp;
 var levelParam = gup("level");
 var afterEditorLoad;
@@ -50,28 +14,22 @@ var brushes_img = new Array(total_brushes);
 
 var level = new Array(30);
 
-  // init the global level data structure
-  for (var i = 0; i < 30; i++) {
-    level[i] = "0000000000000000000000000000000000000000";
-    }
+// init the global level data structure
+for (var i = 0; i < 30; i++) {
+  level[i] = "0000000000000000000000000000000000000000";
+}
 
-  if(levelParam.length == 1200)
-  {
-  for (var c = 0; c < 1200; c += 40)
-    {
-    level[c/40] = levelParam.substr(c,40);
-    }
+if (levelParam.length == 1200) {
+  for (var c = 0; c < 1200; c += 40) {
+    level[c/40] = levelParam.substr(c, 40);
   }
-
-if (!gup("g"))
-{
+}
 
 function setLevel(lvl) {
   level = lvl;
 
   drawCanvas(camx, camy);
 }
-
 
 function loadLevelState(level) {
   setLevel(level);
@@ -145,35 +103,11 @@ function initEditor() {
     afterEditorLoad();
   }
 }
-// Load the default brush, #1
-brush = '4';
-
-camx = 0;
-camy = 0;
-px = -100;
-py = -100;
-
-mouseOverDelay = 0;
-isMouseOut = false;
-
-levelParam = gup("level");
-
-$(function() {
-  $('#level_saving').downloadify({
-    swf:           'resources/flash/downloadify.swf',
-    downloadImage: 'images/save_level_92x128.png',
-    width:         92,
-    height:        32,
-    filename:      getFilenameForSave,
-    data:          getLevelDataForSaveFile
-  });
-})
 
 function replaceOneChar(s, c, n) {
   (s = s.split(''))[n] = c;
   return s.join('');
-};
-
+}
 
 // This painting tool works like a drawing pencil which tracks the mouse
 // movements.
@@ -325,17 +259,71 @@ function getLongURL() {
   return window.location.protocol + "//" + window.location.host + window.location.pathname + '?g=1&' + $.param(params, true)
 }
 
-setInterval ( "incMouseOverDelay()", 100 );
-
-function incMouseOverDelay ( )
-{
-  mouseOverDelay++;
-}
-
-function mouseOut ()
-{
+function mouseOut() {
   isMouseOut = true;
   mouseOverDelay = 0;
 }
 
+function gup( name ) {
+  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var results = regex.exec( window.location.href );
+  if (null == results)
+    return "";
+  else
+    return results[1];
+}
+
+var UpdateMap = UndoableAction.extend({
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+
+    this._super(function() {
+      // The "do" method:
+
+      self.oldValue = UpdateMap.priorOldValue;
+      loadLevelState(getLevelCopy(self.value));
+      UpdateMap.priorOldValue = self.value;
+      // reportLevel(self.value, 'new');
+      // reportLevel(level, 'current');
+      // reportLevel(self.oldValue, 'old');
+    }, function() {
+      // The "undo" method:
+
+      loadLevelState(self.oldValue);
+      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
+    });
+
+    self.redo();
+  }
+});
+
+if (!gup('g')) {
+  // Load the default brush, #1
+  brush = '4';
+
+  camx = 0;
+  camy = 0;
+  px = -100;
+  py = -100;
+
+  mouseOverDelay = 0;
+  isMouseOut = false;
+
+  levelParam = gup("level");
+
+  $(function() {
+    $('#level_saving').downloadify({
+      swf:           'resources/flash/downloadify.swf',
+      downloadImage: 'images/save_level_92x128.png',
+      width:         92,
+      height:        32,
+      filename:      getFilenameForSave,
+      data:          getLevelDataForSaveFile
+    });
+  })
+
+  setInterval (function() { mouseOverDelay++; }, 100);
 }

@@ -22,7 +22,7 @@
 			var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
 			th.touchedfloor=false;
 			th.touchedceil=false;
-	
+
 			if (map.tileIsSolidCeil(th,topleft) || map.tileIsSolidCeil(th,topright)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y,1);
@@ -31,7 +31,7 @@
 			if (map.tileIsSolidFloor(th,bottomleft) || map.tileIsSolidFloor(th,bottomright)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
-				th.touchedfloor=true;
+        th.touchedfloor=true;
 			}
       
 		};
@@ -192,7 +192,10 @@ if (!help.geturlparameter("g"))
     
     var editText = document.createElement("a");
     editText.textContent = "Click here to make more levels like this one, right in your browser!";
-    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?level=' + levelParam;
+	levelParams = {
+		level: levelParam
+	};
+    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(levelParams);
     eintro.childNodes[1].childNodes[1].textContent = "";
     eintro.childNodes[1].childNodes[1].appendChild(editText);
     el = document.getElementById("aki");

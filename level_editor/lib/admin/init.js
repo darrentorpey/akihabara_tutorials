@@ -1,5 +1,3 @@
-var params = $.deparam.querystring();
-
 $(function() {
   $('#imageView').mouseup(function() {
     if ($('#toggle_autoupdate input:checked').length) {

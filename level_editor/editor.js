@@ -1,4 +1,7 @@
 function gup( name ) {
+	if(params[name]){
+		return params[name];
+	}
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp( regexS );
@@ -349,9 +352,10 @@ function redrawMap() {
 function getLongURL() {
   var params = {
     name:  getLevelName(),
-    level: getLevelParams()
+    level: getLevelParams(),
+	g: 1
   };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?g=1&' + $.param(params, true)
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(params);
 }
 
 setInterval ( "incMouseOverDelay()", 100 );

@@ -7,7 +7,8 @@
     ['enemy_sprite',  'resources/enemy_sprite.png'],
     ['block_sprite',  'resources/block_sprite.png'],
     ['background_tilesheet',  'resources/bg1.png'],
-    ['explosion_sprite',  'resources/Frk_Blast1.png']
+    ['explosion_sprite',  'resources/Frk_Blast1.png'],
+    ['lava_sprite',  'resources/lava.png']
   ],
 
   addFont: [
@@ -15,6 +16,15 @@
   ],
 
   addTiles: [
+    {
+      id:      'lava',
+      image:   'lava_sprite',
+      tileh:   32,
+      tilew:   32,
+      tilerow: 8,
+      gapx:    0,
+      gapy:    0
+    },
     {
       id:      'map_pieces',
       image:   'map_spritesheet',

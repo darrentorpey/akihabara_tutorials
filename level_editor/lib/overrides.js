@@ -18,7 +18,7 @@
   toys.platformer.verticalTileCollision = function(th,map,tilemap) {
 			var bottomleft=help.getTileInMap(th.x+4,th.y+th.h,map,0,tilemap);
 			var topleft=help.getTileInMap(th.x+4,th.y,map,0,tilemap);
-      var bottomright=help.getTileInMap(th.x+th.w-4,th.y+th.h,map,0,tilemap);
+            var bottomright=help.getTileInMap(th.x+th.w-4,th.y+th.h,map,0,tilemap);
 			var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
 			th.touchedfloor=false;
 			th.touchedceil=false;
@@ -32,7 +32,7 @@
 			if (map.tileIsSolidFloor(th,bottomleft) || map.tileIsSolidFloor(th,bottomright)) {
 				th.accy=0;
 				th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
-        th.touchedfloor=true;
+                th.touchedfloor=true;
 			}
       
 		};

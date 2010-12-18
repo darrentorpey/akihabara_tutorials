@@ -54,11 +54,11 @@ function main() {
 			if (reset) {
 				toys.resetToy(this,"default-blinker");
 			} else {
-          for (var y = 0; y < 30; y++)
-            for (var x = 0; x < 40; x++)
-              if (level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
-          gbox.blitFade(gbox.getBufferContext(),{alpha:1});
-          return toys.TOY_DONE;
+			  for (var y = 0; y < 30; y++)
+				for (var x = 0; x < 40; x++)
+				  if (level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
+			  gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+			  return toys.TOY_DONE;
 			}		  	
 		};
     
@@ -120,8 +120,9 @@ function main() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
             if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
+            if (level[y][x] == 'a') getModule().add({x:x*32,y:y*32,side:true}, 1);
             }
        
 
@@ -169,7 +170,6 @@ function followCamera(obj, viewdata) {
 }
 
 function addEnemy(data, type) {
-			
   gbox.addObject({
   group:"enemies",
   tileset:"enemy_tiles",

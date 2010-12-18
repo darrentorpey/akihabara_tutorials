@@ -17,7 +17,8 @@ function addMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+	            module = getModule();
+            if (level[y][x] == '9') module.add({x:x*32,y:y*32,side:true}, 0);
             if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
             }
       
@@ -85,7 +86,8 @@ function reloadMap() {
         for (var y = 0; y < 30; y++)
           for (var x = 0; x < 40; x++)
             {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0); 
+	            module = getModule();
+            if (level[y][x] == '9') module.add({x:x*32,y:y*32,side:true}, 0);
             if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
             }
     

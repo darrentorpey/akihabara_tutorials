@@ -34,6 +34,8 @@ $(function() {
   if (params.name) {
     $('#level_name input').val(params.name);
   }
+
+  $('.credits a').attr('target', '_blank');
 })
 
 // This gets run first thing after all non-bottom-scripts static HTML content inside of body has been read

@@ -403,8 +403,10 @@ function addEnemy(data, type) {
           for (var dx = -1; dx <= 1; dx++)
             for (var dy = -1; dy <= 1; dy++)
               {
-              // remove the tile here, unless it's a star tile
-              if (help.getTileInMap(this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,map,null,"map") != 1)
+              // get the tile here             
+              var tile = help.getTileInMap(this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,map,null,"map");
+              // remove it unless it's a star tile or null (outside the map)
+              if (tile != 1 && tile != null)
                 help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,null,"map");
               
               // check and see if there are dynamic objects here

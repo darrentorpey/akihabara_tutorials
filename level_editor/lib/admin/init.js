@@ -44,6 +44,9 @@ function initBottom() {
   });
 
   loadPalette();
+  initEditor();
+
+  if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 }
 
 function loadPalette() {

@@ -16,7 +16,7 @@ function getPlugin() {
 		tileset:"lava",
 		add:function(data) {
 			gbox.addObject({
-				tileID:data.tileID || 8,
+				tileID:data.tileID,
 				group:this.group,
 				tileset:this.tileset,
 				initialize:function() {
@@ -43,10 +43,10 @@ function getPlugin() {
 
 					// Counterc
 					this.counter = (this.counter + 1) % 10;
-
 					if (gbox.objectIsVisible(this) && gbox.getObject("player", "player_id")) {
 						var topleft=help.getTileInMap(this.x+4,this.y-1,map,0,"map");
 						var topright=help.getTileInMap(this.x+this.w-4,this.y-1,map,0,"map");
+						
 						
 						if((topleft && topleft == this.tileID) || (topright && topright == this.tileID)){
 							//This is below an existing tile. Don't show the bubbly animation

@@ -31,7 +31,11 @@ function addMap() {
 }
 
 function loadMap() {
-	return help.asciiArtToMap(level,  [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A'] ]);
+	var mapData = [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A']];
+	for(pluginID in loadedPlugins){
+		mapData.push([pluginID,String.fromCharCode(pluginID)]);
+	}
+	return help.asciiArtToMap(level, mapData);
 }
 
 function reportLevel(lvl, prefix) {
@@ -52,7 +56,7 @@ function reloadMap() {
 			else return false; // Is a wall if is not an empty space
 		}
     });
-	
+
 	reloadGamePieces();
 
 	gbox.getCanvasContext('map_canvas').clearRect(0, 0, 640 * 2, 480 * 2);
@@ -82,9 +86,6 @@ function reloadGamePieces(){
 	gbox.trashGroup('disboxes');
 	gbox.trashGroup('boxes');
 	gbox.trashGroup('enemies');
-
-	console.log("Reloading game pieces");
-
 	var pluginsByGroup = getPluginsByGroup(); //From pluginHelper
 	//Iterate over each group trashing them
 	for(var group in pluginsByGroup){
@@ -100,10 +101,10 @@ function reloadGamePieces(){
 					var data = {
 						x:x*32,
 						y:y*32,
-						side:true
+						side:true,
+						tileID:charCode
 					}
 					//Add the game piece to the level
-					console.log("Adding custom piece");
 					loadedPlugins[charCode].add(data);
 				}
 			}

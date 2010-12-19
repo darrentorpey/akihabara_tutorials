@@ -132,10 +132,7 @@ $(function() {
 		brushes_img[i].src = this.src;
 		i++;
 	});
-	console.log(brushes);
-
 	brushes.live("click",function() {
-		console.log(this);
 		brush = this.id.replace('brush','');
 		if(brush > total_brushes){
 			brush = String.fromCharCode(brush);

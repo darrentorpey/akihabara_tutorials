@@ -11,7 +11,7 @@ function loadResources() {
   // The title (which appears in the browser title bar) is the text we're passing to the function.
 
   help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (params.name ? params.name : 'Akihabara Level Editor & Sharer (ALES)') });
-  
+
   gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 
   // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
@@ -20,6 +20,128 @@ function loadResources() {
   // When everything is ready, the 'loadAll' downloads all the needed resources.
   gbox.loadAll();
 };
+
+//Load all the image resources, this means plugins too!
+function getImageResources(){
+	//Load default resources
+	var imageResources =
+		[
+			['font',             'resources/CasualEncounter.png'],
+			['logo',             'resources/logo.png'],
+			['player_sprite',    'resources/walk.png'],
+			['map_spritesheet',  'resources/map_pieces.png'],
+			['enemy_sprite',  'resources/enemy_sprite.png'],
+			['block_sprite',  'resources/block_sprite.png'],
+			['background_tilesheet',  'resources/bg1.png'],
+			['explosion_sprite',  'resources/Frk_Blast1.png']
+		];
+	for(var plugin in loadedPlugins) {
+		if (loadedPlugins[plugin].sprite) {
+			imageResources.push(loadedPlugins[plugin].sprite);
+		}
+	}
+	return imageResources;
+}
+
+//Load all the tile resources, this means plugins too!
+function getTileResources(){
+	//Load default resources
+	var tileResources = [
+		{
+			id:      'map_pieces',
+			image:   'map_spritesheet',
+			tileh:   32,
+			tilew:   32,
+			tilerow: 9,
+			gapx:    0,
+			gapy:    0
+		},
+		{
+			id:      'player_tiles',  // Set a unique ID for future reference
+			image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
+			tileh:   64,
+			tilew:   32,
+			tilerow: 10,
+			gapx:    0,
+			gapy:    0
+		},
+		{
+			id:      'block_tiles',  // Set a unique ID for future reference
+			image:   'block_sprite', // Use the 'player_sprite' image, as loaded above
+			tileh:   32,
+			tilew:   32,
+			tilerow: 3,
+			gapx:    0,
+			gapy:    0
+		},
+		{
+			id:      'background_tiles',  // Set a unique ID for future reference
+			image:   'background_tilesheet', // Use the 'player_sprite' image, as loaded above
+			tileh:   32,
+			tilew:   32,
+			tilerow: 3,
+			gapx:    0,
+			gapy:    0
+		},
+		{
+			id:      'enemy_tiles',  // Set a unique ID for future reference
+			image:   'enemy_sprite', // Use the 'player_sprite' image, as loaded above
+			tileh:   32,
+			tilew:   32,
+			tilerow: 2,
+			gapx:    0,
+			gapy:    0
+		},
+		{
+			id:      'explosion_tiles',  // Set a unique ID for future reference
+			image:   'explosion_sprite', // Use the 'player_sprite' image, as loaded above
+			tileh:   96,
+			tilew:   96,
+			tilerow: 14,
+			gapx:    0,
+			gapy:    0
+		}
+	];
+	for(var plugin in loadedPlugins){
+		if(loadedPlugins[plugin].tile){
+			tileResources.push(loadedPlugins[plugin].tile);
+		}
+	}
+	return tileResources;
+}
+//Load all the audio resources, this means plugins too!
+function getAudioResources(){
+	//Load default resources
+	var audioResources = [
+		["jump",["resources/jump.mp3","resources/jump.ogg"],{channel:"jump"}],
+		["hit",["resources/hit.mp3","resources/hit.ogg"],{channel:"hit"}],
+		["squish",["resources/sword.mp3","resources/sword.ogg"],{channel:"hit"}],
+		["explode",["resources/megaexplosion.mp3","resources/megaexplosion.ogg"],{channel:"boom"}],
+		["star",["resources/coin.mp3","resources/coin.ogg"],{channel:"hit"}]
+  	];
+	for(var plugin in loadedPlugins){
+		if(loadedPlugins[plugin].audio){
+			audioResources.push(loadedPlugins[plugin].audio);
+		}
+	}
+	return audioResources;
+}
+//Load all the font resources, this means plugins too!
+function getFontResources(){
+	//Load default resources
+	var fontResources = [
+		{ id: 'small', image: 'font', firstletter: ' ', tileh: 20, tilew: 14, tilerow: 255, gapx: 0, gapy: 0 }
+	];
+	for(var plugin in loadedPlugins){
+		if(loadedPlugins[plugin].audio){
+			fontResources.push(loadedPlugins[plugin].audio);
+		}
+	}
+	return fontResources;
+}
+
+
+
 
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
@@ -121,8 +243,7 @@ function main() {
           for (var x = 0; x < 40; x++)
             {
             if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
-            if (level[y][x] == 'a') getModule().add({x:x*32,y:y*32,side:true}, 1);
+            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
             }
        
 
@@ -494,7 +615,7 @@ function addDisBlock(data) {
       blink:false,
       side:data.side,
       onMe:null,
-      type:data.type,
+      type:data.type
     });
     if (this.type == 'TNT')
       {
@@ -616,7 +737,7 @@ function addPlayer() {
         walking:{ speed:4, frames:[0,1,2,3,4,5] },
         falling:{ speed:1, frames:[6] },
         die: { speed:1,frames:[1] },
-        pushing: { speed:6,frames:[8,9] },
+        pushing: { speed:6,frames:[8,9] }
       },
     pushblock:false,
 

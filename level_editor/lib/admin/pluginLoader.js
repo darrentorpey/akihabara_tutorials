@@ -1,10 +1,22 @@
 
 var includedJS = storage('includedJS');
+loadedPlugins = new Object();
+pluginCounter = 0;
 if(includedJS){
 	for(name in includedJS){
-		head.js(includedJS[name]);
+		head.js(includedJS[name],loadPlugin);
 	}
 }
+function loadPlugin(){
+	if(typeof getPlugin == 'function'){
+		var plugin = getPlugin();
+		if(plugin){
+			loadedPlugins[pluginCounter] = plugin;
+			pluginCounter++;
+		}
+	}
+}
+
 jQuery(document).ready(function() {
 	var drop = document.querySelector('#object_loading .drop');
 

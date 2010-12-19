@@ -1,7 +1,7 @@
-function getModule() {
-	module = {
+function getPlugin() {
+	plugin = {
 		name:"Fire Pit",//For display on hover overs and in general...
-		sprite:['lava_sprite',  'http://localhost/akihabara_tutorials/level_editor/resources/lava.png'],
+		sprite:['lava_sprite',  'resources/lava.png'],
 		tile:{
 			  id:      'lava',
 			  image:   'lava_sprite',
@@ -11,10 +11,6 @@ function getModule() {
 			  gapx:    0,
 			  gapy:    0
 			},
-		topSolid: true,
-		bottomSolid: true,
-		leftSolid: true,
-		rightSolid: true,
 		add:function(data) {
 			gbox.addObject({
 				tileID:data.tileID || 8,
@@ -23,12 +19,12 @@ function getModule() {
 				initialize:function() {
 					toys.platformer.initialize(this, {
 						frames:{
-							still:{ speed:4, frames:[0,1,2,3] },
-							fullLava:{ speed:4, frames:[4,5,6,7] },
-							walking:{ speed:4, frames:[4,5,6,7] },
-							jumping:{ speed:4, frames:[0,1,2,3] },
-							falling:{ speed:4, frames:[0,1,2,3] },
-							die: { speed:4,frames:[0,1,2,3] }
+							still:{ speed:4, frames:[0] },
+							fullLava:{ speed:4, frames:[0] },
+							walking:{ speed:4, frames:[0] },
+							jumping:{ speed:4, frames:[0] },
+							falling:{ speed:4, frames:[0] },
+							die: { speed:4,frames:[0] }
 						},
 						x:data.x,
 						y:data.y,
@@ -42,7 +38,7 @@ function getModule() {
 					toys.platformer.verticalTileCollision(this,map,"map");
 					toys.platformer.horizontalTileCollision(this,map,"map");
 
-					// Counter
+					// Counterc
 					this.counter = (this.counter + 1) % 10;
 
 					if (gbox.objectIsVisible(this) && gbox.getObject("player", "player_id")) {
@@ -57,7 +53,7 @@ function getModule() {
 						}
 
 						var pl = gbox.getObject("player", "player_id");
-						if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0) {
+						if (gbox.collides(this, pl)) {
 							pl.resetGame();
 						}
 
@@ -87,5 +83,5 @@ function getModule() {
 			});
 		}
 	};
-	return module;
+	return plugin;
 }

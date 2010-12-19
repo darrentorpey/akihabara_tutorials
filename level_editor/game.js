@@ -1,7 +1,13 @@
 var maingame;
 var map;
 
-window.addEventListener('load', function() { if (start_akihabara) { loadResources() } }, false);
+head.ready(function() {
+  if (!start_akihabara) {
+    console.log('NOT STARTING AKIHABARA');
+  } else {
+    loadResources();
+  }
+});
 
 var bg = new Image();
 bg.src = 'resources/bg0.png'
@@ -11,7 +17,7 @@ function loadResources() {
   // The title (which appears in the browser title bar) is the text we're passing to the function.
 
   help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (params.name ? params.name : 'Akihabara Level Editor & Sharer (ALES)') });
-  
+
   gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 
   // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'

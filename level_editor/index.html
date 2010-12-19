@@ -157,24 +157,52 @@
   </aside>
 <script>
   var start_akihabara = true;
-  head.js('http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6');
+  head.js('lib/swfobject.js',
+    'lib/jquery/jquery-1.4.4.js',
+    'lib/jquery/jquery.tmpl.js',
+    'lib/jquery/jquery.klass.js',
+    'lib/jquery/jquery.undoable.js',
+    'lib/jquery/jquery.ndd.js',
+    'lib/jquery/jquery.jqupload.js',
+    'lib/jquery/jquery.ba-bbq.js',
+    'lib/LZMA_encoder.js',
+    'lib/jquery/jquery-base64.js',
+    'lib/admin/urlInit.js',
+    'lib/jstorage.js',
+    'lib/downloadify.min.js',
+    'lib/core.js',
+    'lib/extensions/date_time.js',
+    'editor.js',
+    'lib/admin/gui.js',
+    'lib/history.js',
+    'lib/admin/init.js',
+    'lib/jquery/jquery-ui.js',
+    'lib/jquery/jquery.json-2.2.js',
+    'lib/h5utils.js',
+    'lib/admin/pluginLoader.js',
+    'lib/admin/brushLoader.js',
+    'http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6',
+    'lib/jquery/jquery.tools_tooltips.min.js',
+    'akihabara/gbox.js',
+    'akihabara/iphopad.js',
+    'akihabara/trigo.js',
+    'akihabara/toys.js',
+    'akihabara/help.js',
+    'akihabara/tool.js',
+    'akihabara/gamecycle.js',
+    'lib/overrides.js',
+    'game.js',
+    'lib/levels/map.js',
+    function() {
+      $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
-  head.js('akihabara/gbox.js', 'akihabara/iphopad.js', 'akihabara/trigo.js', 'akihabara/toys.js', 'akihabara/help.js', 'akihabara/tool.js', 'akihabara/gamecycle.js', 'lib/overrides.js', 'game.js', 'lib/levels/map.js');
+      initBottom();
 
-  head.js('lib/extensions/date_time.js');
+      gbox._passKeysThrough = 1;
 
-  head.js('lib/LZMA_encoder.js');
-
-  head.js('lib/swfobject.js', 'lib/jquery/jquery-1.4.4.js', 'lib/jquery/jquery.tmpl.js', 'lib/jquery/jquery.klass.js', 'lib/jquery/jquery.undoable.js', 'lib/jquery/jquery.ndd.js', 'lib/jquery/jquery.jqupload.js', 'lib/jquery/jquery.ba-bbq.js', 'lib/jstorage.js', 'lib/jquery/jquery-ui.js', 'lib/jquery/jquery.json-2.2.js', 'lib/jquery/jquery-base64.js', 'lib/h5utils.js', 'lib/downloadify.min.js', 'lib/core.js', 'lib/admin/gui.js', 'lib/history.js', 'lib/admin/urlInit.js', 'lib/admin/init.js', 'editor.js', 'lib/admin/pluginLoader.js', 'lib/admin/brushLoader.js', 'lib/jquery/jquery.tools_tooltips.min.js', function() {
-    $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
-
-    $(function(){
-      $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+      $(function(){
+        $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+      });
     });
-
-    initBottom();
-
-    gbox._passKeysThrough = 1;
-  });
 </script>
 </body></html>

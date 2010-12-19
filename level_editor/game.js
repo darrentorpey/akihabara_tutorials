@@ -205,30 +205,7 @@ function main() {
     
   };
   
-  // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
-  map = {
-    tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-
-    // This loads an ASCII-definition of all the 'pieces' of the map as an array of integers specifying a type for each map tile
-    // Each 'type' corresponds to a sprite in our tileset. For example, if a map tile has type 0, then it uses the first sprite in the
-    //  map's tile set ('map_pieces', as defined above) and if a map tile has type 1, it uses the second sprite in the tile set, etc.
-    // Also note that null is an allowed type for a map tile, and uses no sprite from the tile set
-    map: loadMap(),
-
-    // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
-    tileIsSolidCeil: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t!= 7 && t != 2 && t != 1) return true;
-        else return false; // Is a wall if is not an empty space
-      },
-    tileIsSolidFloor: function(obj, t) {
-      if (t != null && t != 8 && t != 5 && t!= 7 && t != 2 && t != 1) return true;
-        else return false; // Is a wall if is not an empty space
-      }
-  }
- 
-  // This function calculates the overall height and width of the map and puts them into the 'x' and 'y' fields of the object
-  map = help.finalizeTilemap(map);
-  
+  map = generateMapObj();
       gbox.trashGroup('boxes');
       gbox.trashGroup('disboxs');
         for (var y = 0; y < 30; y++)
@@ -366,9 +343,9 @@ function addEnemy(data, type) {
       else // Else...
         this.accx=0; // Stay still (i.e. jump only vertically)
       if (this.type == 1) toys.platformer.auto.dontFall(this,map,"map"); // prevent from falling from current platform
+      toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.verticalTileCollision(this,map,"map"); // vertical tile collision (i.e. floor)
       toys.platformer.horizontalTileCollision(this,map,"map"); // horizontal tile collision (i.e. walls)
-      toys.platformer.handleAccellerations(this); // gravity/attrito
       toys.platformer.setFrame(this); // set the right animation frame
       var pl=gbox.getObject("player","player_id");
       
@@ -839,11 +816,11 @@ function addPlayer() {
 					toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
           toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
           toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
-          
+
           if (this.onBox) {
-          this.touchedfloor = true;
-          this.accy = 0;
-          this.y=this.bc+1;
+			  this.touchedfloor = true;
+			  this.accy = 0;
+			  this.y=this.bc+1;
           }
 					
           

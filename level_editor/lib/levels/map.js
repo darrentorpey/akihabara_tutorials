@@ -44,18 +44,7 @@ function reportLevel(lvl, prefix) {
 }
 
 function reloadMap() {
-	map = help.finalizeTilemap({
-		tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-		map: loadMap(),
-		tileIsSolidCeil: function(obj, t) {
-			if (t != null && t != 7 && t != 5 && t != 8 && t != 2 && t != 1) return true;
-			else return false; // Is a wall if is not an empty space
-		},
-		tileIsSolidFloor: function(obj, t) {
-			if (t != null && t != 7 && t != 5 && t != 8 && t != 2 && t != 1) return true;
-			else return false; // Is a wall if is not an empty space
-		}
-    });
+	map = generateMapObj();
 
 	reloadGamePieces();
 
@@ -116,4 +105,53 @@ function reloadGamePieces(){
 			if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
 		}
     }
+}
+
+function generateMapObj(){
+	  // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
+	var map = {
+		tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
+
+		// This loads an ASCII-definition of all the 'pieces' of the map as an array of integers specifying a type for each map tile
+		// Each 'type' corresponds to a sprite in our tileset. For example, if a map tile has type 0, then it uses the first sprite in the
+		//  map's tile set ('map_pieces', as defined above) and if a map tile has type 1, it uses the second sprite in the tile set, etc.
+		// Also note that null is an allowed type for a map tile, and uses no sprite from the tile set
+		map: loadMap(),
+
+		// This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
+		tileIsSolidCeil: function(obj, t) {
+			if (t<10) {
+				if (t != null && t != 8 && t != 5 && t != 7 && t != 2 && t != 1) {
+					return true;
+				} else {
+					return false;
+				}
+			}else{
+				if(loadedPlugins[t] && loadedPlugins[t].solidCeil){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		},
+		tileIsSolidFloor: function(obj, t) {
+			if (t<10) {
+				if (t != null && t != 8 && t != 5 && t != 7 && t != 2 && t != 1) {
+					return true;
+				} else {
+					return false;
+				}
+			}else{
+				if(loadedPlugins[t] && loadedPlugins[t].solidFloor){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+	}
+
+  // This function calculates the overall height and width of the map and puts them into the 'x' and 'y' fields of the object
+  map = help.finalizeTilemap(map);
+	return map;
 }

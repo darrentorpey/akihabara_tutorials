@@ -4,25 +4,7 @@ function addMap() {
     id:    'background_id', // This is the object ID
     group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
     initialize: function() {
-      gbox.trashGroup('disboxes');
-      gbox.trashGroup('boxes');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
-            if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
-            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
-            }
-      gbox.trashGroup('enemies');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
-            }
-      
-
-      
+      reloadGamePieces();
     },
  
     first: function() {
@@ -71,24 +53,8 @@ function reloadMap() {
         else return false; // Is a wall if is not an empty space
       }
     })
+	reloadGamePieces();
 
-      gbox.trashGroup('disboxes');
-      gbox.trashGroup('boxes');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true}); 
-            if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true}); 
-            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'}); 
-            }
-      gbox.trashGroup('enemies');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1); 
-            }
-    
     gbox.getCanvasContext('map_canvas').clearRect(0,0,640*2,480*2);  
     //write the background image
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
@@ -105,4 +71,42 @@ gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0,
 function getLevelCopy(lvl) {
   if (!lvl) { lvl = level }
   return $.extend(true, [], lvl);
+}
+
+
+function reloadGamePieces(){
+	//TODO: These should really be configurable.
+	var gameWidth = 40;
+	var gameHeight = 30;
+	//Trash default groups
+	gbox.trashGroup('disboxes');
+	gbox.trashGroup('boxes');
+	gbox.trashGroup('enemies');
+
+	var pluginsByGroup = getPluginsByGroup(); //From pluginHelper
+	//Iterate over each group trashing them
+	for(var group in pluginsByGroup){
+        gbox.trashGroup(group);
+	}
+	//Iterate over the gameboard
+	for (var y = 0; y < gameHeight; y++){
+		for (var x = 0; x < gameWidth; x++){
+			//If there is anything defined in the level at point y,x find out what it is and load it
+			if(level[y][x] && loadedPlugins[level[y][x]]){
+				var data = {
+					x:x,
+					y:y,
+					side:true
+				}
+				//Add the game piece to the level
+				loadedPlugins[level[y][x]].add(data);
+			}
+			//Load Default objects
+			if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true});
+			if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true});
+			if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'});
+			if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+			if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
+		}
+    }
 }

@@ -1,7 +1,7 @@
 
 var includedJS = storage('includedJS');
 loadedPlugins = new Object();
-pluginCounter = 0;
+pluginCounter = 13; //Arbitrary number above 10 (the number of default objects)
 if(includedJS){
 	for(name in includedJS){
 		head.js(includedJS[name],loadPlugin);
@@ -127,4 +127,21 @@ function storage(name,passedObject){
 		//get
 		return jQuery.parseJSON(sessionStorage.getItem(name)) || new Object();
 	}
+}
+
+/*
+* Returns an object that has groups sorted by name,
+* Object['groupName'] = Array of plugin objects
+* */
+function getPluginsByGroup(){
+	var pluginsByGroup = new Object();
+	for(var plugin in loadedPlugins) {
+		if (loadedPlugins[plugin].group) {
+			if(!pluginsByGroup[loadedPlugins[plugin].group]){
+				pluginsByGroup[loadedPlugins[plugin].group] = new Array();
+			}
+			pluginsByGroup[loadedPlugins[plugin].group].push(loadedPlugins[plugin]);
+		}
+	}
+	return pluginsByGroup;
 }

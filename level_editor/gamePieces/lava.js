@@ -11,11 +11,13 @@ function getPlugin() {
 			  gapx:    0,
 			  gapy:    0
 			},
+		group:"enemies",
+		tileset:"lava",
 		add:function(data) {
 			gbox.addObject({
 				tileID:data.tileID || 8,
-				group:"enemies",
-				tileset:"lava",
+				group:this.group,
+				tileset:this.tileset,
 				initialize:function() {
 					toys.platformer.initialize(this, {
 						frames:{

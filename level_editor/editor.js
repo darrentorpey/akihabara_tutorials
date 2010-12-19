@@ -124,17 +124,23 @@ $(function() {
   function init () {
     // Find the elements
     canvas = document.getElementById('imageView');
-    for (var i = 0; i < total_brushes; i++) {
-      brushes[i] = document.getElementById('brush'+i);
 
-      $(brushes[i]).click(function() {
-        console.log(this);
-        brush = this.id.substr(this.id.length - 1, 1);
-      });
+	brushes = jQuery(".brush");
+	var i = 0;
+	brushes.each(function(){
+		brushes_img[i] = new Image();
+		brushes_img[i].src = this.src;
+		i++;
+	});
+	console.log(brushes);
 
-      brushes_img[i] = new Image();
-      brushes_img[i].src = brushes[i].src;
-    }
+	brushes.live("click",function() {
+		console.log(this);
+		brush = this.id.replace('brush','');
+		if(brush > total_brushes){
+			brush = String.fromCharCode(brush);
+		}
+	});
 
     if (!canvas) {
       alert('Error: I cannot find the canvas element!');
@@ -283,12 +289,24 @@ $(function() {
 })
 
 function drawCanvas(cx, cy) {
-  
-  for (var y = cy; y < cy+15; y++)
-    for (var x = cx; x < cx+20; x++)
-      context.drawImage(document.querySelectorAll('img')[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
-  
-      
+
+	for (var y = cy; y < cy+15; y++){
+		for (var x = cx; x < cx+20; x++){
+			var brush = jQuery("#brush"+level[y][x]);
+			if(brush.length){
+				context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
+			}else{
+				//We didnt find the brush the normal way, check out the char code then...
+				var id = level[y][x].charCodeAt(0);
+				var brush = jQuery("#brush"+id);
+				if(brush.length){
+					context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
+				}else{
+					console.log("Could not find brush for: "+level[y][x]);
+				}
+			}
+		}
+	}
   if (minimap) {
      var tc = document.createElement('canvas');
      tc.setAttribute('width',160);

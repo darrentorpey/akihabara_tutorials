@@ -1,7 +1,7 @@
 
 var includedJS = storage('includedJS');
 loadedPlugins = new Object();
-pluginCounter = 13; //Arbitrary number above 10 (the number of default objects)
+pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
 if(includedJS){
 	for(name in includedJS){
 		head.js(includedJS[name],loadPlugin);

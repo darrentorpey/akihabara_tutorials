@@ -2,6 +2,7 @@ function getPlugin() {
 	plugin = {
 		name:"Fire Pit",//For display on hover overs and in general...
 		sprite:['lava_sprite',  'resources/lava.png'],
+		paletteImage:"resources/lavaPalette.png",
 		tile:{
 			  id:      'lava',
 			  image:   'lava_sprite',

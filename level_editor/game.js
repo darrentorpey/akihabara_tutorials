@@ -1,6 +1,9 @@
 var maingame;
 var map;
 
+function timestamp() {
+  return new Date().getTime();
+}
 window.addEventListener('load', function() { if (start_akihabara) { loadResources() } }, false);
 
 var bg = new Image();
@@ -10,7 +13,7 @@ function loadResources() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
 
-  help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (params.name ? params.name : 'Akihabara Level Editor & Sharer (ALES)') });
+  help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (((typeof params != 'undefined') && params.name) ? params.name : 'Akihabara Level Editor & Sharer (ALES)') });
   
   gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 

@@ -88,8 +88,7 @@ function receiveShortURL(data) {
     break;
   }
 
-  $('#share').val(bitly_link);
-  $('#share').attr('readonly', 'readonly').click(function() { this.select() });
+  $('#share').val(bitly_link).attr('readonly', 'readonly').click(function() { this.select() }).select();
   clip.setText(bitly_link);
 }
 

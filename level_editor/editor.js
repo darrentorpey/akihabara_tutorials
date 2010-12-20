@@ -1,5 +1,5 @@
 var insp;
-var levelParam = gup("level");
+var levelParam = getURLParam('level');
 var afterEditorLoad;
 var canvasContext;
 var minimap;
@@ -255,32 +255,17 @@ function redrawMap() {
 }
 
 function getLongURL() {
-  var params = {
+  var url_params = {
     name:  getLevelName(),
     level: getLevelParams(),
-	g: 1
+	  g:     1
   };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(params);
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(url_params);
 }
 
 function mouseOut() {
   isMouseOut = true;
   mouseOverDelay = 0;
-}
-
-function gup( name ) {
-  console.log(params.g);
-	if(params[name]){
-		return params[name];
-	}
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec( window.location.href );
-  if (null == results)
-    return "";
-  else
-    return results[1];
 }
 
 var UpdateMap = UndoableAction.extend({
@@ -308,7 +293,7 @@ var UpdateMap = UndoableAction.extend({
   }
 });
 
-if (!gup('g')) {
+if (!getURLParam('g')) {
   // If we want the editor
 
   // Load the default brush, #4

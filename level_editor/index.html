@@ -65,7 +65,9 @@
     </div>
   </section>
 
-  <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
+  <div id="event_callout">
+    <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
+  </div>
 
   <div id="container">
     <canvas id="imageView" width="640" height="480"></canvas>
@@ -167,7 +169,7 @@
     'lib/jquery/jquery.ba-bbq.js',
     'lib/LZMA_encoder.js',
     'lib/jquery/jquery-base64.js',
-    'lib/admin/urlInit.js',
+    'lib/init.js',
     'lib/jstorage.js',
     'lib/downloadify.min.js',
     'lib/core.js',
@@ -175,7 +177,6 @@
     'editor.js',
     'lib/admin/gui.js',
     'lib/history.js',
-    'lib/admin/init.js',
     'lib/jquery/jquery-ui.js',
     'lib/jquery/jquery.json-2.2.js',
     'lib/h5utils.js',
@@ -202,6 +203,30 @@
 
       $(function(){
         $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+
+        $('#imageView').mouseup(function() {
+          if ($('#toggle_autoupdate input:checked').length) {
+            redrawMap();
+          }
+        });
+
+        $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+          $().undo();
+        }).parent().find("a:contains('Redo')").click(function() {
+          $().redo();
+        });
+
+        $('#generate_url').click(function() {
+          generateShortURL();
+
+          return false;
+        });
+
+        if (name = getURLParam('name')) {
+          $('#level_name input').val(name);
+        }
+
+        $('.credits a').attr('target', '_blank');
       });
     });
 </script>

@@ -422,9 +422,6 @@ var help={
   * player.lives; // => 3
   */	
 	geturlparameter:function( name ) {
-    // if(params[name]){
-    //  return params[name];
-    // }
 	  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
 	  var regexS = "[\\?&]"+name+"=([^&#]*)";
 	  var regex = new RegExp( regexS );

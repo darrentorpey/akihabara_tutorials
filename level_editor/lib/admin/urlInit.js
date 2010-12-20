@@ -1,8 +1,7 @@
 var params = $.deparam.querystring();
-console.log(params);
-if(params.encoded){
+
+if (params.encoded) {
 	params = decompressToObject(params.encoded);
-	console.log(params);
 }
 
 function compressObject(obj){

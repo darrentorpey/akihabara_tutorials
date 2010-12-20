@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+$(function() {
 	var bdrop = document.querySelector('.brush');
 
 	// Tells the browser that we *can* drop on this target
@@ -23,9 +23,7 @@ jQuery(document).ready(function() {
       // Closure to capture the file information.
       reader.onload = (function(theFile) {
         return function(e) {
-          // Render thumbnail.
-          var span = document.createElement('span');
-          document.getElementsByTagName('img')[0].src = e.target.result;
+          $('#palette img').first().attr('src', e.target.result);
         };
       })(f);
 
@@ -40,6 +38,7 @@ jQuery(document).ready(function() {
 		}
 		return false;
 	}
+
 	function entities(s) {
 	  var e = {
 		'"' : '"',
@@ -51,5 +50,4 @@ jQuery(document).ready(function() {
 		return e[m];
 	  });
 	}
-
 });

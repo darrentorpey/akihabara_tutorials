@@ -62,7 +62,7 @@
 		gbox._keyboard[key]=1;
 	};
   
-if (!help.geturlparameter("g"))
+if (!gup('g'))
 {
   // overriding gbox.initScreen to reposition akihabara frame
   gbox.initScreen = function(w,h) {
@@ -188,9 +188,6 @@ if (!help.geturlparameter("g"))
     eintro = document.getElementById("intro");
     eintro.parentNode.removeChild(eintro);
     
-    //Paint a level in the left box, watch it show up in the game in the right box. Best run on a widescreen monitor! For extra awesome, try putting your browser in full screen mode.
-//Game controls: left/right arrow keys to move, Z to jump, C to respawn near the top-left of the screen.
-    
     var editText = document.createElement("a");
     editText.textContent = "Click here to make more levels like this one, right in your browser!";
 	levelParams = {
@@ -255,7 +252,7 @@ if (!help.geturlparameter("g"))
 	};
   }
 
-if (!help.geturlparameter("g"))  
+if (!gup('g'))  
   // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
  	help.akihabaraInit = function(data) {
 		if ((typeof data).toLowerCase() == "string") data={title:data};

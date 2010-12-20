@@ -6,22 +6,25 @@ var minimap;
 var context;
 var tool, mouseOverDelay, isMouseOut;
 
-var canvas, tool, px, py, tcolor, brush, camx, camy;
-var tool_default = 'rock';
+var canvas, tool, px, py, tcolor, brush;
+var camx = 0;
+var camy = 0;
 var total_brushes = 10;
 var brushes = new Array(total_brushes);
 var brushes_img = new Array(total_brushes);
 
-var level = new Array(30);
+NUM_LEVEL_ROWS = 30;
+NUM_LEVEL_COLS = 40;
+var level = new Array(NUM_LEVEL_ROWS);
 
 // init the global level data structure
-for (var i = 0; i < 30; i++) {
+for (var i = 0; i < NUM_LEVEL_ROWS; i++) {
   level[i] = "0000000000000000000000000000000000000000";
 }
 
-if (levelParam.length == 1200) {
-  for (var c = 0; c < 1200; c += 40) {
-    level[c/40] = levelParam.substr(c, 40);
+if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
+  for (var c = 0; c < (NUM_LEVEL_COLS * NUM_LEVEL_ROWS); c += NUM_LEVEL_COLS) {
+    level[c/NUM_LEVEL_COLS] = levelParam.substr(c, NUM_LEVEL_COLS);
   }
 }
 
@@ -266,6 +269,7 @@ function mouseOut() {
 }
 
 function gup( name ) {
+  console.log(params.g);
 	if(params[name]){
 		return params[name];
 	}
@@ -305,7 +309,9 @@ var UpdateMap = UndoableAction.extend({
 });
 
 if (!gup('g')) {
-  // Load the default brush, #1
+  // If we want the editor
+
+  // Load the default brush, #4
   brush = '4';
 
   camx = 0;
@@ -315,8 +321,6 @@ if (!gup('g')) {
 
   mouseOverDelay = 0;
   isMouseOut = false;
-
-  levelParam = gup("level");
 
   $(function() {
     $('#level_saving').downloadify({

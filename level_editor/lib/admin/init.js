@@ -5,18 +5,6 @@ $(function() {
     }
   });
 
-  $('<label id="toggle_autoupdate"><input type="checkbox" checked = "checked"/>auto-update</label>').appendTo('#admin_buttons').find('input').change(function() {
-    if ($(this).attr('checked')) {
-      redrawMap();
-    }
-  });
-
-  $('<label id="toggle_autoupdate"><input type="checkbox" checked = "checked"/>auto-update</label>').appendTo('#admin_buttons').find('input').change(function() {
-    if ($(this).attr('checked')) {
-      redrawMap();
-    }
-  });
-
   $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
     $().undo();
   }).parent().find("a:contains('Redo')").click(function() {

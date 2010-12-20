@@ -1,8 +1,13 @@
 var maingame;
 var map;
 
+KEY_W = 87;
+KEY_A = 65;
+KEY_S = 83;
+KEY_D = 68;
+
 head.ready(function() {
-  if (!start_akihabara) {
+  if (!startAkihabara) {
     console.log('NOT STARTING AKIHABARA');
   } else {
     loadResources();
@@ -608,19 +613,21 @@ function addPlayer() {
       }
 
       // TODO: Move this into its own lightweight object
-      if (gbox._keyboard[68] == 1 && camx < 20) { // 'd'
-        camx += 1;
-        drawCanvas(camx, camy);
-      } else if (gbox._keyboard[65] == 1 && camx > 0) { // 'a'
-        camx -= 1;
-        drawCanvas(camx, camy);
-      }
-      if (gbox._keyboard[83] == 1 && camy < 15) { // 's'
-        camy += 1;
-        drawCanvas(camx,camy);
-      } else if (gbox._keyboard[87] == 1 && camy > 0) { // 'w'
-        camy -= 1;
-        drawCanvas(camx,camy);
+      if (editor) {
+        if (gbox._keyboard[KEY_D] == 1 && camx < 20) { // 'd'
+          camx += 1;
+          editor.drawCanvas(camx, camy);
+        } else if (gbox._keyboard[KEY_A] == 1 && camx > 0) { // 'a'
+          camx -= 1;
+          editor.drawCanvas(camx, camy);
+        }
+        if (gbox._keyboard[KEY_S] == 1 && camy < 15) { // 's'
+          camy += 1;
+          editor.drawCanvas(camx,camy);
+        } else if (gbox._keyboard[KEY_W] == 1 && camy > 0) { // 'w'
+          camy -= 1;
+          editor.drawCanvas(camx,camy);
+        }
       }
 
       var gp = 'boxes';

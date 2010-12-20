@@ -1,3 +1,8 @@
+var urlParams;
+var levelParam;
+var gameOnlyMode;
+var startAkihabara;
+
 function compressObject(obj) {
   var jsonString = jQuery.toJSON(obj);
   var compressed = LZMA.compress(jsonString);
@@ -16,28 +21,14 @@ function getURLParam(name) {
   return urlParams[name] || '';
 }
 
-// This gets run first thing after all non-bottom-scripts static HTML content inside of body has been read
-function initBottom() {
-  $('.fulltext').hide();
-  $('.shorttext').click(function() {
-    $(this).hide().siblings('.fulltext').show();
-  });
-
-  var game_only_mode = getURLParam('g');
-
-  if (game_only_mode) {
-    $('#top_tools').hide();
-    $('#credits').hide();
-    var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject({ level: levelParam });
-    $('#intro p').first().html('<a href="' + url + '">Click here to make more levels like this one, right in your browser!</a>')
-    $('#imageView').hide();
-    $('#admin_sidebar').hide();
-  }
-
-  loadPalette();
-  initEditor();
-
-  if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+function initGameMode() {
+  $('#top_tools').hide();
+  $('#credits').hide();
+  var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject({ level: levelParam });
+  // var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=';
+  $('#intro p').first().html('<a href="' + url + '">Click here to make more levels like this one, right in your browser!</a>')
+  $('#imageView').hide();
+  $('#admin_sidebar').hide();
 }
 
 function loadPalette() {
@@ -51,8 +42,37 @@ function loadPalette() {
   }
 }
 
-var urlParams = $.deparam.querystring();
+function collapseLongText() {
+  $('.fulltext').hide();
+  $('.shorttext').click(function() {
+    $(this).hide().siblings('.fulltext').show();
+  });
+}
 
-if (urlParams.encoded) {
-	urlParams = decompressToObject(urlParams.encoded);
+function initEditorControls() {
+  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+
+  $('#imageView').mouseup(function() {
+    if ($('#toggle_autoupdate input:checked').length) {
+      redrawMap();
+    }
+  });
+
+  $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+    $().undo();
+  }).parent().find("a:contains('Redo')").click(function() {
+    $().redo();
+  });
+
+  $('#generate_url').click(function() {
+    generateShortURL();
+
+    return false;
+  });
+
+  if (name = getURLParam('name')) {
+    $('#level_name input').val(name);
+  }
+
+  $('.credits a').attr('target', '_blank');
 }

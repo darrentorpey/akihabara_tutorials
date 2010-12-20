@@ -1,10 +1,10 @@
 var insp;
-var levelParam = getURLParam('level');
 var afterEditorLoad;
 var canvasContext;
 var minimap;
 var context;
 var tool, mouseOverDelay, isMouseOut;
+var editor;
 
 var canvas, tool, px, py, tcolor, brush;
 var camx = 0;
@@ -31,7 +31,7 @@ if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
 function setLevel(lvl) {
   level = lvl;
 
-  drawCanvas(camx, camy);
+  editor.drawCanvas(camx, camy);
 }
 
 function loadLevelState(level) {
@@ -57,6 +57,8 @@ function getFilenameForSave() {
 }
 
 function initEditor() {
+  editor = new Editor();
+
   // Find the elements
   canvas = document.getElementById('imageView');
   for (var i = 0; i < total_brushes; i++) {
@@ -96,7 +98,7 @@ function initEditor() {
   document.body.addEventListener('mouseup',   ev_canvas, false);
   document.body.addEventListener('mouseout',   mouseOut, false);
 
-  drawCanvas(camx,camy);
+  editor.drawCanvas(camx,camy);
 
   if (!UpdateMap.priorOldValue) {
     UpdateMap.priorOldValue = getLevelCopy();
@@ -122,7 +124,7 @@ function tool_pencil () {
   this.mousedown = function (ev) {
       level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
       tool.started = true;
-      drawCanvas(camx,camy);
+      editor.drawCanvas(camx,camy);
   };
 
   // This function is called every time you move the mouse. Obviously, it only
@@ -157,7 +159,7 @@ function tool_pencil () {
     if (tool.started) {
       level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
       }
-     drawCanvas(camx,camy);
+     editor.drawCanvas(camx,camy);
      context.lineWidth = 2;
   context.strokeStyle = '#800';
   context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
@@ -206,6 +208,46 @@ function genMiniMap () {
       pix[(i/8)+3] = pix[i+3]; // a
     }
 }
+
+var Editor = Klass.extend({
+  init: function(dom_base, options) {
+
+  },
+
+  drawCanvas: function(cx, cy) {
+    for (var y = cy; y < cy+15; y++)
+      for (var x = cx; x < cx+20; x++)
+        context.drawImage(document.querySelectorAll('img')[parseInt(level[y][x])], (x-camx)*32, (y-camy)*32);
+
+    if (minimap) {
+       var tc = document.createElement('canvas');
+       tc.setAttribute('width',160);
+       tc.setAttribute('height',120);
+
+      var pix = minimap.data;
+      var a = tc.getContext('2d').getImageData(0,0,160,120);
+      var apix = a.data;
+
+      for (var j = 0; j < pix.length/8; j += 640*2*4)
+      for (var i = j; i <  j+160*4; i += 4) {
+        var b = (i-j)+(j/(640*2*4)*160*4);
+        apix[(b)  ] = pix[i  ]; // r
+        apix[(b)+1] = pix[i+1]; // g
+        apix[(b)+2] = pix[i+2]; // b
+        apix[(b)+3] = pix[i+3]; // a
+      }
+
+      //tc.getContext('2d').putImageData(a, 0, 0);
+      //minimap = tc.getContext('2d');
+
+      context.putImageData(a,480,0,0,0,160,120);
+    }
+
+    context.strokeStyle = '#000';
+    context.strokeRect(480,0,160,120);
+    context.strokeRect(480+((camx*32)/8),0+((camy*32)/8),640/8,480/8);
+  }
+});
 
 function drawCanvas(cx, cy) {
   for (var y = cy; y < cy+15; y++)

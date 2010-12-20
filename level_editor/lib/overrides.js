@@ -1,5 +1,4 @@
 // AKIHABARA ENGINE OVERRIDES
-var game_only_mode = getURLParam('g');
 
 // Overriding help.isSquished with a collision fix
 help.isSquished = function(th,by) {
@@ -61,7 +60,7 @@ gbox._keydown = function(e) {
   gbox._keyboard[key] = 1;
 };
 
-if (!game_only_mode) {
+if (!gameOnlyMode) {
   // overriding gbox.initScreen to reposition akihabara frame
   gbox.initScreen = function(w, h) {
     var container=document.createElement("a");
@@ -227,7 +226,7 @@ if (!game_only_mode) {
   };
 }
 
-if (!game_only_mode)
+if (!gameOnlyMode)
   // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
    help.akihabaraInit = function(data) {
     if ((typeof data).toLowerCase() == "string") data={title:data};

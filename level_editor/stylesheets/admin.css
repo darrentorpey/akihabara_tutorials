@@ -124,7 +124,7 @@ a:hover {
   width: 90px;
   text-align: center;
 }
-/* line 91, sass/_core.sass */
+/* line 92, sass/_core.sass */
 #admin_sidebar #undone_admin a {
   color: #2f5a86;
 }
@@ -157,7 +157,7 @@ a:hover {
   min-width: 200px;
   padding: 10px 20px;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #admin_sidebar #admin_buttons a {
   color: #2f5a86;
 }
@@ -209,21 +209,21 @@ a:hover {
   background-color: #f6f3b4;
   color: #284e76;
   padding: 5px 10px;
-  background-color: #f0ec87;
-  -moz-box-shadow: #f0ec87 0px 0px 5px;
-  -webkit-box-shadow: #f0ec87 0px 0px 5px;
-  -o-box-shadow: #f0ec87 0px 0px 5px;
-  box-shadow: #f0ec87 0px 0px 5px;
+  background-color: #f5b485;
+  -moz-box-shadow: #f5b485 0px 0px 5px;
+  -webkit-box-shadow: #f5b485 0px 0px 5px;
+  -o-box-shadow: #f5b485 0px 0px 5px;
+  box-shadow: #f5b485 0px 0px 5px;
 }
-/* line 78, sass/_core.sass */
+/* line 79, sass/_core.sass */
 #jam_teaser p {
   margin: 5px 0px;
 }
-/* line 80, sass/_core.sass */
+/* line 81, sass/_core.sass */
 #jam_teaser p:first-child {
   margin-top: 0px;
 }
-/* line 82, sass/_core.sass */
+/* line 83, sass/_core.sass */
 #jam_teaser p:last-child {
   margin-bottom: 0px;
 }
@@ -259,7 +259,7 @@ a:hover {
   padding: 10px;
   margin-left: 10px;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #top_tools #palette a {
   color: #2f5a86;
 }
@@ -288,7 +288,7 @@ a:hover {
   margin-left: 10px;
   display: inline-block;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #top_tools #level_sharing a {
   color: #2f5a86;
 }
@@ -318,7 +318,7 @@ a:hover {
   padding-right: 20px;
   position: relative;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #top_tools #level_loading a {
   color: #2f5a86;
 }
@@ -367,7 +367,7 @@ a:hover {
   margin-left: 10px;
   padding: 5px 6px 1px;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #top_tools #level_saving a {
   color: #2f5a86;
 }
@@ -396,7 +396,7 @@ a:hover {
   margin-left: 10px;
   position: relative;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #top_tools #level_name a {
   color: #2f5a86;
 }
@@ -443,15 +443,15 @@ section.intro .holder {
   box-shadow: #f0ec87 0px 0px 5px;
   display: inline-block;
 }
-/* line 78, sass/_core.sass */
+/* line 79, sass/_core.sass */
 section.intro .holder p {
   margin: 5px 0px;
 }
-/* line 80, sass/_core.sass */
+/* line 81, sass/_core.sass */
 section.intro .holder p:first-child {
   margin-top: 0px;
 }
-/* line 82, sass/_core.sass */
+/* line 83, sass/_core.sass */
 section.intro .holder p:last-child {
   margin-bottom: 0px;
 }
@@ -479,7 +479,7 @@ section.credits {
   padding: 10px;
   margin: 50px 20px 0px;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 section.credits a {
   color: #2f5a86;
 }
@@ -708,7 +708,7 @@ section.credits section h4 {
   -o-box-shadow: #4367a4 -1px 2px 4px;
   box-shadow: #4367a4 -1px 2px 4px;
 }
-/* line 71, sass/_core.sass */
+/* line 72, sass/_core.sass */
 #level_storage_pane a {
   color: #2f5a86;
 }

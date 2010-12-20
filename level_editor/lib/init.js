@@ -13,7 +13,7 @@ function decompressToObject(paramsCompressed) {
 }
 
 function getURLParam(name) {
-  return urlParams[name];
+  return urlParams[name] || '';
 }
 
 // This gets run first thing after all non-bottom-scripts static HTML content inside of body has been read
@@ -23,7 +23,16 @@ function initBottom() {
     $(this).hide().siblings('.fulltext').show();
   });
 
-  getURLParam('g');
+  var game_only_mode = getURLParam('g');
+
+  if (game_only_mode) {
+    $('#top_tools').hide();
+    $('#credits').hide();
+    var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject({ level: levelParam });
+    $('#intro p').first().html('<a href="' + url + '">Click here to make more levels like this one, right in your browser!</a>')
+    $('#imageView').hide();
+    $('#admin_sidebar').hide();
+  }
 
   loadPalette();
   initEditor();

@@ -1,71 +1,69 @@
 // AKIHABARA ENGINE OVERRIDES
+var game_only_mode = getURLParam('g');
 
-  // overriding help.isSquished with a collision fix
-  help.isSquished = function(th,by) {
-    return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
-  };
+// Overriding help.isSquished with a collision fix
+help.isSquished = function(th,by) {
+  return ((by.accy>0)&&gbox.collides(th,by)&&(Math.abs(th.y-(by.y+by.h))<(by.h)))
+};
 
-  //Overriding the gravity function to increase the usual gravity (from 1 to 2.5).
-      toys.platformer.handleAccellerations = function(th) {
-      // Gravity
-      if (!th.touchedfloor) th.accy += 2.75;
-      // Attrito
-      if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
-    };
+// Overriding the gravity function to increase the usual gravity (from 1 to 2.5).
+toys.platformer.handleAccellerations = function(th) {
+  // Gravity
+  if (!th.touchedfloor) th.accy += 2.75;
+  // Attrito
+  if (th.pushing==toys.PUSH_NONE) if (th.accx) th.accx=help.goToZero(th.accx);
+};
 
-  // overriding toys.platformer.verticalTileCollision to make a four-point collision check
-  // (topleft, topright, bottomleft, bottomright) instead of a two-point collision check (top-middle, bottom-middle)
-  toys.platformer.verticalTileCollision = function(th,map,tilemap) {
-      var bottomleft=help.getTileInMap(th.x+4,th.y+th.h,map,0,tilemap);
-      var topleft=help.getTileInMap(th.x+4,th.y,map,0,tilemap);
-      var bottomright=help.getTileInMap(th.x+th.w-4,th.y+th.h,map,0,tilemap);
-      var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
-      th.touchedfloor=false;
-      th.touchedceil=false;
+// overriding toys.platformer.verticalTileCollision to make a four-point collision check
+// (topleft, topright, bottomleft, bottomright) instead of a two-point collision check (top-middle, bottom-middle)
+toys.platformer.verticalTileCollision = function(th,map,tilemap) {
+  var bottomleft=help.getTileInMap(th.x+4,th.y+th.h,map,0,tilemap);
+  var topleft=help.getTileInMap(th.x+4,th.y,map,0,tilemap);
+  var bottomright=help.getTileInMap(th.x+th.w-4,th.y+th.h,map,0,tilemap);
+  var topright=help.getTileInMap(th.x+th.w-4,th.y,map,0,tilemap);
+  th.touchedfloor=false;
+  th.touchedceil=false;
 
+  if (map.tileIsSolidCeil(th,topleft) || map.tileIsSolidCeil(th,topright)) {
+    th.accy=0;
+    th.y=help.yPixelToTile(map,th.y,1);
+    th.touchedceil=true;
+  }
 
-      if (map.tileIsSolidCeil(th,topleft) || map.tileIsSolidCeil(th,topright)) {
-        th.accy=0;
-        th.y=help.yPixelToTile(map,th.y,1);
-        th.touchedceil=true;
-      }
-      if (map.tileIsSolidFloor(th,bottomleft) || map.tileIsSolidFloor(th,bottomright)) {
-        th.accy=0;
-        th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
-        th.touchedfloor=true;
-      }
+  if (map.tileIsSolidFloor(th,bottomleft) || map.tileIsSolidFloor(th,bottomright)) {
+    th.accy=0;
+    th.y=help.yPixelToTile(map,th.y+th.h)-th.h;
+    th.touchedfloor=true;
+  }
+};
 
-    };
+// overriding toys.platformer.jumpKeys to NOT jump if the player is holding down Ctrl (so you don't jump on Undo)
+toys.platformer.jumpKeys = function(th, key) {
+  if (gbox._keyboard[17] != 1) {
+    if ((toys.platformer.canJump(th)||(key.doublejump&&(th.accy>=0)))&&gbox.keyIsHit(key.jump)&&(th.curjsize==0)) {
+      if (key.audiojump) gbox.hitAudio(key.audiojump);
+      th.accy=-th.jumpaccy;
+      th.curjsize=th.jumpsize;
+      return true;
+    } else if (th.curjsize&&gbox.keyIsHold(key.jump)) { // Jump modulation
+      th.accy--;
+      th.curjsize--;
+    } else
+      th.curjsize=0;
+    return false;
+  }
+};
 
-    // overriding toys.platformer.jumpKeys to NOT jump if the player is holding down Ctrl (so you don't jump on Undo)
-    toys.platformer.jumpKeys = function(th,key) {
-    if (gbox._keyboard[17] != 1)
-      {
-      if ((toys.platformer.canJump(th)||(key.doublejump&&(th.accy>=0)))&&gbox.keyIsHit(key.jump)&&(th.curjsize==0)) {
-        if (key.audiojump) gbox.hitAudio(key.audiojump);
-        th.accy=-th.jumpaccy;
-        th.curjsize=th.jumpsize;
-        return true;
-      } else if (th.curjsize&&gbox.keyIsHold(key.jump)) { // Jump modulation
-        th.accy--;
-        th.curjsize--;
-      } else
-        th.curjsize=0;
-      return false;
-      }
-    };
+// fixing a bug in gbox._keydown where some keys that are set to -1 won't ever register as down
+gbox._keydown = function(e) {
+  if (!gbox._passKeysThrough && e.preventDefault) e.preventDefault();
+  var key=(e.fake||window.event?e.keyCode:e.which);
+  gbox._keyboard[key] = 1;
+};
 
-  // fixing a bug in gbox._keydown where some keys that are set to -1 won't ever register as down
-  gbox._keydown = function(e){
-    if (!gbox._passKeysThrough && e.preventDefault) e.preventDefault();
-    var key=(e.fake||window.event?e.keyCode:e.which);
-    gbox._keyboard[key]=1;
-  };
-
-if (!getURLParam('g'))
-{
+if (!game_only_mode) {
   // overriding gbox.initScreen to reposition akihabara frame
-  gbox.initScreen = function(w,h) {
+  gbox.initScreen = function(w, h) {
     var container=document.createElement("a");
     container.style.width=640;
     container.style.height=480;
@@ -139,10 +137,9 @@ if (!getURLParam('g'))
         break;
       }
     }
-    };
- }
-    else {
-      gbox.initScreen = function(w,h) {
+  };
+} else { // game-only mode
+  gbox.initScreen = function(w, h) {
     document.body.style.textAlign="center";
     document.body.style.height="100%";
     document.body.style.margin="0px";
@@ -176,29 +173,7 @@ if (!getURLParam('g'))
     this._camera.w=w;
     this._box.appendChild(this._screen);
     container.appendChild(this._box);
-    document.body.appendChild(container);
-
-    el = document.getElementById("top_tools");
-    el.parentNode.removeChild(el);
-    el = document.getElementById("container");
-    el.parentNode.removeChild(el);
-    el = document.getElementById("credits");
-    el.parentNode.removeChild(el);
-
-    eintro = document.getElementById("intro");
-    eintro.parentNode.removeChild(eintro);
-
-    var editText = document.createElement("a");
-    editText.textContent = "Click here to make more levels like this one, right in your browser!";
-  levelParams = {
-    level: levelParam
-  };
-    editText.href = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(levelParams);
-    eintro.childNodes[1].childNodes[1].textContent = "";
-    eintro.childNodes[1].childNodes[1].appendChild(editText);
-    el = document.getElementById("aki");
-    el.parentNode.appendChild(eintro);
-
+    document.getElementById('container').appendChild(container);
 
     this.createCanvas("_buffer");
     gbox.addEventListener(window,'keydown', this._keydown);
@@ -250,9 +225,9 @@ if (!getURLParam('g'))
       }
     }
   };
-  }
+}
 
-if (!getURLParam('g'))
+if (!game_only_mode)
   // overriding help.akihabaraInit to have better default title behavior (first check for explicit title, then check doc title, then do default)
    help.akihabaraInit = function(data) {
     if ((typeof data).toLowerCase() == "string") data={title:data};

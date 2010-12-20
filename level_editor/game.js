@@ -710,8 +710,8 @@ function addPlayer() {
           if (level[y][x] == '2') this.starsTotal++;
 
       if (this.starsTotal > 0) {
-        maingame.hud.setWidget("total",{widget:"label",font:"small",value:this.starsTotal,dx:32,dy:10,clear:true});
-        maingame.hud.setWidget("star",{widget:"blit",rightalign:true,tileset:"map_pieces",dx:0,dy:0,gapx:0,gapy:0,maxshown:1,value:[1]});
+        maingame.hud.setWidget('total', { widget: 'label', font: 'small', value: this.starsTotal, dx: 48, dy: 15, clear: true });
+        maingame.hud.setWidget('star', { widget: 'blit', rightalign: true, tileset: 'map_pieces', dx: 10, dy: 5, gapx: 0, gapy: 0, maxshown: 1, value: [1]});
         maingame.hud.redraw();
       } else {
         maingame.hud.setWidget("total",{widget:"label",font:"small",value:"",dx:32,dy:10,clear:true});

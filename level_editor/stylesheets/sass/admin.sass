@@ -2,6 +2,7 @@
 
 $c_background: #F5F4DF
 $c_link: #4481C0
+$c_link_darker: darken($c_link, 20%)
 
 =std_link
   color: $c_link
@@ -98,7 +99,7 @@ a
   padding: 10px 15px
   margin: 10px 0px
   background-color: lighten($c_help_yellow, 10%)
-  color: darken($c_link, 20%)
+  color: $c_link_darker
   +help_box
 
 #top_tools
@@ -152,6 +153,8 @@ section.intro
   .holder
     +help_box
     display: inline-block
+  a
+    color: $c_link_darker
 
 section.credits
   +admin_box

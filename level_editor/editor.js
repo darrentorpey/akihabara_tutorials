@@ -76,10 +76,23 @@ function initEditor() {
     }
   }
 
-  editor.canvas.addEventListener('mousedown', ev_canvas, false);
-  editor.canvas.addEventListener('mousemove', ev_canvas, false);
-  document.body.addEventListener('mouseup',   ev_canvas, false);
-  document.body.addEventListener('mouseout',   mouseOut, false);
+  var actions = ['mousedown', 'mousemove'];
+  $(actions).each(function(i, action) {
+    $(editor.canvas).bind(action, function(ev) {
+      ev._x = ev.pageX - $(this).offset().left;
+      ev._y = ev.pageY - $(this).offset().top;
+      editor.tool[action](ev);
+    });
+  });
+
+  $('body').mouseup(function(e) {
+    e._x = e.pageX - $(editor.canvas).offset().left;
+    e._y = e.pageY - $(editor.canvas).offset().top;
+    editor.tool.mouseup(e);
+  }).mouseout(function() {
+    editor.isMouseOut = true;
+    editor.mouseOverDelay = 0;
+  });
 
   editor.drawCanvas(editor.camx, editor.camy);
 
@@ -155,24 +168,6 @@ function tool_pencil () {
       tool.started = false;
     }
   };
-}
-
-// The general-purpose event handler. This function just determines the mouse
-// position relative to the canvas element.
-function ev_canvas (ev) {
-  if (ev.layerX || ev.layerX == 0) { // Firefox
-    ev._x = ev.layerX;
-    ev._y = ev.layerY;
-  } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-    ev._x = ev.offsetX;
-    ev._y = ev.offsetY;
-  }
-
-  // Call the event handler of the tool.
-  var func = editor.tool[ev.type];
-  if (func) {
-    func(ev);
-  }
 }
 
 function genMiniMap () {

@@ -1,8 +1,3 @@
-var insp;
-var minimapCanvasContext;
-var minimap;
-var context;
-var mouseOverDelay, isMouseOut;
 var editor;
 
 NUM_LEVEL_ROWS = 30;
@@ -51,9 +46,6 @@ function getFilenameForSave() {
 function initEditor() {
   editor = new Editor();
 
-  mouseOverDelay = 0;
-  isMouseOut = false;
-
   // Find the elements
   editor.brushes = $(".brush");
 
@@ -77,8 +69,8 @@ function initEditor() {
     return;
   } else {
     // Get the 2D canvas context.
-    context = editor.canvas.getContext('2d');
-    if (!context) {
+    editor.context = editor.canvas.getContext('2d');
+    if (!editor.context) {
       alert('Error: failed to getContext!');
       return;
     }
@@ -97,7 +89,7 @@ function initEditor() {
 
   $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
-  setInterval (function() { mouseOverDelay++; }, 100);
+  setInterval (function() { editor.mouseOverDelay++; }, 100);
 }
 
 function replaceOneChar(s, c, n) {
@@ -123,25 +115,25 @@ function tool_pencil () {
   // the mouse button).
   this.mousemove = function (ev) {
 
-  isMouseOut = false;
+  editor.isMouseOut = false;
 
-  if (!tool.started && !isMouseOut) {
+  if (!tool.started && !editor.isMouseOut) {
 
     if ( !((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)) )
-      mouseOverDelay = 0;
+      editor.mouseOverDelay = 0;
 
     // move the camera when you hit the edge of the screen
     if (ev._x > 600 && editor.camx < 20) {
-      if (mouseOverDelay >= 2) editor.camx += 1;
+      if (editor.mouseOverDelay >= 2) editor.camx += 1;
     }
     else if (ev._x < 40 && editor.camx > 0) {
-      if (mouseOverDelay >= 2) editor.camx -= 1;
+      if (editor.mouseOverDelay >= 2) editor.camx -= 1;
       }
     if (ev._y > 440 && editor.camy < 15) {
-      if (mouseOverDelay >= 2) editor.camy += 1;
+      if (editor.mouseOverDelay >= 2) editor.camy += 1;
     }
     else if (ev._y < 40 && editor.camy > 0) {
-      if (mouseOverDelay >= 2) editor.camy -= 1;
+      if (editor.mouseOverDelay >= 2) editor.camy -= 1;
       }
    }
 
@@ -149,15 +141,15 @@ function tool_pencil () {
       level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
       }
      editor.drawCanvas(editor.camx, editor.camy);
-     context.lineWidth = 2;
-  context.strokeStyle = '#800';
-  context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+     editor.context.lineWidth = 2;
+  editor.context.strokeStyle = '#800';
+  editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
 
   };
 
   // This is called when you release the mouse button.
   this.mouseup = function (ev) {
-    if (minimapCanvasContext) {genMiniMap();}
+    if (editor.minimapCanvasContext) { genMiniMap(); }
     if (tool.started) {
       tool.mousemove(ev);
       tool.started = false;
@@ -185,8 +177,8 @@ function ev_canvas (ev) {
 
 function genMiniMap () {
   reloadMap();
-  minimap = minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
-  var pix = minimap.data;
+  editor.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
+  var pix = editor.minimap.data;
 
   // Loop over pixels, skipping every Nth since we're shrinking the image
   for (var i = 0, n = pix.length; i < n; i += 4)
@@ -208,6 +200,8 @@ var Editor = Klass.extend({
     this.camx = 0;
     this.camy = 0;
     this.canvas = document.getElementById('imageView');
+    this.mouseOverDelay = 0;
+    this.isMouseOut = false;
   },
 
   drawCanvas: function(cx, cy) {
@@ -215,13 +209,13 @@ var Editor = Klass.extend({
       for (var x = cx; x < cx + 20; x++) {
         var brush = jQuery('#brush' + level[y][x]);
         if (brush.length) {
-          context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
+          this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
         } else {
           // We didnt find the brush the normal way, check out the char code then...
           var id = level[y][x].charCodeAt(0);
           var brush = jQuery('#brush' + id);
           if (brush.length) {
-            context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
+            this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
           } else {
             console.log("Could not find brush for: " + level[y][x]);
           }
@@ -229,12 +223,12 @@ var Editor = Klass.extend({
       }
     }
 
-    if (minimap) {
+    if (this.minimap) {
       var tc = document.createElement('canvas');
       tc.setAttribute('width', 160);
       tc.setAttribute('height', 120);
 
-      var pix = minimap.data;
+      var pix = this.minimap.data;
       var a = tc.getContext('2d').getImageData(0, 0, 160, 120);
       var apix = a.data;
 
@@ -247,12 +241,12 @@ var Editor = Klass.extend({
           apix[(b)+3] = pix[i+3]; // a
         }
 
-      context.putImageData(a,480,0,0,0,160,120);
+      this.context.putImageData(a,480,0,0,0,160,120);
     }
 
-    context.strokeStyle = '#000';
-    context.strokeRect(480,0,160,120);
-    context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
+    this.context.strokeStyle = '#000';
+    this.context.strokeRect(480,0,160,120);
+    this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   }
 });
 
@@ -280,8 +274,8 @@ function getLongURL() {
 }
 
 function mouseOut() {
-  isMouseOut = true;
-  mouseOverDelay = 0;
+  editor.isMouseOut = true;
+  editor.mouseOverDelay = 0;
 }
 
 var UpdateMap = UndoableAction.extend({

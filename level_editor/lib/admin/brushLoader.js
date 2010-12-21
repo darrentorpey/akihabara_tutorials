@@ -1,3 +1,4 @@
+var insp;
 $(function() {
 	var bdrop = document.querySelector('.brush');
 

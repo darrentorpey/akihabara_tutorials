@@ -23,9 +23,9 @@ function addMap() {
       gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
 
-      
-      // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
-      minimapCanvasContext = gbox.getCanvasContext('map_canvas');
+      if (editor) {
+        editor.minimapCanvasContext = gbox.getCanvasContext('map_canvas');
+      }
     }
   });
 }
@@ -55,10 +55,6 @@ function reloadMap() {
 
 	gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 	gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });
-
-
-	// Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
-	minimapCanvasContext = gbox.getCanvasContext('map_canvas');
 }
 
 function getLevelCopy(lvl) {

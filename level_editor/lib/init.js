@@ -24,7 +24,7 @@ function getURLParam(name) {
 function initGameMode() {
   $('#top_tools').hide();
   $('#credits').hide();
-  var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject({ level: levelParam });
+  var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject({ level: levelParam, plugins: getURLParam("plugins")});
   // var url = window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=';
   $('#intro p').first().html('<a href="' + url + '">Click here to make more levels like this one, right in your browser!</a>')
   $('#imageView').hide();

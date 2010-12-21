@@ -12,6 +12,19 @@ function loadPlugin(){
 		var plugin = getPlugin();
 		if(plugin){
 			loadedPlugins[pluginCounter] = plugin;
+			if(typeof gbox != "undefined"){
+				//The game is currently running... add paletteImage, reload resources, reset the game.
+				if(plugin.paletteImage){
+					var img = new Image();
+					img.src = plugin.paletteImage;
+					img.id = "brush"+pluginCounter;
+					img.setAttribute("class", "brush");
+					$(img).appendTo('#palette');
+				}
+				//Reset the game and load the new resources
+				gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
+			}
+
 			pluginCounter++;
 		}
 	}
@@ -41,7 +54,9 @@ jQuery(document).ready(function() {
 					includedJS[pluginName] = pluginObject;
 				}
 				storage('includedJS', includedJS);
-				head.js(pluginObject);
+				head.js(pluginObject,loadPlugin);
+				var pl = gbox.getObject("player","player_id");
+
 			}
 		}
 		return false;
@@ -144,4 +159,21 @@ function getPluginsByGroup(){
 		}
 	}
 	return pluginsByGroup;
+}
+
+function getPluginsForURL(){
+	var pluginsURL = new Object();
+	for(var pluginID in loadedPlugins) {
+		console.log(pluginID);
+		pluginsURL[pluginID] = loadedPlugins[pluginID].sourceURL;
+	}
+	return pluginsURL;
+}
+//Load plugins on page load!
+var urlPlugins = getURLParam("plugins");
+if(urlPlugins){
+	for(pluginID in urlPlugins){
+		pluginCounter = pluginID;
+		head.js(urlPlugins[pluginID],loadPlugin);
+	}
 }

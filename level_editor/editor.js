@@ -229,7 +229,7 @@ var Editor = Klass.extend({
 				if(brush.length){
 					context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
 				}else{
-					console.log("Could not find brush for: "+level[y][x]);
+//					console.log("Could not find brush for: "+level[y][x]);
 				}
 			}
 		}
@@ -331,7 +331,8 @@ function getLongURL() {
   var url_params = {
     name:  getLevelName(),
     level: getLevelParams(),
-	  g:     1
+	g:1,
+	plugins: getPluginsForURL()
   };
   return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(url_params);
 }

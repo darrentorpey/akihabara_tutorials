@@ -14,7 +14,7 @@ function addPlayer() {
       walking: { speed:4, frames:[0,1,2,3,4,5] },
       falling: { speed:1, frames:[6] },
       die:     { speed:1, frames:[1] },
-      pushing: { speed:6, frames:[8,9] },
+      pushing: { speed:6, frames:[8,9] }
     },
     pushblock: false,
 
@@ -159,22 +159,6 @@ function addPlayer() {
       this.accy = 0;
       this.killed = false;
       this.resetHud();
-      gbox.trashGroup('enemies');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-            if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
-            }
-      gbox.trashGroup('boxes');
-      gbox.trashGroup('disboxes');
-        for (var y = 0; y < 30; y++)
-          for (var x = 0; x < 40; x++)
-            {
-            if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true});
-            if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true});
-            if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'});
-            }
     },
 
     resetHud: function() {

@@ -61,35 +61,33 @@ function initEditor() {
 
   // Find the elements
   canvas = document.getElementById('imageView');
-  	brushes = jQuery(".brush");
-	var i = 0;
-	brushes.each(function(){
-		brushes_img[i] = new Image();
-		brushes_img[i].src = this.src;
-		i++;
-	});
-	brushes.live("click",function() {
-		brush = this.id.replace('brush','');
-		if(brush > total_brushes){
-			brush = String.fromCharCode(brush);
-		}
-	});
+  brushes = $(".brush");
+
+  brushes.each(function(i) {
+    brushes_img[i] = new Image();
+    brushes_img[i].src = this.src;
+  });
+
+  brushes.live('click', function() {
+    brush = this.id.replace('brush', '');
+    if (brush > total_brushes) {
+      brush = String.fromCharCode(brush);
+    }
+  });
 
   if (!canvas) {
     alert('Error: I cannot find the canvas element!');
     return;
-  }
-
-  if (!canvas.getContext) {
+  } else if (!canvas.getContext) {
     alert('Error: no canvas.getContext!');
     return;
-  }
-
-  // Get the 2D canvas context.
-  context = canvas.getContext('2d');
-  if (!context) {
-    alert('Error: failed to getContext!');
-    return;
+  } else {
+    // Get the 2D canvas context.
+    context = canvas.getContext('2d');
+    if (!context) {
+      alert('Error: failed to getContext!');
+      return;
+    }
   }
 
   // Pencil tool instance.
@@ -219,102 +217,50 @@ var Editor = Klass.extend({
   },
 
   drawCanvas: function(cx, cy) {
-    for (var y = cy; y < cy+15; y++){
-		for (var x = cx; x < cx+20; x++){
-			var brush = jQuery("#brush"+level[y][x]);
-			if(brush.length){
-				context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
-			}else{
-				//We didnt find the brush the normal way, check out the char code then...
-				var id = level[y][x].charCodeAt(0);
-				var brush = jQuery("#brush"+id);
-				if(brush.length){
-					context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
-				}else{
-//					console.log("Could not find brush for: "+level[y][x]);
-				}
-			}
-		}
-	}
-
+    for (var y = cy; y < cy + 15; y++) {
+      for (var x = cx; x < cx + 20; x++) {
+        var brush = jQuery('#brush' + level[y][x]);
+        if (brush.length) {
+          context.drawImage(brush[0], (x - camx) * 32, (y - camy) * 32);
+        } else {
+          // We didnt find the brush the normal way, check out the char code then...
+          var id = level[y][x].charCodeAt(0);
+          var brush = jQuery('#brush' + id);
+          if (brush.length) {
+            context.drawImage(brush[0], (x - camx) * 32, (y - camy) * 32);
+          } else {
+            console.log("Could not find brush for: " + level[y][x]);
+          }
+        }
+      }
+    }
 
     if (minimap) {
-       var tc = document.createElement('canvas');
-       tc.setAttribute('width',160);
-       tc.setAttribute('height',120);
+      var tc = document.createElement('canvas');
+      tc.setAttribute('width', 160);
+      tc.setAttribute('height', 120);
 
       var pix = minimap.data;
-      var a = tc.getContext('2d').getImageData(0,0,160,120);
+      var a = tc.getContext('2d').getImageData(0, 0, 160, 120);
       var apix = a.data;
 
       for (var j = 0; j < pix.length/8; j += 640*2*4)
-      for (var i = j; i <  j+160*4; i += 4) {
-        var b = (i-j)+(j/(640*2*4)*160*4);
-        apix[(b)  ] = pix[i  ]; // r
-        apix[(b)+1] = pix[i+1]; // g
-        apix[(b)+2] = pix[i+2]; // b
-        apix[(b)+3] = pix[i+3]; // a
-      }
-
-      //tc.getContext('2d').putImageData(a, 0, 0);
-      //minimap = tc.getContext('2d');
+        for (var i = j; i <  j+160*4; i += 4) {
+          var b = (i-j)+(j/(640*2*4)*160*4);
+          apix[(b)  ] = pix[i  ]; // r
+          apix[(b)+1] = pix[i+1]; // g
+          apix[(b)+2] = pix[i+2]; // b
+          apix[(b)+3] = pix[i+3]; // a
+        }
 
       context.putImageData(a,480,0,0,0,160,120);
     }
 
     context.strokeStyle = '#000';
     context.strokeRect(480,0,160,120);
-    context.strokeRect(480+((camx*32)/8),0+((camy*32)/8),640/8,480/8);
+    context.strokeRect(480+((camx*32)/8), 0+((camy*32)/8), 640/8, 480/8);
   }
 });
-
-function drawCanvas(cx, cy) {
-
-	for (var y = cy; y < cy+15; y++){
-		for (var x = cx; x < cx+20; x++){
-			var brush = jQuery("#brush"+level[y][x]);
-			if(brush.length){
-				context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
-			}else{
-				//We didnt find the brush the normal way, check out the char code then...
-				var id = level[y][x].charCodeAt(0);
-				var brush = jQuery("#brush"+id);
-				if(brush.length){
-					context.drawImage(brush[0], (x-camx)*32, (y-camy)*32);
-				}else{
-					console.log("Could not find brush for: "+level[y][x]);
-				}
-			}
-		}
-	}
-  if (minimap) {
-     var tc = document.createElement('canvas');
-     tc.setAttribute('width',160);
-     tc.setAttribute('height',120);
-
-    var pix = minimap.data;
-    var a = tc.getContext('2d').getImageData(0,0,160,120);
-    var apix = a.data;
-
-    for (var j = 0; j < pix.length/8; j += 640*2*4)
-    for (var i = j; i <  j+160*4; i += 4) {
-      var b = (i-j)+(j/(640*2*4)*160*4);
-      apix[(b)  ] = pix[i  ]; // r
-      apix[(b)+1] = pix[i+1]; // g
-      apix[(b)+2] = pix[i+2]; // b
-      apix[(b)+3] = pix[i+3]; // a
-    }
-
-    //tc.getContext('2d').putImageData(a, 0, 0);
-    //minimap = tc.getContext('2d');
-
-    context.putImageData(a,480,0,0,0,160,120);
-  }
-
-  context.strokeStyle = '#000';
-  context.strokeRect(480,0,160,120);
-  context.strokeRect(480+((camx*32)/8),0+((camy*32)/8),640/8,480/8);
-}
 
 function getLevelParams() {
   var levelParam = '';
@@ -326,15 +272,15 @@ function getLevelParams() {
 
 function redrawMap() {
   new UpdateMap(getLevelCopy());
-  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: getLevelData() })
+  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: getLevelData() });
 }
 
 function getLongURL() {
   var url_params = {
     name:  getLevelName(),
     level: getLevelParams(),
-	g:1,
-	plugins: getPluginsForURL()
+  g:1,
+  plugins: getPluginsForURL()
   };
   return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(url_params);
 }

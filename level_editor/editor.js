@@ -118,71 +118,53 @@ function tool_pencil () {
 
   // This is called when you start holding down the mouse button.
   this.mousedown = function (ev) {
-      level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
-      tool.started = true;
-      editor.drawCanvas(editor.camx, editor.camy);
+    level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+    tool.started = true;
+    editor.drawCanvas(editor.camx, editor.camy);
   };
 
   // This function is called every time you move the mouse. Obviously, it only
   // draws if the tool.started state is set to true (when you are holding down
   // the mouse button).
   this.mousemove = function (ev) {
+    editor.isMouseOut = false;
 
-  editor.isMouseOut = false;
+    if (!tool.started && !editor.isMouseOut) {
+      if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)))
+        editor.mouseOverDelay = 0;
 
-  if (!tool.started && !editor.isMouseOut) {
-
-    if ( !((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)) )
-      editor.mouseOverDelay = 0;
-
-    // move the camera when you hit the edge of the screen
-    if (ev._x > 600 && editor.camx < 20) {
-      if (editor.mouseOverDelay >= 2) editor.camx += 1;
-    }
-    else if (ev._x < 40 && editor.camx > 0) {
-      if (editor.mouseOverDelay >= 2) editor.camx -= 1;
+      // move the camera when you hit the edge of the screen
+      if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
+        editor.camx += 1;
+      } else if (ev._x < 40 && editor.camx > 0 && editor.mouseOverDelay >= 2) {
+        editor.camx -= 1;
       }
-    if (ev._y > 440 && editor.camy < 15) {
-      if (editor.mouseOverDelay >= 2) editor.camy += 1;
-    }
-    else if (ev._y < 40 && editor.camy > 0) {
-      if (editor.mouseOverDelay >= 2) editor.camy -= 1;
+
+      if (ev._y > 440 && editor.camy < 15 && editor.mouseOverDelay >= 2) {
+        editor.camy += 1;
+      } else if (ev._y < 40 && editor.camy > 0 && editor.mouseOverDelay >= 2) {
+        editor.camy -= 1;
       }
-   }
+    }
 
     if (tool.started) {
       level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
-      }
-     editor.drawCanvas(editor.camx, editor.camy);
-     editor.context.lineWidth = 2;
-  editor.context.strokeStyle = '#800';
-  editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+    }
 
+    editor.drawCanvas(editor.camx, editor.camy);
+    editor.context.lineWidth = 2;
+    editor.context.strokeStyle = '#800';
+    editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
   };
 
   // This is called when you release the mouse button.
   this.mouseup = function (ev) {
-    if (editor.minimapCanvasContext) { genMiniMap(); }
+    if (editor.minimapCanvasContext) { editor.genMiniMap(); }
     if (tool.started) {
       tool.mousemove(ev);
       tool.started = false;
     }
   };
-}
-
-function genMiniMap () {
-  reloadMap();
-  editor.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
-  var pix = editor.minimap.data;
-
-  // Loop over pixels, skipping every Nth since we're shrinking the image
-  for (var i = 0, n = pix.length; i < n; i += 4)
-    if (i % 32 == 0) {
-      pix[(i/8)  ] = pix[i  ]; // r
-      pix[(i/8)+1] = pix[i+1]; // g
-      pix[(i/8)+2] = pix[i+2]; // b
-      pix[(i/8)+3] = pix[i+3]; // a
-    }
 }
 
 var Editor = Klass.extend({
@@ -242,6 +224,21 @@ var Editor = Klass.extend({
     this.context.strokeStyle = '#000';
     this.context.strokeRect(480,0,160,120);
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
+  },
+
+  genMiniMap: function() {
+    reloadMap();
+    editor.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
+    var pix = editor.minimap.data;
+
+    // Loop over pixels, skipping every Nth since we're shrinking the image
+    for (var i = 0, n = pix.length; i < n; i += 4)
+      if (i % 32 == 0) {
+        pix[(i/8)  ] = pix[i  ]; // r
+        pix[(i/8)+1] = pix[i+1]; // g
+        pix[(i/8)+2] = pix[i+2]; // b
+        pix[(i/8)+3] = pix[i+3]; // a
+      }
   }
 });
 
@@ -260,12 +257,12 @@ function redrawMap() {
 
 function getLongURL() {
   var url_params = {
-    name:  getLevelName(),
-    level: getLevelParams(),
-  g:1,
-  plugins: getPluginsForURL()
+    name:    getLevelName(),
+    level:   getLevelParams(),
+    g:       1,
+    plugins: getPluginsForURL()
   };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded='+compressObject(url_params);
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=' + compressObject(url_params);
 }
 
 function mouseOut() {

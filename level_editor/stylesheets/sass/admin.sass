@@ -2,6 +2,7 @@
 
 $c_background: #F5F4DF
 $c_link: #4481C0
+$c_link_darker: darken($c_link, 20%)
 
 =std_link
   color: $c_link
@@ -17,7 +18,7 @@ $c_link: #4481C0
     margin-left: 0px
 
 body
-  padding: 10px 0px 50px 20px
+  padding: 0px 0px 50px
   background-color: $c_background
   +linear-gradient(color-stops(#F5F4DF, lighten(#F5F4DF, 10%) 50%))
   color: #222
@@ -90,18 +91,21 @@ a
 
 #imageView
   background-color: white
+  border: 1px solid #000
+  margin-right: 25px
 
 #jam_teaser
   display: inline-block
   padding: 10px 15px
-  margin:
-    bottom: 10px
+  margin: 10px 0px
   background-color: lighten($c_help_yellow, 10%)
-  color: darken($c_link, 20%)
+  color: $c_link_darker
+  +help_box(lighten($c_bgj_orange, 5%))
 
 #top_tools
   +clearfix
   padding: 10px 5px
+  margin: 0px 20px
   #palette
     +top_box
   #level_sharing
@@ -138,22 +142,23 @@ a
         width: 16px
 
 #container
+  text-align: center
   position: relative
   cursor: url(../resources/palettes/default/blank.png), default
-
-#imageView
-  border: 1px solid #000
+  +clearfix
 
 section.intro
-  margin: 5px
+  margin: 5px 50px
   text-align: center
   .holder
     +help_box
     display: inline-block
+  a
+    color: $c_link_darker
 
 section.credits
   +admin_box
-  margin-top: 50px
+  margin: 50px 20px 0px
   h3
     font-size: 18px
     font-weight: bold
@@ -231,3 +236,6 @@ section.credits
 
 #undo_counter
   margin-top: 10px
+
+#event_callout
+  text-align: center

@@ -60,6 +60,7 @@ $c_base_four: #FEB884
 $c_base_darker_one: #C66832
 
 $c_help_yellow: #F0EC87
+$c_bgj_orange: #F3A56D
 
 =admin_box($base_color: $c_primary_5)
   background-color: lighten($base_color, 30%)
@@ -71,10 +72,10 @@ $c_help_yellow: #F0EC87
   a
     color: #2F5A86
 
-=help_box
+=help_box($base_color: $c_help_yellow)
   padding: 5px 10px
-  background-color: $c_help_yellow
-  +box-shadow($c_help_yellow, 0px, 0px, 5px)
+  background-color: $base_color
+  +box-shadow($base_color, 0px, 0px, 5px)
   p
     margin: 5px 0px
     &:first-child

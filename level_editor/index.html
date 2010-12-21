@@ -8,38 +8,8 @@
   <link rel="stylesheet" href="stylesheets/plain.css">
   <link rel="stylesheet" href="stylesheets/jquery-ui.css">
 
-  <script type="text/javascript" src="lib/swfobject.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery-1.4.4.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.tmpl.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.klass.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.undoable.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.ndd.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.jqupload.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.ba-bbq.js"></script>
-
-	<!--Encoding and compression tools for the url params-->
-  <script type="text/javascript" src="lib/LZMA_encoder.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery-base64.js"></script>
-	<!--Initialize the URL parameters (decode them if they need to be decoded)-->
-  <script type="text/javascript" src="lib/admin/urlInit.js"></script>
-
-  <script type="text/javascript" src="lib/jstorage.js"></script>
-  <script type="text/javascript" src="lib/downloadify.min.js"></script>
-  <script type="text/javascript" src="lib/clipboard/ZeroClipboard.js"></script>
-  <script type="text/javascript" src="lib/core.js"></script>
-  <script type="text/javascript" src="lib/extensions/date_time.js"></script>
-  <script type="text/javascript" src="editor.js"></script>
-  <script type="text/javascript" src="lib/admin/gui.js"></script>
-  <script type="text/javascript" src="lib/history.js"></script>
-  <script type="text/javascript" src="lib/admin/init.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery-ui.js"></script>
-  <script type="text/javascript" src="lib/jquery/jquery.json-2.2.js"></script>
-  <script type="text/javascript" src="lib/h5utils.js"></script>
   <script type="text/javascript" src="lib/head.js"></script>
-  <script type="text/javascript" src="lib/admin/pluginHelper.js"></script>
-  <script type="text/javascript" src="lib/admin/brushLoader.js"></script>
   <script type="text/javascript">
-
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-16151239-1']);
     _gaq.push(['_setDomainName', '.bostongamejams.com']);
@@ -50,7 +20,6 @@
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-
   </script>
 </head>
 <body>
@@ -96,7 +65,9 @@
     </div>
   </section>
 
-  <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
+  <div id="event_callout">
+    <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
+  </div>
 
   <div id="container">
     <canvas id="imageView" width="640" height="480"></canvas>
@@ -186,35 +157,81 @@
       </div>
     </div>
   </aside>
-
-
-  <script type="text/javascript" charset="utf-8" src="http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6"></script>
-  <script type="text/javascript" src="akihabara/gbox.js"></script>
-  <script type="text/javascript" src="akihabara/iphopad.js"></script>
-  <script type="text/javascript" src="akihabara/trigo.js"></script>
-  <script type="text/javascript" src="akihabara/toys.js"></script>
-  <script type="text/javascript" src="akihabara/help.js"></script>
-  <script type="text/javascript" src="akihabara/tool.js"></script>
-  <script type="text/javascript" src="akihabara/gamecycle.js"></script>
-  <script type="text/javascript" src="lib/overrides.js"></script>
-  <script type="text/javascript" src="game.js"></script>
-  <script type="text/javascript" src="lib/levels/map.js"></script>
 <script>
-  head.js('lib/jquery/jquery.tools_tooltips.min.js', function() {
-    $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+  head.ready('jquery', function() {
+    collapseLongText();
   });
 
-  $(function(){
-    $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+  head.ready('bbq', function() {
+    urlParams = $.deparam.querystring();
+
+    if (urlParams.encoded) {
+      urlParams = decompressToObject(urlParams.encoded);
+    }
+
+    gameOnlyMode = getURLParam('g');
+
+    levelParam = getURLParam('level');
+
+    if (gameOnlyMode) {
+      console.log('Initializing game mode');
+      initGameMode();
+    } else {
+      console.log('Initializing editor mode');
+    }
   });
 
-  initBottom();
+  head.ready('akihabara', function() {
+    gbox._passKeysThrough = 1;
+    startAkihabara = true;
+  })
 
-  if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+  head.js('lib/swfobject.js',
+    'lib/init.js',
+    { jquery: 'lib/jquery/jquery-1.4.4.js' },
+    'lib/jquery/jquery.tmpl.js',
+    'lib/jquery/jquery.klass.js',
+    'lib/jquery/jquery.undoable.js',
+    'lib/jquery/jquery.ndd.js',
+    'lib/jquery/jquery.jqupload.js',
+    'lib/LZMA_encoder.js',
+    'lib/jquery/jquery-base64.js',
+    'lib/jquery/jquery.json-2.2.js',
+    { bbq: 'lib/jquery/jquery.ba-bbq.js' },
+    'lib/jstorage.js',
+    'lib/downloadify.min.js',
+    'lib/core.js',
+    'lib/extensions/date_time.js',
+    'editor.js',
+    'lib/admin/gui.js',
+    'lib/history.js',
+    'lib/jquery/jquery-ui.js',
+    'lib/h5utils.js',
+    'lib/admin/pluginHelper.js',
+    'lib/admin/brushLoader.js',
+    'http://bit.ly/javascript-api.js?version=latest&login=bostongamejams&apiKey=R_b2d6a272c1c138f9272fdb05d7dc17a6',
+    'lib/jquery/jquery.tools_tooltips.min.js',
+    'akihabara/gbox.js',
+    'akihabara/iphopad.js',
+    'akihabara/trigo.js',
+    'akihabara/toys.js',
+    'akihabara/help.js',
+    'akihabara/tool.js',
+    { akihabara: 'akihabara/gamecycle.js' },
+    'lib/overrides.js',
+    'player.js',
+    'enemy.js',
+    'game.js',
+    'lib/levels/map.js',
+    function() {
+      $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
-  gbox._passKeysThrough = 1;
-
-  var start_akihabara = true;
+      if (!gameOnlyMode) {
+        loadPalette();
+        initEditor();
+        if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+        initEditorControls();
+      }
+    });
 </script>
-<output id="list"></output>
 </body></html>

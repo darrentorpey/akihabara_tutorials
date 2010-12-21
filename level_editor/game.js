@@ -250,15 +250,22 @@ function collideGroup(obj,group) {
 }
 
 function followCamera(obj, viewdata) {
-  xbuf = 256;                 // The number of pixels from the left and right of the screen at which the camera starts following the player
-  ybuf = 160;                 // The number of pixels from the top and bottom of the screen at which the camera starts following the player
+  // the distance from the top/bottom/left/right at which we start panning the camera
+  xbufL = 32*8;
+  xbufR = 32*8;
+  ybufT = 32*3;
+  ybufB = 32*5;
   xcam = gbox.getCamera().x; // The current x-coordinate of the camera
   ycam = gbox.getCamera().y; // The current y-coordinate of the camera
+  
+  // we want to center the camera on the object
+  x = obj.x + obj.w/2;
+  y = obj.y + obj.h/2;
 
-  if ((obj.x - xcam) > (gbox._screenw - xbuf)) gbox.setCameraX(xcam + (obj.x - xcam) - (gbox._screenw - xbuf), viewdata);
-  if ((obj.x - xcam) < (xbuf))                 gbox.setCameraX(xcam + (obj.x - xcam) - xbuf,                   viewdata);
-  if ((obj.y - ycam) > (gbox._screenh - ybuf)) gbox.setCameraY(ycam + (obj.y - ycam) - (gbox._screenh - ybuf), viewdata);
-  if ((obj.y - ycam) < (ybuf))                 gbox.setCameraY(ycam + (obj.y - ycam) - ybuf,                   viewdata);
+  if ((x - xcam) > (gbox._screenw - xbufR)) gbox.setCameraX(xcam + (x - xcam) - (gbox._screenw - xbufR), viewdata);
+  if ((x - xcam) < (xbufL))                 gbox.setCameraX(xcam + (x - xcam) - xbufL,                   viewdata);
+  if ((y - ycam) > (gbox._screenh - ybufB)) gbox.setCameraY(ycam + (y - ycam) - (gbox._screenh - ybufB), viewdata);
+  if ((y - ycam) < (ybufT))                 gbox.setCameraY(ycam + (y - ycam) - ybufT,                   viewdata);
 }
 
 function addBlock(data) {

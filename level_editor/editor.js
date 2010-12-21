@@ -1,17 +1,14 @@
-var insp;
+console.log('hi');var insp;
 var afterEditorLoad;
-var canvasContext;
+var minimapCanvasContext;
 var minimap;
 var context;
-var tool, mouseOverDelay, isMouseOut;
+var mouseOverDelay, isMouseOut;
 var editor;
 
-var canvas, tool, px, py, tcolor, brush;
+var canvas;
 var camx = 0;
 var camy = 0;
-var total_brushes = 10;
-var brushes = new Array(total_brushes);
-var brushes_img = new Array(total_brushes);
 
 NUM_LEVEL_ROWS = 30;
 NUM_LEVEL_COLS = 40;
@@ -59,19 +56,25 @@ function getFilenameForSave() {
 function initEditor() {
   editor = new Editor();
 
+  camx = 0;
+  camy = 0;
+
+  mouseOverDelay = 0;
+  isMouseOut = false;
+
   // Find the elements
   canvas = document.getElementById('imageView');
-  brushes = $(".brush");
+  editor.brushes = $(".brush");
 
-  brushes.each(function(i) {
-    brushes_img[i] = new Image();
-    brushes_img[i].src = this.src;
+  editor.brushes.each(function(i) {
+    editor.brushes_img[i] = new Image();
+    editor.brushes_img[i].src = this.src;
   });
 
-  brushes.live('click', function() {
-    brush = this.id.replace('brush', '');
-    if (brush > total_brushes) {
-      brush = String.fromCharCode(brush);
+  editor.brushes.live('click', function() {
+    editor.currentBrush = this.id.replace('brush', '');
+    if (editor.currentBrush > editor.total_brushes) {
+      editor.currentBrush = String.fromCharCode(editor.currentBrush);
     }
   });
 
@@ -89,9 +92,6 @@ function initEditor() {
       return;
     }
   }
-
-  // Pencil tool instance.
-  tool = new tool_pencil();
 
   canvas.addEventListener('mousedown', ev_canvas, false);
   canvas.addEventListener('mousemove', ev_canvas, false);
@@ -124,7 +124,7 @@ function tool_pencil () {
 
   // This is called when you start holding down the mouse button.
   this.mousedown = function (ev) {
-      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
+      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], editor.currentBrush, [Math.floor(ev._x/32)+camx]);
       tool.started = true;
       editor.drawCanvas(camx,camy);
   };
@@ -134,8 +134,6 @@ function tool_pencil () {
   // the mouse button).
   this.mousemove = function (ev) {
 
-  px = ev._x;
-  py = ev._y;
   isMouseOut = false;
 
   if (!tool.started && !isMouseOut) {
@@ -159,7 +157,7 @@ function tool_pencil () {
    }
 
     if (tool.started) {
-      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], brush, [Math.floor(ev._x/32)+camx]);
+      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], editor.currentBrush, [Math.floor(ev._x/32)+camx]);
       }
      editor.drawCanvas(camx,camy);
      context.lineWidth = 2;
@@ -170,7 +168,7 @@ function tool_pencil () {
 
   // This is called when you release the mouse button.
   this.mouseup = function (ev) {
-    if (canvasContext) {genMiniMap();}
+    if (minimapCanvasContext) {genMiniMap();}
     if (tool.started) {
       tool.mousemove(ev);
       tool.started = false;
@@ -190,7 +188,7 @@ function ev_canvas (ev) {
   }
 
   // Call the event handler of the tool.
-  var func = tool[ev.type];
+  var func = editor.tool[ev.type];
   if (func) {
     func(ev);
   }
@@ -198,7 +196,7 @@ function ev_canvas (ev) {
 
 function genMiniMap () {
   reloadMap();
-  minimap = canvasContext.getImageData(0, 0, 640*2, 480*2);
+  minimap = minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
   var pix = minimap.data;
 
   // Loop over pixels, skipping every Nth since we're shrinking the image
@@ -213,7 +211,11 @@ function genMiniMap () {
 
 var Editor = Klass.extend({
   init: function(dom_base, options) {
-
+    this.currentBrush  = '4';
+    this.total_brushes = 10;
+    this.brushes       = new Array(this.total_brushes);
+    this.brushes_img   = new Array(this.total_brushes);
+    this.tool          = new tool_pencil();
   },
 
   drawCanvas: function(cx, cy) {
@@ -314,31 +316,3 @@ var UpdateMap = UndoableAction.extend({
     self.redo();
   }
 });
-
-if (!getURLParam('g')) {
-  // If we want the editor
-
-  // Load the default brush, #4
-  brush = '4';
-
-  camx = 0;
-  camy = 0;
-  px = -100;
-  py = -100;
-
-  mouseOverDelay = 0;
-  isMouseOut = false;
-
-  $(function() {
-    $('#level_saving').downloadify({
-      swf:           'resources/flash/downloadify.swf',
-      downloadImage: 'images/save_level_92x128.png',
-      width:         92,
-      height:        32,
-      filename:      getFilenameForSave,
-      data:          getLevelDataForSaveFile
-    });
-  })
-
-  setInterval (function() { mouseOverDelay++; }, 100);
-}

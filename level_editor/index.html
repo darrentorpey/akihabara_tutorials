@@ -229,8 +229,21 @@
     if (!gameOnlyMode) {
       loadPalette();
       initEditor();
-      if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
       initEditorControls();
+      if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+
+      $(function() {
+        $('#level_saving').downloadify({
+          swf:           'resources/flash/downloadify.swf',
+          downloadImage: 'images/save_level_92x128.png',
+          width:         92,
+          height:        32,
+          filename:      getFilenameForSave,
+          data:          getLevelDataForSaveFile
+        });
+      })
+
+      setInterval (function() { mouseOverDelay++; }, 100);
     }
   });
 </script>

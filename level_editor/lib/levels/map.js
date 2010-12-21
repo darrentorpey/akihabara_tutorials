@@ -25,7 +25,7 @@ function addMap() {
 
       
       // Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
-      canvasContext = gbox.getCanvasContext('map_canvas');
+      minimapCanvasContext = gbox.getCanvasContext('map_canvas');
     }
   });
 }
@@ -58,7 +58,7 @@ function reloadMap() {
 
 
 	// Write the entire canvas context to the canvasImage global var, which the editor will read for the minimap
-	canvasContext = gbox.getCanvasContext('map_canvas');
+	minimapCanvasContext = gbox.getCanvasContext('map_canvas');
 }
 
 function getLevelCopy(lvl) {

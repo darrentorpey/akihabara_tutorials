@@ -107,6 +107,8 @@ function initEditor() {
   if (afterEditorLoad) {
     afterEditorLoad();
   }
+
+  $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 }
 
 function replaceOneChar(s, c, n) {

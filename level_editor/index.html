@@ -158,34 +158,6 @@
     </div>
   </aside>
 <script>
-  head.ready('jquery', function() {
-    collapseLongText();
-  });
-
-  head.ready('bbq', function() {
-    urlParams = $.deparam.querystring();
-
-    if (urlParams.encoded) {
-      urlParams = decompressToObject(urlParams.encoded);
-    }
-
-    gameOnlyMode = getURLParam('g');
-
-    levelParam = getURLParam('level');
-
-    if (gameOnlyMode) {
-      console.log('Initializing game mode');
-      initGameMode();
-    } else {
-      console.log('Initializing editor mode');
-    }
-  });
-
-  head.ready('akihabara', function() {
-    gbox._passKeysThrough = 1;
-    startAkihabara = true;
-  })
-
   head.js('lib/swfobject.js',
     'lib/init.js',
     { jquery: 'lib/jquery/jquery-1.4.4.js' },
@@ -220,16 +192,44 @@
     { akihabara: 'akihabara/gamecycle.js' },
     'lib/overrides.js',
     'game.js',
-    'lib/levels/map.js',
-    function() {
-      $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+    'lib/levels/map.js'
+  );
 
-      if (!gameOnlyMode) {
-        loadPalette();
-        initEditor();
-        if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
-        initEditorControls();
-      }
-    });
+  head.ready('jquery', function() {
+    collapseLongText();
+  });
+
+  head.ready('bbq', function() {
+    urlParams = $.deparam.querystring();
+
+    if (urlParams.encoded) {
+      urlParams = decompressToObject(urlParams.encoded);
+    }
+
+    gameOnlyMode = getURLParam('g');
+
+    levelParam = getURLParam('level');
+
+    if (gameOnlyMode) {
+      console.log('Initializing game mode');
+      initGameMode();
+    } else {
+      console.log('Initializing editor mode');
+    }
+  });
+
+  head.ready('akihabara', function() {
+    gbox._passKeysThrough = 1;
+    startAkihabara = true;
+  });
+
+  head.ready(function() {
+    if (!gameOnlyMode) {
+      loadPalette();
+      initEditor();
+      if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+      initEditorControls();
+    }
+  });
 </script>
 </body></html>

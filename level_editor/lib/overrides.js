@@ -37,21 +37,63 @@ toys.platformer.verticalTileCollision = function(th,map,tilemap) {
 };
 
 // overriding toys.platformer.jumpKeys to NOT jump if the player is holding down Ctrl (so you don't jump on Undo)
+// also changing the variable-height jump code
 toys.platformer.jumpKeys = function(th, key) {
   if (gbox._keyboard[17] != 1) {
-    if ((toys.platformer.canJump(th)||(key.doublejump&&(th.accy>=0)))&&gbox.keyIsHit(key.jump)&&(th.curjsize==0)) {
+    if ((toys.platformer.canJump(th)||(key.doublejump&&(th.accy>=0)))&&gbox.keyIsHit(key.jump)) {
       if (key.audiojump) gbox.hitAudio(key.audiojump);
       th.accy=-th.jumpaccy;
-      th.curjsize=th.jumpsize;
+      toys.timer.real(th,'jump',{});
       return true;
-    } else if (th.curjsize&&gbox.keyIsHold(key.jump)) { // Jump modulation
-      th.accy--;
-      th.curjsize--;
+    } else if (th.jumpholdtime&&gbox.keyIsHold(key.jump)&&!toys._maketoy(th,'jump')) { // Jump modulation
+        if (toys.timer.real(th,'jump',{}) != toys.TOY_DONE) {
+            if (th.toys['jump'].realtime < th.jumpholdtime)
+                  th.accy=-th.jumpaccsusy;
+          }
     } else
-      th.curjsize=0;
-    return false;
+      {  
+      toys.resetToy(th,'jump');
+      }
   }
+    return false;  
 };
+
+// overriding toys.timer.real to provide a th.toys[id].realtime variable that tells you the time in seconds and milliseconds
+toys.timer.real = function(th,id,data) {
+			if (toys._maketoy(th,id)) {
+				th.toys[id].subtimer=gbox.getFps();
+				th.toys[id].done=false;
+				if (data.countdown) {
+					th.toys[id].time=data.countdown;
+          th.toys[id].realtime=data.countdown;
+        }
+				else {
+					th.toys[id].time=0;
+          th.toys[id].realtime=0;
+        }
+			}
+			th.toys[id].subtimer--;
+      if (data.countdown) th.toys[id].realtime = th.toys[id].time + th.toys[id].subtimer/gbox.getFps();
+        else  th.toys[id].realtime = th.toys[id].time + (1 - th.toys[id].subtimer/gbox.getFps());
+			
+      if (!th.toys[id].subtimer) {
+				th.toys[id].subtimer=gbox.getFps();
+				if (data.countdown) {
+					if (th.toys[id].time) {
+						th.toys[id].time--;
+            th.toys[id].realtime = th.toys[id].time;
+						if (data.audiocritical&&(th.toys[id].time<=data.critical))
+							gbox.hitAudio(data.audiocritical);
+					} else th.toys[id].done=true;
+				} else
+					{
+            th.toys[id].time++;
+            th.toys[id].realtime = th.toys[id].time;
+          }
+			}
+			return toys._toyfrombool(th,id,th.toys[id].done);
+
+		};
 
 // fixing a bug in gbox._keydown where some keys that are set to -1 won't ever register as down
 gbox._keydown = function(e) {

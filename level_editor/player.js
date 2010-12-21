@@ -80,24 +80,6 @@ function addPlayer() {
         this.resetGame();
       }
 
-      // TODO: Move this into its own lightweight object
-      if (editor) {
-        if (gbox._keyboard[KEY_D] == 1 && camx < 20) { // 'd'
-          camx += 1;
-          editor.drawCanvas(camx, camy);
-        } else if (gbox._keyboard[KEY_A] == 1 && camx > 0) { // 'a'
-          camx -= 1;
-          editor.drawCanvas(camx, camy);
-        }
-        if (gbox._keyboard[KEY_S] == 1 && camy < 15) { // 's'
-          camy += 1;
-          editor.drawCanvas(camx,camy);
-        } else if (gbox._keyboard[KEY_W] == 1 && camy > 0) { // 'w'
-          camy -= 1;
-          editor.drawCanvas(camx,camy);
-        }
-      }
-
       var gp = 'boxes';
 
       // iterate through each pushblock

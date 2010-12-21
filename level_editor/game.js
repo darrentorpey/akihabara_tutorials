@@ -212,6 +212,10 @@ function main() {
 
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
+
+    if (editor) {
+      addEditorHelper();
+    }
   };
   map = generateMapObj();
 

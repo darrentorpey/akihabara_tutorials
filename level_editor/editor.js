@@ -1,14 +1,9 @@
-console.log('hi');var insp;
-var afterEditorLoad;
+var insp;
 var minimapCanvasContext;
 var minimap;
 var context;
 var mouseOverDelay, isMouseOut;
 var editor;
-
-var canvas;
-var camx = 0;
-var camy = 0;
 
 NUM_LEVEL_ROWS = 30;
 NUM_LEVEL_COLS = 40;
@@ -28,7 +23,7 @@ if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
 function setLevel(lvl) {
   level = lvl;
 
-  editor.drawCanvas(camx, camy);
+  editor.drawCanvas(editor.camx, editor.camy);
 }
 
 function loadLevelState(level) {
@@ -56,14 +51,10 @@ function getFilenameForSave() {
 function initEditor() {
   editor = new Editor();
 
-  camx = 0;
-  camy = 0;
-
   mouseOverDelay = 0;
   isMouseOut = false;
 
   // Find the elements
-  canvas = document.getElementById('imageView');
   editor.brushes = $(".brush");
 
   editor.brushes.each(function(i) {
@@ -78,37 +69,35 @@ function initEditor() {
     }
   });
 
-  if (!canvas) {
+  if (!editor.canvas) {
     alert('Error: I cannot find the canvas element!');
     return;
-  } else if (!canvas.getContext) {
+  } else if (!editor.canvas.getContext) {
     alert('Error: no canvas.getContext!');
     return;
   } else {
     // Get the 2D canvas context.
-    context = canvas.getContext('2d');
+    context = editor.canvas.getContext('2d');
     if (!context) {
       alert('Error: failed to getContext!');
       return;
     }
   }
 
-  canvas.addEventListener('mousedown', ev_canvas, false);
-  canvas.addEventListener('mousemove', ev_canvas, false);
+  editor.canvas.addEventListener('mousedown', ev_canvas, false);
+  editor.canvas.addEventListener('mousemove', ev_canvas, false);
   document.body.addEventListener('mouseup',   ev_canvas, false);
   document.body.addEventListener('mouseout',   mouseOut, false);
 
-  editor.drawCanvas(camx,camy);
+  editor.drawCanvas(editor.camx, editor.camy);
 
   if (!UpdateMap.priorOldValue) {
     UpdateMap.priorOldValue = getLevelCopy();
   }
 
-  if (afterEditorLoad) {
-    afterEditorLoad();
-  }
-
   $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+
+  setInterval (function() { mouseOverDelay++; }, 100);
 }
 
 function replaceOneChar(s, c, n) {
@@ -124,9 +113,9 @@ function tool_pencil () {
 
   // This is called when you start holding down the mouse button.
   this.mousedown = function (ev) {
-      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], editor.currentBrush, [Math.floor(ev._x/32)+camx]);
+      level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
       tool.started = true;
-      editor.drawCanvas(camx,camy);
+      editor.drawCanvas(editor.camx, editor.camy);
   };
 
   // This function is called every time you move the mouse. Obviously, it only
@@ -138,28 +127,28 @@ function tool_pencil () {
 
   if (!tool.started && !isMouseOut) {
 
-    if ( !((ev._x > 600 && camx < 20) || (ev._x < 40 && camx > 0) || (ev._y > 440 && camy < 15) || (ev._y < 40 && camy > 0)) )
+    if ( !((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)) )
       mouseOverDelay = 0;
 
     // move the camera when you hit the edge of the screen
-    if (ev._x > 600 && camx < 20) {
-      if (mouseOverDelay >= 2) camx += 1;
+    if (ev._x > 600 && editor.camx < 20) {
+      if (mouseOverDelay >= 2) editor.camx += 1;
     }
-    else if (ev._x < 40 && camx > 0) {
-      if (mouseOverDelay >= 2) camx -= 1;
+    else if (ev._x < 40 && editor.camx > 0) {
+      if (mouseOverDelay >= 2) editor.camx -= 1;
       }
-    if (ev._y > 440 && camy < 15) {
-      if (mouseOverDelay >= 2) camy += 1;
+    if (ev._y > 440 && editor.camy < 15) {
+      if (mouseOverDelay >= 2) editor.camy += 1;
     }
-    else if (ev._y < 40 && camy > 0) {
-      if (mouseOverDelay >= 2) camy -= 1;
+    else if (ev._y < 40 && editor.camy > 0) {
+      if (mouseOverDelay >= 2) editor.camy -= 1;
       }
    }
 
     if (tool.started) {
-      level[Math.floor(ev._y/32)+camy] = replaceOneChar(level[Math.floor(ev._y/32)+camy], editor.currentBrush, [Math.floor(ev._x/32)+camx]);
+      level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
       }
-     editor.drawCanvas(camx,camy);
+     editor.drawCanvas(editor.camx, editor.camy);
      context.lineWidth = 2;
   context.strokeStyle = '#800';
   context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
@@ -216,6 +205,9 @@ var Editor = Klass.extend({
     this.brushes       = new Array(this.total_brushes);
     this.brushes_img   = new Array(this.total_brushes);
     this.tool          = new tool_pencil();
+    this.camx = 0;
+    this.camy = 0;
+    this.canvas = document.getElementById('imageView');
   },
 
   drawCanvas: function(cx, cy) {
@@ -223,13 +215,13 @@ var Editor = Klass.extend({
       for (var x = cx; x < cx + 20; x++) {
         var brush = jQuery('#brush' + level[y][x]);
         if (brush.length) {
-          context.drawImage(brush[0], (x - camx) * 32, (y - camy) * 32);
+          context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
         } else {
           // We didnt find the brush the normal way, check out the char code then...
           var id = level[y][x].charCodeAt(0);
           var brush = jQuery('#brush' + id);
           if (brush.length) {
-            context.drawImage(brush[0], (x - camx) * 32, (y - camy) * 32);
+            context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
           } else {
             console.log("Could not find brush for: " + level[y][x]);
           }
@@ -260,7 +252,7 @@ var Editor = Klass.extend({
 
     context.strokeStyle = '#000';
     context.strokeRect(480,0,160,120);
-    context.strokeRect(480+((camx*32)/8), 0+((camy*32)/8), 640/8, 480/8);
+    context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   }
 });
 
@@ -316,3 +308,33 @@ var UpdateMap = UndoableAction.extend({
     self.redo();
   }
 });
+
+function addEditorHelper() {
+   var editorHelper = gbox.addObject({
+    id:    'editor_helper',
+    group: 'game',
+
+    // initialize: this.init.bind(this),
+    // first:      this.step.bind(this),
+    // blit:       this.draw.bind(this)
+    initialize: function() {},
+    first:      function() {
+      if (gbox._keyboard[KEY_D] == 1 && editor.camx < 20) { // 'd'
+        editor.camx += 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      } else if (gbox._keyboard[KEY_A] == 1 && editor.camx > 0) { // 'a'
+        editor.camx -= 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      }
+
+      if (gbox._keyboard[KEY_S] == 1 && editor.camy < 15) { // 's'
+        editor.camy += 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      } else if (gbox._keyboard[KEY_W] == 1 && editor.camy > 0) { // 'w'
+        editor.camy -= 1;
+        editor.drawCanvas(editor.camx,editor.camy);
+      }
+    },
+    blit: function() {}
+  });
+}

@@ -14,7 +14,7 @@ function addPlayer() {
       walking: { speed:4, frames:[0,1,2,3,4,5] },
       falling: { speed:1, frames:[6] },
       die:     { speed:1, frames:[1] },
-      pushing: { speed:6, frames:[8,9] },
+      pushing: { speed:6, frames:[8,9] }
     },
     pushblock: false,
 

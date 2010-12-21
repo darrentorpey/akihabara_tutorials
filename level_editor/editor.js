@@ -122,7 +122,6 @@ function tool_pencil () {
   // draws if the tool.started state is set to true (when you are holding down
   // the mouse button).
   this.mousemove = function (ev) {
-
   isMouseOut = false;
 
   if (!tool.started && !isMouseOut) {

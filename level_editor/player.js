@@ -28,7 +28,10 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-      this.jumpaccy = 22.5; // this makes a 3-tile jump
+      this.jumpaccy = 10.5; // initial jump vel (size of jump when you tap the jump button)
+      this.jumpholdtime = 0.25; // amount of time you can hold the jump, in seconds
+      this.jumpaccsusy = 15.5; // jump vel while holding
+      this.jumping = false; // used by the jumpKeys func
       this.maxaccx = 7;
       this.maxaccy = 20;
       this.h = 58;
@@ -41,6 +44,7 @@ function addPlayer() {
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
     //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
     first: function() {
+      
       if (this.killed) this.resetGame();
 
     this.prevaccy = this.accy;

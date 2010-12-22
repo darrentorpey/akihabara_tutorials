@@ -56,7 +56,7 @@ function drawGuiActions() {
   historyManager = new HistoryManager($('#level_storage_pane'));
 
   $('#clear_level_storage').click(function() {
-    if (confirm('Are you sure you want to permanently delete your level history?')) {
+    if (confirm('Are you sure you want to PERMANENTLY delete your level history?')) {
       historyManager.clearStorage();
     }
 

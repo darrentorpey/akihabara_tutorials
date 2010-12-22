@@ -6,20 +6,14 @@ KEY_A = 65;
 KEY_S = 83;
 KEY_D = 68;
 
-head.ready(function() {
-  if (!startAkihabara) {
-    console.log('NOT STARTING AKIHABARA');
-  } else {
-    loadResources();
-  }
-});
-
 var bg = new Image();
 bg.src = 'resources/bg0.png'
 
-function loadResources() {
+function startGame() {
   // This initializes Akihabara with the default settings.
   // The title (which appears in the browser title bar) is the text we're passing to the function.
+
+  level = levelParam;
 
   help.akihabaraInit({ width: 640, height: 480, zoom: 1, title: (getURLParam('name') ? getURLParam('name') : 'Akihabara Level Editor & Sharer (ALES)') });
 
@@ -187,10 +181,9 @@ function main() {
       if (reset) {
         toys.resetToy(this,"default-blinker");
       } else {
-        var the_level = editor.getLevelData();
           for (var y = 0; y < 30; y++)
             for (var x = 0; x < 40; x++)
-              if (the_level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
+              if (game.level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
           gbox.blitFade(gbox.getBufferContext(),{alpha:1});
           return toys.TOY_DONE;
       }
@@ -502,3 +495,8 @@ gbox.addObject({
   }
 });
 }
+
+var Game = Klass.extend({
+  init: function() {
+  }
+});

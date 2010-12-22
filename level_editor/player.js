@@ -152,7 +152,7 @@ function addPlayer() {
       this.starsCollected = 0;
       for (var y = 0; y < 30; y++)
         for (var x = 0; x < 40; x++)
-          if (editor.level[y][x] == '2') this.starsTotal++;
+          if (game.level[y][x] == '2') this.starsTotal++;
 
       if (this.starsTotal > 0) {
         maingame.hud.setWidget('total', { widget: 'label', font: 'small', value: this.starsTotal, dx: 48, dy: 15, clear: true });

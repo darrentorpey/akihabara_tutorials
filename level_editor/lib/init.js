@@ -1,7 +1,5 @@
 var urlParams;
-var levelParam;
 var gameOnlyMode;
-var startAkihabara;
 
 function compressObject(obj) {
   var jsonString = jQuery.toJSON(obj);

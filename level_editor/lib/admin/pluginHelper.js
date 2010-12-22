@@ -1,4 +1,3 @@
-
 var includedJS = storage('includedJS');
 loadedPlugins = new Object();
 pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
@@ -12,15 +11,17 @@ function loadPlugin(){
 		var plugin = getPlugin();
 		if(plugin){
 			loadedPlugins[pluginCounter] = plugin;
-			if(plugin.paletteImage && jQuery('img[src="'+plugin.paletteImage+'"]').length == 0){
+
+			if(plugin.paletteImage){
 				var img = new Image();
 				img.src = plugin.paletteImage;
 				img.id = "brush"+pluginCounter;
 				img.setAttribute("class", "brush");
 				$(img).appendTo('#palette');
 			}
+
 			if(typeof gbox != "undefined"){
-				//The game is currently running... reload resources
+				//The game is currently running... add paletteImage, reload resources, reset the game.
 				//Reset the game and load the new resources
 				gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 			}

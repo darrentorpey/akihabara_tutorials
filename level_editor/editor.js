@@ -1,32 +1,10 @@
 var editor;
 
-NUM_LEVEL_ROWS = 30;
-NUM_LEVEL_COLS = 40;
-
 function getLevelName() {
   return $('#level_name input').val();
 }
 
-function getFilenameForSave() {
-  return getLevelName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestampForFile() + '.json';
-}
-
 function initEditor() {
-  editor = new Editor();
-
-  editor.level = new Array(NUM_LEVEL_ROWS);
-
-  // init the global level data structure
-  for (var i = 0; i < NUM_LEVEL_ROWS; i++) {
-    editor.level[i] = "0000000000000000000000000000000000000000";
-  }
-
-  if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
-    for (var c = 0; c < (NUM_LEVEL_COLS * NUM_LEVEL_ROWS); c += NUM_LEVEL_COLS) {
-      editor.level[c/NUM_LEVEL_COLS] = levelParam.substr(c, NUM_LEVEL_COLS);
-    }
-  }
-
   // Find the elements
   editor.brushes = $(".brush");
 
@@ -121,12 +99,12 @@ function initEditorControls() {
 
 function redrawMap() {
   new UpdateMap(getLevelCopy());
-  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: editor.getLevelData() });
+  historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: editor.getLevelData() });
 }
 
 function getLongURL() {
   var url_params = {
-    name:    getLevelName(),
+    name:    currentLevel.getName(),
     level:   getLevelParams(),
     g:       1,
     plugins: getPluginsForURL()
@@ -317,6 +295,7 @@ var Editor = Klass.extend({
 
   loadLevelState: function(level) {
     this.setLevel(level);
+    game.level = level;
     reloadMap();
     $('#last_saved').text(getCurrentTimestamp());
   },

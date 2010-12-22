@@ -302,6 +302,7 @@ var Editor = Klass.extend({
 
   loadLevelState: function(level) {
     this.setLevel(level);
+    game.level = level;
     reloadMap();
     $('#last_saved').text(getCurrentTimestamp());
   },

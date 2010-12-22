@@ -43,7 +43,7 @@ function loadPalette() {
 	head.ready(function (){
 		for(pluginID in loadedPlugins){
 			var plugin = loadedPlugins[pluginID];
-			if(plugin.paletteImage){
+			if(plugin.paletteImage && jQuery('img[src="'+plugin.paletteImage+'"]').length == 0){
 				var img = new Image();
 				img.src = plugin.paletteImage;
 				img.id = "brush"+pluginID;

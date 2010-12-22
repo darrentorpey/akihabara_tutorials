@@ -35,7 +35,7 @@ function loadMap() {
 	for(pluginID in loadedPlugins){
 		mapData.push([pluginID,String.fromCharCode(pluginID)]);
 	}
-	return help.asciiArtToMap(level, mapData);
+	return help.asciiArtToMap(editor.level, mapData);
 }
 
 function reportLevel(lvl, prefix) {
@@ -58,7 +58,7 @@ function reloadMap() {
 }
 
 function getLevelCopy(lvl) {
-  if (!lvl) { lvl = level }
+  if (!lvl) { lvl = editor.level }
   return $.extend(true, [], lvl);
 }
 
@@ -80,8 +80,8 @@ function reloadGamePieces(){
 	for (var y = 0; y < gameHeight; y++){
 		for (var x = 0; x < gameWidth; x++){
 			//If there is anything defined in the level at point y,x find out what it is and load it
-			if(level[y][x]){
-				var charCode = level[y][x].charCodeAt(0);
+			if(editor.level[y][x]){
+				var charCode = editor.level[y][x].charCodeAt(0);
 				if(loadedPlugins[charCode]){
 					var data = {
 						x:x*32,
@@ -94,11 +94,11 @@ function reloadGamePieces(){
 				}
 			}
 			//Load Default objects
-			if (level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true});
-			if (level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true});
-			if (level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'});
-			if (level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
-			if (level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
+			if (editor.level[y][x] == '3') addBlock({x:x*32,y:y*32,side:true});
+			if (editor.level[y][x] == '1') addDisBlock({x:x*32,y:y*32,side:true});
+			if (editor.level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'});
+			if (editor.level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
+			if (editor.level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
 		}
     }
 }

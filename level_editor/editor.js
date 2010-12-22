@@ -2,18 +2,6 @@ var editor;
 
 NUM_LEVEL_ROWS = 30;
 NUM_LEVEL_COLS = 40;
-var level = new Array(NUM_LEVEL_ROWS);
-
-// init the global level data structure
-for (var i = 0; i < NUM_LEVEL_ROWS; i++) {
-  level[i] = "0000000000000000000000000000000000000000";
-}
-
-if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
-  for (var c = 0; c < (NUM_LEVEL_COLS * NUM_LEVEL_ROWS); c += NUM_LEVEL_COLS) {
-    level[c/NUM_LEVEL_COLS] = levelParam.substr(c, NUM_LEVEL_COLS);
-  }
-}
 
 function getLevelName() {
   return $('#level_name input').val();
@@ -25,6 +13,19 @@ function getFilenameForSave() {
 
 function initEditor() {
   editor = new Editor();
+
+  editor.level = new Array(NUM_LEVEL_ROWS);
+
+  // init the global level data structure
+  for (var i = 0; i < NUM_LEVEL_ROWS; i++) {
+    editor.level[i] = "0000000000000000000000000000000000000000";
+  }
+
+  if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
+    for (var c = 0; c < (NUM_LEVEL_COLS * NUM_LEVEL_ROWS); c += NUM_LEVEL_COLS) {
+      editor.level[c/NUM_LEVEL_COLS] = levelParam.substr(c, NUM_LEVEL_COLS);
+    }
+  }
 
   // Find the elements
   editor.brushes = $(".brush");
@@ -136,7 +137,7 @@ function getLongURL() {
 function getLevelParams() {
   var levelParam = '';
   for (var i = 0; i < 30; i++) {
-    levelParam += level[i];
+    levelParam += editor.level[i];
   }
   return levelParam;
 }
@@ -153,7 +154,7 @@ var UpdateMap = UndoableAction.extend({
       editor.loadLevelState(getLevelCopy(self.value));
       UpdateMap.priorOldValue = self.value;
       // reportLevel(self.value, 'new');
-      // reportLevel(level, 'current');
+      // reportLevel(editor.level, 'current');
       // reportLevel(self.oldValue, 'old');
     }, function() {
       // The "undo" method:
@@ -202,7 +203,7 @@ var PencilTool = Klass.extend({
   },
 
   mousedown: function(ev) {
-    level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+    editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
     this.started = true;
     editor.drawCanvas(editor.camx, editor.camy);
   },
@@ -229,7 +230,7 @@ var PencilTool = Klass.extend({
     }
 
     if (this.started) {
-      level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+      editor.level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
     }
 
     editor.drawCanvas(editor.camx, editor.camy);
@@ -264,17 +265,17 @@ var Editor = Klass.extend({
   drawCanvas: function(cx, cy) {
     for (var y = cy; y < cy + 15; y++) {
       for (var x = cx; x < cx + 20; x++) {
-        var brush = jQuery('#brush' + level[y][x]);
+        var brush = jQuery('#brush' + this.level[y][x]);
         if (brush.length) {
           this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
         } else {
           // We didnt find the brush the normal way, check out the char code then...
-          var id = level[y][x].charCodeAt(0);
+          var id = this.level[y][x].charCodeAt(0);
           var brush = jQuery('#brush' + id);
           if (brush.length) {
             this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
           } else {
-            console.log("Could not find brush for: " + level[y][x]);
+            console.log("Could not find brush for: " + this.level[y][x]);
           }
         }
       }
@@ -311,7 +312,7 @@ var Editor = Klass.extend({
   },
 
   getLevelData: function() {
-    return level;
+    return this.level;
   },
 
   loadLevelState: function(level) {
@@ -321,7 +322,7 @@ var Editor = Klass.extend({
   },
 
   setLevel: function(lvl) {
-    level = lvl;
+    this.level = lvl;
     this.drawCanvas(this.camx, this.camy);
   },
 

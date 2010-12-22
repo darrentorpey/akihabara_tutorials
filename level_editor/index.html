@@ -229,7 +229,6 @@
     if (!gameOnlyMode) {
       loadPalette();
       initEditor();
-      initEditorControls();
       if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 
       $(function() {
@@ -239,7 +238,7 @@
           width:         92,
           height:        32,
           filename:      getFilenameForSave,
-          data:          getLevelDataForSaveFile
+          data:          editor.getLevelDataForSaveFile()
         });
       })
     }

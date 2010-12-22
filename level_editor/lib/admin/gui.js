@@ -10,9 +10,6 @@ function drawGuiActions() {
     //   ID: 'first',
     //   Name: 'reload map',
     //   func: function() {
-    //     redrawMap();
-    //     flash_message('map updated');
-    //     return false;
     //   }
     // }
   ];
@@ -36,7 +33,7 @@ function drawGuiActions() {
   $('#drag_to_load').bind('drop', function(event) {
     readFirstTextFile(event, function(levelData) {
       // console.log('Loaded level data:'); console.log(levelData);
-      setLevel(jQuery.parseJSON(levelData));
+      editor.setLevel(jQuery.parseJSON(levelData));
       reloadMap();
     });
 
@@ -68,7 +65,7 @@ function drawGuiActions() {
     var id = this.id;
     id = parseInt(id.replace(/history_row_/, ''))
     var state = historyManager.getLevelState(id);
-    loadLevelState(state.level);
+    editor.loadLevelState(state.level);
   });
 }
 

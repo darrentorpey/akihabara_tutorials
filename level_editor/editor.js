@@ -15,26 +15,6 @@ if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
   }
 }
 
-function setLevel(lvl) {
-  level = lvl;
-
-  editor.drawCanvas(editor.camx, editor.camy);
-}
-
-function loadLevelState(level) {
-  setLevel(level);
-  reloadMap();
-  $('#last_saved').text(getCurrentTimestamp());
-}
-
-function getLevelDataForSaveFile() {
-  return JSON.stringify(getLevelData());
-}
-
-function getLevelData() {
-  return level;
-}
-
 function getLevelName() {
   return $('#level_name input').val();
 }
@@ -103,6 +83,8 @@ function initEditor() {
   $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
   setInterval (function() { editor.mouseOverDelay++; }, 100);
+
+  initEditorControls();
 }
 
 function replaceOneChar(s, c, n) {
@@ -110,26 +92,125 @@ function replaceOneChar(s, c, n) {
   return s.join('');
 }
 
-// This painting tool works like a drawing pencil which tracks the mouse
-// movements.
-function tool_pencil () {
-  tool = this;
-  this.started = false;
+function initEditorControls() {
+  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
 
-  // This is called when you start holding down the mouse button.
-  this.mousedown = function (ev) {
-    level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
-    tool.started = true;
-    editor.drawCanvas(editor.camx, editor.camy);
+  $('#imageView').mouseup(function() {
+    redrawMap();
+  });
+
+  $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+    $().undo();
+  }).parent().find("a:contains('Redo')").click(function() {
+    $().redo();
+  });
+
+  $('#generate_url').click(function() {
+    generateShortURL();
+
+    return false;
+  });
+
+  if (name = getURLParam('name')) {
+    $('#level_name input').val(name);
+  }
+
+  $('.credits a').attr('target', '_blank');
+}
+
+function redrawMap() {
+  new UpdateMap(getLevelCopy());
+  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: editor.getLevelData() });
+}
+
+function getLongURL() {
+  var url_params = {
+    name:    getLevelName(),
+    level:   getLevelParams(),
+    g:       1,
+    plugins: getPluginsForURL()
   };
+  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=' + compressObject(url_params);
+}
 
-  // This function is called every time you move the mouse. Obviously, it only
-  // draws if the tool.started state is set to true (when you are holding down
-  // the mouse button).
-  this.mousemove = function (ev) {
+function getLevelParams() {
+  var levelParam = '';
+  for (var i = 0; i < 30; i++) {
+    levelParam += level[i];
+  }
+  return levelParam;
+}
+
+var UpdateMap = UndoableAction.extend({
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+
+    this._super(function() {
+      // The "do" method:
+
+      self.oldValue = UpdateMap.priorOldValue;
+      editor.loadLevelState(getLevelCopy(self.value));
+      UpdateMap.priorOldValue = self.value;
+      // reportLevel(self.value, 'new');
+      // reportLevel(level, 'current');
+      // reportLevel(self.oldValue, 'old');
+    }, function() {
+      // The "undo" method:
+
+      editor.loadLevelState(self.oldValue);
+      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
+    });
+
+    self.redo();
+  }
+});
+
+function addEditorHelper() {
+   var editorHelper = gbox.addObject({
+    id:    'editor_helper',
+    group: 'game',
+
+    // initialize: this.init.bind(this),
+    // first:      this.step.bind(this),
+    // blit:       this.draw.bind(this)
+    initialize: function() {},
+    first:      function() {
+      if (gbox._keyboard[KEY_D] == 1 && editor.camx < 20) { // 'd'
+        editor.camx += 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      } else if (gbox._keyboard[KEY_A] == 1 && editor.camx > 0) { // 'a'
+        editor.camx -= 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      }
+
+      if (gbox._keyboard[KEY_S] == 1 && editor.camy < 15) { // 's'
+        editor.camy += 1;
+        editor.drawCanvas(editor.camx, editor.camy);
+      } else if (gbox._keyboard[KEY_W] == 1 && editor.camy > 0) { // 'w'
+        editor.camy -= 1;
+        editor.drawCanvas(editor.camx,editor.camy);
+      }
+    },
+    blit: function() {}
+  });
+}
+
+var PencilTool = Klass.extend({
+  init: function() {
+    this.started = false;
+  },
+
+  mousedown: function(ev) {
+    level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+    this.started = true;
+    editor.drawCanvas(editor.camx, editor.camy);
+  },
+
+  mousemove: function(ev) {
     editor.isMouseOut = false;
 
-    if (!tool.started && !editor.isMouseOut) {
+    if (!this.started && !editor.isMouseOut) {
       if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)))
         editor.mouseOverDelay = 0;
 
@@ -147,7 +228,7 @@ function tool_pencil () {
       }
     }
 
-    if (tool.started) {
+    if (this.started) {
       level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
     }
 
@@ -155,25 +236,24 @@ function tool_pencil () {
     editor.context.lineWidth = 2;
     editor.context.strokeStyle = '#800';
     editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
-  };
+  },
 
-  // This is called when you release the mouse button.
-  this.mouseup = function (ev) {
+  mouseup: function(ev) {
     if (editor.minimapCanvasContext) { editor.genMiniMap(); }
-    if (tool.started) {
-      tool.mousemove(ev);
-      tool.started = false;
+    if (this.started) {
+      this.mousemove(ev);
+      this.started = false;
     }
-  };
-}
+  }
+});
 
 var Editor = Klass.extend({
-  init: function(dom_base, options) {
+  init: function() {
     this.currentBrush  = '4';
     this.total_brushes = 10;
     this.brushes       = new Array(this.total_brushes);
     this.brushes_img   = new Array(this.total_brushes);
-    this.tool          = new tool_pencil();
+    this.tool          = new PencilTool();
     this.camx = 0;
     this.camy = 0;
     this.canvas = document.getElementById('imageView');
@@ -226,9 +306,28 @@ var Editor = Klass.extend({
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
 
+  getLevelDataForSaveFile: function() {
+    return JSON.stringify(editor.getLevelData());
+  },
+
+  getLevelData: function() {
+    return level;
+  },
+
+  loadLevelState: function(level) {
+    this.setLevel(level);
+    reloadMap();
+    $('#last_saved').text(getCurrentTimestamp());
+  },
+
+  setLevel: function(lvl) {
+    level = lvl;
+    this.drawCanvas(this.camx, this.camy);
+  },
+
   genMiniMap: function() {
     reloadMap();
-    editor.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
+    this.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;
 
     // Loop over pixels, skipping every Nth since we're shrinking the image
@@ -241,86 +340,3 @@ var Editor = Klass.extend({
       }
   }
 });
-
-function getLevelParams() {
-  var levelParam = '';
-  for (var i = 0; i < 30; i++) {
-    levelParam += level[i];
-  }
-  return levelParam;
-}
-
-function redrawMap() {
-  new UpdateMap(getLevelCopy());
-  historyManager.addLevelState({ name: getLevelName(), date: getCurrentTimestampForFile(), level: getLevelData() });
-}
-
-function getLongURL() {
-  var url_params = {
-    name:    getLevelName(),
-    level:   getLevelParams(),
-    g:       1,
-    plugins: getPluginsForURL()
-  };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=' + compressObject(url_params);
-}
-
-function mouseOut() {
-  editor.isMouseOut = true;
-  editor.mouseOverDelay = 0;
-}
-
-var UpdateMap = UndoableAction.extend({
-  init: function(value, options) {
-    var self = this;
-    self.value = value;
-
-    this._super(function() {
-      // The "do" method:
-
-      self.oldValue = UpdateMap.priorOldValue;
-      loadLevelState(getLevelCopy(self.value));
-      UpdateMap.priorOldValue = self.value;
-      // reportLevel(self.value, 'new');
-      // reportLevel(level, 'current');
-      // reportLevel(self.oldValue, 'old');
-    }, function() {
-      // The "undo" method:
-
-      loadLevelState(self.oldValue);
-      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
-    });
-
-    self.redo();
-  }
-});
-
-function addEditorHelper() {
-   var editorHelper = gbox.addObject({
-    id:    'editor_helper',
-    group: 'game',
-
-    // initialize: this.init.bind(this),
-    // first:      this.step.bind(this),
-    // blit:       this.draw.bind(this)
-    initialize: function() {},
-    first:      function() {
-      if (gbox._keyboard[KEY_D] == 1 && editor.camx < 20) { // 'd'
-        editor.camx += 1;
-        editor.drawCanvas(editor.camx, editor.camy);
-      } else if (gbox._keyboard[KEY_A] == 1 && editor.camx > 0) { // 'a'
-        editor.camx -= 1;
-        editor.drawCanvas(editor.camx, editor.camy);
-      }
-
-      if (gbox._keyboard[KEY_S] == 1 && editor.camy < 15) { // 's'
-        editor.camy += 1;
-        editor.drawCanvas(editor.camx, editor.camy);
-      } else if (gbox._keyboard[KEY_W] == 1 && editor.camy > 0) { // 'w'
-        editor.camy -= 1;
-        editor.drawCanvas(editor.camx,editor.camy);
-      }
-    },
-    blit: function() {}
-  });
-}

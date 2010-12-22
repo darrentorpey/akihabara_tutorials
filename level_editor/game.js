@@ -187,9 +187,10 @@ function main() {
       if (reset) {
         toys.resetToy(this,"default-blinker");
       } else {
+        var the_level = editor.getLevelData();
           for (var y = 0; y < 30; y++)
             for (var x = 0; x < 40; x++)
-              if (level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
+              if (the_level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
           gbox.blitFade(gbox.getBufferContext(),{alpha:1});
           return toys.TOY_DONE;
       }

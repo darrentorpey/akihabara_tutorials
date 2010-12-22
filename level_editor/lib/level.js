@@ -1,9 +1,23 @@
+level_id = 0;
 var Level = Klass.extend({
-  init: function() {
-    this.n_map_rows = NUM_LEVEL_ROWS;
-    this.n_map_cols = NUM_LEVEL_COLS;
+  init: function(options) {
+    this.settings = {
+      map_rows: 30,
+      map_cols: 40
+    }
+
+    this.id = level_id++;
+
+    if (options) {
+      $.extend(this.settings, options);
+    }
+
+    this.n_map_rows = this.settings.map_rows;
+    this.n_map_cols = this.settings.map_cols;
     this.map = new Array(this.n_map_rows);
     this.initMap();
+    this.name = $('#level_name input').val() || 'Unnamed ALES Map';
+    this.hookToUI();
   },
 
   generateMapFromString: function(levelDataString) {
@@ -18,5 +32,19 @@ var Level = Klass.extend({
     for (var i = 0; i < this.n_map_rows; i++) {
       this.map[i] = '0000000000000000000000000000000000000000';
     }
+  },
+
+  getName: function() {
+    return this.name;
+  },
+
+  hookToUI: function() {
+    $('#level_name input').change({ level: this }, function(event) {
+      event.data.level.name = $('#level_name input').val();
+    });
+  },
+
+  getFilenameForSave: function() {
+    return this.getName().toLowerCase().replace(/ /g, '_') + '_' + getCurrentTimestampForFile() + '.json';
   }
 });

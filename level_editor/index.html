@@ -250,7 +250,7 @@
           downloadImage: 'images/save_level_92x128.png',
           width:         92,
           height:        32,
-          filename:      getFilenameForSave,
+          filename:      function() { return currentLevel.getFilenameForSave() },
           data:          editor.getLevelDataForSaveFile()
         });
       })

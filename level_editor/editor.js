@@ -12,21 +12,6 @@ function getFilenameForSave() {
 }
 
 function initEditor() {
-  editor = new Editor();
-
-  editor.level = new Array(NUM_LEVEL_ROWS);
-
-  // init the global level data structure
-  for (var i = 0; i < NUM_LEVEL_ROWS; i++) {
-    editor.level[i] = "0000000000000000000000000000000000000000";
-  }
-
-  if (levelParam.length == (NUM_LEVEL_COLS * NUM_LEVEL_ROWS)) {
-    for (var c = 0; c < (NUM_LEVEL_COLS * NUM_LEVEL_ROWS); c += NUM_LEVEL_COLS) {
-      editor.level[c/NUM_LEVEL_COLS] = levelParam.substr(c, NUM_LEVEL_COLS);
-    }
-  }
-
   // Find the elements
   editor.brushes = $(".brush");
 

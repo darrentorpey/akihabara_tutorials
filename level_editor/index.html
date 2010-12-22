@@ -251,7 +251,7 @@
           width:         92,
           height:        32,
           filename:      function() { return currentLevel.getFilenameForSave() },
-          data:          editor.getLevelDataForSaveFile()
+          data:          function() { return editor.getLevelDataForSaveFile() }
         });
       })
     }

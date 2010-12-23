@@ -86,13 +86,16 @@ var UpdateMap = UndoableAction.extend({
     var self = this;
     self.value = value;
 
-    this._super(function() { // The "do" method:
-      self.oldValue = UpdateMap.priorOldValue;
-      editor.loadLevelState(getLevelCopy(self.value));
-      UpdateMap.priorOldValue = self.value;
-    }, function() { // The "undo" method:
-      editor.loadLevelState(self.oldValue);
-      UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
+    this._super({
+      do: function() { // The "do" method:
+        self.oldValue = UpdateMap.priorOldValue;
+        editor.loadLevelState(getLevelCopy(self.value));
+        UpdateMap.priorOldValue = self.value;
+      },
+      undo: function() { // The "undo" method:
+        editor.loadLevelState(self.oldValue);
+        UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
+      }
     });
 
     self.redo();

@@ -32,11 +32,11 @@ function requireLib(libraryName) {
 var undoCounter = 0;
 
 var UndoableAction = Klass.extend({
-  init: function(do_func, undo_func, options) {
+  init: function(options) {
     // this.parent = jQuery(parent);
     this.options   = options || {};
-    this.do_func   = do_func;
-    this.undo_func = undo_func;
+    this.do_func   = options.do;
+    this.undo_func = options.undo;
     this.counter = 0;
   },
 

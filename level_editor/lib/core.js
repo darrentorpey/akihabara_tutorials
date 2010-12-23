@@ -96,7 +96,7 @@ function readTextFile(file, callback) {
 
 function readFirstTextFile(event, teh_callback) {
   var files = event.dataTransfer.files; // FileList object
-  if (!files) { return false; }
+  if (!files || !files.length) { return false; }
 
   readTextFile(files[0], function(evt, file) {
     teh_callback(evt.target.result);

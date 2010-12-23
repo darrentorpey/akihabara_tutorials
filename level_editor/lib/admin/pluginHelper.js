@@ -112,8 +112,8 @@ if (urlPlugins) {
 
 $(function() {
   $('#object_loading .drop').bind('drop', function(event) {
-    if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types)) {
-      var pluginObject = event.dataTransfer.types && entities(event.dataTransfer.getData('text/plain'));
+    if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
+      var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
       if (pluginObject) {
         console.log('Plugin URL dropped: ' + pluginObject);
         var pluginName = prompt('What would you like to name this plugin?');
@@ -132,12 +132,7 @@ $(function() {
         var pl = gbox.getObject('player', 'player_id');
       }
     } else {
-      readFirstTextFile(event, function(levelData) {
-        // console.log('Loaded level data:'); console.log(levelData);
-        editor.setLevel(jQuery.parseJSON(levelData));
-        reloadMap();
-        editor.redrawMap();
-      });
+      evalFirstTextFile(event);
     }
 
     event.stopPropagation(); event.preventDefault(); return false;

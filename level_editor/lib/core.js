@@ -103,6 +103,15 @@ function readFirstTextFile(event, teh_callback) {
   })
 }
 
+function evalFirstTextFile(event) {
+  var files = event.dataTransfer.files; // FileList object
+  if (!files || !files.length) { return false; }
+
+  readTextFile(files[0], function(evt, file) {
+    eval(evt.target.result);
+  })
+}
+
 function entities(s) {
   var e = {
     '"' : '"',

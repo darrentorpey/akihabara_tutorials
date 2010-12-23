@@ -38,6 +38,11 @@ var Level = Klass.extend({
     return this.name;
   },
 
+  setName: function(val) {
+    this.name = val;
+    $('#level_name input').val(val);
+  },
+
   hookToUI: function() {
     $('#level_name input').change({ level: this }, function(event) {
       event.data.level.name = $('#level_name input').val();

@@ -67,6 +67,7 @@ function drawGuiActions() {
     id = parseInt(id.replace(/history_row_/, ''))
     var state = historyManager.getLevelState(id);
     editor.loadLevelState(state.level);
+    currentLevel.setName(state.name);
   });
 }
 

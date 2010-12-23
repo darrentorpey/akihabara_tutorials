@@ -1,6 +1,6 @@
 function getLongURL() {
   var url_params = {
-    name:    currentLevel.getName(),
+    name:    editor.level.getName(),
     level:   editor.getLevelParams(),
     g:       1,
     plugins: getPluginsForURL()

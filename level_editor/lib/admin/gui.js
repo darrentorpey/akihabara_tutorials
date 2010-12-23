@@ -39,11 +39,7 @@ function drawGuiActions() {
     });
 
     event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragenter', function(event) {
-    event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragover', function(event) {
-    event.stopPropagation(); event.preventDefault(); return false;
-  });
+  }).bind('dragenter dragover', false);
 
   $('#open_level_storage').click(function() {
     $('#level_storage_pane').toggle();

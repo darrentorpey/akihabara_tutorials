@@ -131,40 +131,26 @@ if (urlPlugins) {
 }
 
 $(function() {
-	var drop = document.querySelector('#object_loading .drop');
-
-	// Tells the browser that we *can* drop on this target
-	addEvent(drop, 'dragover', cancel);
-	addEvent(drop, 'dragenter', cancel);
-
-	addEvent(drop, 'drop', function (event) {
-		// stops the browser from redirecting off to the text.
-		if (event.preventDefault) {
-			event.preventDefault();
-		}
+  $('#object_loading .drop').bind('drop', function(event) {
 		if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types)) {
 			var pluginObject = event.dataTransfer.types && entities(event.dataTransfer.getData('text/plain'));
 			if (pluginObject) {
 				var pluginName = prompt('What would you like to name this plugin?');
 				var includedJS = storage('includedJS');
+
 				if (includedJS) {
 					includedJS[pluginName] = pluginObject;
 				} else {
 					includedJS = new Object();
 					includedJS[pluginName] = pluginObject;
 				}
+
 				storage('includedJS', includedJS);
 				head.js(pluginObject, loadPlugin);
 				var pl = gbox.getObject('player', 'player_id');
 			}
 		}
-		return false;
-	});
 
-	function cancel(event) {
-		if (event.preventDefault) {
-			event.preventDefault();
-		}
-		return false;
-	}
+    event.stopPropagation(); event.preventDefault(); return false;
+  }).bind('dragenter dragover', false);
 });

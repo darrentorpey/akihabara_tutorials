@@ -102,3 +102,15 @@ function readFirstTextFile(event, teh_callback) {
     teh_callback(evt.target.result);
   })
 }
+
+function entities(s) {
+  var e = {
+    '"' : '"',
+    '&' : '&',
+    '<' : '<',
+    '>' : '>'
+  };
+  return s.replace(/["&<>]/g, function (m) {
+    return e[m];
+  });
+}

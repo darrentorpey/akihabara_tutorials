@@ -1,9 +1,5 @@
 var editor;
 
-function getLevelName() {
-  return $('#level_name input').val();
-}
-
 function initEditor() {
   // Find the elements
   editor.brushes = $(".brush");
@@ -44,7 +40,7 @@ function initEditor() {
     });
   });
 
-  $('body').mouseup(function(e) {
+  $('#imageView').mouseup(function(e) {
     e._x = e.pageX - $(editor.canvas).offset().left;
     e._y = e.pageY - $(editor.canvas).offset().top;
     editor.tool.mouseup(e);
@@ -63,20 +59,8 @@ function initEditor() {
 
   setInterval (function() { editor.mouseOverDelay++; }, 100);
 
-  initEditorControls();
-}
 
-function replaceOneChar(s, c, n) {
-  (s = s.split(''))[n] = c;
-  return s.join('');
-}
-
-function initEditorControls() {
   $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
-
-  $('#imageView').mouseup(function() {
-    redrawMap();
-  });
 
   $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
     $().undo();
@@ -97,46 +81,16 @@ function initEditorControls() {
   $('.credits a').attr('target', '_blank');
 }
 
-function redrawMap() {
-  new UpdateMap(getLevelCopy());
-  historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: editor.getLevelData() });
-}
-
-function getLongURL() {
-  var url_params = {
-    name:    currentLevel.getName(),
-    level:   getLevelParams(),
-    g:       1,
-    plugins: getPluginsForURL()
-  };
-  return window.location.protocol + "//" + window.location.host + window.location.pathname + '?encoded=' + compressObject(url_params);
-}
-
-function getLevelParams() {
-  var levelParam = '';
-  for (var i = 0; i < 30; i++) {
-    levelParam += editor.level[i];
-  }
-  return levelParam;
-}
-
 var UpdateMap = UndoableAction.extend({
   init: function(value, options) {
     var self = this;
     self.value = value;
 
-    this._super(function() {
-      // The "do" method:
-
+    this._super(function() { // The "do" method:
       self.oldValue = UpdateMap.priorOldValue;
       editor.loadLevelState(getLevelCopy(self.value));
       UpdateMap.priorOldValue = self.value;
-      // reportLevel(self.value, 'new');
-      // reportLevel(editor.level, 'current');
-      // reportLevel(self.oldValue, 'old');
-    }, function() {
-      // The "undo" method:
-
+    }, function() { // The "undo" method:
       editor.loadLevelState(self.oldValue);
       UpdateMap.priorOldValue = getLevelCopy(self.oldValue);
     });
@@ -223,6 +177,8 @@ var PencilTool = Klass.extend({
       this.mousemove(ev);
       this.started = false;
     }
+
+    editor.redrawMap();
   }
 });
 
@@ -285,8 +241,16 @@ var Editor = Klass.extend({
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
 
+  getLevelParams: function() {
+    var levelParam = '';
+    for (var i = 0; i < 30; i++) {
+      levelParam += this.level[i];
+    }
+    return levelParam;
+  },
+
   getLevelDataForSaveFile: function() {
-    return JSON.stringify(editor.getLevelData());
+    return JSON.stringify(this.getLevelData());
   },
 
   getLevelData: function() {
@@ -298,6 +262,12 @@ var Editor = Klass.extend({
     game.level = level;
     reloadMap();
     $('#last_saved').text(getCurrentTimestamp());
+  },
+
+  redrawMap: function() {
+    new UpdateMap(getLevelCopy());
+    console.log(this.getLevelData());
+    historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: this.getLevelData() });
   },
 
   setLevel: function(lvl) {

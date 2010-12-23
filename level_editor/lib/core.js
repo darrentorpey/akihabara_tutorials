@@ -1,3 +1,8 @@
+function replaceOneChar(s, c, n) {
+  (s = s.split(''))[n] = c;
+  return s.join('');
+}
+
 function loadImage(path, callback) {
   var image = new Image();
   image.src = path;
@@ -56,24 +61,6 @@ var UndoableAction = Klass.extend({
 
   undo: function() {
     console.log('un-doing');
-  }
-});
-
-var UpdateValue = UndoableAction.extend({
-  init: function(value, options) {
-    var self = this;
-    self.value = value;
-
-    this._super(function() {
-      self.oldValue = UpdateValue.priorOldValue;
-      loadValue(self.value);
-      UpdateValue.priorOldValue = self.value;
-    }, function() {
-      loadValue(self.oldValue);
-      UpdateValue.priorOldValue = self.oldValue;
-    });
-
-    self.redo();
   }
 });
 

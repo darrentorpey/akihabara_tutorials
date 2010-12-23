@@ -61,6 +61,7 @@ function drawGuiActions() {
   });
 
   $('#level_storage_pane li').live('click', function() {
+    console.log('heya');
     thingy = this;
     var id = this.id;
     id = parseInt(id.replace(/history_row_/, ''))

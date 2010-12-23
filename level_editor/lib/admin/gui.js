@@ -35,6 +35,7 @@ function drawGuiActions() {
       // console.log('Loaded level data:'); console.log(levelData);
       editor.setLevel(jQuery.parseJSON(levelData));
       reloadMap();
+      editor.redrawMap();
     });
 
     event.stopPropagation(); event.preventDefault(); return false;

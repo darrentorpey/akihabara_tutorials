@@ -244,14 +244,6 @@ var Editor = Klass.extend({
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
 
-  getLevelParams: function() {
-    var levelParam = '';
-    for (var i = 0; i < 30; i++) {
-      levelParam += this.level[i];
-    }
-    return levelParam;
-  },
-
   getLevelDataForSaveFile: function() {
     return JSON.stringify(this.getLevelData());
   },

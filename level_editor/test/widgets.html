@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Buttons!</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/tutorials.css">
+  <link rel="stylesheet" href="../css/jquery-ui.css">
+  <script type="text/javascript" src="../lib/head.js"></script>
+</head>
+<body id="widgets_testing">
+  <div class="tutorial_set">
+    <header>
+      Tutorial 1
+    </header>
+
+    <section>
+      <header>
+        One
+      </header>
+
+      <p>
+        Welcome!...
+      </p>
+    </section>
+
+    <section>
+      <header>
+        Two
+      </header>
+
+      <p>
+        Do some stuff...
+      </p>
+    </section>
+
+    <section>
+      <header>
+        Three
+      </header>
+
+      <p>
+        Finally...
+      </p>
+    </section>
+  </div>
+
+  <script>
+    head.js(
+      { jquery: '../lib/jquery/jquery-1.4.4.js' },
+      { jquery_ui: '../lib/jquery/jquery-ui.js' },
+      '../lib/jquery-ui/jquery.ui.progress_form.js',
+      function() {
+        $('.tutorial_set').progressform();
+      });
+  </script>
+</body></html>

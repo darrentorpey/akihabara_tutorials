@@ -56,7 +56,7 @@ section header {
 
 /* line 20, sass/tutorials.sass */
 .tutorial_set {
-  width: 500px;
+  width: 400px;
   margin: 30px;
 }
 /* line 23, sass/tutorials.sass */
@@ -65,11 +65,7 @@ section header {
   font-weight: bold;
   font-size: 18px;
 }
-/* line 27, sass/tutorials.sass */
-.tutorial_set .buttons {
-  padding: 5px;
-}
-/* line 29, sass/tutorials.sass */
+/* line 28, sass/tutorials.sass */
 .tutorial_set .buttons input[type=button] {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -95,6 +91,8 @@ section header {
   background-image: -moz-linear-gradient(top, #d1a196 0%, #c28272 40%, #b2624f 100%);
   text-shadow: #8f4e3f 0 -1px 0;
   cursor: pointer;
+  font-size: 12px;
+  padding: 0px 10px;
 }
 /* line 61, sass/partials/_buttons.sass */
 .tutorial_set .buttons input[type=button]:hover {

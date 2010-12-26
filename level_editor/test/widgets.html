@@ -10,7 +10,7 @@
   <script type="text/javascript" src="../lib/head.js"></script>
 </head>
 <body id="widgets_testing">
-  <div class="tutorial_set">
+  <div class="tutorial_set tutorial_box">
     <header>
       Test Tutorial
     </header>
@@ -56,13 +56,20 @@
     </section>
   </div>
 
+  <div class="tutorial_box" id="tut2"></div>
+
   <script>
     head.js(
+      '../lib/jquery/jquery.klass.js',
       { jquery: '../lib/jquery/jquery-1.4.4.js' },
       { jquery_ui: '../lib/jquery/jquery-ui.js' },
       '../lib/jquery-ui/jquery.ui.progress_form.js',
+      '../lib/tutorials/tutorial.js',
+      '../lib/jquery/jquery.tmpl.js',
+      '../lib/tutorials/tutorial_manager.js',
       function() {
         $('.tutorial_set').progressform();
+        Tutorials.manager.createTutorial($('#tut2'), { header: 'Tutorial Uno', steps: tut_parts });
       });
   </script>
 </body></html>

@@ -55,18 +55,27 @@ section header {
 }
 
 /* line 20, sass/tutorials.sass */
-.tutorial_set {
+.tutorial_box {
   width: 400px;
   margin: 30px;
 }
 /* line 23, sass/tutorials.sass */
-.tutorial_set > header {
+.tutorial_box > header {
   padding: 5px;
   font-weight: bold;
   font-size: 18px;
 }
-/* line 28, sass/tutorials.sass */
-.tutorial_set .buttons input[type=button] {
+/* line 27, sass/tutorials.sass */
+.tutorial_box .buttons {
+  overflow: hidden;
+  display: inline-block;
+}
+/* line 8, sass/compass/utilities/general/_hacks.scss */
+.tutorial_box .buttons {
+  display: block;
+}
+/* line 29, sass/tutorials.sass */
+.tutorial_box .buttons input[type=button] {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   -ms-box-sizing: content-box;
@@ -95,11 +104,11 @@ section header {
   padding: 0px 10px;
 }
 /* line 61, sass/partials/_buttons.sass */
-.tutorial_set .buttons input[type=button]:hover {
+.tutorial_box .buttons input[type=button]:hover {
   text-decoration: none;
 }
 /* line 63, sass/partials/_buttons.sass */
-.tutorial_set .buttons input[type=button].disabled, .tutorial_set .buttons input[type=button].disabled:active, .tutorial_set .buttons input[type=button].disabled:hover, .tutorial_set .buttons input[type=button].disabled.hover, .tutorial_set .buttons input[type=button].disabled:visited {
+.tutorial_box .buttons input[type=button].disabled, .tutorial_box .buttons input[type=button].disabled:active, .tutorial_box .buttons input[type=button].disabled:hover, .tutorial_box .buttons input[type=button].disabled.hover, .tutorial_box .buttons input[type=button].disabled:visited {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #cdcdcd), color-stop(4%, #cdcdcd), color-stop(100%, #cdcdcd));
   background-image: -moz-linear-gradient(top, #cdcdcd 0%, #cdcdcd 4%, #cdcdcd 100%);
   color: #fdfdfd;
@@ -108,12 +117,12 @@ section header {
   cursor: default;
 }
 /* line 69, sass/partials/_buttons.sass */
-.tutorial_set .buttons input[type=button]:active {
+.tutorial_box .buttons input[type=button]:active {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #482720), color-stop(4%, #7e4437), color-stop(100%, #9a5443));
   background-image: -moz-linear-gradient(top, #482720 0%, #7e4437 4%, #9a5443 100%);
 }
 /* line 71, sass/partials/_buttons.sass */
-.tutorial_set .buttons input[type=button]:hover, .tutorial_set .buttons input[type=button].hover {
+.tutorial_box .buttons input[type=button]:hover, .tutorial_box .buttons input[type=button].hover {
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #c99184), color-stop(40%, #ba7261), color-stop(100%, #a15846));
   background-image: -moz-linear-gradient(top, #c99184 0%, #ba7261 40%, #a15846 100%);
 }

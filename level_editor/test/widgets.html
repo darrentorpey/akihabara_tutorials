@@ -59,16 +59,20 @@
   <div class="tutorial_box" id="tut2"></div>
   <div class="tutorial_box" id="tut3"></div>
 
+  <textarea name="tutorial_markdown" id="tutorial_markdown" cols="60" rows="10"></textarea>
+
   <script>
     head.js(
       '../lib/jquery/jquery.klass.js',
       { jquery: '../lib/jquery/jquery-1.4.4.js' },
       { jquery_ui: '../lib/jquery/jquery-ui.js' },
       '../lib/jquery-ui/jquery.ui.progress_form.js',
+      '../lib/showdown.js',
       '../lib/jquery/jquery.tmpl.js',
       '../lib/tutorials/tutorial.js',
       '../lib/tutorials/tutorial_manager.js',
       '../lib/tutorials/jquery.tutorials.js',
+      '../lib/jquery/jquery.showdown.js',
       function() {
         $('#prerendered_tut').progressform();
 
@@ -85,6 +89,11 @@
           { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
           { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
         ]});
+
+        $('#tutorial_markdown').giveMarkdown(function(markdown, html) {
+          console.log(markdown);
+          console.log(html);
+        });
       });
   </script>
 </body></html>

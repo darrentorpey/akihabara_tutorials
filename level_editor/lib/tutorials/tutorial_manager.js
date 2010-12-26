@@ -9,5 +9,3 @@ var TutorialManager = Klass.extend({
 });
 var Tutorials = {};
 Tutorials.manager = new TutorialManager();
-
-// jQuery hook

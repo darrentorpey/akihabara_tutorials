@@ -10,7 +10,7 @@
   <script type="text/javascript" src="../lib/head.js"></script>
 </head>
 <body id="widgets_testing">
-  <div class="tutorial_set tutorial_box">
+  <div id="prerendered_tut" class="tutorial_box">
     <header>
       Test Tutorial
     </header>
@@ -57,6 +57,7 @@
   </div>
 
   <div class="tutorial_box" id="tut2"></div>
+  <div class="tutorial_box" id="tut3"></div>
 
   <script>
     head.js(
@@ -67,17 +68,23 @@
       '../lib/jquery/jquery.tmpl.js',
       '../lib/tutorials/tutorial.js',
       '../lib/tutorials/tutorial_manager.js',
+      '../lib/tutorials/jquery.tutorials.js',
       function() {
-        $('.tutorial_set').progressform();
+        $('#prerendered_tut').progressform();
 
         var tut_parts = [
           { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
           { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
           { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
         ];
-
         var tutorial_uno = new Tutorial({ header: 'Tutorial Uno', steps: tut_parts });
         Tutorials.manager.createTutorial($('#tut2'), tutorial_uno);
+
+        $('#tut3').insertTutorial({ header: 'Tutorial Dos', steps: [
+          { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
+          { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
+          { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
+        ]});
       });
   </script>
 </body></html>

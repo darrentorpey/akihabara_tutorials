@@ -64,12 +64,20 @@
       { jquery: '../lib/jquery/jquery-1.4.4.js' },
       { jquery_ui: '../lib/jquery/jquery-ui.js' },
       '../lib/jquery-ui/jquery.ui.progress_form.js',
-      '../lib/tutorials/tutorial.js',
       '../lib/jquery/jquery.tmpl.js',
+      '../lib/tutorials/tutorial.js',
       '../lib/tutorials/tutorial_manager.js',
       function() {
         $('.tutorial_set').progressform();
-        Tutorials.manager.createTutorial($('#tut2'), { header: 'Tutorial Uno', steps: tut_parts });
+
+        var tut_parts = [
+          { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
+          { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
+          { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
+        ];
+
+        var tutorial_uno = new Tutorial({ header: 'Tutorial Uno', steps: tut_parts });
+        Tutorials.manager.createTutorial($('#tut2'), tutorial_uno);
       });
   </script>
 </body></html>

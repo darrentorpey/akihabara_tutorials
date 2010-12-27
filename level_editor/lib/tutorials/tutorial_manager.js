@@ -4,7 +4,7 @@ var TutorialManager = Klass.extend({
   },
 
   createTutorial: function(element, tutorial) {
-    $(element).append(tutorial.createDOM()).progressform();
+    $(element).html(tutorial.createDOM()).progressform();
   }
 });
 var Tutorials = {};

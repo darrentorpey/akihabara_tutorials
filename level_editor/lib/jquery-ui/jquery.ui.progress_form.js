@@ -87,6 +87,10 @@ var ProgressForm = {
     this.element.find('section:not(:first)').hide();
     this._currentStep = 1;
     this._update_state();
+  },
+
+  destroy: function() {
+    $.Widget.prototype.destroy.apply(this, arguments);
   }
 };
 

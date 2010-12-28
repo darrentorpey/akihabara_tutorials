@@ -59,6 +59,7 @@
   <div class="tutorial_box" id="tut2"></div>
   <div class="tutorial_box" id="tut3"></div>
   <div class="tutorial_box" id="tut4"></div>
+  <div class="tutorial_box" id="tutorial_box"></div>
 
   <textarea name="tutorial_markdown" id="tutorial_markdown" cols="60" rows="10">
 Tutorial Tres
@@ -91,7 +92,8 @@ Finally... ::
   <script>
     head.js(
       '../lib/jquery/jquery.klass.js',
-      { jquery: '../lib/jquery/jquery-1.4.4.js' },
+      '../lib/core.js',
+      { jquery:    '../lib/jquery/jquery-1.4.4.js' },
       { jquery_ui: '../lib/jquery/jquery-ui.js' },
       '../lib/jquery-ui/jquery.ui.tutorial.js',
       '../lib/showdown.js',
@@ -123,29 +125,12 @@ Finally... ::
         });
 
         $('#create_tutorial').click(function() {
-          var converter = new Showdown.converter();
-          var text = $('#tutorial_markdown').val();
-          var html = converter.makeHtml(text);
-          var text_pars = text.split('___');
-          // console.log(text_pars);
-
-          var parts = text_pars.map(function(text_part) {
-            return converter.makeHtml(text_part);
-          });
-
-          var tutorial_header = parts[0];
-          var tutorial_parts = parts.map(function(part, i) {
-            var tmp = $('<div></div>').append(part);
-            return {
-              id: i + 1,
-              header: tmp.find('h2').text(),
-              content: '<p>' + tmp.find('p').text() + '</p>'
-            }
-          });
-
           $('#tut4').tutorial('destroy');
-          $('#tut4').insertTutorial({ header: $('<div></div>').append(tutorial_header).text(), steps: tutorial_parts.slice(1, tutorial_parts.length) });
+          $('#tut4').insertTutorial(Tutorials.manager.readTutorialFromMarkdown($('#tutorial_markdown').val()));
         }, false);
+
+        // Load a tutorial from the default tutorial file
+        Tutorials.manager.loadDefaultTutorial();
       });
   </script>
 </body></html>

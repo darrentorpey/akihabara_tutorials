@@ -123,3 +123,11 @@ function entities(s) {
     return e[m];
   });
 }
+
+function timestampedURL(url) {
+  var base_url = url.split('?')[0];
+  var query_params = url.split('?')[1];
+  query_params = query_params ? query_params.split('&') : [];
+  query_params.push('ts=' + (new Date().getTime()));
+  return base_url + '?' + query_params.join('&');
+}

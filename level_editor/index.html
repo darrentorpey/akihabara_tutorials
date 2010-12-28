@@ -157,6 +157,12 @@
       </div>
     </div>
   </aside>
+
+  <aside id="tutorial_box" class="tutorial_box">
+    Hello
+  </aside>
+  <label id="tutorial_link">Help</label>
+
 <script>
   head.js('lib/swfobject.js',
     'lib/init.js',
@@ -180,6 +186,13 @@
     'lib/admin/gui.js',
     'lib/history.js',
     'lib/jquery/jquery-ui.js',
+    'lib/showdown.js',
+    'lib/jquery/jquery.showdown.js',
+    'lib/jquery/jquery.tmpl.js',
+    'lib/tutorials/tutorial.js',
+    'lib/tutorials/tutorial_manager.js',
+    'lib/tutorials/jquery.tutorials.js',
+    'lib/jquery-ui/jquery.ui.tutorial.js',
     'lib/h5utils.js',
     'lib/admin/pluginHelper.js',
     'lib/admin/brushLoader.js',
@@ -244,6 +257,14 @@
       loadPalette();
       initEditor();
       if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+
+      Tutorials.manager.loadTutorial({
+        target: '#tutorial_box',
+        file:   'resources/tutorial.txt'
+      });
+      $('#tutorial_link').click(function() {
+        $('#tutorial_box').fadeToggle();
+      });
 
       $(function() {
         $('#level_saving').downloadify({

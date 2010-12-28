@@ -1,4 +1,4 @@
-var Tutorial = {
+var TutorialWidget = {
 
   _currentStep:   1,
   _totalSteps:    0,
@@ -95,5 +95,5 @@ var Tutorial = {
 };
 
 (function($) {
-  $.widget('ales.tutorial', Tutorial);
+  $.widget('ales.tutorial', TutorialWidget);
 })(jQuery);

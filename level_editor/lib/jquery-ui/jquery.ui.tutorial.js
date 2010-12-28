@@ -1,4 +1,4 @@
-var ProgressForm = {
+var Tutorial = {
 
   _currentStep:   1,
   _totalSteps:    0,
@@ -95,5 +95,5 @@ var ProgressForm = {
 };
 
 (function($) {
-  $.widget('bocoup.progressform', ProgressForm);
+  $.widget('ales.tutorial', Tutorial);
 })(jQuery);

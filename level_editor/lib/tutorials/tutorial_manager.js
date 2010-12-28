@@ -7,7 +7,7 @@ var TutorialManager = Klass.extend({
     $(element).html(tutorial.createDOM()).tutorial();
   },
 
-  loadTutorialIntoDOM: function(file_url, element) {
+  loadTutorialFromFileIntoDOM: function(file_url, element) {
     $.ajax({ url: timestampedURL(file_url) + timestamp(), dataType: 'text', success: function(tutorial_markdown) {
       var tutorial = new Tutorial(Tutorials.manager.readTutorialFromMarkdown(tutorial_markdown));
       Tutorials.manager.createTutorial(element, tutorial);
@@ -18,13 +18,11 @@ var TutorialManager = Klass.extend({
     var converter = new Showdown.converter();
 
     var text_pars = text.split('___');
-    // console.log(text_pars);
-
     var parts = text_pars.map(function(text_part) {
       return converter.makeHtml(text_part);
     });
 
-    var tutorial_header = parts[0];
+    var tutorial_header = $('<div></div>').append(parts[0]).text();
     var tutorial_parts = parts.map(function(part, i) {
       var tmp = $('<div></div>').append(part);
       return {
@@ -33,16 +31,26 @@ var TutorialManager = Klass.extend({
         content: '<p>' + tmp.find('p').text() + '</p>'
       }
     });
+    tutorial_parts = tutorial_parts.slice(1, tutorial_parts.length);
 
-    return {
-      header: $('<div></div>').append(tutorial_header).text(),
-      steps:  tutorial_parts.slice(1, tutorial_parts.length)
-    }
+    return new Tutorial({
+      header: tutorial_header,
+      steps:  tutorial_parts
+    });
   },
 
   loadDefaultTutorial: function() {
-    $('#tutorial_box').tutorial('destroy');
-    Tutorials.manager.loadTutorialIntoDOM('../resources/tutorial.txt', '#tutorial_box');
+    this.loadTutorial({
+      target: '#tutorial_box',
+      file:   '../resources/tutorial.txt'
+    });
+  },
+
+  loadTutorial: function(options) {
+    if (options.file && options.target) {
+      $(options.target).tutorial('destroy');
+      Tutorials.manager.loadTutorialFromFileIntoDOM(options.file, options.target);
+    }
   }
 });
 var Tutorials = {};

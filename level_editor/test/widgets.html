@@ -58,11 +58,11 @@
 
   <div class="tutorial_box" id="tut2"></div>
   <div class="tutorial_box" id="tut3"></div>
-  <div class="tutorial_box" id="tut4"></div>
   <div class="tutorial_box" id="tutorial_box"></div>
+  <div class="tutorial_box" id="tut4"></div>
 
   <textarea name="tutorial_markdown" id="tutorial_markdown" cols="60" rows="10">
-Tutorial Tres
+Tutorial From Textarea
 =
 
 ___
@@ -105,19 +105,20 @@ Finally... ::
       function() {
         $('#prerendered_tut').tutorial();
 
-        var tut_parts = [
+        Tutorials.manager.createTutorial($('#tut2'), new Tutorial({ header: 'Tutorial Uno', steps: [
           { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
           { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
           { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
-        ];
-        var tutorial_uno = new Tutorial({ header: 'Tutorial Uno', steps: tut_parts });
-        Tutorials.manager.createTutorial($('#tut2'), tutorial_uno);
+        ]}));
 
-        $('#tut3').insertTutorial({ header: 'Tutorial Dos', steps: [
-          { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
-          { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
-          { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
-        ]});
+        $('#tut3').insertTutorial(new Tutorial({
+          header: 'Tutorial Dos',
+          steps: [
+            { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
+            { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
+            { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
+          ]
+        }));
 
         $('#tutorial_markdown').giveMarkdown(function(markdown, html) {
           // console.log(markdown);

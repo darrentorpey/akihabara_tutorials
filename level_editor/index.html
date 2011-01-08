@@ -254,9 +254,8 @@
     if (!gameOnlyMode) {
       editor = new Editor();
       editor.level = currentLevel.map;
+      editor.setup();
 
-      loadPalette();
-      initEditor();
       if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 
       Tutorials.manager.loadDefaultTutorial();

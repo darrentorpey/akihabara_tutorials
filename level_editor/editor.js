@@ -1,84 +1,95 @@
 var editor;
 
 function initEditor() {
-  // Find the elements
-  editor.brushes = $(".brush");
+}
 
-  editor.brushes.each(function(i) {
-    editor.brushes_img[i] = new Image();
-    editor.brushes_img[i].src = this.src;
-  });
-
-  editor.brushes.live('click', function() {
-    editor.currentBrush = this.id.replace('brush', '');
-    if (editor.currentBrush > editor.total_brushes) {
-      editor.currentBrush = String.fromCharCode(editor.currentBrush);
-    }
-  });
-
-  if (!editor.canvas) {
-    alert('Error: I cannot find the canvas element!');
-    return;
-  } else if (!editor.canvas.getContext) {
-    alert('Error: no canvas.getContext!');
-    return;
-  } else {
-    // Get the 2D canvas context.
-    editor.context = editor.canvas.getContext('2d');
-    if (!editor.context) {
-      alert('Error: failed to getContext!');
-      return;
-    }
+function loadPalette() {
+  imgs = [];
+  for (var i = 0; i < 10; i++) {
+    var img = new Image();
+    img.src = 'resources/palettes/default/' + i.toString() + '.png';
+    img.id = 'brush' + i;
+    img.setAttribute('class', 'brush');
+    $(img).appendTo('#palette');
   }
 
-  var actions = ['mousedown', 'mousemove'];
-  $(actions).each(function(i, action) {
-    $(editor.canvas).bind(action, function(ev) {
-      ev._x = ev.pageX - $(this).offset().left;
-      ev._y = ev.pageY - $(this).offset().top;
-      editor.tool[action](ev);
+  head.ready(function () {
+    for (pluginID in loadedPlugins) {
+      var plugin = loadedPlugins[pluginID];
+      if (plugin.paletteImage) {
+        var img = new Image();
+        img.src = plugin.paletteImage;
+        img.id = 'brush' + pluginID;
+        img.setAttribute('class', 'brush');
+        $(img).appendTo('#palette');
+      }
+    }
+  });
+}
+
+function setupAdminBox() {
+  var buttons = [
+    // {
+    //   ID: 'first',
+    //   Name: 'reload map',
+    //   func: function() {
+    //   }
+    // }
+  ];
+
+  $(buttons).each(function() {
+    buttons_hash[this.ID] = this;
+  });
+  $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
+  $('#undone_admin, #admin_buttons h4').click(function() {
+    $('#undone_admin').toggle();
+    $('#admin_buttons').toggle();
+    // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
+  })
+  $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
+    var id = $(this).parent().attr('data-button-id');
+    return buttons_hash[id].func();
+  });
+
+  $('#drag_to_load').bind('drop', function(event) {
+    readFirstTextFile(event, function(levelData) {
+      // console.log('Loaded level data:'); console.log(levelData);
+      editor.setLevel(jQuery.parseJSON(levelData));
+      reloadMap();
+      editor.redrawMap();
     });
-  });
 
-  $('#imageView').mouseup(function(e) {
-    e._x = e.pageX - $(editor.canvas).offset().left;
-    e._y = e.pageY - $(editor.canvas).offset().top;
-    editor.tool.mouseup(e);
-  }).mouseout(function() {
-    editor.isMouseOut = true;
-    editor.mouseOverDelay = 0;
-  });
+    event.stopPropagation(); event.preventDefault(); return false;
+  }).bind('dragenter dragover', false);
+}
 
-  editor.drawCanvas(editor.camx, editor.camy);
-
-  if (!UpdateMap.priorOldValue) {
-    UpdateMap.priorOldValue = getLevelCopy();
-  }
-
-  $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
-
-  setInterval (function() { editor.mouseOverDelay++; }, 100);
-
-
+function setupHistoryManager() {
   $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
 
-  $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
-    $().undo();
-  }).parent().find("a:contains('Redo')").click(function() {
-    $().redo();
+  historyManager = new HistoryManager($('#level_storage_pane'));
+
+  $('#open_level_storage').click(function() {
+    $('#level_storage_pane').toggle();
+    $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
+    return false;
   });
 
-  $('#generate_url').click(function() {
-    generateShortURL();
+  $('#clear_level_storage').click(function() {
+    if (confirm('Are you sure you want to PERMANENTLY delete your level history?')) {
+      historyManager.clearStorage();
+    }
 
     return false;
   });
 
-  if (name = getURLParam('name')) {
-    $('#level_name input').val(name);
-  }
-
-  $('.credits a').attr('target', '_blank');
+  $('#level_storage_pane li').live('click', function() {
+    thingy = this;
+    var id = this.id;
+    id = parseInt(id.replace(/history_row_/, ''))
+    var state = historyManager.getLevelState(id);
+    editor.loadLevelState(state.level);
+    currentLevel.setName(state.name);
+  });
 }
 
 var UpdateMap = UndoableAction.extend({
@@ -200,6 +211,92 @@ var Editor = Klass.extend({
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
     this.isMouseOverScrollingEnabled = true;
+  },
+
+  setup: function() {
+    // Find the elements
+    editor.brushes = $(".brush");
+
+    editor.brushes.each(function(i) {
+      editor.brushes_img[i] = new Image();
+      editor.brushes_img[i].src = this.src;
+    });
+
+    editor.brushes.live('click', function() {
+      editor.currentBrush = this.id.replace('brush', '');
+      if (editor.currentBrush > editor.total_brushes) {
+        editor.currentBrush = String.fromCharCode(editor.currentBrush);
+      }
+    });
+
+    if (!editor.canvas) {
+      alert('Error: I cannot find the canvas element!');
+      return;
+    } else if (!editor.canvas.getContext) {
+      alert('Error: no canvas.getContext!');
+      return;
+    } else {
+      // Get the 2D canvas context.
+      editor.context = editor.canvas.getContext('2d');
+      if (!editor.context) {
+        alert('Error: failed to getContext!');
+        return;
+      }
+    }
+
+    var actions = ['mousedown', 'mousemove'];
+    $(actions).each(function(i, action) {
+      $(editor.canvas).bind(action, function(ev) {
+        ev._x = ev.pageX - $(this).offset().left;
+        ev._y = ev.pageY - $(this).offset().top;
+        editor.tool[action](ev);
+      });
+    });
+
+    $('#imageView').mouseup(function(e) {
+      e._x = e.pageX - $(editor.canvas).offset().left;
+      e._y = e.pageY - $(editor.canvas).offset().top;
+      editor.tool.mouseup(e);
+    }).mouseout(function() {
+      editor.isMouseOut = true;
+      editor.mouseOverDelay = 0;
+    });
+
+    editor.drawCanvas(editor.camx, editor.camy);
+
+    if (!UpdateMap.priorOldValue) {
+      UpdateMap.priorOldValue = getLevelCopy();
+    }
+
+    $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+
+    setInterval (function() { editor.mouseOverDelay++; }, 100);
+
+    $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+      $().undo();
+    }).parent().find("a:contains('Redo')").click(function() {
+      $().redo();
+    });
+
+    $('#generate_url').click(function() {
+      generateShortURL();
+
+      return false;
+    });
+
+    if (name = getURLParam('name')) {
+      $('#level_name input').val(name);
+    }
+
+    $('.credits a').attr('target', '_blank');
+
+    loadPalette();
+
+    $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
+
+    setupAdminBox();
+
+    setupHistoryManager();
   },
 
   drawCanvas: function(cx, cy) {

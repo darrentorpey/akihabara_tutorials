@@ -29,31 +29,6 @@ function initGameMode() {
   $('#admin_sidebar').hide();
 }
 
-function loadPalette() {
-  imgs = [];
-  for(var i = 0; i < 10; i++) {
-    var img = new Image();
-    img.src = 'resources/palettes/default/' + i.toString() + '.png';
-    img.id = 'brush' + i;
-    img.setAttribute("class", "brush");
-    $(img).appendTo('#palette');
-  }
-	head.ready(function (){
-		for(pluginID in loadedPlugins){
-			var plugin = loadedPlugins[pluginID];
-			if(plugin.paletteImage){
-				var img = new Image();
-				img.src = plugin.paletteImage;
-				img.id = "brush"+pluginID;
-				img.setAttribute("class", "brush");
-				$(img).appendTo('#palette');
-			}
-		}
-	});
-
-
-}
-
 function collapseLongText() {
   $('.fulltext').hide();
   $('.shorttext').click(function() {

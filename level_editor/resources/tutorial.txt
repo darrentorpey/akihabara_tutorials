@@ -1,11 +1,14 @@
-Tutorial From Text File (tutorial.txt)
+Getting Started with ALES
 =
 
 ___
-Getting Started
+Welcome!
 -
-Welcome!...
+ALES is an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas.
 
+Use the mouse to paint on the left hand side. Try it!
+
+![Alt text](./resources/logo.png)
 ___
 Fundamentals
 -
@@ -14,11 +17,12 @@ Do some stuff...
 You may want to know:
 
 ___
-A few advanced tricks
+Tips and tricks
 -
-And then you...
+ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
 
+To pan the map in the editor, we recommend using the W, A, S, D keys on your keyboard. You can also move your mouse to an edge of the editor and the map will pan in that direction.
 ___
 Things to remember
 -
-Finally... ::
+Finally... 

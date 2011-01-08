@@ -151,16 +151,18 @@ var PencilTool = Klass.extend({
         editor.mouseOverDelay = 0;
 
       // move the camera when you hit the edge of the screen
-      if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
-        editor.camx += 1;
-      } else if (ev._x < 40 && editor.camx > 0 && editor.mouseOverDelay >= 2) {
-        editor.camx -= 1;
-      }
+      if (editor.isMouseOverScrollingEnabled) {
+        if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
+          editor.camx += 1;
+        } else if (ev._x < 40 && editor.camx > 0 && editor.mouseOverDelay >= 2) {
+          editor.camx -= 1;
+        }
 
-      if (ev._y > 440 && editor.camy < 15 && editor.mouseOverDelay >= 2) {
-        editor.camy += 1;
-      } else if (ev._y < 40 && editor.camy > 0 && editor.mouseOverDelay >= 2) {
-        editor.camy -= 1;
+        if (ev._y > 440 && editor.camy < 15 && editor.mouseOverDelay >= 2) {
+          editor.camy += 1;
+        } else if (ev._y < 40 && editor.camy > 0 && editor.mouseOverDelay >= 2) {
+          editor.camy -= 1;
+        }
       }
     }
 
@@ -197,6 +199,7 @@ var Editor = Klass.extend({
     this.canvas = document.getElementById('imageView');
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
+    this.isMouseOverScrollingEnabled = true;
   },
 
   drawCanvas: function(cx, cy) {

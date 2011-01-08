@@ -907,10 +907,12 @@ section.credits section h4 {
 #tutorial_box {
   display: none;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 55px;
   background-color: #eef2f8;
   padding: 20px;
+  margin: 0px;
+  z-index: 11;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
   -o-border-radius: 8px;
@@ -923,7 +925,7 @@ section.credits section h4 {
   box-shadow: #999999 0px 1px 5px;
 }
 
-/* line 254, sass/admin.sass */
+/* line 256, sass/admin.sass */
 #tutorial_link {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
@@ -943,7 +945,7 @@ section.credits section h4 {
   position: fixed;
   cursor: pointer;
   top: 0px;
-  right: 150px;
+  left: 0px;
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
   background-image: -moz-linear-gradient(top, #a5b9db 0%, #b8c7e2 33%, #cad6e9 67%);

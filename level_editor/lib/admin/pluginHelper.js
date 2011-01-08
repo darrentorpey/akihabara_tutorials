@@ -1,6 +1,7 @@
 function loadPluginFromURL(url) {
-  console.log('Getting script...');
-  jQuery.getScript(url);
+//  console.log('Getting script...');
+	//Load plugins in order (hopefully) untested.
+	head.js(url);
 }
 
 function removeAllIncludes() {
@@ -86,7 +87,7 @@ function getPluginsByGroup() {
 function getPluginsForURL(){
   var pluginsURL = new Object();
   for (var pluginID in loadedPlugins) {
-    console.log(pluginID);
+//    console.log(pluginID);
     pluginsURL[pluginID] = loadedPlugins[pluginID].sourceURL;
   }
   return pluginsURL;
@@ -147,8 +148,8 @@ $(function() {
 });
 
 function introduceALESPlugin(plugin) {
-  console.log('Loading plugin:');
-  console.log(plugin);
+//  console.log('Loading plugin:');
+//  console.log(plugin);
 
   loadedPlugins[pluginCounter] = plugin;
 

@@ -1,100 +1,5 @@
 var editor;
 
-function initEditor() {
-}
-
-function loadPalette() {
-  imgs = [];
-  for (var i = 0; i < 10; i++) {
-    var img = new Image();
-    img.src = 'resources/palettes/default/' + i.toString() + '.png';
-    img.id = 'brush' + i;
-    img.setAttribute('class', 'brush');
-    $(img).appendTo('#palette');
-  }
-
-  head.ready(function () {
-    for (pluginID in loadedPlugins) {
-      var plugin = loadedPlugins[pluginID];
-      if (plugin.paletteImage) {
-        var img = new Image();
-        img.src = plugin.paletteImage;
-        img.id = 'brush' + pluginID;
-        img.setAttribute('class', 'brush');
-        $(img).appendTo('#palette');
-      }
-    }
-  });
-}
-
-function setupAdminBox() {
-  var buttons = [
-    // {
-    //   ID: 'first',
-    //   Name: 'reload map',
-    //   func: function() {
-    //   }
-    // }
-  ];
-
-  $(buttons).each(function() {
-    buttons_hash[this.ID] = this;
-  });
-  $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
-  $('#undone_admin, #admin_buttons h4').click(function() {
-    $('#undone_admin').toggle();
-    $('#admin_buttons').toggle();
-    // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
-  })
-  $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
-    var id = $(this).parent().attr('data-button-id');
-    return buttons_hash[id].func();
-  });
-
-  $('#drag_to_load').bind('drop', function(event) {
-    readFirstTextFile(event, function(levelData) {
-      editor.setLevel(jQuery.parseJSON(levelData));
-      reloadMap();
-      editor.redrawMap();
-    });
-
-    event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragenter dragover', false);
-}
-
-function setupHistoryManager() {
-  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
-
-  historyManager = new HistoryManager($('#level_storage_pane'));
-
-  $('#open_level_storage').click(function() {
-    $('#level_storage_pane').toggle();
-    $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
-    return false;
-  });
-
-  $('#clear_level_storage').click(function() {
-    if (confirm('Are you sure you want to PERMANENTLY delete your level history?')) {
-      historyManager.clearStorage();
-    }
-
-    return false;
-  });
-
-  $('#level_storage_pane li').live('click', function() {
-    thingy = this;
-    var id = this.id;
-    id = parseInt(id.replace(/history_row_/, ''))
-    var state = historyManager.getLevelState(id);
-    editor.loadLevelState(state.level);
-    currentLevel.setName(state.name);
-  });
-
-  if (!UpdateMap.priorOldValue) {
-    UpdateMap.priorOldValue = getLevelCopy();
-  }
-}
-
 var UpdateMap = UndoableAction.extend({
   init: function(value, options) {
     var self = this;
@@ -219,36 +124,13 @@ var Editor = Klass.extend({
   },
 
   setup: function() {
-    loadPalette();
-
-    // Find the elements
-    editor.brushes = $('.brush');
-
-    editor.brushes.each(function(i) {
-      editor.brushes_img[i] = new Image();
-      editor.brushes_img[i].src = this.src;
-    });
-
-    editor.brushes.live('click', function() {
-      editor.currentBrush = this.id.replace('brush', '');
-      if (editor.currentBrush > editor.total_brushes) {
-        editor.currentBrush = String.fromCharCode(editor.currentBrush);
-      }
-    });
-
+    this.loadPalette();
     this.setupMouseHandlers();
-
-    editor.drawCanvas(editor.camx, editor.camy);
+    this.drawCanvas(this.camx, this.camy);
+    this.setupAdminBox();
+    this.setupHistoryManager();
 
     $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
-
-    setInterval (function() { editor.mouseOverDelay++; }, 100);
-
-    $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
-      $().undo();
-    }).parent().find("a:contains('Redo')").click(function() {
-      $().redo();
-    });
 
     $('#generate_url').click(function() {
       generateShortURL();
@@ -263,10 +145,42 @@ var Editor = Klass.extend({
     $('.credits a').attr('target', '_blank');
 
     $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
+  },
 
-    setupAdminBox();
+  loadPalette: function() {
+    for (var i = 0; i < 10; i++) {
+      var img = new Image();
+      img.src = 'resources/palettes/default/' + i.toString() + '.png';
+      img.id = 'brush' + i;
+      img.setAttribute('class', 'brush');
+      $(img).appendTo('#palette');
+    }
 
-    setupHistoryManager();
+    head.ready(function () {
+      for (pluginID in loadedPlugins) {
+        var plugin = loadedPlugins[pluginID];
+        if (plugin.paletteImage) {
+          var img = new Image();
+          img.src = plugin.paletteImage;
+          img.id = 'brush' + pluginID;
+          img.setAttribute('class', 'brush');
+          $(img).appendTo('#palette');
+        }
+      }
+    });
+
+    // Find the elements
+    editor.brushes = $('.brush');
+
+    editor.brushes.each(function(i) {
+      editor.brushes_img[i] = new Image();
+      editor.brushes_img[i].src = this.src;
+    }).live('click', function() {
+      editor.currentBrush = this.id.replace('brush', '');
+      if (editor.currentBrush > editor.total_brushes) {
+        editor.currentBrush = String.fromCharCode(editor.currentBrush);
+      }
+    });
   },
 
   validateInit: function() {
@@ -284,6 +198,80 @@ var Editor = Klass.extend({
         return;
       }
     }
+  },
+
+  setupAdminBox: function() {
+    var buttons = [
+      // {
+      //   ID: 'first',
+      //   Name: 'reload map',
+      //   func: function() {
+      //   }
+      // }
+    ];
+
+    $(buttons).each(function() {
+      buttons_hash[this.ID] = this;
+    });
+    $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
+    $('#undone_admin, #admin_buttons h4').click(function() {
+      $('#undone_admin').toggle();
+      $('#admin_buttons').toggle();
+      // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
+    })
+    $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
+      var id = $(this).parent().attr('data-button-id');
+      return buttons_hash[id].func();
+    });
+
+    $('#drag_to_load').bind('drop', function(event) {
+      readFirstTextFile(event, function(levelData) {
+        editor.setLevel(jQuery.parseJSON(levelData));
+        reloadMap();
+        editor.redrawMap();
+      });
+
+      event.stopPropagation(); event.preventDefault(); return false;
+    }).bind('dragenter dragover', false);
+  },
+
+  setupHistoryManager: function() {
+    $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+
+    historyManager = new HistoryManager($('#level_storage_pane'));
+
+    $('#open_level_storage').click(function() {
+      $('#level_storage_pane').toggle();
+      $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
+      return false;
+    });
+
+    $('#clear_level_storage').click(function() {
+      if (confirm('Are you sure you want to PERMANENTLY delete your level history?')) {
+        historyManager.clearStorage();
+      }
+
+      return false;
+    });
+
+    $('#level_storage_pane li').live('click', function() {
+      thingy = this;
+      var id = this.id;
+      id = parseInt(id.replace(/history_row_/, ''))
+      var state = historyManager.getLevelState(id);
+      editor.loadLevelState(state.level);
+      currentLevel.setName(state.name);
+    });
+
+    if (!UpdateMap.priorOldValue) {
+      UpdateMap.priorOldValue = getLevelCopy();
+    }
+
+    $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+      $().undo();
+    }).parent().find("a:contains('Redo')").click(function() {
+      $().redo();
+    });
   },
 
   setupMouseHandlers: function() {
@@ -304,6 +292,8 @@ var Editor = Klass.extend({
       editor.isMouseOut = true;
       editor.mouseOverDelay = 0;
     });
+
+    setInterval (function() { editor.mouseOverDelay++; }, 100);
   },
 
   drawCanvas: function(cx, cy) {

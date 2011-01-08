@@ -25,10 +25,12 @@ var TutorialManager = Klass.extend({
     var tutorial_header = $('<div></div>').append(parts[0]).text();
     var tutorial_parts = parts.map(function(part, i) {
       var tmp = $('<div></div>').append(part);
+      var header_text = tmp.find('h2').text();
+      tmp.find('h2').remove();
       return {
         id: i + 1,
-        header: tmp.find('h2').text(),
-        content: '<p>' + tmp.find('p').text() + '</p>'
+        header: header_text,
+        content: '<p>' + tmp.html() + '</p>'
       }
     });
     tutorial_parts = tutorial_parts.slice(1, tutorial_parts.length);

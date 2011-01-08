@@ -2,9 +2,9 @@ introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:         'plugins/solidBox.js',
   name:              'Solid Box', //For display on hover overs and in general...
-  sprite:            ['solid_block_sprite', 'plugins/solidBox/solidBox.png'],
+  sprites:           [['solid_block_sprite', 'plugins/solidBox/solidBox.png']],
   paletteImage:      'plugins/solidBox/solidBox.png',
-  tile: {
+  tiles: [{
 		id:      'solid_block_tile',  // Set a unique ID for future reference
 		image:   'solid_block_sprite',
 		tileh:   32,
@@ -12,7 +12,7 @@ introduceALESPlugin({
 		tilerow: 1,
 		gapx:    0,
 		gapy:    0
-  },
+  }],
   group:"boxes",
   tileset:"solid_block_tile",
   solidFloor:        true,

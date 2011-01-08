@@ -2,9 +2,9 @@ introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:         'plugins/grass.js',
   name:              'Grass', //For display on hover overs and in general...
-  sprite:            ['grass_sprite', 'plugins/grass/grass.png'],
+  sprites:           [['grass_sprite', 'plugins/grass/grass.png']],
   paletteImage:      'plugins/grass/grassPalette.png',
-  tile: {
+  tiles: [{
 		id:      'grass_tile',  // Set a unique ID for future reference
 		image:   'grass_sprite',
 		tileh:   32,
@@ -12,7 +12,7 @@ introduceALESPlugin({
 		tilerow: 1,
 		gapx:    0,
 		gapy:    0
-  },
+  }],
   group:"boxes",
   tileset:"grass_tile",
   solidFloor:        false,

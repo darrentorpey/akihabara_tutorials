@@ -2,9 +2,9 @@ introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:         'plugins/lava/lava.js',
   name:              'Fire Pits', //For display on hover overs and in general...
-  sprite:            ['lava_sprite', 'plugins/lava/lava.png'],
+  sprites:            [['lava_sprite', 'plugins/lava/lava.png']],
   paletteImage:      'plugins/lava/lavaPalette.png',
-  tile: {
+  tiles: [{
     id:              'lava',
     image:           'lava_sprite',
     tileh:           32,
@@ -12,7 +12,7 @@ introduceALESPlugin({
     tilerow:         8,
     gapx:            0,
     gapy:            0
-  },
+  }],
   group:             'enemies',
   tileset:           'lava',
   solidFloor:        false,

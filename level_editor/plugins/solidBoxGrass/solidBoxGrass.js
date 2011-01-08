@@ -2,9 +2,9 @@ introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:         'plugins/solidBoxGrass.js',
   name:              'Solid Box with Grass', //For display on hover overs and in general...
-  sprite:            ['solid_block_grass_sprite', 'plugins/solidBoxGrass/solidBoxGrass.png'],
+  sprites:            [['solid_block_grass_sprite', 'plugins/solidBoxGrass/solidBoxGrass.png']],
   paletteImage:      'plugins/solidBoxGrass/solidBoxGrass.png',
-  tile: {
+  tiles: [{
 		id:      'solid_block_grass_tile',  // Set a unique ID for future reference
 		image:   'solid_block_grass_sprite',
 		tileh:   32,
@@ -12,7 +12,7 @@ introduceALESPlugin({
 		tilerow: 1,
 		gapx:    0,
 		gapy:    0
-  },
+  }],
   group:"boxes",
   tileset:"solid_block_grass_tile",
   solidFloor:        true,

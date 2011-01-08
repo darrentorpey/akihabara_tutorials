@@ -2,9 +2,9 @@ introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:         'plugins/physicsBox.js',
   name:              'Physics Box', //For display on hover overs and in general...
-  sprite:            ['physics_box_sprite', 'plugins/physicsBox/physicsBox.png'],
+  sprites:           [['physics_box_sprite', 'plugins/physicsBox/physicsBox.png']],
   paletteImage:      'plugins/physicsBox/physicsBox.png',
-  tile: {
+  tiles: [{
 		id:      'physics_box_tile',  // Set a unique ID for future reference
 		image:   'physics_box_sprite',
 		tileh:   32,
@@ -12,7 +12,7 @@ introduceALESPlugin({
 		tilerow: 1,
 		gapx:    0,
 		gapy:    0
-  },
+  }],
   group:"boxes",
   tileset:"physics_box_tile",
   solidFloor:        false,

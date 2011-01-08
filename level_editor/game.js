@@ -41,8 +41,8 @@ function getImageResources(){
 			['explosion_sprite',  'resources/Frk_Blast1.png']
 		];
 	for(var plugin in loadedPlugins) {
-		if (loadedPlugins[plugin].sprite) {
-			imageResources.push(loadedPlugins[plugin].sprite);
+		if (loadedPlugins[plugin].sprites) {
+			jQuery.merge(imageResources,loadedPlugins[plugin].sprites);
 		}
 	}
 	return imageResources;
@@ -108,8 +108,8 @@ function getTileResources(){
 		}
 	];
 	for(var plugin in loadedPlugins){
-		if(loadedPlugins[plugin].tile){
-			tileResources.push(loadedPlugins[plugin].tile);
+		if(loadedPlugins[plugin].tiles){
+			jQuery.merge(tileResources,loadedPlugins[plugin].tiles);
 		}
 	}
 	return tileResources;

@@ -53,7 +53,6 @@ function setupAdminBox() {
 
   $('#drag_to_load').bind('drop', function(event) {
     readFirstTextFile(event, function(levelData) {
-      // console.log('Loaded level data:'); console.log(levelData);
       editor.setLevel(jQuery.parseJSON(levelData));
       reloadMap();
       editor.redrawMap();
@@ -90,6 +89,10 @@ function setupHistoryManager() {
     editor.loadLevelState(state.level);
     currentLevel.setName(state.name);
   });
+
+  if (!UpdateMap.priorOldValue) {
+    UpdateMap.priorOldValue = getLevelCopy();
+  }
 }
 
 var UpdateMap = UndoableAction.extend({
@@ -211,11 +214,15 @@ var Editor = Klass.extend({
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
     this.isMouseOverScrollingEnabled = true;
+
+    this.validateInit();
   },
 
   setup: function() {
+    loadPalette();
+
     // Find the elements
-    editor.brushes = $(".brush");
+    editor.brushes = $('.brush');
 
     editor.brushes.each(function(i) {
       editor.brushes_img[i] = new Image();
@@ -229,44 +236,9 @@ var Editor = Klass.extend({
       }
     });
 
-    if (!editor.canvas) {
-      alert('Error: I cannot find the canvas element!');
-      return;
-    } else if (!editor.canvas.getContext) {
-      alert('Error: no canvas.getContext!');
-      return;
-    } else {
-      // Get the 2D canvas context.
-      editor.context = editor.canvas.getContext('2d');
-      if (!editor.context) {
-        alert('Error: failed to getContext!');
-        return;
-      }
-    }
-
-    var actions = ['mousedown', 'mousemove'];
-    $(actions).each(function(i, action) {
-      $(editor.canvas).bind(action, function(ev) {
-        ev._x = ev.pageX - $(this).offset().left;
-        ev._y = ev.pageY - $(this).offset().top;
-        editor.tool[action](ev);
-      });
-    });
-
-    $('#imageView').mouseup(function(e) {
-      e._x = e.pageX - $(editor.canvas).offset().left;
-      e._y = e.pageY - $(editor.canvas).offset().top;
-      editor.tool.mouseup(e);
-    }).mouseout(function() {
-      editor.isMouseOut = true;
-      editor.mouseOverDelay = 0;
-    });
+    this.setupMouseHandlers();
 
     editor.drawCanvas(editor.camx, editor.camy);
-
-    if (!UpdateMap.priorOldValue) {
-      UpdateMap.priorOldValue = getLevelCopy();
-    }
 
     $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
@@ -290,13 +262,48 @@ var Editor = Klass.extend({
 
     $('.credits a').attr('target', '_blank');
 
-    loadPalette();
-
     $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
 
     setupAdminBox();
 
     setupHistoryManager();
+  },
+
+  validateInit: function() {
+    if (!this.canvas) {
+      alert('Error: I cannot find the canvas element!');
+      return;
+    } else if (!this.canvas.getContext) {
+      alert('Error: no canvas.getContext!');
+      return;
+    } else {
+      // Get the 2D canvas context.
+      this.context = this.canvas.getContext('2d');
+      if (!this.context) {
+        alert('Error: failed to getContext!');
+        return;
+      }
+    }
+  },
+
+  setupMouseHandlers: function() {
+    var actions = ['mousedown', 'mousemove'];
+    $(actions).each(function(i, action) {
+      $(editor.canvas).bind(action, function(ev) {
+        ev._x = ev.pageX - $(this).offset().left;
+        ev._y = ev.pageY - $(this).offset().top;
+        editor.tool[action](ev);
+      });
+    });
+
+    $('#imageView').mouseup(function(e) {
+      e._x = e.pageX - $(editor.canvas).offset().left;
+      e._y = e.pageY - $(editor.canvas).offset().top;
+      editor.tool.mouseup(e);
+    }).mouseout(function() {
+      editor.isMouseOut = true;
+      editor.mouseOverDelay = 0;
+    });
   },
 
   drawCanvas: function(cx, cy) {
@@ -361,7 +368,6 @@ var Editor = Klass.extend({
 
   redrawMap: function() {
     new UpdateMap(getLevelCopy());
-    console.log(this.getLevelData());
     historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: this.getLevelData() });
   },
 

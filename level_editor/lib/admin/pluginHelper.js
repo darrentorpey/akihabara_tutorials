@@ -108,6 +108,13 @@ if (urlPlugins) {
     pluginCounter = pluginID;
     loadPluginFromURL(urlPlugins[pluginID]);
   }
+}else{
+  //Load the default plugins
+  jQuery.getJSON("plugins/defaultPlugins.json",function(data,textStatus){
+    jQuery(data).each(function (index,pluginString){
+    	loadPluginFromURL(pluginString);
+	 });
+  });
 }
 
 $(function() {

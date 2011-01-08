@@ -259,10 +259,8 @@
       initEditor();
       if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
 
-      Tutorials.manager.loadTutorial({
-        target: '#tutorial_box',
-        file:   'resources/tutorial.txt'
-      });
+      Tutorials.manager.loadDefaultTutorial();
+
       $('#tutorial_link').click(function() {
         $('#tutorial_box').fadeToggle();
       });

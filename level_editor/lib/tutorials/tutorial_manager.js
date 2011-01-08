@@ -44,7 +44,7 @@ var TutorialManager = Klass.extend({
   loadDefaultTutorial: function() {
     this.loadTutorial({
       target: '#tutorial_box',
-      file:   '../resources/tutorial.txt'
+      file:   'resources/tutorial.txt'
     });
   },
 

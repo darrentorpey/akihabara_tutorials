@@ -1,0 +1,8 @@
+[
+	"plugins/grass/grass.js",
+	"plugins/solidBoxGrass/solidBoxGrass.js",
+	"plugins/lava/lava.js",
+	"plugins/solidBox/solidBox.js",
+	"plugins/tnt/tnt.js",
+	"plugins/physicsBox/physicsBox.js"
+]

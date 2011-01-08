@@ -1,9 +1,9 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'http://ryan-kahn.com/akihabara/lava/lava.js',
+  sourceURL:         'plugins/lava/lava.js',
   name:              'Fire Pits', //For display on hover overs and in general...
-  sprite:            ['lava_sprite', 'http://ryan-kahn.com/akihabara/lava/lava.png'],
-  paletteImage:      'http://ryan-kahn.com/akihabara/lava/lavaPalette.png',
+  sprite:            ['lava_sprite', 'plugins/lava/lava.png'],
+  paletteImage:      'plugins/lava/lavaPalette.png',
   tile: {
     id:              'lava',
     image:           'lava_sprite',
@@ -57,13 +57,12 @@ introduceALESPlugin({
             this.frame = help.decideFrame(this.counter, { speed:4, frames:[1, 2, 3, 4] });
           }
 
-          //-1 is a hack because it wasnt working with 0, however! the heat from the lava could kill well before they hit it... :)
-          if (gbox.collides(this, pl, 0)) {
+          if (gbox.collides(this, pl, 2)) {
             pl.resetGame();
           }
 
           for (var i in gbox._objects['enemies']) {
-            if ((!gbox._objects['enemies'][i].initialize) && gbox._objects['enemies'][i].tileset != 'lava' && gbox.collides(this, gbox._objects['enemies'][i], 0)){
+            if ((!gbox._objects['enemies'][i].initialize) && gbox._objects['enemies'][i].tileset != 'lava' && gbox.collides(this, gbox._objects['enemies'][i], 2)){
               gbox.trashObject(gbox._objects['enemies'][i]);
             }
           }

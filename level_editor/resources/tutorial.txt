@@ -19,9 +19,8 @@ You may want to know:
 ___
 Tips and tricks
 -
-ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
-
-To pan the map in the editor, we recommend using the W, A, S, D keys on your keyboard. You can also move your mouse to an edge of the editor and the map will pan in that direction.
+* ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
+* To pan the map in the editor, we recommend using the W, A, S, D keys on your keyboard. You can also move your mouse to an edge of the editor and the map will pan in that direction.
 ___
 Things to remember
 -

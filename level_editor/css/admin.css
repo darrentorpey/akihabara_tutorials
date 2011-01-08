@@ -350,9 +350,10 @@ a:hover {
   background-color: white;
   border: 1px solid black;
   margin-right: 25px;
+  cursor: url(../resources/palettes/default/blank.png), default;
 }
 
-/* line 98, sass/admin.sass */
+/* line 99, sass/admin.sass */
 #jam_teaser {
   display: inline-block;
   padding: 10px 15px;
@@ -379,7 +380,7 @@ a:hover {
   margin-bottom: 0px;
 }
 
-/* line 106, sass/admin.sass */
+/* line 107, sass/admin.sass */
 #top_tools {
   overflow: hidden;
   display: inline-block;
@@ -390,7 +391,7 @@ a:hover {
 #top_tools {
   display: block;
 }
-/* line 110, sass/admin.sass */
+/* line 111, sass/admin.sass */
 #top_tools #palette {
   float: left;
   background-color: #cad6e9;
@@ -418,7 +419,7 @@ a:hover {
 #top_tools #palette:first-child {
   margin-left: 0px;
 }
-/* line 112, sass/admin.sass */
+/* line 113, sass/admin.sass */
 #top_tools #level_sharing {
   float: left;
   background-color: #cad6e9;
@@ -447,7 +448,7 @@ a:hover {
 #top_tools #level_sharing:first-child {
   margin-left: 0px;
 }
-/* line 115, sass/admin.sass */
+/* line 116, sass/admin.sass */
 #top_tools #level_loading {
   float: left;
   background-color: #cad6e9;
@@ -477,15 +478,15 @@ a:hover {
 #top_tools #level_loading:first-child {
   margin-left: 0px;
 }
-/* line 120, sass/admin.sass */
+/* line 121, sass/admin.sass */
 #top_tools #level_loading #upload_to_load input {
   width: 80px;
 }
-/* line 122, sass/admin.sass */
+/* line 123, sass/admin.sass */
 #top_tools #level_loading #drag_to_load {
   padding: 3px;
 }
-/* line 124, sass/admin.sass */
+/* line 125, sass/admin.sass */
 #top_tools #level_loading #drag_to_load a.inline_help {
   cursor: help;
   position: absolute;
@@ -493,11 +494,11 @@ a:hover {
   top: 3px;
   right: 5px;
 }
-/* line 130, sass/admin.sass */
+/* line 131, sass/admin.sass */
 #top_tools #level_loading #drag_to_load a.inline_help:hover {
   text-decoration: none;
 }
-/* line 132, sass/admin.sass */
+/* line 133, sass/admin.sass */
 #top_tools #level_saving {
   float: left;
   background-color: #cad6e9;
@@ -526,7 +527,7 @@ a:hover {
 #top_tools #level_saving:first-child {
   margin-left: 0px;
 }
-/* line 135, sass/admin.sass */
+/* line 136, sass/admin.sass */
 #top_tools #level_name {
   float: left;
   background-color: #cad6e9;
@@ -555,22 +556,21 @@ a:hover {
 #top_tools #level_name:first-child {
   margin-left: 0px;
 }
-/* line 138, sass/admin.sass */
+/* line 139, sass/admin.sass */
 #top_tools #level_name #open_level_storage {
   position: absolute;
   bottom: 0px;
   right: 5px;
 }
-/* line 142, sass/admin.sass */
+/* line 143, sass/admin.sass */
 #top_tools #level_name #open_level_storage img {
   width: 16px;
 }
 
-/* line 145, sass/admin.sass */
+/* line 146, sass/admin.sass */
 #container {
   text-align: center;
   position: relative;
-  cursor: url(../resources/palettes/default/blank.png), default;
   overflow: hidden;
   display: inline-block;
 }

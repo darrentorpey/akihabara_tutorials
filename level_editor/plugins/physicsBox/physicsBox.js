@@ -1,6 +1,6 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/physicsBox.js',
+  sourceURL:         'plugins/physicsBox/physicsBox.js',
   name:              'Physics Box', //For display on hover overs and in general...
   sprites:           [['physics_box_sprite', 'plugins/physicsBox/physicsBox.png']],
   paletteImage:      'plugins/physicsBox/physicsBox.png',

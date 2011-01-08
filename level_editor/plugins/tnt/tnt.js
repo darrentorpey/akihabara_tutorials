@@ -1,6 +1,6 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/solidBox.js',
+  sourceURL:         'plugins/tnt/tnt.js',
   name:              'TNT', //For display on hover overs and in general...
   sprites:           [['tnt_sprite', 'plugins/tnt/tnt.png']],
   paletteImage:      'plugins/tnt/tnt.png',

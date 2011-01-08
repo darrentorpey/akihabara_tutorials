@@ -1,6 +1,6 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/solidBox.js',
+  sourceURL:         'plugins/solidBox/solidBox.js',
   name:              'Solid Box', //For display on hover overs and in general...
   sprites:           [['solid_block_sprite', 'plugins/solidBox/solidBox.png']],
   paletteImage:      'plugins/solidBox/solidBox.png',

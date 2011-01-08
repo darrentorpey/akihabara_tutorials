@@ -1,6 +1,6 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/solidBoxGrass.js',
+  sourceURL:         'plugins/solidBoxGrass/solidBoxGrass.js',
   name:              'Solid Box with Grass', //For display on hover overs and in general...
   sprites:            [['solid_block_grass_sprite', 'plugins/solidBoxGrass/solidBoxGrass.png']],
   paletteImage:      'plugins/solidBoxGrass/solidBoxGrass.png',

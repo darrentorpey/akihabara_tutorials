@@ -1,6 +1,6 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/grass.js',
+  sourceURL:         'plugins/grass/grass.js',
   name:              'Grass', //For display on hover overs and in general...
   sprites:           [['grass_sprite', 'plugins/grass/grass.png']],
   paletteImage:      'plugins/grass/grassPalette.png',

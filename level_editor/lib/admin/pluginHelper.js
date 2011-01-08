@@ -88,7 +88,7 @@ function getPluginsForURL(){
   var pluginsURL = new Object();
   for (var pluginID in loadedPlugins) {
 //    console.log(pluginID);
-    pluginsURL[pluginID] = loadedPlugins[pluginID].sourceURL;
+    pluginsURL[loadedPlugins[pluginID].name] = { url: loadedPlugins[pluginID].sourceURL, id: pluginID};
   }
   return pluginsURL;
 }
@@ -106,8 +106,7 @@ if (includedJS) {
 var urlPlugins = getURLParam('plugins');
 if (urlPlugins) {
   for (pluginID in urlPlugins) {
-    pluginCounter = pluginID;
-    loadPluginFromURL(urlPlugins[pluginID]);
+    loadPluginFromURL(urlPlugins[pluginID].url);
   }
 }else{
   //Load the default plugins
@@ -150,13 +149,13 @@ $(function() {
 function introduceALESPlugin(plugin) {
 //  console.log('Loading plugin:');
 //  console.log(plugin);
-
-  loadedPlugins[pluginCounter] = plugin;
+  var pluginId = getPluginIDFromName(plugin.name);
+  loadedPlugins[pluginId] = plugin;
 
   if (plugin.paletteImage){
     var img = new Image();
     img.src = plugin.paletteImage;
-    img.id = 'brush' + pluginCounter;
+    img.id = 'brush' + pluginId;
     img.setAttribute('class', 'brush');
     $(img).appendTo('#palette');
   }
@@ -166,6 +165,24 @@ function introduceALESPlugin(plugin) {
     //Reset the game and load the new resources
     gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
   }
+}
 
-  pluginCounter++;
+
+function getPluginIDFromName(pluginName){
+	//Check to see if the plugin is in the list of existing plugins
+	var plugins = getURLParam("plugins");
+	if(plugins){
+		//We have existing plugins, no need to generate a new number. Find our pluginName in the list.
+		for(var i=0;i<plugins.length;i++){
+			if(plugins[i].name == pluginName){
+				return plugins[i].id;
+			}
+		}
+	}
+	
+	//Otherwise, find a pluginID that is not in use
+	while(loadedPlugins[pluginCounter] != null){
+		 pluginCounter++;
+	}
+	return pluginCounter;
 }

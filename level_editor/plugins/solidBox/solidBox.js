@@ -1,17 +1,17 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:         'plugins/solidBox.js',
+  sourceURL:         'plugins/solidBox/solidBox.js',
   name:              'Solid Box', //For display on hover overs and in general...
   sprites:           [['solid_block_sprite', 'plugins/solidBox/solidBox.png']],
   paletteImage:      'plugins/solidBox/solidBox.png',
   tiles: [{
-		id:      'solid_block_tile',  // Set a unique ID for future reference
-		image:   'solid_block_sprite',
-		tileh:   32,
-		tilew:   32,
-		tilerow: 1,
-		gapx:    0,
-		gapy:    0
+    id:      'solid_block_tile',  // Set a unique ID for future reference
+    image:   'solid_block_sprite',
+    tileh:   32,
+    tilew:   32,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
   }],
   group:"boxes",
   tileset:"solid_block_tile",
@@ -27,24 +27,24 @@ introduceALESPlugin({
       initialize: function() {
         toys.platformer.initialize(this, {
            frames: {
-				  still:   { speed:1, frames:[0] },
-				  walking: { speed:1, frames:[0] },
-				  jumping: { speed:1, frames:[0] },
-				  falling: { speed:1, frames:[0] },
-				  die:     { speed:1, frames:[0] }
-				},
-				x: data.x,
-				y: data.y,
-				jumpaccy: 10,
-				prevtouchedfloor: true,
-				side: data.side
+          still:   { speed:1, frames:[0] },
+          walking: { speed:1, frames:[0] },
+          jumping: { speed:1, frames:[0] },
+          falling: { speed:1, frames:[0] },
+          die:     { speed:1, frames:[0] }
+        },
+        x: data.x,
+        y: data.y,
+        jumpaccy: 10,
+        prevtouchedfloor: true,
+        side: data.side
         });
       },
 
       first: function() {
         // Counter
         this.counter = (this.counter + 1) % 10;
-		  this.frame = 0;
+      this.frame = 0;
       },
 
       blit: function() {

@@ -5,13 +5,13 @@ introduceALESPlugin({
   sprites:            [['solid_block_grass_sprite', 'plugins/solidBoxGrass/solidBoxGrass.png']],
   paletteImage:      'plugins/solidBoxGrass/solidBoxGrass.png',
   tiles: [{
-		id:      'solid_block_grass_tile',  // Set a unique ID for future reference
-		image:   'solid_block_grass_sprite',
-		tileh:   32,
-		tilew:   32,
-		tilerow: 1,
-		gapx:    0,
-		gapy:    0
+    id:      'solid_block_grass_tile',  // Set a unique ID for future reference
+    image:   'solid_block_grass_sprite',
+    tileh:   32,
+    tilew:   32,
+    tilerow: 1,
+    gapx:    0,
+    gapy:    0
   }],
   group:"boxes",
   tileset:"solid_block_grass_tile",
@@ -27,24 +27,24 @@ introduceALESPlugin({
       initialize: function() {
         toys.platformer.initialize(this, {
            frames: {
-				  still:   { speed:1, frames:[0] },
-				  walking: { speed:1, frames:[0] },
-				  jumping: { speed:1, frames:[0] },
-				  falling: { speed:1, frames:[0] },
-				  die:     { speed:1, frames:[0] }
-				},
-				x: data.x,
-				y: data.y,
-				jumpaccy: 10,
-				prevtouchedfloor: true,
-				side: data.side
+          still:   { speed:1, frames:[0] },
+          walking: { speed:1, frames:[0] },
+          jumping: { speed:1, frames:[0] },
+          falling: { speed:1, frames:[0] },
+          die:     { speed:1, frames:[0] }
+        },
+        x: data.x,
+        y: data.y,
+        jumpaccy: 10,
+        prevtouchedfloor: true,
+        side: data.side
         });
       },
 
       first: function() {
         // Counter
         this.counter = (this.counter + 1) % 10;
-		  this.frame = 0;
+      this.frame = 0;
       },
 
       blit: function() {

@@ -3,10 +3,10 @@
   <meta charset="utf-8">
   <title>ALES - the Akihabara Level Editor &amp; Sharer</title>
 
-  <link rel="stylesheet" href="stylesheets/reset.css">
-  <link rel="stylesheet" href="stylesheets/admin.css">
-  <link rel="stylesheet" href="stylesheets/plain.css">
-  <link rel="stylesheet" href="stylesheets/jquery-ui.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/plain.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">
 
   <script type="text/javascript" src="lib/head.js"></script>
   <script type="text/javascript">
@@ -157,6 +157,12 @@
       </div>
     </div>
   </aside>
+
+  <aside id="tutorial_box" class="tutorial_box">
+    Hello
+  </aside>
+  <label id="tutorial_link">Help</label>
+
 <script>
   head.js('lib/swfobject.js',
     'lib/init.js',
@@ -172,6 +178,7 @@
     { bbq: 'lib/jquery/jquery.ba-bbq.js' },
     'lib/jstorage.js',
     'lib/downloadify.min.js',
+    'lib/base.js',
     'lib/core.js',
     'lib/extensions/date_time.js',
     'lib/level.js',
@@ -179,6 +186,13 @@
     'lib/admin/gui.js',
     'lib/history.js',
     'lib/jquery/jquery-ui.js',
+    'lib/showdown.js',
+    'lib/jquery/jquery.showdown.js',
+    'lib/jquery/jquery.tmpl.js',
+    'lib/tutorials/tutorial.js',
+    'lib/tutorials/tutorial_manager.js',
+    'lib/tutorials/jquery.tutorials.js',
+    'lib/jquery-ui/jquery.ui.tutorial.js',
     'lib/h5utils.js',
     'lib/admin/pluginHelper.js',
     'lib/admin/brushLoader.js',
@@ -243,6 +257,14 @@
       loadPalette();
       initEditor();
       if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+
+      Tutorials.manager.loadTutorial({
+        target: '#tutorial_box',
+        file:   'resources/tutorial.txt'
+      });
+      $('#tutorial_link').click(function() {
+        $('#tutorial_box').fadeToggle();
+      });
 
       $(function() {
         $('#level_saving').downloadify({

@@ -35,14 +35,11 @@ function drawGuiActions() {
       // console.log('Loaded level data:'); console.log(levelData);
       editor.setLevel(jQuery.parseJSON(levelData));
       reloadMap();
+      editor.redrawMap();
     });
 
     event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragenter', function(event) {
-    event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragover', function(event) {
-    event.stopPropagation(); event.preventDefault(); return false;
-  });
+  }).bind('dragenter dragover', false);
 
   $('#open_level_storage').click(function() {
     $('#level_storage_pane').toggle();
@@ -61,11 +58,13 @@ function drawGuiActions() {
   });
 
   $('#level_storage_pane li').live('click', function() {
+    console.log('heya');
     thingy = this;
     var id = this.id;
     id = parseInt(id.replace(/history_row_/, ''))
     var state = historyManager.getLevelState(id);
     editor.loadLevelState(state.level);
+    currentLevel.setName(state.name);
   });
 }
 

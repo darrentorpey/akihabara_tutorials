@@ -39,16 +39,4 @@ $(function() {
 		}
 		return false;
 	}
-
-	function entities(s) {
-	  var e = {
-		'"' : '"',
-		'&' : '&',
-		'<' : '<',
-		'>' : '>'
-	  };
-	  return s.replace(/["&<>]/g, function (m) {
-		return e[m];
-	  });
-	}
 });

@@ -1,0 +1,17 @@
+@import core
+@import partials/tutorials
+
+$c_background: #F5F4DF
+
+body
+  padding: 0px 0px 50px
+  background-color: $c_background
+  +linear-gradient(color-stops(#F5F4DF, lighten(#F5F4DF, 10%) 50%))
+  color: #222
+  font-size: 14px
+
+#progress
+  +clearfix
+
+.tutorial_box
+  +tutorial_box

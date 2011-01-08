@@ -20,8 +20,25 @@
   <script type="text/javascript" src="../../../lib/admin/init.js"></script>
 
   <input name="" value="start"></input>
-
 <script>
+var UpdateValue = UndoableAction.extend({
+  init: function(value, options) {
+    var self = this;
+    self.value = value;
+
+    this._super(function() {
+      self.oldValue = UpdateValue.priorOldValue;
+      loadValue(self.value);
+      UpdateValue.priorOldValue = self.value;
+    }, function() {
+      loadValue(self.oldValue);
+      UpdateValue.priorOldValue = self.oldValue;
+    });
+
+    self.redo();
+  }
+});
+
 jQuery(function(){
   $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
 });

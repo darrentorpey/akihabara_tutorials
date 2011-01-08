@@ -1,3 +1,8 @@
+function replaceOneChar(s, c, n) {
+  (s = s.split(''))[n] = c;
+  return s.join('');
+}
+
 function loadImage(path, callback) {
   var image = new Image();
   image.src = path;
@@ -27,11 +32,11 @@ function requireLib(libraryName) {
 var undoCounter = 0;
 
 var UndoableAction = Klass.extend({
-  init: function(do_func, undo_func, options) {
+  init: function(options) {
     // this.parent = jQuery(parent);
     this.options   = options || {};
-    this.do_func   = do_func;
-    this.undo_func = undo_func;
+    this.do_func   = options.do;
+    this.undo_func = options.undo;
     this.counter = 0;
   },
 
@@ -56,24 +61,6 @@ var UndoableAction = Klass.extend({
 
   undo: function() {
     console.log('un-doing');
-  }
-});
-
-var UpdateValue = UndoableAction.extend({
-  init: function(value, options) {
-    var self = this;
-    self.value = value;
-
-    this._super(function() {
-      self.oldValue = UpdateValue.priorOldValue;
-      loadValue(self.value);
-      UpdateValue.priorOldValue = self.value;
-    }, function() {
-      loadValue(self.oldValue);
-      UpdateValue.priorOldValue = self.oldValue;
-    });
-
-    self.redo();
   }
 });
 
@@ -109,9 +96,38 @@ function readTextFile(file, callback) {
 
 function readFirstTextFile(event, teh_callback) {
   var files = event.dataTransfer.files; // FileList object
-  if (!files) { return false; }
+  if (!files || !files.length) { return false; }
 
   readTextFile(files[0], function(evt, file) {
     teh_callback(evt.target.result);
   })
+}
+
+function evalFirstTextFile(event) {
+  var files = event.dataTransfer.files; // FileList object
+  if (!files || !files.length) { return false; }
+
+  readTextFile(files[0], function(evt, file) {
+    eval(evt.target.result);
+  })
+}
+
+function entities(s) {
+  var e = {
+    '"' : '"',
+    '&' : '&',
+    '<' : '<',
+    '>' : '>'
+  };
+  return s.replace(/["&<>]/g, function (m) {
+    return e[m];
+  });
+}
+
+function timestampedURL(url) {
+  var base_url = url.split('?')[0];
+  var query_params = url.split('?')[1];
+  query_params = query_params ? query_params.split('&') : [];
+  query_params.push('ts=' + (new Date().getTime()));
+  return base_url + '?' + query_params.join('&');
 }

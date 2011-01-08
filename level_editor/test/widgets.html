@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>Tutorial Tool Demo</title>
+
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/tutorials.css">
+  <link rel="stylesheet" href="../css/jquery-ui.css">
+  <script type="text/javascript" src="../lib/head.js"></script>
+</head>
+<body id="widgets_testing">
+  <div id="prerendered_tut" class="tutorial_box">
+    <header>
+      Test Tutorial
+    </header>
+
+    <section>
+      <header>
+        Getting started
+      </header>
+
+      <p>
+        Welcome!...
+      </p>
+    </section>
+
+    <section>
+      <header>
+        Fundamentals
+      </header>
+
+      <p>
+        Do some stuff...
+      </p>
+    </section>
+
+    <section>
+      <header>
+        A few advanced tricks
+      </header>
+
+      <p>
+        And then you...
+      </p>
+    </section>
+
+    <section>
+      <header>
+        Things to remember
+      </header>
+
+      <p>
+        Finally...
+      </p>
+    </section>
+  </div>
+
+  <div class="tutorial_box" id="tut2"></div>
+  <div class="tutorial_box" id="tut3"></div>
+  <div class="tutorial_box" id="tutorial_box"></div>
+  <div class="tutorial_box" id="tut4"></div>
+
+  <textarea name="tutorial_markdown" id="tutorial_markdown" cols="60" rows="10">
+Tutorial From Textarea
+=
+
+___
+Getting sta''ted
+-
+Welcome!...
+
+___
+Fundamentals
+-
+Do some stuff...
+
+You may want to know:
+
+___
+A few advanced tricks
+-
+And then you...
+
+___
+Things to remember
+-
+Finally... ::
+  </textarea>
+  <input type="submit" name="" value="Create Tutorial" id="create_tutorial">
+
+  <script>
+    head.js(
+      '../lib/jquery/jquery.klass.js',
+      '../lib/core.js',
+      { jquery:    '../lib/jquery/jquery-1.4.4.js' },
+      { jquery_ui: '../lib/jquery/jquery-ui.js' },
+      '../lib/jquery-ui/jquery.ui.tutorial.js',
+      '../lib/showdown.js',
+      '../lib/jquery/jquery.tmpl.js',
+      '../lib/tutorials/tutorial.js',
+      '../lib/tutorials/tutorial_manager.js',
+      '../lib/tutorials/jquery.tutorials.js',
+      '../lib/jquery/jquery.showdown.js',
+      function() {
+        $('#prerendered_tut').tutorial();
+
+        Tutorials.manager.createTutorial($('#tut2'), new Tutorial({ header: 'Tutorial Uno', steps: [
+          { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
+          { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
+          { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
+        ]}));
+
+        $('#tut3').insertTutorial(new Tutorial({
+          header: 'Tutorial Dos',
+          steps: [
+            { id: 1, header: 'Getting started', content: '<p>Welcome!...</p>' },
+            { id: 2, header: 'Fundamentals', content: '<p>Do some stuff...</p>' },
+            { id: 3, header: 'Things to remember', content: '<p>Finally...</p>' }
+          ]
+        }));
+
+        $('#tutorial_markdown').giveMarkdown(function(markdown, html) {
+          // console.log(markdown);
+          // console.log(html);
+        });
+
+        $('#create_tutorial').click(function() {
+          $('#tut4').tutorial('destroy');
+          $('#tut4').insertTutorial(Tutorials.manager.readTutorialFromMarkdown($('#tutorial_markdown').val()));
+        }, false);
+
+        // Load a tutorial from the default tutorial file
+        Tutorials.manager.loadDefaultTutorial();
+      });
+  </script>
+</body></html>

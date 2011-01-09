@@ -31,7 +31,7 @@ var Level = Klass.extend({
   getLevelParams: function() {
     var levelParam = '';
     for (var i = 0; i < 30; i++) {
-      levelParam += this.map[i];
+      levelParam += editor.level[i];
     }
     return levelParam;
   },

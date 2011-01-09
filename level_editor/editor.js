@@ -200,26 +200,32 @@ var Editor = Klass.extend({
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
     this.isMouseOverScrollingEnabled = true;
+    this.minicvs = document.createElement("canvas");
+    this.minicvs.height = this.canvas.height*2;
+    this.minicvs.width = this.canvas.width*2;
+    this.minictx = this.minicvs.getContext('2d');
   },
 
   drawCanvas: function(cx, cy) {
-    for (var y = cy; y < cy + 15; y++) {
-      for (var x = cx; x < cx + 20; x++) {
+    for (var y = 0; y < 30; y++) {
+      for (var x = 0; x < 40; x++) {
         var brush = jQuery('#brush' + this.level[y][x]);
         if (brush.length) {
-          this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
+          this.minictx.drawImage(brush[0], (x - 0) * 32, (y - 0) * 32);
         } else {
           // We didnt find the brush the normal way, check out the char code then...
           var id = this.level[y][x].charCodeAt(0);
           var brush = jQuery('#brush' + id);
           if (brush.length) {
-            this.context.drawImage(brush[0], (x - this.camx) * 32, (y - this.camy) * 32);
+            this.minictx.drawImage(brush[0], (x -0) * 32, (y - 0) * 32);
           } else {
             console.log("Could not find brush for: " + this.level[y][x]);
           }
         }
       }
     }
+    
+    this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
 
     if (this.minimap) {
       var tc = document.createElement('canvas');
@@ -275,7 +281,7 @@ var Editor = Klass.extend({
 
   genMiniMap: function() {
     reloadMap();
-    this.minimap = editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
+    this.minimap = this.minictx.getImageData(0, 0, 640*2, 480*2); //editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;
 
     // Loop over pixels, skipping every Nth since we're shrinking the image

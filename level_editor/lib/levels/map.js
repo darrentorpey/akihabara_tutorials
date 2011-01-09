@@ -24,7 +24,7 @@ function addMap() {
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
 
       if (editor) {
-        editor.minimapCanvasContext = gbox.getCanvasContext('map_canvas');
+        editor.minimapCanvasContext = gbox.getBufferContext();//gbox.getCanvasContext('map_canvas');
       }
       
       
@@ -105,6 +105,7 @@ function reloadGamePieces(){
 			if (game.level[y][x] == '7') addDisBlock({x:x*32,y:y*32,side:true,type:'TNT'});
 			if (game.level[y][x] == '9') addEnemy({x:x*32,y:y*32,side:true}, 0);
 			if (game.level[y][x] == '6') addEnemy({x:x*32,y:y*32,side:true}, 1);
+			
 		}
     }
 }

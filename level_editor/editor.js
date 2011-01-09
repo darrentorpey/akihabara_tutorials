@@ -131,7 +131,8 @@ var PencilTool = Klass.extend({
 
 var Editor = Klass.extend({
   init: function() {
-    this.currentBrush  = '4';
+    if ($config.use_plugins) this.currentBrush  = '0';
+      else this.currentBrush  = '4';
     this.total_brushes = 10;
     this.brushes       = new Array(this.total_brushes);
     this.brushes_img   = new Array(this.total_brushes);

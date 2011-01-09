@@ -65,6 +65,10 @@ body {
   padding: 5px;
 }
 /* line 12, sass/partials/_tutorials.sass */
+.tutorial_box section p {
+  margin: 8px;
+}
+/* line 14, sass/partials/_tutorials.sass */
 .tutorial_box section header {
   font-weight: bold;
   padding-bottom: 3px;
@@ -73,21 +77,21 @@ body {
   display: inline-block;
   min-width: 100px;
 }
-/* line 19, sass/partials/_tutorials.sass */
+/* line 21, sass/partials/_tutorials.sass */
 .tutorial_box section ul, .tutorial_box section ol {
   margin-top: 10px;
   margin-left: 20px;
   margin-bottom: 5px;
 }
-/* line 24, sass/partials/_tutorials.sass */
+/* line 26, sass/partials/_tutorials.sass */
 .tutorial_box section ul {
   list-style-type: disc;
 }
-/* line 26, sass/partials/_tutorials.sass */
+/* line 28, sass/partials/_tutorials.sass */
 .tutorial_box section ol {
   list-style-type: decimal;
 }
-/* line 28, sass/partials/_tutorials.sass */
+/* line 30, sass/partials/_tutorials.sass */
 .tutorial_box .buttons {
   overflow: hidden;
   display: inline-block;
@@ -96,7 +100,7 @@ body {
 .tutorial_box .buttons {
   display: block;
 }
-/* line 30, sass/partials/_tutorials.sass */
+/* line 32, sass/partials/_tutorials.sass */
 .tutorial_box .buttons input[type=button] {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;

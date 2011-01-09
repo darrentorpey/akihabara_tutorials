@@ -26,6 +26,8 @@ function addMap() {
       if (editor) {
         editor.minimapCanvasContext = gbox.getCanvasContext('map_canvas');
       }
+      
+      
     }
   });
 }
@@ -51,10 +53,14 @@ function reloadMap() {
 	gbox.getCanvasContext('map_canvas').clearRect(0, 0, 640 * 2, 480 * 2);
 	//write the background image
 	gbox.blit(gbox.getBufferContext(), gbox.getCanvas('bg_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('bg_canvas').width, dh: gbox.getCanvas('bg_canvas').height, sourcecamera: true })
-
+	
+	
+	
 
 	gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 	gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });
+	
+	
 }
 
 function getLevelCopy(lvl) {

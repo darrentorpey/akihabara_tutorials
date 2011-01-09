@@ -94,6 +94,10 @@ body {
   padding: 5px;
 }
 /* line 12, sass/partials/_tutorials.sass */
+.tutorial_box section p {
+  margin: 8px;
+}
+/* line 14, sass/partials/_tutorials.sass */
 .tutorial_box section header {
   font-weight: bold;
   padding-bottom: 3px;
@@ -102,21 +106,21 @@ body {
   display: inline-block;
   min-width: 100px;
 }
-/* line 19, sass/partials/_tutorials.sass */
+/* line 21, sass/partials/_tutorials.sass */
 .tutorial_box section ul, .tutorial_box section ol {
   margin-top: 10px;
   margin-left: 20px;
   margin-bottom: 5px;
 }
-/* line 24, sass/partials/_tutorials.sass */
+/* line 26, sass/partials/_tutorials.sass */
 .tutorial_box section ul {
   list-style-type: disc;
 }
-/* line 26, sass/partials/_tutorials.sass */
+/* line 28, sass/partials/_tutorials.sass */
 .tutorial_box section ol {
   list-style-type: decimal;
 }
-/* line 28, sass/partials/_tutorials.sass */
+/* line 30, sass/partials/_tutorials.sass */
 .tutorial_box .buttons {
   overflow: hidden;
   display: inline-block;
@@ -125,7 +129,7 @@ body {
 .tutorial_box .buttons {
   display: block;
 }
-/* line 30, sass/partials/_tutorials.sass */
+/* line 32, sass/partials/_tutorials.sass */
 .tutorial_box .buttons input[type=button] {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
@@ -350,9 +354,10 @@ a:hover {
   background-color: white;
   border: 1px solid black;
   margin-right: 25px;
+  cursor: url(../resources/palettes/default/blank.png), default;
 }
 
-/* line 98, sass/admin.sass */
+/* line 99, sass/admin.sass */
 #jam_teaser {
   display: inline-block;
   padding: 10px 15px;
@@ -379,7 +384,7 @@ a:hover {
   margin-bottom: 0px;
 }
 
-/* line 106, sass/admin.sass */
+/* line 107, sass/admin.sass */
 #top_tools {
   overflow: hidden;
   display: inline-block;
@@ -391,7 +396,7 @@ a:hover {
 #top_tools {
   display: block;
 }
-/* line 111, sass/admin.sass */
+/* line 112, sass/admin.sass */
 #top_tools #palette {
   float: left;
   background-color: #cad6e9;
@@ -419,7 +424,7 @@ a:hover {
 #top_tools #palette:first-child {
   margin-left: 0px;
 }
-/* line 113, sass/admin.sass */
+/* line 114, sass/admin.sass */
 #top_tools #level_sharing {
   float: left;
   background-color: #cad6e9;
@@ -448,7 +453,7 @@ a:hover {
 #top_tools #level_sharing:first-child {
   margin-left: 0px;
 }
-/* line 116, sass/admin.sass */
+/* line 117, sass/admin.sass */
 #top_tools #drag_to_load {
   float: left;
   background-color: #cad6e9;
@@ -478,15 +483,15 @@ a:hover {
 #top_tools #drag_to_load:first-child {
   margin-left: 0px;
 }
-/* line 121, sass/admin.sass */
+/* line 122, sass/admin.sass */
 #top_tools #drag_to_load #upload_to_load input {
   width: 80px;
 }
-/* line 123, sass/admin.sass */
+/* line 124, sass/admin.sass */
 #top_tools #drag_to_load #drag_to_load {
   padding: 3px;
 }
-/* line 125, sass/admin.sass */
+/* line 126, sass/admin.sass */
 #top_tools #drag_to_load #drag_to_load a.inline_help {
   cursor: help;
   position: absolute;
@@ -494,11 +499,11 @@ a:hover {
   top: 3px;
   right: 5px;
 }
-/* line 131, sass/admin.sass */
+/* line 132, sass/admin.sass */
 #top_tools #drag_to_load #drag_to_load a.inline_help:hover {
   text-decoration: none;
 }
-/* line 133, sass/admin.sass */
+/* line 134, sass/admin.sass */
 #top_tools #level_saving {
   float: left;
   background-color: #cad6e9;
@@ -527,7 +532,7 @@ a:hover {
 #top_tools #level_saving:first-child {
   margin-left: 0px;
 }
-/* line 136, sass/admin.sass */
+/* line 137, sass/admin.sass */
 #top_tools #level_name {
   float: left;
   background-color: #cad6e9;
@@ -556,22 +561,21 @@ a:hover {
 #top_tools #level_name:first-child {
   margin-left: 0px;
 }
-/* line 139, sass/admin.sass */
+/* line 140, sass/admin.sass */
 #top_tools #level_name #open_level_storage {
   position: absolute;
   bottom: 0px;
   right: 5px;
 }
-/* line 143, sass/admin.sass */
+/* line 144, sass/admin.sass */
 #top_tools #level_name #open_level_storage img {
   width: 16px;
 }
 
-/* line 146, sass/admin.sass */
+/* line 147, sass/admin.sass */
 #container {
   text-align: center;
   position: relative;
-  cursor: url(../resources/palettes/default/blank.png), default;
   overflow: hidden;
   display: inline-block;
 }

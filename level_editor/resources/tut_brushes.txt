@@ -1,13 +1,18 @@
-Brushes, Motherfucker
+Using the Palette
 =
 
 ___
-BRUSHES!
+Brushes
 -
-![Two canvases.](http://img199.imageshack.us/img199/2691/tumblrky8h8tmq4u1qaitwv.jpg)
+The default palette contains 10 different brushes that paint blocks with different appearances and behaviors.
 
-**Tip:** you can click the "Help" button again to close this tutorial. Don't worry, your place will be saved!
+Click on a brush in the palette and then click and drag to paint with it in the editor:
+
+![Painting.](./resources/paint2.gif)
+
+The blocks you paint appear live in the game on the right.
 ___
-YEAAAAH
+Ground Blocks
 -
-God damn brushes.
+![](./resources/palettes/default/4.png)
+![](./resources/palettes/default/5.png)

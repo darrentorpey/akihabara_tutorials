@@ -90,7 +90,7 @@ introduceALESPlugin({
             fliph:  this.fliph,
             flipv:  this.flipv,
             camera:  this.camera,
-            alpha:  1.0
+            alpha:  .8
           });
         }
       }

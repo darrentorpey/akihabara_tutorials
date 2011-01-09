@@ -1,20 +1,20 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:      'plugins/vanishBox/vanishBox.js',
-  name:          'Vanishing Box', //For display on hover overs and in general...
-  sprites:      [
+  sourceURL:  'plugins/vanishBox/vanishBox.js',
+  name:    'Vanishing Box', //For display on hover overs and in general...
+  sprites:  [
     ['vanish_box_sprite', 'plugins/vanishBox/vanishBox.png']
   ],
-  paletteImage:   'plugins/vanishBox/vanishBox.png',
+  paletteImage:  'plugins/vanishBox/vanishBox.png',
   tiles: [
     {
-      id:          'vanish_box_tile',
-      image:        'vanish_box_sprite',
-      tileh:        32,
-      tilew:        32,
-      tilerow:      1,
-      gapx:        0,
-      gapy:        0
+      id:    'vanish_box_tile',
+      image:   'vanish_box_sprite',
+      tileh:   32,
+      tilew:   32,
+      tilerow:  1,
+      gapx:   0,
+      gapy:   0
     }
   ],
   group: "boxes",
@@ -25,8 +25,8 @@ introduceALESPlugin({
   solidRight: true,
   add: function(data) {
     gbox.addObject({
-      tileID:   data.tileID,
-      group:   this.group,
+      tileID:  data.tileID,
+      group:  this.group,
       tileset:  this.tileset,
       initialize: function() {
         toys.platformer.initialize(this, {
@@ -35,7 +35,7 @@ introduceALESPlugin({
             walking: { speed:1, frames:[0] },
             jumping: { speed:1, frames:[0] },
             falling: { speed:1, frames:[0] },
-            die:    { speed:1, frames:[0] }
+            die:  { speed:1, frames:[0] }
           },
           x: data.x,
           y: data.y,
@@ -43,11 +43,15 @@ introduceALESPlugin({
           prevtouchedfloor: true,
           side: data.side
         });
+        this.killed = false;
         help.setTileInMap(gbox.getCanvasContext("map_canvas"), map, this.x / this.w, this.y / this.h, 6, "map");
       },
 
       first: function() {
         if (gbox.objectIsVisible(this) && gbox.getObject("player", "player_id")) {
+          if (this.killed) {
+            gbox.trashObject(this);
+          }
           // Counter, required for setFrame
           this.counter = (this.counter + 1) % 10;
           for (var j in gbox._groups) {
@@ -59,7 +63,7 @@ introduceALESPlugin({
                   this.onMe = other;
                   if (toys.timer.every(this, 'fall', 30) == toys.TOY_DONE) {
                     help.setTileInMap(gbox.getCanvasContext('map_canvas'), map, this.x / this.w, this.y / this.h, null, "map");
-                    gbox.trashObject(this);
+                    this.killed = true;
                   }
                   if (this.toys['fall'].timer > 0) {
                     this.alpha = 1 - this.toys['fall'].timer / 30.0;
@@ -83,8 +87,8 @@ introduceALESPlugin({
           gbox.blitTile(gbox.getBufferContext(), {
             tileset: this.tileset,
             tile:  this.frame,
-            dx:   this.x,
-            dy:   this.y,
+            dx:  this.x,
+            dy:  this.y,
             fliph:  this.fliph,
             flipv:  this.flipv,
             camera:  this.camera,

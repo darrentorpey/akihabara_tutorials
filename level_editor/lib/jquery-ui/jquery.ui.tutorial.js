@@ -1,6 +1,7 @@
 var TutorialWidget = {
 
   _currentStep:   1,
+  _fudgeFactor:   20,
   _totalSteps:    0,
 
   _prevButton:    false,
@@ -19,12 +20,12 @@ var TutorialWidget = {
     this._nextButton    = $('<input type="button" value="next step">');
     this._restartButton = $('<input type="button" value="restart">');
 
-    $('<div class="buttons"></div>').css('padding-top', '5px').appendTo(this.element).append(this._prevButton).append(this._nextButton).append(this._restartButton);
+    $('<div class="buttons"></div>').insertAfter(this.element.children('header')).append(this._prevButton).append(this._nextButton).append(this._restartButton);
     this._prevButton.hide();
     this._restartButton.hide();
 
-    this._progressbar = $('<div id="progress"/>').prependTo(this.element);
-    this._progressbar.progressbar({ value: ((100/this._totalSteps) * this._currentStep) });
+    this._progressbar = $('<div id="progress"/>').insertAfter(this.element.children('header'));
+    this._progressbar.progressbar({ value: (((100 - this._fudgeFactor)/this._totalSteps) * this._currentStep + this._fudgeFactor) });
 
     this._progressbar.find('.ui-progressbar-value').html('<span>Step ' + this._currentStep + ' of ' + this._totalSteps + '</span>');
 
@@ -66,7 +67,7 @@ var TutorialWidget = {
     this._nextButton.toggle(this._currentStep < this._totalSteps);
     this._restartButton.toggle(this._currentStep > 2);
     this.element.find('input[type=submit]').toggle(this._currentStep == this._totalSteps);
-    this._progressbar.progressbar('option', 'value', ((100/this._totalSteps) * this._currentStep));
+    this._progressbar.progressbar('option', 'value', (((100 - this._fudgeFactor)/this._totalSteps) * this._currentStep + this._fudgeFactor));
     this._progressbar.find('.ui-progressbar-value span').text('Step ' + this._currentStep + ' of '+ this._totalSteps);
   },
 

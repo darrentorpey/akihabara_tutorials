@@ -32,7 +32,7 @@ ALES provides full undo/redo. Press Ctrl+Z to undo, Ctrl+Y to redo. You can also
 
 ![Brushes.](./resources/tut_undo.png)
 ___
-Naming a Level
+Naming Your Level
 -
 You can name your level by typing in a new name here:
 
@@ -40,14 +40,34 @@ You can name your level by typing in a new name here:
 
 There's no need to press enter: the name automatically updates as you type.
 ___
-Tips and tricks: Resolution
+Sharing Your Level
+-
+You can share the levels you make with friends! Just click on the "Generate a URL" link and copy it to your clipboard:
+
+![Brushes.](./resources/tut_share.gif)
+
+Anyone who visits that link will be able to play your level in **Game Mode**.
+___
+Game Mode
+-
+When you share a level with someone, they see it in game mode, where the editor is hidden and they get some tips on controls:
+
+![Brushes.](./resources/tut_game.png)
+
+There's a link at the bottom of game mode that a visitor can click to edit their own copy of your level. Hopefully they'll build on what you've made it share it back with you!
+___
+Level History
+-
+ALES locally stores the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click here to view every revision you've ever made to any level:
+
+![Brushes.](./resources/tut_name.png)
+
+You don't even have to worry about the current level you're editing: you can always get back to it by scrolling to the top and clicking the most recent level revision.
+___
+Resolution Problems?
 -
 ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
 ___
-Tips and tricks: Panning
+Thank You!
 -
-* To pan the map in the editor, we recommend 
-___
-Things to remember
--
-Finally... 
+Thanks for trying ALES! We hope you have fun putting levels together.

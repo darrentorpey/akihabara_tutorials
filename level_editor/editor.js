@@ -21,6 +21,29 @@ var UpdateMap = UndoableAction.extend({
   }
 });
 
+function setupSaveLevelBox() {
+  $('#level_saving').downloadify({
+    swf:           'resources/flash/downloadify.swf',
+    downloadImage: 'images/save_level_92x128.png',
+    width:         92,
+    height:        32,
+    filename:      function() { return currentLevel.getFilenameForSave() },
+    data:          function() { return editor.getLevelDataForSaveFile() }
+  }).show();
+}
+
+function setupLoadLevelBox() {
+  $('#drag_to_load').bind('drop', function(event) {
+    readFirstTextFile(event, function(levelData) {
+      editor.setLevel(jQuery.parseJSON(levelData));
+      reloadMap();
+      editor.redrawMap();
+    });
+
+    event.stopPropagation(); event.preventDefault(); return false;
+  }).bind('dragenter dragover', false).show();
+}
+
 function addEditorHelper() {
    var editorHelper = gbox.addObject({
     id:    'editor_helper',
@@ -70,7 +93,7 @@ var PencilTool = Klass.extend({
         editor.mouseOverDelay = 0;
 
       // move the camera when you hit the edge of the screen
-      if (editor.isMouseOverScrollingEnabled) {
+      if ($config.mouse_over_scrolling) {
         if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
           editor.camx += 1;
         } else if (ev._x < 40 && editor.camx > 0 && editor.mouseOverDelay >= 2) {
@@ -118,7 +141,6 @@ var Editor = Klass.extend({
     this.canvas = document.getElementById('imageView');
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
-    this.isMouseOverScrollingEnabled = true;
 
     this.validateInit();
   },
@@ -127,7 +149,6 @@ var Editor = Klass.extend({
     this.loadPalette();
     this.setupMouseHandlers();
     this.drawCanvas(this.camx, this.camy);
-    this.setupAdminBox();
     this.setupHistoryManager();
 
     $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
@@ -138,13 +159,13 @@ var Editor = Klass.extend({
       return false;
     });
 
-    if (name = getURLParam('name')) {
-      $('#level_name input').val(name);
-    }
-
     $('.credits a').attr('target', '_blank');
 
     $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
+
+    if (name = getURLParam('name')) { $('#level_name input').val(name); }
+    if ($config.use_admin_box) { this.setupAdminBox(); }
+    if ($config.show_event_callout) { $('#event_callout').show(); }
   },
 
   loadPalette: function() {
@@ -224,15 +245,7 @@ var Editor = Klass.extend({
       return buttons_hash[id].func();
     });
 
-    $('#drag_to_load').bind('drop', function(event) {
-      readFirstTextFile(event, function(levelData) {
-        editor.setLevel(jQuery.parseJSON(levelData));
-        reloadMap();
-        editor.redrawMap();
-      });
-
-      event.stopPropagation(); event.preventDefault(); return false;
-    }).bind('dragenter dragover', false);
+    if ($config.save_and_load) { setupLoadLevelBox(); }
   },
 
   setupHistoryManager: function() {

@@ -1,7 +1,7 @@
 var TutorialWidget = {
 
   _currentStep:   1,
-  _fudgeFactor:   10,
+  _fudgeFactor:   20,
   _totalSteps:    0,
 
   _prevButton:    false,

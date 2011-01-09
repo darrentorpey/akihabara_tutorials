@@ -944,6 +944,7 @@ section.credits section h4 {
   left: 55px;
   background-color: #eef2f8;
   padding: 15px;
+  padding-top: 5px;
   margin: 0px;
   z-index: 11;
   -moz-border-radius: 8px;

@@ -128,11 +128,9 @@ introduceALESPlugin({
                   for (var j in gbox._groups) {
                     for (var i in gbox._objects[gbox._groups[j]]) {
                       var group = gbox._groups[j];
-                      if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes') {
-                        var other = gbox._objects[group][i];
-                        if (gbox.pixelcollides({ x: this.x + this.w / 2 + this.w * dx, y: this.y + this.h / 2 + this.h * dy }, other)) {
-                          other.killed = true;
-                        }
+                      var other = gbox._objects[group][i];
+                      if (gbox.pixelcollides({ x: this.x + this.w / 2 + this.w * dx, y: this.y + this.h / 2 + this.h * dy }, other)) {
+                        other.killed = true;
                       }
                     }
                   }

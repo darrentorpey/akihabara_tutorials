@@ -7,14 +7,14 @@ Welcome!
 ALES is an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas.
 
 ![Two canvases.](./resources/tut_canvases.png)
+
+**Tip:** you can click the "Help" button again to close this tutorial. Don't worry, your place will be saved!
 ___
 The Map and the Editor
 -
-The map of the level is actually twice as wide and twice as tall as the area you can see in the game or in the editor. Because we can't see the whole map at once, we've added a minimap to the upper right of the editor.
+The map of the level is actually twice as wide and twice as tall as the area you can see in the game or in the editor. Because we can't see the whole map at once, we've added a minimap to the upper right of the editor. To scroll the editor so you see a different part of the map, use the W, A, S, D keys on your keyboard:
 
 ![Minimap.](./resources/scroll.gif)
-
-**Tip:** to scroll the editor so you see a different part of the map, use the W, A, S, D keys on your keyboard. You can also move your mouse to an edge of the editor and the map will scroll in that direction.
 ___
 Painting
 -
@@ -66,7 +66,7 @@ You don't even have to worry about the current level you're editing: you can alw
 ___
 Resolution Problems?
 -
-ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
+ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser. You can press Ctrl and + (plus) to zoom in if you went a little too far.
 ___
 Thank You!
 -

@@ -57,3 +57,4 @@ var TutorialManager = Klass.extend({
 });
 var Tutorials = {};
 Tutorials.manager = new TutorialManager();
+Tutorials.brushes = new TutorialManager();

@@ -257,12 +257,33 @@ section.credits
   +border-radius(8px)
   +box-shadow(#999, 0px, 1px, 5px)
 
+#tutorial_box_brushes
+  display: none
+  position: absolute
+  top:  5px
+  left: 105px
+  background-color: lighten($c_primary_5, 40%)
+  padding: 15px
+  margin: 0px
+  z-index: 11
+  +border-radius(8px)
+  +box-shadow(#999, 0px, 1px, 5px)
+
 #tutorial_link
   +admin_box
   position: fixed
   cursor: pointer
   top: 0px
   left: 0px
+  +discrete_links
+  padding:
+    left: 10px
+    right: 10px
+
+#tutorial_brushes
+  +admin_box
+  position: relative
+  cursor: pointer
   +discrete_links
   padding:
     left: 10px

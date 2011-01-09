@@ -11,6 +11,8 @@ Click on a brush in the palette and then click and drag to paint with it in the 
 ![Painting.](./resources/paint2.gif)
 
 The blocks you paint appear live in the game on the right.
+
+To erase, select the blank brush and paint with it.
 ___
 Ground Blocks and Grass Tile
 -

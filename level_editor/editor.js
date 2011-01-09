@@ -1,86 +1,5 @@
 var editor;
 
-function initEditor() {
-  // Find the elements
-  editor.brushes = $(".brush");
-
-  editor.brushes.each(function(i) {
-    editor.brushes_img[i] = new Image();
-    editor.brushes_img[i].src = this.src;
-  });
-
-  editor.brushes.live('click', function() {
-    editor.currentBrush = this.id.replace('brush', '');
-    if (editor.currentBrush > editor.total_brushes) {
-      editor.currentBrush = String.fromCharCode(editor.currentBrush);
-    }
-  });
-
-  if (!editor.canvas) {
-    alert('Error: I cannot find the canvas element!');
-    return;
-  } else if (!editor.canvas.getContext) {
-    alert('Error: no canvas.getContext!');
-    return;
-  } else {
-    // Get the 2D canvas context.
-    editor.context = editor.canvas.getContext('2d');
-    if (!editor.context) {
-      alert('Error: failed to getContext!');
-      return;
-    }
-  }
-
-  var actions = ['mousedown', 'mousemove'];
-  $(actions).each(function(i, action) {
-    $(editor.canvas).bind(action, function(ev) {
-      ev._x = ev.pageX - $(this).offset().left;
-      ev._y = ev.pageY - $(this).offset().top;
-      editor.tool[action](ev);
-    });
-  });
-
-  $('#imageView').mouseup(function(e) {
-    e._x = e.pageX - $(editor.canvas).offset().left;
-    e._y = e.pageY - $(editor.canvas).offset().top;
-    editor.tool.mouseup(e);
-  }).mouseout(function() {
-    editor.isMouseOut = true;
-    editor.mouseOverDelay = 0;
-  });
-
-  editor.drawCanvas(editor.camx, editor.camy);
-
-  if (!UpdateMap.priorOldValue) {
-    UpdateMap.priorOldValue = getLevelCopy();
-  }
-
-  $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
-
-  setInterval (function() { editor.mouseOverDelay++; }, 100);
-
-
-  $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
-
-  $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
-    $().undo();
-  }).parent().find("a:contains('Redo')").click(function() {
-    $().redo();
-  });
-
-  $('#generate_url').click(function() {
-    generateShortURL();
-
-    return false;
-  });
-
-  if (name = getURLParam('name')) {
-    $('#level_name input').val(name);
-  }
-
-  $('.credits a').attr('target', '_blank');
-}
-
 var UpdateMap = UndoableAction.extend({
   init: function(value, options) {
     var self = this;
@@ -101,6 +20,29 @@ var UpdateMap = UndoableAction.extend({
     self.redo();
   }
 });
+
+function setupSaveLevelBox() {
+  $('#level_saving').downloadify({
+    swf:           'resources/flash/downloadify.swf',
+    downloadImage: 'images/save_level_92x128.png',
+    width:         92,
+    height:        32,
+    filename:      function() { return currentLevel.getFilenameForSave() },
+    data:          function() { return editor.getLevelDataForSaveFile() }
+  }).show();
+}
+
+function setupLoadLevelBox() {
+  $('#drag_to_load').bind('drop', function(event) {
+    readFirstTextFile(event, function(levelData) {
+      editor.setLevel(jQuery.parseJSON(levelData));
+      reloadMap();
+      editor.redrawMap();
+    });
+
+    event.stopPropagation(); event.preventDefault(); return false;
+  }).bind('dragenter dragover', false).show();
+}
 
 function addEditorHelper() {
    var editorHelper = gbox.addObject({
@@ -151,7 +93,7 @@ var PencilTool = Klass.extend({
         editor.mouseOverDelay = 0;
 
       // move the camera when you hit the edge of the screen
-      if (editor.isMouseOverScrollingEnabled) {
+      if ($config.mouse_over_scrolling) {
         if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
           editor.camx += 1;
         } else if (ev._x < 40 && editor.camx > 0 && editor.mouseOverDelay >= 2) {
@@ -199,11 +141,175 @@ var Editor = Klass.extend({
     this.canvas = document.getElementById('imageView');
     this.mouseOverDelay = 0;
     this.isMouseOut = false;
-    this.isMouseOverScrollingEnabled = true;
     this.minicvs = document.createElement("canvas");
     this.minicvs.height = this.canvas.height*2;
     this.minicvs.width = this.canvas.width*2;
     this.minictx = this.minicvs.getContext('2d');
+    this.validateInit();
+  },
+
+  setup: function() {
+    this.loadPalette();
+    this.setupMouseHandlers();
+    this.drawCanvas(this.camx, this.camy);
+    this.setupHistoryManager();
+
+    $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
+
+    $('#generate_url').click(function() {
+      generateShortURL();
+
+      return false;
+    });
+
+    $('.credits a').attr('target', '_blank');
+
+    $('<div id="flash">&nbsp;</div>').appendTo('body').hide();
+
+    if (name = getURLParam('name')) { $('#level_name input').val(name); }
+    if ($config.use_admin_box) { this.setupAdminBox(); }
+    if ($config.show_event_callout) { $('#event_callout').show(); }
+  },
+
+  loadPalette: function() {
+    for (var i = 0; i < 10; i++) {
+      var img = new Image();
+      img.src = 'resources/palettes/default/' + i.toString() + '.png';
+      img.id = 'brush' + i;
+      img.setAttribute('class', 'brush');
+      $(img).appendTo('#palette');
+    }
+
+    head.ready(function () {
+      for (pluginID in loadedPlugins) {
+        var plugin = loadedPlugins[pluginID];
+        if (plugin.paletteImage) {
+          var img = new Image();
+          img.src = plugin.paletteImage;
+          img.id = 'brush' + pluginID;
+          img.setAttribute('class', 'brush');
+          $(img).appendTo('#palette');
+        }
+      }
+    });
+
+    // Find the elements
+    editor.brushes = $('.brush');
+
+    editor.brushes.each(function(i) {
+      editor.brushes_img[i] = new Image();
+      editor.brushes_img[i].src = this.src;
+    }).live('click', function() {
+      editor.currentBrush = this.id.replace('brush', '');
+      if (editor.currentBrush > editor.total_brushes) {
+        editor.currentBrush = String.fromCharCode(editor.currentBrush);
+      }
+    });
+  },
+
+  validateInit: function() {
+    if (!this.canvas) {
+      alert('Error: I cannot find the canvas element!');
+      return;
+    } else if (!this.canvas.getContext) {
+      alert('Error: no canvas.getContext!');
+      return;
+    } else {
+      // Get the 2D canvas context.
+      this.context = this.canvas.getContext('2d');
+      if (!this.context) {
+        alert('Error: failed to getContext!');
+        return;
+      }
+    }
+  },
+
+  setupAdminBox: function() {
+    var buttons = [
+      // {
+      //   ID: 'first',
+      //   Name: 'reload map',
+      //   func: function() {
+      //   }
+      // }
+    ];
+
+    $(buttons).each(function() {
+      buttons_hash[this.ID] = this;
+    });
+    $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
+    $('#undone_admin, #admin_buttons h4').click(function() {
+      $('#undone_admin').toggle();
+      $('#admin_buttons').toggle();
+      // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
+    })
+    $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
+      var id = $(this).parent().attr('data-button-id');
+      return buttons_hash[id].func();
+    });
+
+    if ($config.save_and_load) { setupLoadLevelBox(); }
+  },
+
+  setupHistoryManager: function() {
+    $().enableUndo({ redoCtrlChar : 'y', redoShiftReq : false });
+
+    historyManager = new HistoryManager($('#level_storage_pane'));
+
+    $('#open_level_storage').click(function() {
+      $('#level_storage_pane').toggle();
+      $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
+      return false;
+    });
+
+    $('#clear_level_storage').click(function() {
+      if (confirm('Are you sure you want to PERMANENTLY delete your level history?')) {
+        historyManager.clearStorage();
+      }
+
+      return false;
+    });
+
+    $('#level_storage_pane li').live('click', function() {
+      thingy = this;
+      var id = this.id;
+      id = parseInt(id.replace(/history_row_/, ''))
+      var state = historyManager.getLevelState(id);
+      editor.loadLevelState(state.level);
+      currentLevel.setName(state.name);
+    });
+
+    if (!UpdateMap.priorOldValue) {
+      UpdateMap.priorOldValue = getLevelCopy();
+    }
+
+    $('<div style="display: inline"><a href="#" style="padding-right: 1px; padding-left: 3px;">Undo</a><a href="#" style="margin-left: 3px; padding-left: 6px; border-left: 1px solid #999">Redo</a></div>').appendTo('#undo_counter').find("a:contains('Undo')").click(function() {
+      $().undo();
+    }).parent().find("a:contains('Redo')").click(function() {
+      $().redo();
+    });
+  },
+
+  setupMouseHandlers: function() {
+    var actions = ['mousedown', 'mousemove'];
+    $(actions).each(function(i, action) {
+      $(editor.canvas).bind(action, function(ev) {
+        ev._x = ev.pageX - $(this).offset().left;
+        ev._y = ev.pageY - $(this).offset().top;
+        editor.tool[action](ev);
+      });
+    });
+
+    $('#imageView').mouseup(function(e) {
+      e._x = e.pageX - $(editor.canvas).offset().left;
+      e._y = e.pageY - $(editor.canvas).offset().top;
+      editor.tool.mouseup(e);
+    }).mouseout(function() {
+      editor.isMouseOut = true;
+      editor.mouseOverDelay = 0;
+    });
+
+    setInterval (function() { editor.mouseOverDelay++; }, 100);
   },
 
   drawCanvas: function(cx, cy) {
@@ -270,7 +376,6 @@ var Editor = Klass.extend({
 
   redrawMap: function() {
     new UpdateMap(getLevelCopy());
-    console.log(this.getLevelData());
     historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: this.getLevelData() });
   },
 

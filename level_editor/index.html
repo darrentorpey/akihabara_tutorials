@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/plain.css">
   <link rel="stylesheet" href="css/jquery-ui.css">
 
+  <script type="text/javascript" src="lib/config.js"></script>
   <script type="text/javascript" src="lib/head.js"></script>
 </head>
 <body>
@@ -37,13 +38,10 @@
       <input type="text" size="20" placeholder="Click generate link" id="share">
     </div>
 
-    <div id="level_saving">
-    </div>
+    <div id="level_saving" style="display: none"></div>
 
-    <div id="level_loading">
-      <p id="drag_to_load">
-        Drag here to load <a href="#" title="Drag a level file (that was saved from this editor) onto this box to load it" class="inline_help">(?)</a>
-      </p>
+    <div id="drag_to_load" style="display: none">
+      Drag here to load <a href="#" title="Drag a level file (that was saved from this editor) onto this box to load it" class="inline_help">(?)</a>
     </div>
 
     <div id="level_storage_pane" style="display: none">
@@ -53,7 +51,7 @@
     </div>
   </section>
 
-  <div id="event_callout">
+  <div id="event_callout" style="display: none">
     <a href="http://bostongamejams.com/game-jams/html5-tools-jam-2011/" id="jam_teaser" target="_blank">Build great HTML5 game dev tools at the HTML5 Tools Jam, January 8<sup>th</sup> + 9<sup>th</sup>, 2011 &mdash; Boston/worldwide &raquo;</a>
   </div>
 
@@ -242,10 +240,7 @@
     if (!gameOnlyMode) {
       editor = new Editor();
       editor.level = currentLevel.map;
-
-      loadPalette();
-      initEditor();
-      if (typeof drawGuiActions != 'undefined') { drawGuiActions(); }
+      editor.setup();
 
       Tutorials.manager.loadDefaultTutorial();
 
@@ -253,16 +248,9 @@
         $('#tutorial_box').fadeToggle();
       });
 
-      $(function() {
-        $('#level_saving').downloadify({
-          swf:           'resources/flash/downloadify.swf',
-          downloadImage: 'images/save_level_92x128.png',
-          width:         92,
-          height:        32,
-          filename:      function() { return currentLevel.getFilenameForSave() },
-          data:          function() { return editor.getLevelDataForSaveFile() }
-        });
-      })
+      if ($config.flash_okay && $config.save_and_load) {
+        setupSaveLevelBox();
+      }
     }
   });
 </script>

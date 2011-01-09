@@ -77,7 +77,7 @@ function addPlayer() {
       followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
 
       if (gbox.keyIsHit("b")) {
-
+  
       }
 
       if (gbox.keyIsHit("c")) {

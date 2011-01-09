@@ -1,6 +1,5 @@
 [
   "plugins/solidBox/solidBox.js",
-  "plugins/solidBoxGrass/solidBoxGrass.js",
   "plugins/grass/grass.js",
   "plugins/lava/lava.js",
   "plugins/tnt/tnt.js",

@@ -5,14 +5,14 @@ introduceALESPlugin({
   sprites:      [
     ['solid_block_sprite', 'plugins/solidBox/solidBox.png']
   ],
-  paletteImage:   'plugins/solidBox/solidBox.png',
+  paletteImage:   'plugins/solidBox/solidBoxPalette.png',
   tiles: [
     {
       id:   'solid_block_tile',  // Set a unique ID for future reference
       image:  'solid_block_sprite',
       tileh:  32,
       tilew:  32,
-      tilerow: 1,
+      tilerow: 2,
       gapx:  0,
       gapy:  0
     }
@@ -52,7 +52,15 @@ introduceALESPlugin({
           gbox.trashObject(this);
         }
         this.counter = (this.counter + 1) % 10;
-        this.frame = 0;
+		  var topleft = help.getTileInMap(this.x + 4, this.y - 1, map, 0, 'map');
+		  var topright = help.getTileInMap(this.x + this.w - 4, this.y - 1, map, 0, 'map');
+		  if ((topleft && topleft == parseInt(this.tileID)) || (topright && topright == parseInt(this.tileID))) {
+		 	 //This is below an existing tile.
+          this.frame = 0;
+		  } else {
+          this.frame = 1;
+		  }
+
       },
 
       blit: function() {

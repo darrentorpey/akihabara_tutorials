@@ -172,26 +172,34 @@ var Editor = Klass.extend({
   },
 
   loadPalette: function() {
-    for (var i = 0; i < 10; i++) {
+    if (!$config.use_plugins) {
+      for (var i = 0; i < 10; i++) {
+        var img = new Image();
+        img.src = 'resources/palettes/default/' + i.toString() + '.png';
+        img.id = 'brush' + i;
+        img.setAttribute('class', 'brush');
+        $(img).appendTo('#palette');
+      }
+    } else {
       var img = new Image();
-      img.src = 'resources/palettes/default/' + i.toString() + '.png';
-      img.id = 'brush' + i;
+      img.src = 'resources/palettes/default/0.png';
+      img.id = 'brush0';
       img.setAttribute('class', 'brush');
-      $(img).appendTo('#palette');
+	   $(img).appendTo('#palette');
+      head.ready(function () {
+        for (pluginID in loadedPlugins) {
+          var plugin = loadedPlugins[pluginID];
+          if (plugin.paletteImage) {
+            var img = new Image();
+            img.src = plugin.paletteImage;
+            img.id = 'brush' + pluginID;
+            img.setAttribute('class', 'brush');
+            $(img).appendTo('#palette');
+          }
+        }
+      });
     }
 
-    head.ready(function () {
-      for (pluginID in loadedPlugins) {
-        var plugin = loadedPlugins[pluginID];
-        if (plugin.paletteImage) {
-          var img = new Image();
-          img.src = plugin.paletteImage;
-          img.id = 'brush' + pluginID;
-          img.setAttribute('class', 'brush');
-          $(img).appendTo('#palette');
-        }
-      }
-    });
 
     // Find the elements
     editor.brushes = $('.brush');
@@ -330,7 +338,7 @@ var Editor = Klass.extend({
         }
       }
     }
-    
+
     this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
 
     if (this.minimap) {

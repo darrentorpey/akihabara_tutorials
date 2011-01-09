@@ -1,32 +1,32 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
-  sourceURL:    'plugins/lava/lava.js',
-  name:       'Fire Pits', //For display on hover overs and in general...
-  sprites:      [
+  sourceURL:   'plugins/lava/lava.js',
+  name:     'Fire Pits', //For display on hover overs and in general...
+  sprites:    [
     ['lava_sprite', 'plugins/lava/lava.png']
   ],
-  paletteImage:   'plugins/lava/lavaPalette.png',
+  paletteImage:  'plugins/lava/lavaPalette.png',
   tiles: [
     {
-      id:       'lava',
-      image:      'lava_sprite',
-      tileh:      32,
-      tilew:      32,
-      tilerow:    13,
-      gapx:      0,
-      gapy:      0
+      id:     'lava',
+      image:    'lava_sprite',
+      tileh:    32,
+      tilew:    32,
+      tilerow:   13,
+      gapx:    0,
+      gapy:    0
     }
   ],
-  group:      'boxes',
-  tileset:      'lava',
-  solidFloor:    false,
-  solidCeil:    false,
-  solidLeft:    false,
-  solidRight:    false,
+  group:    'lava',
+  tileset:    'lava',
+  solidFloor:   false,
+  solidCeil:   false,
+  solidLeft:   false,
+  solidRight:   false,
   add: function(data) {
     gbox.addObject({
-      tileID:   data.tileID,
-      group:   this.group,
+      tileID:  data.tileID,
+      group:  this.group,
       tileset:  this.tileset,
       initialize: function() {
         toys.platformer.initialize(this, {
@@ -36,12 +36,12 @@ introduceALESPlugin({
             walking:  { speed: 4, frames:[0] },
             jumping:  { speed: 4, frames:[0] },
             falling:  { speed: 4, frames:[0] },
-            die:   { speed: 4, frames:[0] }
+            die:  { speed: 4, frames:[0] }
           },
-          x:    data.x,
-          y:    data.y,
+          x:   data.x,
+          y:   data.y,
           jumpaccy: 10,
-          side:   data.side,
+          side:  data.side,
           onBox:  false
         });
         this.killed = false;
@@ -50,7 +50,7 @@ introduceALESPlugin({
       first: function() {
         // Counter
         this.counter = (this.counter + 1);
-
+        this.touchedfloor = false;
         var pl = gbox.getObject('player', 'player_id');
         if (gbox.objectIsVisible(this) && pl) {
           if (this.killed) {
@@ -58,7 +58,7 @@ introduceALESPlugin({
           }
           var topleft = help.getTileInMap(this.x + 4, this.y - 1, map, 0, 'map');
           var topright = help.getTileInMap(this.x + this.w - 4, this.y - 1, map, 0, 'map');
-          if ((topleft && topleft == this.tileID) || (topright && topright == this.tileID)) {
+          if ((topleft && topleft == parseInt(this.tileID)) || (topright && topright == parseInt(this.tileID))) {
             //This is below an existing tile. Don't show the bubbly animation
             this.frame = help.decideFrame(this.counter, { speed:4, frames:[10,11,12] });
           } else {
@@ -85,8 +85,8 @@ introduceALESPlugin({
           gbox.blitTile(gbox.getBufferContext(), {
             tileset: this.tileset,
             tile:  this.frame,
-            dx:   this.x,
-            dy:   this.y,
+            dx:  this.x,
+            dy:  this.y,
             fliph:  this.fliph,
             flipv:  this.flipv,
             camera:  this.camera,

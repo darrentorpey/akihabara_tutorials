@@ -34,8 +34,11 @@ function addMap() {
 
 function loadMap() {
 	var mapData = [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A']];
-	for(pluginID in loadedPlugins){
-		mapData.push([pluginID,String.fromCharCode(pluginID)]);
+	if($config.use_plugins){
+		mapData = [[null,'0']];
+		for(pluginID in loadedPlugins){
+			mapData.push([pluginID,String.fromCharCode(pluginID)]);
+		}
 	}
 	return help.asciiArtToMap(game.level, mapData);
 }

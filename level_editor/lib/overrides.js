@@ -36,6 +36,32 @@ toys.platformer.verticalTileCollision = function(th,map,tilemap) {
   }
 };
 
+toys.platformer.horizontalTileCollision = function(th,map,tilemap,precision) {
+  var left=0;
+  var right=0;
+  var t=16;
+
+  th.touchedleftwall=false;
+  th.touchedrightwall=false;
+  
+  while (t<th.h) {
+    left=help.getTileInMap(th.x,th.y+t,map,0,tilemap);
+    right=help.getTileInMap(th.x+th.w-1,th.y+t,map,0,tilemap);
+	    
+    if ((th.accx<0)&&map.tileIsSolidFloor(th,left)) {
+	    th.accx=0;
+	    th.x=help.xPixelToTile(map,th.x-1,1);
+	    th.touchedleftwall=true;
+    } 
+    if ((th.accx>0)&&map.tileIsSolidFloor(th,right)) {
+	    th.accx=0;
+	    th.x=help.xPixelToTile(map,th.x+th.w)-th.w;
+	    th.touchedrightwall=true;
+    }
+    t+=gbox.getTiles(map.tileset).tileh/(precision?precision:1);
+  }
+};
+
 // overriding toys.platformer.jumpKeys to NOT jump if the player is holding down Ctrl (so you don't jump on Undo)
 // also changing the variable-height jump code
 toys.platformer.jumpKeys = function(th, key) {

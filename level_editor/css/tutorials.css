@@ -95,12 +95,13 @@ body {
 .tutorial_box .buttons {
   overflow: hidden;
   display: inline-block;
+  margin: 10px 0px;
 }
 /* line 8, sass/compass/utilities/general/_hacks.scss */
 .tutorial_box .buttons {
   display: block;
 }
-/* line 32, sass/partials/_tutorials.sass */
+/* line 33, sass/partials/_tutorials.sass */
 .tutorial_box .buttons input[type=button] {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;

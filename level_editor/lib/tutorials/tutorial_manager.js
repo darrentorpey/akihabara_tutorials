@@ -8,7 +8,7 @@ var TutorialManager = Klass.extend({
   },
 
   loadTutorialFromFileIntoDOM: function(file_url, element) {
-    $.ajax({ url: timestampedURL(file_url) + timestamp(), dataType: 'text', success: function(tutorial_markdown) {
+    $.ajax({ url: timestampedURL(file_url), dataType: 'text', success: function(tutorial_markdown) {
       var tutorial = new Tutorial(Tutorials.manager.readTutorialFromMarkdown(tutorial_markdown));
       Tutorials.manager.createTutorial(element, tutorial);
     }});

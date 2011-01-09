@@ -3,7 +3,8 @@ introduceALESPlugin({
   sourceURL:   'plugins/tnt/tnt.js',
   name:     'TNT', //For display on hover overs and in general...
   sprites:   [
-    ['tnt_sprite', 'plugins/tnt/tnt.png']
+    ['tnt_sprite', 'plugins/tnt/tnt.png'],
+    ['explosion_sprite', 'plugins/tnt/explosion.png']
   ],
   paletteImage:  'plugins/tnt/tnt.png',
   tiles: [
@@ -15,6 +16,15 @@ introduceALESPlugin({
       tilerow:   1,
       gapx:    0,
       gapy:    0
+    },
+    {
+      id:    'explosion_tiles',  // Set a unique ID for future reference
+      image:  'explosion_sprite', // Use the 'player_sprite' image, as loaded above
+      tileh:  96,
+      tilew:  96,
+      tilerow: 14,
+      gapx:   0,
+      gapy:   0
     }
   ],
   group: "disboxes",

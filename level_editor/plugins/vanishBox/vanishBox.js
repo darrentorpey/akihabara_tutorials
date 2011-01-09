@@ -17,7 +17,7 @@ introduceALESPlugin({
       gapy:   0
     }
   ],
-  group: "boxes",
+  group: "disboxes",
   tileset: "vanish_box_tile",
   solidFloor: true,
   solidCeil: true,
@@ -63,7 +63,7 @@ introduceALESPlugin({
                   this.onMe = other;
                   if (toys.timer.every(this, 'fall', 30) == toys.TOY_DONE) {
                     help.setTileInMap(gbox.getCanvasContext('map_canvas'), map, this.x / this.w, this.y / this.h, null, "map");
-                    this.killed = true;
+                    gbox.trashObject(this);
                   }
                   if (this.toys['fall'].timer > 0) {
                     this.alpha = 1 - this.toys['fall'].timer / 30.0;

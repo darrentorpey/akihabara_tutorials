@@ -9,7 +9,7 @@ introduceALESPlugin({
     image:           'lava_sprite',
     tileh:           32,
     tilew:           32,
-    tilerow:         8,
+    tilerow:         13,
     gapx:            0,
     gapy:            0
   }],
@@ -44,7 +44,7 @@ introduceALESPlugin({
 
       first: function() {
         // Counter
-        this.counter = (this.counter + 1) % 10;
+        this.counter = (this.counter + 1);
 
         var pl = gbox.getObject('player', 'player_id');
         if (gbox.objectIsVisible(this) && pl) {
@@ -52,9 +52,9 @@ introduceALESPlugin({
           var topright = help.getTileInMap(this.x + this.w - 4, this.y - 1, map, 0, 'map');
           if ((topleft && topleft == this.tileID) || (topright && topright == this.tileID)) {
             //This is below an existing tile. Don't show the bubbly animation
-            this.frame = help.decideFrame(this.counter, { speed:4, frames:[4, 5, 6, 7] });
+            this.frame = help.decideFrame(this.counter, { speed:4, frames:[10,11,12] });
           } else {
-            this.frame = help.decideFrame(this.counter, { speed:4, frames:[1, 2, 3, 4] });
+            this.frame = help.decideFrame(this.counter, { speed:2, frames:[0,1,2,3,4,5,6,7,8,9] });
           }
 
           if (gbox.collides(this, pl, 2)) {

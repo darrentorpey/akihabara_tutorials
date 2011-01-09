@@ -1,7 +1,7 @@
-//[
-//  "plugins/grass/grass.js",
-//  "plugins/solidBoxGrass/solidBoxGrass.js",
-//  "plugins/lava/lava.js",
-//  "plugins/solidBox/solidBox.js",
-//  "plugins/physicsBox/physicsBox.js"
-//]
+[
+  "plugins/grass/grass.js",
+  "plugins/solidBoxGrass/solidBoxGrass.js",
+  "plugins/lava/lava.js",
+  "plugins/solidBox/solidBox.js",
+  "plugins/physicsBox/physicsBox.js"
+]

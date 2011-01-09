@@ -22,13 +22,27 @@ Paint in the editor pane by clicking and dragging with the mouse.
 
 ![Painting.](./resources/paint2.gif)
 
-You can choose new brushes by clicking on an image in the palette above the editor. It looks like this:
+You can choose new brushes by clicking on an image in the palette above the editor. The palette looks like this:
 
 ![Brushes.](./resources/tut_brushes.png)
-____
+___
+Undo & Redo
+-
+ALES provides full undo/redo. Press Ctrl+Z to undo, Ctrl+Y to redo. You can also use the mouse to undo/redo by clicking on these buttons:
+
+![Brushes.](./resources/tut_undo.png)
+___
+Naming a Level
+-
+You can name your level by typing in a new name here:
+
+![Brushes.](./resources/tut_name.png)
+
+There's no need to press enter: the name automatically updates as you type.
+___
 Tips and tricks: Resolution
 -
-* ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
+ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser.
 ___
 Tips and tricks: Panning
 -

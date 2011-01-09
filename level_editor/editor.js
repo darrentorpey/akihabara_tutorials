@@ -119,7 +119,7 @@ var PencilTool = Klass.extend({
   },
 
   mouseup: function(ev) {
-    if (editor.minimapCanvasContext) { editor.genMiniMap(); }
+    if (1 || editor.minimapCanvasContext) { editor.genMiniMap(); }
     if (this.started) {
       this.mousemove(ev);
       this.started = false;
@@ -385,7 +385,7 @@ var Editor = Klass.extend({
   },
 
   genMiniMap: function() {
-    reloadMap();
+    if (gbox.getGroups().length > 0) reloadMap();
     this.minimap = this.minictx.getImageData(0, 0, 640*2, 480*2); //editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;
 

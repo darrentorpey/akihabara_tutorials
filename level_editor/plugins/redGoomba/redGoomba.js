@@ -90,7 +90,7 @@ introduceALESPlugin({
 
           this.blink = true;
 
-      } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0) {
+      } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0 && !this.blink) {
         pl.resetGame();
       }
 
@@ -140,7 +140,7 @@ introduceALESPlugin({
           tile:    this.frame,
           dx:      this.x,
           dy:      this.y,
-          fliph:   this.fliph,
+          fliph:   this.side,
           flipv:   this.flipv,
           camera:  this.camera,
           alpha:   1.0

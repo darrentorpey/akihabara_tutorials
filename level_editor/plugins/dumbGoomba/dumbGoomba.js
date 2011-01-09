@@ -55,7 +55,7 @@ introduceALESPlugin({
         if ((!block.initialize) && help.isSquished(this, block)) {
           toys.platformer.bounce(block, { jumpsize: 10 });
           gbox.hitAudio('squish');
-			this.blink = true;
+          gbox.trashObject(this);
         }
 
         // check to see if you're touching it on the left or right
@@ -74,7 +74,6 @@ introduceALESPlugin({
         toys.platformer.auto.goomba(this,{moveWhileFalling:true,speed:1.5}); // goomba movement
       else this.accx = 0; // Stay still (i.e. jump only vertically)
 
-      toys.platformer.auto.dontFall(this, map, 'map'); // prevent from falling from current platform
       toys.platformer.verticalTileCollision(this, map, 'map'); // vertical tile collision (i.e. floor)
       toys.platformer.horizontalTileCollision(this, map, 'map'); // horizontal tile collision (i.e. walls)
       toys.platformer.handleAccellerations(this); // gravity/attrito
@@ -88,45 +87,12 @@ introduceALESPlugin({
 
         gbox.hitAudio("squish");
 
-          this.blink = true;
+         gbox.trashObject(this);
 
       } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0) {
         pl.resetGame();
       }
 
-      if (this.blink) {
-        if (toys.timer.every(this, 'fall', 30) == toys.TOY_DONE) { // after a number of steps, explode!
-          // play explosion animation & sound
-          toys.generate.sparks.simple(this, 'particles', null, { animspeed: 1.5, tileset: 'explosion_tiles', accx: 0, accy: 0 });
-          gbox.hitAudio('explode');
-          // loop through 9 quadrants encompassing the enemy
-          for (var dx = -1; dx <= 1; dx++)
-            for (var dy = -1; dy <= 1; dy++) {
-              // get the tile here
-              var tile = help.getTileInMap(this.x+this.w/2+this.w*dx,this.y+this.h/2+this.h*dy,map,null,"map");
-              // remove it unless it's a star tile or null (outside the map)
-              if (tile != 1 && tile != null)
-                help.setTileInMapAtPixel(gbox.getCanvasContext('map_canvas'), map, this.x + this.w/2 + this.w*dx,this.y+this.h/2+this.h*dy, null, "map");
-
-              // check and see if there are dynamic objects here
-              for (var j in gbox._groups)
-                for (var i in gbox._objects[gbox._groups[j]]) {
-                  var group = gbox._groups[j];
-                  if (group == 'enemies' || group == 'player' || group == 'boxes' || group == 'disboxes') {
-                    var other = gbox._objects[group][i];
-                    if (gbox.pixelcollides({ x: this.x + this.w/2 + this.w*dx, y: this.y + this.h/2 + this.h*dy }, other)) {
-                      if (group != 'player') {
-                        if ((group == 'enemies' && other.type == 1) || (group == 'disboxes' && other.type == 'TNT')) {
-                          other.blink = true;
-                        } else gbox.trashObject(other);
-                      } else other.killed = true;
-                    }
-                  }
-                }
-              }
-          gbox.trashObject(this);
-        }
-      }
     }
       },
 
@@ -134,13 +100,12 @@ introduceALESPlugin({
         // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
         //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
         //  spries is flipped, camera info, and the alpha transparency value
-		 if (!this.blink || !(this.counter % 3))
         gbox.blitTile(gbox.getBufferContext(), {
           tileset: this.tileset,
           tile:    this.frame,
           dx:      this.x,
           dy:      this.y,
-          fliph:   this.fliph,
+          fliph:   this.side,
           flipv:   this.flipv,
           camera:  this.camera,
           alpha:   1.0

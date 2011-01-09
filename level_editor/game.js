@@ -167,7 +167,7 @@ function main() {
 
 	if($config.use_plugins){
 		for(var plugin in loadedPlugins){
-			if(loadedPlugins[plugin].group && !jQuery.inArray(loadedPlugins[plugin].group,groups)){
+			if(loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group,groups) == -1){
 				groups.push(loadedPlugins[plugin].group);
 			}
 		}

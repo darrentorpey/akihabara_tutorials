@@ -13,7 +13,7 @@ introduceALESPlugin({
     gapx:            0,
     gapy:            0
   }],
-  group:             'enemies',
+  group:             'blocks',
   tileset:           'lava',
   solidFloor:        false,
   solidCeil:         false,
@@ -62,7 +62,7 @@ introduceALESPlugin({
           }
 
           for (var i in gbox._objects['enemies']) {
-            if ((!gbox._objects['enemies'][i].initialize) && gbox._objects['enemies'][i].tileset != 'lava' && gbox.collides(this, gbox._objects['enemies'][i], 2)){
+            if ((!gbox._objects['enemies'][i].initialize) && gbox.collides(this, gbox._objects['enemies'][i], 2)){
               gbox.trashObject(gbox._objects['enemies'][i]);
             }
           }

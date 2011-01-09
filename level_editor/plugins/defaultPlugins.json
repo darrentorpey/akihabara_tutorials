@@ -5,5 +5,6 @@
   "plugins/solidBox/solidBox.js",
   "plugins/tnt/tnt.js",
   "plugins/vanishBox/vanishBox.js",
+  "plugins/redGoomba/redGoomba.js",
   "plugins/physicsBox/physicsBox.js"
 ]

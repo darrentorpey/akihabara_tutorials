@@ -17,7 +17,7 @@ introduceALESPlugin({
       gapy:      0
     }
   ],
-  group:      'blocks',
+  group:      'boxes',
   tileset:      'lava',
   solidFloor:    false,
   solidCeil:    false,

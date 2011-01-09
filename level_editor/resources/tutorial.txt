@@ -12,7 +12,7 @@ The Map and the Editor
 -
 The map of the level is actually twice as wide and twice as tall as the area you can see in the game or in the editor. Because we can't see the whole map at once, we've added a minimap to the upper right of the editor.
 
-![Minimap.](./resources/tut_minimap.png)
+![Minimap.](./resources/scroll.gif)
 
 **Tip:** to scroll the editor so you see a different part of the map, use the W, A, S, D keys on your keyboard. You can also move your mouse to an edge of the editor and the map will scroll in that direction.
 ___

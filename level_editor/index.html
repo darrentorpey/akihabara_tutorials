@@ -15,7 +15,7 @@
   <h1 id="">ALES &mdash; the Akihabara Level Editor &amp; Sharer</h1>
 
   <section id="top_tools">
-    <div id="palette"></div>
+    <div id="palette"><span id="tutorial_brushes">?</span>&nbsp;</div>
 
     <div id="level_name">
       <label for="level_name">Level Name</label>
@@ -147,6 +147,9 @@
   <aside id="tutorial_box" class="tutorial_box">
     Hello
   </aside>
+  <aside id="tutorial_box_brushes" class="tutorial_box">
+    Hello
+  </aside>
   <label id="tutorial_link">Help</label>
 
 <script>
@@ -243,9 +246,14 @@
       editor.setup();
 
       Tutorials.manager.loadDefaultTutorial();
+      Tutorials.brushes.loadTutorial({file:'./resources/tut_brushes.txt',target: '#tutorial_box_brushes'});
 
       $('#tutorial_link').click(function() {
         $('#tutorial_box').fadeToggle();
+      });
+      
+      $('#tutorial_brushes').click(function() {
+        $('#tutorial_box_brushes').fadeToggle();
       });
 
       if ($config.flash_okay && $config.save_and_load) {

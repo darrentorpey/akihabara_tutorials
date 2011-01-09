@@ -959,6 +959,28 @@ section.credits section h4 {
 }
 
 /* line 259, sass/admin.sass */
+#tutorial_box_brushes {
+  display: none;
+  position: absolute;
+  top: 5px;
+  left: 105px;
+  background-color: #eef2f8;
+  padding: 15px;
+  margin: 0px;
+  z-index: 11;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  -moz-box-shadow: #999999 0px 1px 5px;
+  -webkit-box-shadow: #999999 0px 1px 5px;
+  -o-box-shadow: #999999 0px 1px 5px;
+  box-shadow: #999999 0px 1px 5px;
+}
+
+/* line 271, sass/admin.sass */
 #tutorial_link {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
@@ -996,5 +1018,44 @@ section.credits section h4 {
 }
 /* line 92, sass/_core.sass */
 #tutorial_link a {
+  color: #2f5a86;
+}
+
+/* line 282, sass/admin.sass */
+#tutorial_brushes {
+  background-color: #cad6e9;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
+  background-image: -moz-linear-gradient(top, #a5b9db 0%, #b8c7e2 33%, #cad6e9 67%);
+  border: 1px solid #b8c7e2;
+  -moz-box-shadow: #345180 0px 1px 0px;
+  -webkit-box-shadow: #345180 0px 1px 0px;
+  -o-box-shadow: #345180 0px 1px 0px;
+  box-shadow: #345180 0px 1px 0px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -khtml-border-radius: 8px;
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+  background-color: #cad6e9;
+  background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
+  background-image: -moz-linear-gradient(top, #a5b9db 0%, #b8c7e2 33%, #cad6e9 67%);
+  -moz-box-shadow: #4367a4 0px 0px 5px;
+  -webkit-box-shadow: #4367a4 0px 0px 5px;
+  -o-box-shadow: #4367a4 0px 0px 5px;
+  box-shadow: #4367a4 0px 0px 5px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+/* line 72, sass/_core.sass */
+#tutorial_brushes a {
+  color: #2f5a86;
+}
+/* line 92, sass/_core.sass */
+#tutorial_brushes a {
   color: #2f5a86;
 }

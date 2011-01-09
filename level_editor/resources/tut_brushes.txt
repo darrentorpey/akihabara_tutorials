@@ -20,7 +20,7 @@ Ground Blocks and Grass Tile
 ![](./resources/palettes/default/5.png)
 ![](./resources/palettes/default/8.png)
 
-The two ground blocks are basic terrain tiles that the player and other moving objects collide with. The grass tile is purely decorative, meant to be placed on top of ground tiles for making prettier terrain. It lives in the background and doesn't interact with anything on the screen.
+The two ground blocks are basic terrain tiles that the player and other moving objects collide with and stand on. The grass tile is purely decorative, meant to be placed on top of ground tiles for making prettier terrain. It lives in the background and doesn't interact with anything on the screen.
 ___
 Vanish Block
 -
@@ -37,6 +37,14 @@ Push Block
 The push block can be pushed around the map by the player. These blocks can fall and kill a player or an enemy. They also trigger the vanishing blocks.
 
 ![](./resources/tut_push.gif)
+___
+Lava Block
+-
+![](./plugins/lava/lavaPalette.png)
+
+It's lava. You probably want to avoid falling into it. (So do enemies.)
+
+![](./resources/tut_lava.gif)
 ___
 Enemies
 -

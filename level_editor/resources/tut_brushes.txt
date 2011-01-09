@@ -12,7 +12,57 @@ Click on a brush in the palette and then click and drag to paint with it in the 
 
 The blocks you paint appear live in the game on the right.
 ___
-Ground Blocks
+Ground Blocks and Grass Tile
 -
 ![](./resources/palettes/default/4.png)
 ![](./resources/palettes/default/5.png)
+![](./resources/palettes/default/8.png)
+
+The two ground blocks are basic terrain tiles that the player and other moving objects collide with. The grass tile is purely decorative, meant to be placed on top of ground tiles for making prettier terrain. It lives in the background and doesn't interact with anything on the screen.
+___
+Vanish Block
+-
+![](./resources/palettes/default/1.png)
+
+The vanish block disappears in a short amount of time if the player, an enemy, or a push block is on top of it:
+
+![](./resources/tut_vanish.gif)
+___
+Push Block
+-
+![](./resources/palettes/default/3.png)
+
+The push block can be pushed around the map by the player. These blocks can fall and kill a player or an enemy. They also trigger the vanishing blocks.
+
+![](./resources/tut_push.gif)
+___
+Enemies
+-
+![](./resources/palettes/default/9.png)
+![](./resources/palettes/default/6.png)
+
+There are two enemy types. The basic enemy (purple) walks to the left until it hits an obstacle, then switches direction. Jump on this enemy to kill it. This enemy will walk off a ledge.
+
+The exploding enemy (red) walks to the left until it hits and obstacle or a ledge, then changes direction. If you jump on this enemy it blinks for a short while, then explodes, destroying everything around it. Don't get caught in the explosion!
+
+![](./resources/tut_enemies.gif)
+___
+TNT Blocks
+-
+![](./resources/palettes/default/7.png)
+
+TNT blocks behave just like regular ground blocks until the moment they are ignited. When ignited, they flash for a short while and then explode. The only way to ignite a TNT block is with an explosion. This means you can kick off a chain reaction by using an exploding enemy:
+
+![](./resources/tut_tnt.gif)
+
+This block can be used for things like timing-based puzzles.
+___
+Stars
+-
+![](./resources/palettes/default/2.png)
+
+Stars are optional goals you can add to your level. By adding stars, you create a "win" state for your level that occurs when all stars are collected.
+
+If you have stars on your map, text will appear in the game telling the player how many stars are uncollected. When the player collects a star that number reduces by 1. When the player collects all stars, the message "Well done!" appears on the screen and the level resets:
+
+![](./resources/tut_stars.gif)

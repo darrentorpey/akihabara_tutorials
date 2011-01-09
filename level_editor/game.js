@@ -205,7 +205,8 @@ function main() {
           for (var y = 0; y < 30; y++)
             for (var x = 0; x < 40; x++)
               if (game.level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
-          gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+          gbox.getObject('player','player_id').resetGame();
+	  gbox.blitFade(gbox.getBufferContext(),{alpha:1});
           return toys.TOY_DONE;
       }
     };

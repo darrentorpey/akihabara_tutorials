@@ -1040,6 +1040,7 @@ section.credits section h4 {
   border-radius: 8px;
   padding: 10px;
   position: relative;
+  top: -11px;
   cursor: pointer;
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));

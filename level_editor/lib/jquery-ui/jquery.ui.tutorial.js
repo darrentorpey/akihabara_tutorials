@@ -90,6 +90,24 @@ var TutorialWidget = {
     this._update_state();
   },
 
+  close: function() {
+    this.element.fadeOut();
+  },
+
+  open: function() {
+    this.element.fadeIn();
+    var self = this;
+    registerEscapeCandidate(function() { self.close() });
+  },
+
+  toggle: function() {
+    if (this.element.is(':visible')) {
+      this.close();
+    } else {
+      this.open();
+    }
+  },
+
   destroy: function() {
     $.Widget.prototype.destroy.apply(this, arguments);
   }

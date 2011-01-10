@@ -239,6 +239,15 @@ var Editor = Klass.extend({
   },
 
   setupAdminBox: function() {
+    $('#admin_buttons').toolbox({
+      open: function() {
+        $('#undone_admin').toggle();
+      },
+      close: function() {
+        $('#undone_admin').toggle();
+      }
+    });
+
     var buttons = [
       // {
       //   ID: 'first',
@@ -253,8 +262,7 @@ var Editor = Klass.extend({
     });
     $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
     $('#undone_admin, #admin_buttons h4').click(function() {
-      $('#undone_admin').toggle();
-      $('#admin_buttons').toggle();
+      $('#admin_buttons').toolbox('toggle');
       // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
     })
     $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
@@ -446,3 +454,13 @@ $(document).bind('keyup', function(e) {
     }
   }
 });
+
+if (typeof ales == 'undefined') { ales = {} }
+if (typeof ales.jqui_plugins == 'undefined') { ales.jqui_plugins = {} }
+ales.jqui_plugins.std_close_btn_css = {
+  color:    'blue',
+  cursor:   'pointer',
+  position: 'absolute',
+  top:      '5px',
+  right:    '5px'
+}

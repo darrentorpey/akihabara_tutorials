@@ -1,5 +1,13 @@
+var plugins_logging_enabled = false;
+
+function plugin_log() {
+  if (plugins_logging_enabled) {
+    console.log.apply(console, arguments);
+  }
+}
+
 function loadPluginFromURL(url) {
-//  console.log('Getting script...');
+//  plugin_log('Getting script...');
   //Load plugins in order (hopefully) untested.
   head.js(url);
 }
@@ -87,7 +95,7 @@ function getPluginsByGroup() {
 function getPluginsForURL(){
   var pluginsURL = new Object();
   for (var pluginID in loadedPlugins) {
-//    console.log(pluginID);
+//    plugin_log(pluginID);
     pluginsURL[loadedPlugins[pluginID].name] = { url: loadedPlugins[pluginID].sourceURL, id: pluginID};
   }
   return pluginsURL;
@@ -112,14 +120,14 @@ if ($config.use_plugins) {
     }
   }else{
     //Load the default plugins
-    jQuery.getJSON("plugins/defaultPlugins.json",function(data,textStatus){
+    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus){
       jQuery(data).each(function (index,pluginString){
-        console.log(index + ': ' + pluginString);
+        plugin_log(index + ': ' + pluginString);
         pluginOrder[pluginString] = index;
         loadPluginFromURL(pluginString);
      });
     head.ready(function(){
-        console.log(loadedPlugins);
+        plugin_log(loadedPlugins);
         for (i in loadedPlugins) $('#brush' + i).remove();
         var g = new Array();
         for (i in loadedPlugins) {
@@ -149,7 +157,7 @@ $(function() {
     if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
       var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
       if (pluginObject) {
-        console.log('Plugin URL dropped: ' + pluginObject);
+        plugin_log('Plugin URL dropped: ' + pluginObject);
         var pluginName = prompt('What would you like to name this plugin?');
         var includedJS = storage('includedJS');
 
@@ -174,8 +182,8 @@ $(function() {
 });
 
 function introduceALESPlugin(plugin) {
-//  console.log('Loading plugin:');
-//  console.log(plugin);
+//  plugin_log('Loading plugin:');
+//  plugin_log(plugin);
   var pluginId = getPluginIDFromName(plugin.name);
   loadedPlugins[pluginId] = plugin;
 

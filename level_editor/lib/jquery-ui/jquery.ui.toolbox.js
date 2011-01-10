@@ -1,6 +1,7 @@
 var ToolBoxWidget = {
   options: {
-    card: null
+    close: null,
+    open:  null
   },
 
   _create: function() {
@@ -9,21 +10,12 @@ var ToolBoxWidget = {
   },
 
   _init_css: function() {
-    this.element.find('.close_box').css({
-      color:    'blue',
-      cursor:   'pointer',
-      position: 'absolute',
-      top:      '5px',
-      right:    '5px'
-    });
+    this.element.find('.close_box').css(ales.jqui_plugins.std_close_btn_css);
   },
 
   _init_behavior: function() {
     var self = this;
-    var box = this.element;
     this.element.find('.close_box').click(function() {
-      console.log('closing');
-      box.toggle();
       self.close();
       return false;
     });
@@ -31,10 +23,12 @@ var ToolBoxWidget = {
 
   close: function() {
     this.element.hide();
+    if (this.options.close) { this.options.close(); }
   },
 
   open: function() {
     this.element.show();
+    if (this.options.open) { this.options.open(); }
     var self = this;
     registerEscapeCandidate(function() { self.close() });
   },

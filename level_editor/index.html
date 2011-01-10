@@ -251,7 +251,7 @@
       Tutorials.brushes.loadTutorial({file:'./resources/tut_brushes.txt',target: '#tutorial_box_brushes'});
 
       $('#tutorial_link').click(function() {
-        $('#tutorial_box').fadeToggle();
+        $('#tutorial_box').tutorial('toggle');
       });
       
       $('#tutorial_brushes').click(function() {

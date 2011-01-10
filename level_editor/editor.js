@@ -261,10 +261,13 @@ var Editor = Klass.extend({
       buttons_hash[this.ID] = this;
     });
     $('<label id="undone_admin">Admin</label>').appendTo('#admin_sidebar');
-    $('#undone_admin, #admin_buttons h4').click(function() {
+    $('#undone_admin').click(function() {
       $('#admin_buttons').toolbox('toggle');
-      // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
-    })
+    });
+    // $('#undone_admin, #admin_buttons h4').click(function() {
+    //   $('#admin_buttons').toolbox('toggle');
+    //   // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
+    // })
     $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
       var id = $(this).parent().attr('data-button-id');
       return buttons_hash[id].func();
@@ -424,30 +427,13 @@ var Editor = Klass.extend({
   }
 });
 
-var KEY = {
-  BACKSPACE: 8,
-  TAB:       9,
-  RETURN:   13,
-  ESC:      27,
-  LEFT:     37,
-  UP:       38,
-  RIGHT:    39,
-  DOWN:     40,
-  DELETE:   46,
-  HOME:     36,
-  END:      35,
-  PAGEUP:   33,
-  PAGEDOWN: 34,
-  INSERT:   45
-};
-
 var escapeCandidates = [];
 function registerEscapeCandidate(candidate) {
   escapeCandidates.push(candidate);
 }
 
 $(document).bind('keyup', function(e) {
-  if (KEY.ESC == e.keyCode) {
+  if ($.ui.keyCode.ESCAPE == e.keyCode) {
     var candidate = escapeCandidates.pop();
     if (candidate) {
       candidate();
@@ -457,10 +443,17 @@ $(document).bind('keyup', function(e) {
 
 if (typeof ales == 'undefined') { ales = {} }
 if (typeof ales.jqui_plugins == 'undefined') { ales.jqui_plugins = {} }
-ales.jqui_plugins.std_close_btn_css = {
-  color:    'blue',
-  cursor:   'pointer',
-  position: 'absolute',
-  top:      '5px',
-  right:    '5px'
+ales.jqui_plugins = {
+  std_close_btn_css: {
+    color:       'blue',
+    cursor:      'pointer',
+    position:    'absolute',
+    top:         '8px',
+    right:       '8px',
+    'font-size': '12px'
+  },
+
+  create_close_button: function() {
+    return $('<span class="close_box">close</span>').css(ales.jqui_plugins.std_close_btn_css)
+  }
 }

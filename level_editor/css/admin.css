@@ -875,13 +875,6 @@ section.credits section h4 {
   top: 5px;
   right: 5px;
   z-index: 5;
-  -moz-opacity: 0.9;
-  -webkit-opacity: 0.9;
-  -o-opacity: 0.9;
-  -khtml-opacity: 0.9;
-  opacity: 0.9;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
   -moz-box-shadow: #4367a4 -1px 2px 4px;
   -webkit-box-shadow: #4367a4 -1px 2px 4px;
   -o-box-shadow: #4367a4 -1px 2px 4px;
@@ -906,12 +899,12 @@ section.credits section h4 {
 #level_storage_pane ul li {
   cursor: pointer;
   padding: 5px 5px;
-  background-color: #819dcc;
+  background-color: #93abd3;
   line-height: 18px;
 }
 /* line 227, sass/admin.sass */
 #level_storage_pane ul li:nth-child(2n) {
-  background-color: #93abd3;
+  background-color: #a5b9db;
 }
 /* line 229, sass/admin.sass */
 #level_storage_pane #clear_level_storage {
@@ -963,7 +956,7 @@ section.credits section h4 {
   box-shadow: #999999 0px 1px 5px;
 }
 
-/* line 260, sass/admin.sass */
+/* line 259, sass/admin.sass */
 #tutorial_box_brushes {
   display: none;
   position: absolute;
@@ -985,7 +978,7 @@ section.credits section h4 {
   box-shadow: #999999 0px 1px 5px;
 }
 
-/* line 272, sass/admin.sass */
+/* line 271, sass/admin.sass */
 #tutorial_link {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
@@ -1026,7 +1019,7 @@ section.credits section h4 {
   color: #2f5a86;
 }
 
-/* line 283, sass/admin.sass */
+/* line 282, sass/admin.sass */
 #tutorial_brushes {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));

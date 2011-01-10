@@ -29,12 +29,23 @@ var TutorialWidget = {
 
     this._progressbar.find('.ui-progressbar-value').html('<span>Step ' + this._currentStep + ' of ' + this._totalSteps + '</span>');
 
-    var tmp = this;
-    this._nextButton.click(function() { tmp.nextStep(); });
-    this._prevButton.click(function() { tmp.prevStep(); });
-    this._restartButton.click(function() { tmp.restart(); });
+    var self = this;
+    this._nextButton.click(function() { self.nextStep(); });
+    this._prevButton.click(function() { self.prevStep(); });
+    this._restartButton.click(function() { self.restart(); });
 
+    this._init_dom();
     this._init_css();
+  },
+
+  _init_dom: function() {
+    var self = this;
+    ales.jqui_plugins.create_close_button()
+      .click(function() {
+        self.close();
+        return false;
+      })
+      .appendTo(this.element);
   },
 
   _init_css: function() {

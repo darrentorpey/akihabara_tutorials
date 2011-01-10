@@ -5,20 +5,27 @@ var ToolBoxWidget = {
   },
 
   _create: function() {
-    this._init_css();
+    this._init_dom();
     this._init_behavior();
+    this._init_css();
   },
 
-  _init_css: function() {
-    this.element.find('.close_box').css(ales.jqui_plugins.std_close_btn_css);
+  _init_dom: function() {
+    var self = this;
+    ales.jqui_plugins.create_close_button()
+      .click(function() {
+        self.close();
+        return false;
+      })
+      .appendTo(this.element);
   },
 
   _init_behavior: function() {
     var self = this;
-    this.element.find('.close_box').click(function() {
-      self.close();
-      return false;
-    });
+  },
+
+  _init_css: function() {
+    this.element.find('.close_box').css(ales.jqui_plugins.std_close_btn_css);
   },
 
   close: function() {
@@ -29,8 +36,6 @@ var ToolBoxWidget = {
   open: function() {
     this.element.show();
     if (this.options.open) { this.options.open(); }
-    // var self = this;
-    // registerEscapeCandidate(function() { self.close() });
     (function(self) { registerEscapeCandidate(function() { self.close() }) })(this);
   },
 

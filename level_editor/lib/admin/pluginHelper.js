@@ -105,6 +105,7 @@ var includedJS = storage('includedJS');
 loadedPlugins = new Object();
 pluginOrder = new Array();
 pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
+pluginCounterMin = pluginCounter;
 if (includedJS) {
   for (name in includedJS) {
     loadPluginFromURL(includedJS[name]);
@@ -132,17 +133,17 @@ if ($config.use_plugins) {
         for (i in loadedPlugins) $('#brush' + i).remove();
         var g = new Array();
         for (i in loadedPlugins) {
-          p = pluginOrder[loadedPlugins[i].sourceURL] + 66;
+          p = pluginOrder[loadedPlugins[i].sourceURL] + pluginCounterMin;
           g[p] =  loadedPlugins[i];
           loadedPlugins[i].origID = i;
         }
         
-        for (i=66; i<75; i++) {
+        for (i=pluginCounterMin; i<pluginCounterMin+10; i++) {
           if (g[i]) {
             var img = new Image();
             img.src = g[i].paletteImage;
-            q = pluginOrder[g[i].sourceURL]+66;
-            img.id = 'brush' + g[i].origID;
+            q = pluginOrder[g[i].sourceURL]+pluginCounterMin;
+            img.id = 'brush' + g[i].origID; //i;
             img.setAttribute('class', 'brush');
             $(img).appendTo('#palette');
           }
@@ -184,7 +185,8 @@ $(function() {
 function introduceALESPlugin(plugin) {
 //  plugin_log('Loading plugin:');
 //  plugin_log(plugin);
-  var pluginId = getPluginIDFromName(plugin.name);
+  var pluginId = getPluginIDFromName(plugin.name, plugin.sourceURL);
+
   loadedPlugins[pluginId] = plugin;
 
   if (plugin.paletteImage){
@@ -203,9 +205,13 @@ function introduceALESPlugin(plugin) {
 }
 
 
-function getPluginIDFromName(pluginName){
+function getPluginIDFromName(pluginName, pluginURL){
   //Check to see if the plugin is in the list of existing plugins
   var plugins = getURLParam("plugins");
+
+  //if it's a default plugin, return an ID based on its order in the defaultPlugins.json file
+  if (typeof pluginOrder[pluginURL] != 'undefined') {console.log("Hey, default order for" + pluginName + ' is ' + pluginOrder[pluginURL]); return pluginOrder[pluginURL]+pluginCounterMin;}
+  
   if(plugins){
     //We have existing plugins, no need to generate a new number. Find our pluginName in the list.
     for(var i=0;i<plugins.length;i++){

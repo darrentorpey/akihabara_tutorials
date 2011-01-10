@@ -31,7 +31,7 @@ var Level = Klass.extend({
   getLevelParams: function() {
     var levelParam = '';
     for (var i = 0; i < 30; i++) {
-      levelParam += this.map[i];
+      levelParam += editor.level[i];
     }
     return levelParam;
   },
@@ -40,7 +40,9 @@ var Level = Klass.extend({
     for (var i = 0; i < this.n_map_rows; i++) {
       this.map[i] = '0000000000000000000000000000000000000000';
     }
-    this.map[7] = '4400000000000000000000000000000000000000';
+	 if(!$config.use_plugins){
+	   this.map[7] = '4400000000000000000000000000000000000000';
+	 }
   },
 
   getName: function() {

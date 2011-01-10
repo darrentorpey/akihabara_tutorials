@@ -40,9 +40,12 @@ function getImageResources(){
 			['background_tilesheet',  'resources/bg1.png'],
 			['explosion_sprite',  'resources/Frk_Blast1.png']
 		];
-	for(var plugin in loadedPlugins) {
-		if (loadedPlugins[plugin].sprites) {
-			jQuery.merge(imageResources,loadedPlugins[plugin].sprites);
+	if($config.use_plugins){
+//		imageResources = [];
+		for(var plugin in loadedPlugins) {
+			if (loadedPlugins[plugin].sprites) {
+				jQuery.merge(imageResources,loadedPlugins[plugin].sprites);
+			}
 		}
 	}
 	return imageResources;
@@ -107,9 +110,12 @@ function getTileResources(){
 			gapy:    0
 		}
 	];
-	for(var plugin in loadedPlugins){
-		if(loadedPlugins[plugin].tiles){
-			jQuery.merge(tileResources,loadedPlugins[plugin].tiles);
+	if($config.use_plugins){
+//		tileResources = [];
+		for(var plugin in loadedPlugins){
+			if(loadedPlugins[plugin].tiles){
+				jQuery.merge(tileResources,loadedPlugins[plugin].tiles);
+			}
 		}
 	}
 	return tileResources;
@@ -124,9 +130,12 @@ function getAudioResources(){
 		["explode",["resources/megaexplosion.mp3","resources/megaexplosion.ogg"],{channel:"boom"}],
 		["star",["resources/coin.mp3","resources/coin.ogg"],{channel:"hit"}]
   	];
-	for(var plugin in loadedPlugins){
-		if(loadedPlugins[plugin].audio){
-			audioResources.push(loadedPlugins[plugin].audio);
+	if($config.use_plugins){
+//		audioResources = [];
+		for(var plugin in loadedPlugins){
+			if(loadedPlugins[plugin].audio){
+				audioResources.push(loadedPlugins[plugin].audio);
+			}
 		}
 	}
 	return audioResources;
@@ -137,9 +146,12 @@ function getFontResources(){
 	var fontResources = [
 		{ id: 'small', image: 'font', firstletter: ' ', tileh: 20, tilew: 14, tilerow: 255, gapx: 0, gapy: 0 }
 	];
-	for(var plugin in loadedPlugins){
-		if(loadedPlugins[plugin].audio){
-			fontResources.push(loadedPlugins[plugin].audio);
+	if($config.use_plugins){
+//		fontResources = [];
+		for(var plugin in loadedPlugins){
+			if(loadedPlugins[plugin].font){
+				fontResources.push(loadedPlugins[plugin].font);
+			}
 		}
 	}
 	return fontResources;
@@ -151,8 +163,17 @@ function getFontResources(){
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-  gbox.setGroups(['background', 'boxes', 'disboxes', 'enemies', 'player', 'particles', 'game']);
-  gbox.setAudioChannels({ jump: { volume: 0.1 }, hit: { volume: 0.3 }, boom: { volume: 0.3 }});
+	var groups = ['background', 'boxes', 'disboxes', 'enemies', 'player', 'particles', 'game'];
+
+	if($config.use_plugins){
+		for(var plugin in loadedPlugins){
+			if(loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group,groups) == -1){
+				groups.push(loadedPlugins[plugin].group);
+			}
+		}
+	}
+	gbox.setGroups(groups);
+	gbox.setAudioChannels({ jump: { volume: 0.1 }, hit: { volume: 0.3 }, boom: { volume: 0.3 }});
 
   // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
   maingame = gamecycle.createMaingame('game', 'game');
@@ -184,7 +205,8 @@ function main() {
           for (var y = 0; y < 30; y++)
             for (var x = 0; x < 40; x++)
               if (game.level[y][x] == '2') help.setTileInMapAtPixel(gbox.getCanvasContext("map_canvas"),map,x*32,y*32,1,"map");
-          gbox.blitFade(gbox.getBufferContext(),{alpha:1});
+          gbox.getObject('player','player_id').resetGame();
+	  gbox.blitFade(gbox.getBufferContext(),{alpha:1});
           return toys.TOY_DONE;
       }
     };

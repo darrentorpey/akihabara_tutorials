@@ -963,11 +963,11 @@ section.credits section h4 {
   box-shadow: #999999 0px 1px 5px;
 }
 
-/* line 259, sass/admin.sass */
+/* line 260, sass/admin.sass */
 #tutorial_box_brushes {
   display: none;
   position: absolute;
-  top: 5px;
+  top: 90px;
   left: 105px;
   background-color: #eef2f8;
   padding: 15px;
@@ -985,7 +985,7 @@ section.credits section h4 {
   box-shadow: #999999 0px 1px 5px;
 }
 
-/* line 271, sass/admin.sass */
+/* line 272, sass/admin.sass */
 #tutorial_link {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
@@ -1026,7 +1026,7 @@ section.credits section h4 {
   color: #2f5a86;
 }
 
-/* line 282, sass/admin.sass */
+/* line 283, sass/admin.sass */
 #tutorial_brushes {
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));
@@ -1044,6 +1044,7 @@ section.credits section h4 {
   border-radius: 8px;
   padding: 10px;
   position: relative;
+  top: -11px;
   cursor: pointer;
   background-color: #cad6e9;
   background-image: -webkit-gradient(linear, 0% 0%, 0% grad-opposite-position(0%), color-stop(0%, #a5b9db), color-stop(49.254%, #b8c7e2), color-stop(100%, #cad6e9));

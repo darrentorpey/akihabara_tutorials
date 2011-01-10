@@ -131,7 +131,8 @@ var PencilTool = Klass.extend({
 
 var Editor = Klass.extend({
   init: function() {
-    this.currentBrush  = '4';
+    if ($config.use_plugins) this.currentBrush  = '0';
+      else this.currentBrush  = '4';
     this.total_brushes = 10;
     this.brushes       = new Array(this.total_brushes);
     this.brushes_img   = new Array(this.total_brushes);
@@ -172,26 +173,39 @@ var Editor = Klass.extend({
   },
 
   loadPalette: function() {
-    for (var i = 0; i < 10; i++) {
+    if (!$config.use_plugins) {
+      for (var i = 0; i < 10; i++) {
+        var img = new Image();
+        img.src = 'resources/palettes/default/' + i.toString() + '.png';
+        img.id = 'brush' + i;
+        img.setAttribute('class', 'brush');
+        $(img).appendTo('#palette');
+      }
+    } else {
       var img = new Image();
-      img.src = 'resources/palettes/default/' + i.toString() + '.png';
-      img.id = 'brush' + i;
+      img.src = 'resources/palettes/default/0.png';
+      img.id = 'brush0';
       img.setAttribute('class', 'brush');
       $(img).appendTo('#palette');
+      var img = new Image();
+      img.src = 'resources/palettes/default/2.png';
+      img.id = 'brush2';
+      img.setAttribute('class', 'brush');
+      $(img).appendTo('#palette');
+      head.ready(function () {
+        for (pluginID in loadedPlugins) {
+          var plugin = loadedPlugins[pluginID];
+          if (plugin.paletteImage) {
+            var img = new Image();
+            img.src = plugin.paletteImage;
+            img.id = 'brush' + pluginID;
+            img.setAttribute('class', 'brush');
+            $(img).appendTo('#palette');
+          }
+        }
+      });
     }
 
-    head.ready(function () {
-      for (pluginID in loadedPlugins) {
-        var plugin = loadedPlugins[pluginID];
-        if (plugin.paletteImage) {
-          var img = new Image();
-          img.src = plugin.paletteImage;
-          img.id = 'brush' + pluginID;
-          img.setAttribute('class', 'brush');
-          $(img).appendTo('#palette');
-        }
-      }
-    });
 
     // Find the elements
     editor.brushes = $('.brush');

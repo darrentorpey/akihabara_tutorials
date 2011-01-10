@@ -1,7 +1,10 @@
 [
-  "plugins/grass/grass.js",
-  "plugins/solidBoxGrass/solidBoxGrass.js",
-  "plugins/lava/lava.js",
   "plugins/solidBox/solidBox.js",
-  "plugins/physicsBox/physicsBox.js"
+  "plugins/grass/grass.js",
+  "plugins/lava/lava.js",
+  "plugins/tnt/tnt.js",
+  "plugins/vanishBox/vanishBox.js",
+  "plugins/physicsBox/physicsBox.js",
+  "plugins/redGoomba/redGoomba.js",
+  "plugins/dumbGoomba/dumbGoomba.js"
 ]

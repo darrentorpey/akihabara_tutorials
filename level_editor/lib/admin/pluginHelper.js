@@ -95,6 +95,7 @@ function getPluginsForURL(){
 
 var includedJS = storage('includedJS');
 loadedPlugins = new Object();
+pluginOrder = new Array();
 pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
 if (includedJS) {
   for (name in includedJS) {
@@ -113,8 +114,32 @@ if ($config.use_plugins) {
     //Load the default plugins
     jQuery.getJSON("plugins/defaultPlugins.json",function(data,textStatus){
       jQuery(data).each(function (index,pluginString){
+        console.log(index + ': ' + pluginString);
+        pluginOrder[pluginString] = index;
         loadPluginFromURL(pluginString);
      });
+    head.ready(function(){
+        console.log(loadedPlugins);
+        for (i in loadedPlugins) $('#brush' + i).remove();
+        var g = new Array();
+        for (i in loadedPlugins) {
+          p = pluginOrder[loadedPlugins[i].sourceURL] + 66;
+          g[p] =  loadedPlugins[i];
+          loadedPlugins[i].origID = i;
+        }
+        
+        for (i=66; i<75; i++) {
+          var img = new Image();
+          img.src = g[i].paletteImage;
+          q = pluginOrder[g[i].sourceURL]+66;
+          img.id = 'brush' + g[i].origID;
+          img.setAttribute('class', 'brush');
+          $(img).appendTo('#palette');
+        }
+          
+
+        
+        });
     });
   }
 }

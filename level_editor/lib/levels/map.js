@@ -23,19 +23,18 @@ function addMap() {
       gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map); 
       gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });        
 
-      if (editor) {
-        editor.minimapCanvasContext = gbox.getBufferContext();//gbox.getCanvasContext('map_canvas');
-      }
-      
-      
+
     }
   });
 }
 
 function loadMap() {
 	var mapData = [ [null, '0'], [0, '1'], [1,'2'], [2, '3'], [3,'4'], [4,'5'], [5,'6'], [6,'7'], [7,'8'], [8,'9'], [9,'A']];
-	for(pluginID in loadedPlugins){
-		mapData.push([pluginID,String.fromCharCode(pluginID)]);
+	if($config.use_plugins){
+		//mapData = [[null,'0']];
+		for(pluginID in loadedPlugins){
+			mapData.push([pluginID,String.fromCharCode(pluginID)]);
+		}
 	}
 	return help.asciiArtToMap(game.level, mapData);
 }
@@ -48,6 +47,10 @@ function reportLevel(lvl, prefix) {
 function reloadMap() {
 	map = generateMapObj();
 
+	
+	
+
+
 	reloadGamePieces();
 
 	gbox.getCanvasContext('map_canvas').clearRect(0, 0, 640 * 2, 480 * 2);
@@ -59,8 +62,6 @@ function reloadMap() {
 
 	gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
 	gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, camera: true });
-	
-	
 }
 
 function getLevelCopy(lvl) {

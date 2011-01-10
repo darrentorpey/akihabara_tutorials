@@ -75,7 +75,7 @@ gbox.addObject({
       var pl = gbox.getObject('player', 'player_id');
 
       //player is squishing the enemy (second conditional is a hack for jumping on multiple enemies at once)
-      if (help.isSquished(this, pl) || ((pl.prevaccy > 0) && gbox.collides(this, pl) && (Math.abs(this.y - (pl.y + pl.h)) < (pl.h)))) {
+      if ((help.isSquished(this, pl) || ((pl.prevaccy > 0)) && gbox.collides(this, pl) && (Math.abs(this.y - (pl.y + pl.h)) < (pl.h)))) {
         if (gbox.keyIsHold('a')) toys.platformer.bounce(pl, { jumpsize: 25 });
           else toys.platformer.bounce(pl, { jumpsize: 15 });
 
@@ -87,7 +87,7 @@ gbox.addObject({
           }
           else gbox.trashObject(this);
 
-      } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0) {
+      } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0 && !this.blink) {
         pl.resetGame();
       }
 

@@ -77,7 +77,7 @@ function addPlayer() {
       followCamera(gbox.getObject('player', 'player_id'), { w: map.w, h: map.h });
 
       if (gbox.keyIsHit("b")) {
-
+  
       }
 
       if (gbox.keyIsHit("c")) {
@@ -116,8 +116,8 @@ function addPlayer() {
 
       this.frames.walking.speed = 20/(Math.abs(this.accx));
       toys.platformer.setFrame(this);
-      if ((this.pushing == toys.PUSH_LEFT || this.pushing == toys.PUSH_RIGHT) && Math.abs(this.accx) <= 4) this.frame=help.decideFrame(this.counter,this.frames.pushing);
-      if (Math.abs(this.accx) <= 1 && Math.abs(this.accy) <= 1) this.frame=help.decideFrame(this.counter,this.frames.still);
+      if ((this.pushing == toys.PUSH_LEFT || this.pushing == toys.PUSH_RIGHT) && Math.abs(this.accx) <= 4 && this.touchedfloor) this.frame=help.decideFrame(this.counter,this.frames.pushing);
+      if (Math.abs(this.accx) <= 1 && Math.abs(this.accy) <= 1 && this.touchedfloor) this.frame=help.decideFrame(this.counter,this.frames.still);
     },
 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here

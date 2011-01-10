@@ -246,7 +246,12 @@
       editor.level = currentLevel.map;
       editor.setup();
 
-      Tutorials.manager.loadDefaultTutorial();
+      Tutorials.manager.loadDefaultTutorial({
+        change_step: function(step_num) {
+          $.jStorage.set('tutorial_main_left_off', step_num);
+        },
+        starting_step: $.jStorage.get('tutorial_main_left_off')
+      });
       Tutorials.brushes.loadTutorial({file:'./resources/tut_brushes.txt',target: '#tutorial_box_brushes'});
 
       $('#tutorial_link').click(function() {

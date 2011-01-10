@@ -3,14 +3,14 @@ var TutorialManager = Klass.extend({
     this.tutorials = [];
   },
 
-  createTutorial: function(element, tutorial) {
-    $(element).html(tutorial.createDOM()).tutorial();
+  createTutorial: function(element, tutorial, options) {
+    $(element).html(tutorial.createDOM()).tutorial(options);
   },
 
-  loadTutorialFromFileIntoDOM: function(file_url, element) {
+  loadTutorialFromFileIntoDOM: function(file_url, element, options) {
     $.ajax({ url: timestampedURL(file_url), dataType: 'text', success: function(tutorial_markdown) {
       var tutorial = new Tutorial(Tutorials.manager.readTutorialFromMarkdown(tutorial_markdown));
-      Tutorials.manager.createTutorial(element, tutorial);
+      Tutorials.manager.createTutorial(element, tutorial, options);
     }});
   },
 
@@ -41,17 +41,17 @@ var TutorialManager = Klass.extend({
     });
   },
 
-  loadDefaultTutorial: function() {
-    this.loadTutorial({
+  loadDefaultTutorial: function(options) {
+    this.loadTutorial($.extend({
       target: '#tutorial_box',
       file:   'resources/tutorial.txt'
-    });
+    }, options));
   },
 
   loadTutorial: function(options) {
     if (options.file && options.target) {
       $(options.target).tutorial('destroy');
-      Tutorials.manager.loadTutorialFromFileIntoDOM(options.file, options.target);
+      Tutorials.manager.loadTutorialFromFileIntoDOM(options.file, options.target, options);
     }
   }
 });

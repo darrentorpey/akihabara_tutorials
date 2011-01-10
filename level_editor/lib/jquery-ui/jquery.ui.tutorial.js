@@ -11,6 +11,10 @@ var TutorialWidget = {
 
   // this would be _init() for jQuery UI versions < 1.8
   _create: function() {
+    if (this.options.starting_step) {
+      this._currentStep = this.options.starting_step;
+    }
+
     this.element.find('section:not(:first)').hide();
     this.element.find('input[type=submit]').css('float','right').hide();
 
@@ -80,6 +84,8 @@ var TutorialWidget = {
     this.element.find('input[type=submit]').toggle(this._currentStep == this._totalSteps);
     this._progressbar.progressbar('option', 'value', (((100 - this._fudgeFactor)/this._totalSteps) * this._currentStep + this._fudgeFactor));
     this._progressbar.find('.ui-progressbar-value span').text('Step ' + this._currentStep + ' of '+ this._totalSteps);
+
+    if (this.options.change_step) { this.options.change_step(this._currentStep); }
   },
 
   nextStep: function () {

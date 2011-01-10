@@ -101,6 +101,14 @@ function getPluginsForURL(){
   return pluginsURL;
 }
 
+function updateGroups() {
+for(var plugin in loadedPlugins){
+                if(loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group,gbox._groups) == -1){
+                        gbox._groups.push(loadedPlugins[plugin].group); gbox.setGroups(gbox._groups);
+                }
+        }
+}
+
 var includedJS = storage('includedJS');
 loadedPlugins = new Object();
 pluginOrder = new Array();
@@ -112,23 +120,11 @@ if (includedJS) {
   }
 }
 
-if ($config.use_plugins) {
-  //Load plugins on page load!
-  var urlPlugins = getURLParam('plugins');
-  if (urlPlugins) {
-    for (pluginID in urlPlugins) {
-      loadPluginFromURL(urlPlugins[pluginID].url);
-    }
-  } else {
-    //Load the default plugins
-    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus) {
-      jQuery(data).each(function (index,pluginString) {
-        plugin_log(index + ': ' + pluginString);
-        pluginOrder[pluginString] = index;
-        loadPluginFromURL(pluginString);
-      });
-
-      head.ready(function() {
+ head.ready(function() {
+        
+        
+        //console.log("ready!");
+        
         plugin_log(loadedPlugins);
         for (i in loadedPlugins) $('#brush' + i).remove();
         var g = new Array();
@@ -149,12 +145,30 @@ if ($config.use_plugins) {
           }
         }
       });
+
+if ($config.use_plugins) {
+  //Load plugins on page load!
+  var urlPlugins = getURLParam('plugins');
+  if (urlPlugins) {
+    for (pluginID in urlPlugins) {
+      loadPluginFromURL(urlPlugins[pluginID].url);
+    }
+  } else {
+    //Load the default plugins
+    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus) {
+      jQuery(data).each(function (index,pluginString) {
+        plugin_log(index + ': ' + pluginString);
+        pluginOrder[pluginString] = index;
+        loadPluginFromURL(pluginString);
+      });
+
+     
     });
   }
 }
 
 $(function() {
-  $('#object_loading .drop').bind('drop', function(event) {
+  $('#object_loading .drop').bind('drop', function(event) { 
     if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
       var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
       if (pluginObject) {
@@ -171,11 +185,13 @@ $(function() {
 
         storage('includedJS', includedJS);
         loadPluginFromURL(pluginObject);
+        
 
         var pl = gbox.getObject('player', 'player_id');
       }
     } else {
       evalFirstTextFile(event);
+      updateGroups();
     }
 
     event.stopPropagation(); event.preventDefault(); return false;
@@ -201,6 +217,10 @@ function introduceALESPlugin(plugin) {
     //The game is currently running... add paletteImage, reload resources, reset the game.
     //Reset the game and load the new resources
     gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
+    
+    if(plugin.group && jQuery.inArray(plugin.group,gbox._groups) == -1){
+                        gbox._groups.push(plugin.group); gbox.setGroups(gbox._groups);
+    }
   }
 }
 
@@ -210,7 +230,7 @@ function getPluginIDFromName(pluginName, pluginURL){
   var plugins = getURLParam("plugins");
 
   //if it's a default plugin, return an ID based on its order in the defaultPlugins.json file
-  if (typeof pluginOrder[pluginURL] != 'undefined') {console.log("Hey, default order for" + pluginName + ' is ' + pluginOrder[pluginURL]); return pluginOrder[pluginURL]+pluginCounterMin;}
+  if (typeof pluginOrder[pluginURL] != 'undefined') {return pluginOrder[pluginURL]+pluginCounterMin;}
   
   if(plugins){
     //We have existing plugins, no need to generate a new number. Find our pluginName in the list.

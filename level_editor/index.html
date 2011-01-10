@@ -20,16 +20,13 @@
     <div id="level_name">
       <label for="level_name">Level Name</label>
       <input name="level_name" value="Akihabara Live Edit" size="30">
-      <p>
+      <!-- <p class="last_saved">
         Last saved: <span id="last_saved">-----</span>
-      </p>
-
-      <p id="undo_counter">
-        Undos: <span class="num">None</span>
-      </p>
+      </p> -->
 
       <a href="" id="open_level_storage">
-        <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">">
+        go back in time &raquo;
+        <!-- <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">"> -->
       </a>
     </div>
 
@@ -45,7 +42,11 @@
     </div>
 
     <div id="level_storage_pane" style="display: none">
-      <h3>Level History/Storage</h3>
+      <header>
+        <h3>Level History</h3>
+        <span class="sub"></span>
+      </header>
+      <span class="close_box">X</span>
       <ul></ul>
       <a href="" id="clear_level_storage">clear storage</a>
     </div>
@@ -183,6 +184,7 @@
     'lib/tutorials/tutorial_manager.js',
     'lib/tutorials/jquery.tutorials.js',
     'lib/jquery-ui/jquery.ui.tutorial.js',
+    'lib/jquery-ui/jquery.ui.toolbox.js',
     'lib/h5utils.js',
     'lib/admin/pluginHelper.js',
     'lib/admin/brushLoader.js',

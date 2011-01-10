@@ -19,7 +19,15 @@ var HistoryManager = Klass.extend({
 
   refreshList: function() {
     this.list.html('');
-    $.tmpl('history_row', $(this.levelStates).get().reverse()).appendTo(this.list);
+    var history_rows = $(this.levelStates).get().reverse();
+    $.each(history_rows, function() {
+      if (parseInt(this.date).toString().length < 5) {
+        // Old format... keep as is
+      } else {
+        this.date = dateFormat(this.date, "mmm dd yyyy HH:MM")
+      }
+    });
+    $.tmpl('history_row', history_rows).appendTo(this.list);
   },
 
   loadLevelStatesFromLS: function() {
@@ -95,4 +103,4 @@ var HistoryManager = Klass.extend({
   }
 });
 
-$.template('history_row', '<li id="history_row_${id}">${date} - ${name} (${id})</li>');
+$.template('history_row', '<li class="level_history_row" id="history_row_${id}">${date} - ${name} (${id})</li>');

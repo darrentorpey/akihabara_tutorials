@@ -256,8 +256,10 @@ var Editor = Klass.extend({
 
     historyManager = new HistoryManager($('#level_storage_pane'));
 
+    $('#level_storage_pane').toolbox();
+
     $('#open_level_storage').click(function() {
-      $('#level_storage_pane').toggle();
+      $('#level_storage_pane').toolbox('toggle');
       $(this).css('opacity', ($('#level_storage_pane').is(':visible') ? '0.8' : '1.0'));
       return false;
     });
@@ -330,7 +332,7 @@ var Editor = Klass.extend({
         }
       }
     }
-    
+
     this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
 
     if (this.minimap) {
@@ -376,7 +378,7 @@ var Editor = Klass.extend({
 
   redrawMap: function() {
     new UpdateMap(getLevelCopy());
-    historyManager.addLevelState({ name: currentLevel.getName(), date: getCurrentTimestampForFile(), level: this.getLevelData() });
+    historyManager.addLevelState({ name: currentLevel.getName(), date: timestamp(), level: this.getLevelData() });
   },
 
   setLevel: function(lvl) {
@@ -397,5 +399,36 @@ var Editor = Klass.extend({
         pix[(i/8)+2] = pix[i+2]; // b
         pix[(i/8)+3] = pix[i+3]; // a
       }
+  }
+});
+
+var KEY = {
+  BACKSPACE: 8,
+  TAB:       9,
+  RETURN:   13,
+  ESC:      27,
+  LEFT:     37,
+  UP:       38,
+  RIGHT:    39,
+  DOWN:     40,
+  DELETE:   46,
+  HOME:     36,
+  END:      35,
+  PAGEUP:   33,
+  PAGEDOWN: 34,
+  INSERT:   45
+};
+
+var escapeCandidates = [];
+function registerEscapeCandidate(candidate) {
+  escapeCandidates.push(candidate);
+}
+
+$(document).bind('keyup', function(e) {
+  if (KEY.ESC == e.keyCode) {
+    var candidate = escapeCandidates.pop();
+    if (candidate) {
+      candidate();
+    }
   }
 });

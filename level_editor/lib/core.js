@@ -126,7 +126,6 @@ function entities(s) {
 
 function timestampedURL(url) {
   if ((typeof $config != null) && $config.auto_cache_break_libraries) {
-    console.log('yes');
     var base_url = url.split('?')[0];
     var query_params = url.split('?')[1];
     query_params = query_params ? query_params.split('&') : [];

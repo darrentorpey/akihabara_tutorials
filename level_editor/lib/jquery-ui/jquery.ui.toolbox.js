@@ -29,8 +29,9 @@ var ToolBoxWidget = {
   open: function() {
     this.element.show();
     if (this.options.open) { this.options.open(); }
-    var self = this;
-    registerEscapeCandidate(function() { self.close() });
+    // var self = this;
+    // registerEscapeCandidate(function() { self.close() });
+    (function(self) { registerEscapeCandidate(function() { self.close() }) })(this);
   },
 
   toggle: function() {

@@ -118,15 +118,16 @@ if ($config.use_plugins) {
     for (pluginID in urlPlugins) {
       loadPluginFromURL(urlPlugins[pluginID].url);
     }
-  }else{
+  } else {
     //Load the default plugins
-    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus){
-      jQuery(data).each(function (index,pluginString){
+    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus) {
+      jQuery(data).each(function (index,pluginString) {
         plugin_log(index + ': ' + pluginString);
         pluginOrder[pluginString] = index;
         loadPluginFromURL(pluginString);
-     });
-    head.ready(function(){
+      });
+
+      head.ready(function() {
         plugin_log(loadedPlugins);
         for (i in loadedPlugins) $('#brush' + i).remove();
         var g = new Array();
@@ -137,17 +138,16 @@ if ($config.use_plugins) {
         }
         
         for (i=66; i<75; i++) {
-          var img = new Image();
-          img.src = g[i].paletteImage;
-          q = pluginOrder[g[i].sourceURL]+66;
-          img.id = 'brush' + g[i].origID;
-          img.setAttribute('class', 'brush');
-          $(img).appendTo('#palette');
+          if (g[i]) {
+            var img = new Image();
+            img.src = g[i].paletteImage;
+            q = pluginOrder[g[i].sourceURL]+66;
+            img.id = 'brush' + g[i].origID;
+            img.setAttribute('class', 'brush');
+            $(img).appendTo('#palette');
+          }
         }
-          
-
-        
-        });
+      });
     });
   }
 }

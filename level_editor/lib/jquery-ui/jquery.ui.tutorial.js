@@ -40,6 +40,14 @@ var TutorialWidget = {
 
     this._init_dom();
     this._init_css();
+
+    if (this.options.start_open) {
+      this.open();
+    }
+
+    if (this.options.after_init) {
+      this.options.after_init();
+    }
   },
 
   _init_dom: function() {

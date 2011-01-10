@@ -264,10 +264,14 @@ var Editor = Klass.extend({
     $('#undone_admin').click(function() {
       $('#admin_buttons').toolbox('toggle');
     });
-    // $('#undone_admin, #admin_buttons h4').click(function() {
-    //   $('#admin_buttons').toolbox('toggle');
-    //   // $('#admin_buttons').slideToggle(400, function() { $('#undone_admin').toggle(); });
-    // })
+
+    $('#reset_tutorial_status').click(function() {
+      $.jStorage.set('tutorial_main_left_off', 1);
+      $.jStorage.set('tutorial_main_has_been_shown', false);
+      $('<span>Done!</span>').css({ 'margin-left': '8px' }).insertAfter($(this)).fadeOut('slow');
+      return false;
+    });
+
     $.tmpl('button', buttons).appendTo('#admin_buttons').find('a').click(function() {
       var id = $(this).parent().attr('data-button-id');
       return buttons_hash[id].func();

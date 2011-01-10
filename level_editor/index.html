@@ -140,6 +140,8 @@
           </div>
           <a class="view_plugins" onclick="viewPlugins()">View Plugins</a>
         </div>
+
+        <a href="#" id="reset_tutorial_status">reset tutorial status</a>
       </div>
     </div>
   </aside>
@@ -250,7 +252,11 @@
         change_step: function(step_num) {
           $.jStorage.set('tutorial_main_left_off', step_num);
         },
-        starting_step: $.jStorage.get('tutorial_main_left_off')
+        after_init: function() {
+          $.jStorage.set('tutorial_main_has_been_shown', true);
+        },
+        starting_step: $.jStorage.get('tutorial_main_left_off'),
+        start_open:    !$.jStorage.get('tutorial_main_has_been_shown')
       });
       Tutorials.brushes.loadTutorial({file:'./resources/tut_brushes.txt',target: '#tutorial_box_brushes'});
 

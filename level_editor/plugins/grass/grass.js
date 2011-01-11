@@ -17,7 +17,7 @@ introduceALESPlugin({
       gapy:  0
     }
   ],
-  group:"boxes",
+  group:"solidboxes",
   tileset:"grass_tile",
   solidFloor:    false,
   solidCeil:    false,

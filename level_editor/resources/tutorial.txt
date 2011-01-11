@@ -28,9 +28,7 @@ You can choose new brushes by clicking on an image in the palette above the edit
 ___
 Undo & Redo
 -
-ALES provides full undo/redo. Press Ctrl+Z to undo, Ctrl+Y to redo. You can also use the mouse to undo/redo by clicking on these buttons:
-
-![Brushes.](./resources/tut_undo.png)
+ALES provides full undo/redo. Press Ctrl+Z to undo, Ctrl+Y to redo.
 ___
 Naming Your Level
 -
@@ -58,7 +56,7 @@ There's a link at the bottom of game mode that a visitor can click to edit their
 ___
 Level History
 -
-ALES locally stores the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click here to view every revision you've ever made to any level:
+ALES locally stores the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click "go back in time" to view and browse every revision you've ever made to any level:
 
 ![Brushes.](./resources/tut_name.png)
 

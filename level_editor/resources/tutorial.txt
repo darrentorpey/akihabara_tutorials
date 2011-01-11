@@ -56,11 +56,23 @@ There's a link at the bottom of game mode that a visitor can click to edit their
 ___
 Level History
 -
-ALES locally stores the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click "go back in time" to view and browse every revision you've ever made to any level:
+ALES uses HTML5 local storage to keep track of the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click "go back in time" to view and browse every revision you've ever made to any level:
 
 ![Brushes.](./resources/tut_history.gif)
 
 You don't even have to worry about the current level you're editing: you can always get back to it by scrolling to the top and clicking the most recent level revision.
+___
+Plugin System
+-
+If you want to build your own blocks and share them with others, we provide a plugin system that makes it easy. To see it in action, click on the Admin button in the upper right and drag this purple lava plugin from ryan-kahn.com into the designated drop area.
+
+<a href="http://ryan-kahn.com/akihabara/plugins/purpleLava/purpleLava.js" onclick="event.preventDefault &amp;&amp; event.preventDefault();alert('You need to drag this to the plugins import section! Admin-&gt;Plugins');"><img src="http://ryan-kahn.com/akihabara/plugins/purpleLava/purpleLavaPalette.png"></a>
+
+(Here's how to do it!)
+
+![Brushes.](./resources/tut_plugins.gif)
+
+If you make a level using a custom plugin, you can still share it with a friend and they'll be able to see it and use that plugin (as long as the domain hosting the plugin is still up).
 ___
 Resolution Problems?
 -
@@ -70,4 +82,4 @@ Thank You!
 -
 Thanks for trying ALES! We hope you have fun putting levels together.
 
-**To learn about the different brushes you can use, click the '?' symbol to the left of the palette.**
+**To learn about the different brushes you can use, click the ? to the left of the palette.**

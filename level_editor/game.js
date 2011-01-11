@@ -163,7 +163,7 @@ function getFontResources(){
 function main() {
   // For Tutorial Part 3 we're adding 'background' to the next line.
   // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
-	var groups = ['background', 'boxes', 'disboxes', 'enemies', 'player', 'particles'];
+	var groups = ['background', 'staticboxes', 'boxes', 'disboxes', 'enemies', 'particles'];
 
 	if($config.use_plugins){
 		for(var plugin in loadedPlugins){
@@ -172,6 +172,7 @@ function main() {
 			}
 		}
 	}
+	groups.push('player');
 	groups.push('game');
 	gbox.setGroups(groups);
 	gbox.setAudioChannels({ jump: { volume: 0.1 }, hit: { volume: 0.3 }, boom: { volume: 0.3 }});

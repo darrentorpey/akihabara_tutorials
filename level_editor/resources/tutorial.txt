@@ -4,7 +4,7 @@ Getting Started with ALES
 ___
 Welcome!
 -
-ALES is an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas.
+ALES is an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas. You can even play the game while you edit using the left and right arrow keys to move, Z to jump, and C to reset your player to the top-left of the screen.
 
 ![Two canvases.](./resources/tut_canvases.png)
 
@@ -58,9 +58,13 @@ Level History
 -
 ALES locally stores the entire undo history of every level you've ever made. As long as you're on the same computer using the same web browser, you can click "go back in time" to view and browse every revision you've ever made to any level:
 
-![Brushes.](./resources/tut_name.png)
+![Brushes.](./resources/tut_history.gif)
 
 You don't even have to worry about the current level you're editing: you can always get back to it by scrolling to the top and clicking the most recent level revision.
+___
+Plugin System
+-
+<a href="/akihabara/plugins/lava/lava.js" onclick="event.preventDefault &amp;&amp; event.preventDefault();alert('You need to drag this to the plugins import section! Admin-&gt;Plugins');"><img src="/akihabara/plugins/lava/lavaPalette.png"></a>
 ___
 Resolution Problems?
 -
@@ -69,3 +73,5 @@ ___
 Thank You!
 -
 Thanks for trying ALES! We hope you have fun putting levels together.
+
+**To learn about the different brushes you can use, click the ? to the left of the palette.**

@@ -148,7 +148,7 @@ function getPluginsForURL() {
 function updateGroups() {
   for (var plugin in loadedPlugins) {
     if (loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group, gbox._groups) == -1) {
-      gbox._groups[gbox._groups.length-1] = plugin.group; gbox._groups[gbox._groups.length] = "game";
+      gbox._groups[gbox._groups.length-2] = plugin.group; gbox._groups[gbox._groups.length-1] = "game"; gbox._groups[gbox._groups.length] = "player";
       gbox.setGroups(gbox._groups);
     }
   }

@@ -88,18 +88,20 @@ introduceALESPlugin({
           // being pushed left/right by another box
           for (var i in gbox._objects[group]) {
             if ((!gbox._objects[group][i].initialize) && gbox.collides(this, gbox._objects[group][i])) {
-              if (gbox._objects[group][i] != this) {
+              if (gbox._objects[group][i].id != this.id) {
                 other = gbox._objects[group][i];
                 other.accx = 0;
                 if ((this.accx < 0)) {
                   this.accx = 0;
                   this.x = other.x + other.w;
                   this.touchedleftwall = true;
+
                 }
                 if ((this.accx > 0)) {
                   this.accx = 0;
                   this.x = other.x - this.w;
                   this.touchedrightwall = true;
+
                 }
               }
             }

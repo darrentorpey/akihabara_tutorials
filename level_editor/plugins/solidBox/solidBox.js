@@ -17,7 +17,7 @@ introduceALESPlugin({
       gapy:  0
     }
   ],
-  group:"boxes",
+  group:"staticboxes",
   tileset:"solid_block_tile",
   solidFloor:    true,
   solidCeil:    true,

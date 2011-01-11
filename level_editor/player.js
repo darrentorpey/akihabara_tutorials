@@ -98,7 +98,7 @@ function addPlayer() {
 
       toys.platformer.applyGravity(this); // Apply gravity
       toys.platformer.horizontalKeys(this,{left:"left",right:"right"}); // Moves horizontally
-      toys.platformer.horizontalTileCollision(this,map,"map",1); // horizontal tile collision (i.e. walls)
+      toys.platformer.horizontalTileCollision(this,map,"map",2); // horizontal tile collision (i.e. walls)
       toys.platformer.verticalTileCollision(this,map,"map",1); // vertical tile collision (i.e. floor)
 
       if (this.onBox) {

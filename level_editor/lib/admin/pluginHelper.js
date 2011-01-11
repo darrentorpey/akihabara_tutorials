@@ -203,7 +203,7 @@ $(function() {
 function introduceALESPlugin(plugin) {
   var pluginId = pluginURLToID[plugin.sourceURL]
   loadedPlugins[pluginId] = plugin;
-  
+
   if (plugin.paletteImage) {
     var img = new Image();
     img.src = plugin.paletteImage;

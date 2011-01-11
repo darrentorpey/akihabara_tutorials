@@ -44,7 +44,7 @@ toys.platformer.horizontalTileCollision = function(th,map,tilemap,precision) {
   th.touchedleftwall=false;
   th.touchedrightwall=false;
   
-  while (t<th.h-16) {
+  while (t<th.h-15) {
     left=help.getTileInMap(th.x,th.y+t,map,0,tilemap);
     right=help.getTileInMap(th.x+th.w-1,th.y+t,map,0,tilemap);
 	    

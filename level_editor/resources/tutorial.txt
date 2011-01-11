@@ -4,9 +4,11 @@ Getting Started with ALES
 ___
 Welcome!
 -
-ALES is an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas. You can even play the game while you edit using the left and right arrow keys to move, Z to jump, and C to reset your player to the top-left of the screen.
+Hi there, Game On judge! Welcome to ALES, an HTML5 level editor for a Mario-style platformer. You can paint a level on the left-hand canvas and see it update automatically on the right-hand canvas. You can even play the game while you edit using the left and right arrow keys to move, Z to jump, and C to reset your player to the top-left of the screen.
 
 ![Two canvases.](./resources/tut_canvases.png)
+
+Please do read all the way to the end of this tutorial. There's a lot of functionality here!
 
 **Tip:** you can click the "Help" button again to close this tutorial. Don't worry, your place will be saved!
 ___
@@ -83,3 +85,9 @@ Thank You!
 Thanks for trying ALES! We hope you have fun putting levels together.
 
 **To learn about the different brushes you can use, click the ? to the left of the palette.**
+
+Or, try some of these demo levels:
+
+See some basic features in action: http://bit.ly/dLa3T3
+A tricky timing puzzle, better be fast: http://bit.ly/gaTwkX
+Blast your way to the star: http://bit.ly/fD8X11

@@ -62,16 +62,6 @@ ALES locally stores the entire undo history of every level you've ever made. As 
 
 You don't even have to worry about the current level you're editing: you can always get back to it by scrolling to the top and clicking the most recent level revision.
 ___
-Plugin System
--
-If you want to build your own blocks and share them with others, we provide a plugin system that makes it easy. To see it in action, click on the Admin button in the upper right and drag this plugin from ryan-kahn.com into the designated drop area.
-
-<a href="http://ryan-kahn.com/akihabara/plugins/lava/lava.js" onclick="event.preventDefault &amp;&amp; event.preventDefault();alert('You need to drag this to the plugins import section! Admin-&gt;Plugins');"><img src="http://ryan-kahn.com/akihabara/plugins/lava/lavaPalette.png"></a>
-
-(Here's how to do it!)
-
-
-___
 Resolution Problems?
 -
 ALES is best run on a widescreen monitor, but if your resolution is low enough that you don't see both canvases next to each other, just press Ctrl and - (minus) to zoom out with your browser. You can press Ctrl and + (plus) to zoom in if you went a little too far.
@@ -80,4 +70,4 @@ Thank You!
 -
 Thanks for trying ALES! We hope you have fun putting levels together.
 
-**To learn about the different brushes you can use, click the ? to the left of the palette.**
+**To learn about the different brushes you can use, click the '?' symbol to the left of the palette.**

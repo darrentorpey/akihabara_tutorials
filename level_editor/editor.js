@@ -195,6 +195,7 @@ var Editor = Klass.extend({
       redrawPlugins();
     }
 
+    editor.level[4]="CC00000000000000000000000000000000000000";
 
     // Find the elements
     editor.brushes = $('.brush');

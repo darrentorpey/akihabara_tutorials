@@ -104,8 +104,7 @@ introduceALESPlugin({
               toys.platformer.bounce(pl, { jumpsize: 15 });
             }
             this.killed = true;
-
-          } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0) {
+          } else if (gbox.collides(this, pl) && pl.x && pl.prevaccy <= 0 && !this.killed) {
             pl.resetGame();
           }
 

@@ -148,7 +148,7 @@ function getPluginsForURL() {
 function updateGroups() {
   for (var plugin in loadedPlugins) {
     if (loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group, gbox._groups) == -1) {
-      gbox._groups.push(loadedPlugins[plugin].group);
+      gbox._groups[gbox._groups.length-1] = plugin.group; gbox._groups[gbox._groups.length] = "game";
       gbox.setGroups(gbox._groups);
     }
   }
@@ -216,13 +216,12 @@ function introduceALESPlugin(plugin) {
   }
 
   if (typeof gbox != 'undefined') {
-    updateGroups();
     //The game is currently running... add paletteImage, reload resources, reset the game.
     //Reset the game and load the new resources
     gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
 
     if (plugin.group && jQuery.inArray(plugin.group, gbox._groups) == -1) {
-      gbox._groups.push(plugin.group);
+      gbox._groups[gbox._groups.length-1] = plugin.group; gbox._groups[gbox._groups.length] = "game";
       gbox.setGroups(gbox._groups);
     }
     console.log(gbox._groups);

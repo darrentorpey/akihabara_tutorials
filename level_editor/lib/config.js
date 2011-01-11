@@ -6,5 +6,5 @@ $config = {
   mouse_over_scrolling:       false,
   auto_cache_break_libraries: true,
   use_plugins:                true,
-  use_audio:                  false
+  use_audio:                  true
 }

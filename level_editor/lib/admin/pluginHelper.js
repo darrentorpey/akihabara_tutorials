@@ -114,6 +114,7 @@ loadedPlugins = new Object();
 pluginOrder = new Array();
 pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
 pluginCounterMin = pluginCounter;
+var defaultsLoaded = false;
 if (includedJS) {
   for (name in includedJS) {
     loadPluginFromURL(includedJS[name]);
@@ -122,27 +123,30 @@ if (includedJS) {
 
  head.ready(function() {
         
-        
-        //console.log("ready!");
-        
-        plugin_log(loadedPlugins);
-        for (i in loadedPlugins) $('#brush' + i).remove();
-        var g = new Array();
-        for (i in loadedPlugins) {
-          p = pluginOrder[loadedPlugins[i].sourceURL] + pluginCounterMin;
-          g[p] =  loadedPlugins[i];
-          loadedPlugins[i].origID = i;
-        }
-        
-        for (i=pluginCounterMin; i<pluginCounterMin+10; i++) {
-          if (g[i]) {
-            var img = new Image();
-            img.src = g[i].paletteImage;
-            q = pluginOrder[g[i].sourceURL]+pluginCounterMin;
-            img.id = 'brush' + g[i].origID; //i;
-            img.setAttribute('class', 'brush');
-            $(img).appendTo('#palette');
+        console.log('ready is called');
+        if (!defaultsLoaded) {
+          console.log('defaultsLoaded is false!')
+          plugin_log(loadedPlugins);
+          for (i in loadedPlugins) $('#brush' + i).remove();
+          var g = new Array();
+          for (i in loadedPlugins) {
+            p = pluginOrder[loadedPlugins[i].sourceURL] + pluginCounterMin;
+            g[p] =  loadedPlugins[i];
+            loadedPlugins[i].origID = i;
           }
+          
+          for (i=pluginCounterMin; i<pluginCounterMin+10; i++) {
+            if (g[i]) {
+              var img = new Image();
+              img.src = g[i].paletteImage;
+              q = pluginOrder[g[i].sourceURL]+pluginCounterMin;
+              img.id = 'brush' + g[i].origID; //i;
+              img.setAttribute('class', 'brush');
+              $(img).appendTo('#palette');
+            }
+          }
+          
+          defaultsLoaded = true;
         }
       });
 
@@ -185,7 +189,6 @@ $(function() {
 
         storage('includedJS', includedJS);
         loadPluginFromURL(pluginObject);
-        
 
         var pl = gbox.getObject('player', 'player_id');
       }
@@ -201,10 +204,11 @@ $(function() {
 function introduceALESPlugin(plugin) {
 //  plugin_log('Loading plugin:');
 //  plugin_log(plugin);
+
   var pluginId = getPluginIDFromName(plugin.name, plugin.sourceURL);
 
   loadedPlugins[pluginId] = plugin;
-
+   console.log("introducing " + plugin.name)
   if (plugin.paletteImage){
     var img = new Image();
     img.src = plugin.paletteImage;

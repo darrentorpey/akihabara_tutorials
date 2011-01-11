@@ -194,6 +194,7 @@ var Editor = Klass.extend({
       $(img).appendTo('#palette');
       head.ready(function () {
         for (pluginID in loadedPlugins) {
+	  if (!defaultsLoaded) {
           var plugin = loadedPlugins[pluginID];
           if (plugin.paletteImage) {
             var img = new Image();
@@ -202,6 +203,7 @@ var Editor = Klass.extend({
             img.setAttribute('class', 'brush');
             $(img).appendTo('#palette');
           }
+	  }
         }
       });
     }

@@ -192,18 +192,7 @@ var Editor = Klass.extend({
       img.id = 'brush2';
       img.setAttribute('class', 'brush');
       $(img).appendTo('#palette');
-      head.ready(function () {
-        for (pluginID in loadedPlugins) {
-          var plugin = loadedPlugins[pluginID];
-          if (plugin.paletteImage) {
-            var img = new Image();
-            img.src = plugin.paletteImage;
-            img.id = 'brush' + pluginID;
-            img.setAttribute('class', 'brush');
-            $(img).appendTo('#palette');
-          }
-        }
-      });
+      redrawPlugins();
     }
 
 

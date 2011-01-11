@@ -1,5 +1,46 @@
 var plugins_logging_enabled = false;
 
+
+var pluginURLToID = new Object();
+var includedJS = storage('includedJS');
+var loadedPlugins = new Object();
+var pluginOrder = new Array();
+var pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
+
+head.ready(function() {
+  redrawPlugins();
+});
+
+if ($config.use_plugins) {
+  //Load plugins on page load!
+  var urlPlugins = getURLParam('plugins');
+  if (urlPlugins) {
+    for (pluginID in urlPlugins) {
+      loadPluginFromURL(urlPlugins[pluginID].url);
+    }
+  } else {
+    //Load the default plugins
+    $.ajax({
+      url: timestampedURL('plugins/defaultPlugins.json'),
+      dataType: 'json',
+      success: function(data, textStatus) {
+        jQuery(data).each(function (index, pluginString) {
+          plugin_log(index + ': ' + pluginString);
+          pluginOrder[pluginString] = index;
+          loadPluginFromURL(pluginString);
+        });
+      },
+      async: false
+    });
+  }
+  if (includedJS) {
+    for (name in includedJS) {
+      loadPluginFromURL(includedJS[name]);
+    }
+  }
+}
+
+
 function plugin_log() {
   if (plugins_logging_enabled) {
     console.log.apply(console, arguments);
@@ -7,8 +48,8 @@ function plugin_log() {
 }
 
 function loadPluginFromURL(url) {
-//  plugin_log('Getting script...');
-  //Load plugins in order (hopefully) untested.
+  //Load plugins in order
+  pluginURLToID[url] = getPluginID();
   head.js(url);
 }
 
@@ -17,20 +58,23 @@ function removeAllIncludes() {
   var confirmation = confirm("Are you sure you want to remove all the plugins?");
   if (confirmation) {
     storage('includedJS', null);
+  redrawPlugins();
   }
   jQuery(x).dialog('close');
+
 }
 
-function closeDialog(){
+function closeDialog() {
   jQuery(this).dialog('close');
 }
 
-function removePlugin(name){
-  var confirmation = confirm("Are you sure you want to remove "+name+" ?");
+function removePlugin(name) {
+  var confirmation = confirm("Are you sure you want to remove " + name + " ?");
   if (confirmation) {
     var includedJS = storage('includedJS');
     delete includedJS[name];
-    storage('includedJS',includedJS);
+    storage('includedJS', includedJS);
+  redrawPlugins();
   }
   jQuery('.ui-dialog-titlebar-close').click();
 }
@@ -76,9 +120,9 @@ function storage(name, passedObject) {
 }
 
 /*
-* Returns an object that has groups sorted by name,
-* Object['groupName'] = Array of plugin objects
-* */
+ * Returns an object that has groups sorted by name,
+ * Object['groupName'] = Array of plugin objects
+ * */
 function getPluginsByGroup() {
   var pluginsByGroup = new Object();
   for (var plugin in loadedPlugins) {
@@ -92,7 +136,7 @@ function getPluginsByGroup() {
   return pluginsByGroup;
 }
 
-function getPluginsForURL(){
+function getPluginsForURL() {
   var pluginsURL = new Object();
   for (var pluginID in loadedPlugins) {
 //    plugin_log(pluginID);
@@ -102,148 +146,85 @@ function getPluginsForURL(){
 }
 
 function updateGroups() {
-for(var plugin in loadedPlugins){
-                if(loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group,gbox._groups) == -1){
-                        gbox._groups.push(loadedPlugins[plugin].group); gbox.setGroups(gbox._groups);
-                }
-        }
-}
-
-var includedJS = storage('includedJS');
-loadedPlugins = new Object();
-pluginOrder = new Array();
-pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
-pluginCounterMin = pluginCounter;
-if (includedJS) {
-  for (name in includedJS) {
-    loadPluginFromURL(includedJS[name]);
-  }
-}
-
- head.ready(function() {
-        
-        
-        //console.log("ready!");
-        
-        plugin_log(loadedPlugins);
-        for (i in loadedPlugins) $('#brush' + i).remove();
-        var g = new Array();
-        for (i in loadedPlugins) {
-          p = pluginOrder[loadedPlugins[i].sourceURL] + pluginCounterMin;
-          g[p] =  loadedPlugins[i];
-          loadedPlugins[i].origID = i;
-        }
-        
-        for (i=pluginCounterMin; i<pluginCounterMin+10; i++) {
-          if (g[i]) {
-            var img = new Image();
-            img.src = g[i].paletteImage;
-            q = pluginOrder[g[i].sourceURL]+pluginCounterMin;
-            img.id = 'brush' + g[i].origID; //i;
-            img.setAttribute('class', 'brush');
-            $(img).appendTo('#palette');
-          }
-        }
-      });
-
-if ($config.use_plugins) {
-  //Load plugins on page load!
-  var urlPlugins = getURLParam('plugins');
-  if (urlPlugins) {
-    for (pluginID in urlPlugins) {
-      loadPluginFromURL(urlPlugins[pluginID].url);
+  for (var plugin in loadedPlugins) {
+    if (loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group, gbox._groups) == -1) {
+      gbox._groups.push(loadedPlugins[plugin].group);
+      gbox.setGroups(gbox._groups);
     }
-  } else {
-    //Load the default plugins
-    jQuery.getJSON(timestampedURL('plugins/defaultPlugins.json'), function(data,textStatus) {
-      jQuery(data).each(function (index,pluginString) {
-        plugin_log(index + ': ' + pluginString);
-        pluginOrder[pluginString] = index;
-        loadPluginFromURL(pluginString);
-      });
-
-     
-    });
   }
 }
 
+
+function redrawPlugins() {
+  $('.plugin').remove();
+  for (var plugin in loadedPlugins) {
+    var img = new Image();
+    img.src = loadedPlugins[plugin].paletteImage;
+    img.id = 'brush' + plugin; //i;
+    img.setAttribute('class', 'brush plugin');
+    $(img).appendTo('#palette');
+  }
+}
+
+//Handle new plugin drops
 $(function() {
-  $('#object_loading .drop').bind('drop', function(event) { 
-    if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
-      var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
-      if (pluginObject) {
-        plugin_log('Plugin URL dropped: ' + pluginObject);
-        var pluginName = prompt('What would you like to name this plugin?');
-        var includedJS = storage('includedJS');
+  $('#object_loading .drop').bind('drop',
+   function(event) {
+     if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
+     var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
+     if (pluginObject) {
+       plugin_log('Plugin URL dropped: ' + pluginObject);
+       var pluginName = prompt('What would you like to name this plugin?');
+       var includedJS = storage('includedJS');
 
-        if (includedJS) {
-          includedJS[pluginName] = pluginObject;
-        } else {
-          includedJS = new Object();
-          includedJS[pluginName] = pluginObject;
-        }
+       if (includedJS) {
+       includedJS[pluginName] = pluginObject;
+       } else {
+       includedJS = new Object();
+       includedJS[pluginName] = pluginObject;
+       }
 
-        storage('includedJS', includedJS);
-        loadPluginFromURL(pluginObject);
-        
+       storage('includedJS', includedJS);
+       loadPluginFromURL(pluginObject);
+       var pl = gbox.getObject('player', 'player_id');
+     }
+     } else {
+     evalFirstTextFile(event);
+     updateGroups();
+     }
 
-        var pl = gbox.getObject('player', 'player_id');
-      }
-    } else {
-      evalFirstTextFile(event);
-      updateGroups();
-    }
-
-    event.stopPropagation(); event.preventDefault(); return false;
-  }).bind('dragenter dragover', false);
+     event.stopPropagation();
+     event.preventDefault();
+     return false;
+   }).bind('dragenter dragover', false);
 });
 
+//Load a single plugin
 function introduceALESPlugin(plugin) {
-//  plugin_log('Loading plugin:');
-//  plugin_log(plugin);
-  var pluginId = getPluginIDFromName(plugin.name, plugin.sourceURL);
-
+  var pluginId = pluginURLToID[plugin.sourceURL]
   loadedPlugins[pluginId] = plugin;
-
-  if (plugin.paletteImage){
+  
+  if (plugin.paletteImage) {
     var img = new Image();
     img.src = plugin.paletteImage;
     img.id = 'brush' + pluginId;
-    img.setAttribute('class', 'brush');
+    img.setAttribute('class', 'brush plugin');
     $(img).appendTo('#palette');
   }
 
   if (typeof gbox != 'undefined') {
+    updateGroups();
     //The game is currently running... add paletteImage, reload resources, reset the game.
     //Reset the game and load the new resources
     gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
-    
-    if(plugin.group && jQuery.inArray(plugin.group,gbox._groups) == -1){
-                        gbox._groups.push(plugin.group); gbox.setGroups(gbox._groups);
+
+    if (plugin.group && jQuery.inArray(plugin.group, gbox._groups) == -1) {
+      gbox._groups.push(plugin.group);
+      gbox.setGroups(gbox._groups);
     }
   }
 }
 
-
-function getPluginIDFromName(pluginName, pluginURL){
-  //Check to see if the plugin is in the list of existing plugins
-  var plugins = getURLParam("plugins");
-
-  //if it's a default plugin, return an ID based on its order in the defaultPlugins.json file
-  if (typeof pluginOrder[pluginURL] != 'undefined') {return pluginOrder[pluginURL]+pluginCounterMin;}
-  
-  if(plugins){
-    //We have existing plugins, no need to generate a new number. Find our pluginName in the list.
-    for(var i=0;i<plugins.length;i++){
-      if(plugins[i].name == pluginName){
-        return plugins[i].id;
-      }
-    }
-  }
-
-  //Otherwise, find a pluginID that is not in use
-  while(loadedPlugins[pluginCounter] != null){
-     pluginCounter++;
-  }
-  return pluginCounter;
+function getPluginID() {
+  return ++pluginCounter;
 }

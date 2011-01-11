@@ -225,6 +225,7 @@ function introduceALESPlugin(plugin) {
       gbox._groups.push(plugin.group);
       gbox.setGroups(gbox._groups);
     }
+    console.log(gbox._groups);
   }
 }
 

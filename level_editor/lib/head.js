@@ -1,20 +1,21 @@
 /**
- 	Head JS		The only script in your <HEAD>
+	Head JS		The only script in your <HEAD>
 	Copyright	Tero Piirainen (tipiirai)
-	License 		MIT / http://bit.ly/mit-license
+	License		MIT / http://bit.ly/mit-license
+	Version		0.8
 	
 	http://headjs.com
 */
 (function(doc) {
 	
 	var html = doc.documentElement,
-		conf = {
+		 conf = {
 			screens: [320, 480, 640, 768, 1024, 1280, 1440, 1680, 1920],
 			section: "-section",
 			page: "-page",
 			head: "head"
-		},
-		klass = [];
+		 },
+		 klass = [];
 		
 		
 	if (window.head_conf) {
@@ -50,7 +51,8 @@
 		// internal: apply all classes
 		if (!key) { 
 			html.className += ' ' + klass.join( ' ' );
-			return klass = [];		  
+			klass = [];
+			return;
 		}
 		
 		if (Object.prototype.toString.call(enabled) == '[object Function]') {
@@ -103,8 +105,8 @@
 			
 		if (this.length > 2 && this[i + 1] !== undefined) {
 			if (i) { pushClass(this.slice(1, i+1).join("-") + conf.section); }
-	  	 
-		} else {	  	 
+		
+		} else {
 			
 			// pageId
 			var id = el || "index", index = id.indexOf(".");
@@ -112,7 +114,7 @@
 			html.id = id + conf.page;
 			
 			// on root?
-		 	if (!i) { pushClass("root" + conf.section); }		 
+			if (!i) { pushClass("root" + conf.section); }
 	  } 
 	});	
 	
@@ -143,9 +145,10 @@
 
 
 /**
- 	Head JS		The only script in your <HEAD>
+	Head JS		The only script in your <HEAD>
 	Copyright	Tero Piirainen (tipiirai)
-	License 		MIT / http://bit.ly/mit-license
+	License		MIT / http://bit.ly/mit-license
+	Version		0.8
 	
 	http://headjs.com
 */
@@ -168,19 +171,27 @@
 	var el = document.createElement("i"),
 		 style = el.style,
 		 prefs = ' -o- -moz- -ms- -webkit- -khtml- '.split(' '),
+		 domPrefs = 'Webkit Moz O ms Khtml'.split(' '),
+		 
 		 head_var = window.head_conf && head_conf.head || "head",
 		 api = window[head_var];
+	
 		 
-	/* 
-		runs a vendor property test (-moz, ...)  
-		
-		testAll("box-shadow: 0 0 0 red;");
-	*/
-	function testAll(definition)  {
-		style.cssText = prefs.join(definition + ";");
-		var val = style.cssText;
-		if (val.indexOf("-o") != -1 && val.indexOf("-ms") != -1) { return false; }
-		return !!val;
+	// Paul Irish (http://paulirish.com): Million Thanks!	 
+	function testProps(props) {
+		for (var i in props) {
+			if (style[props[i]] !== undefined) {
+				return true;
+			}
+		}
+	}
+	
+	
+	function testAll(prop) {	
+		var camel = prop.charAt(0).toUpperCase() + prop.substr(1),
+			 props   = (prop + ' ' + domPrefs.join(camel + ' ') + camel).split(' ');
+	
+		return !!testProps(props);
 	}
 
 	var tests = {
@@ -199,10 +210,10 @@
 			return !!style.backgroundColor;
 		},
 		
-		boxshadow: function() {
-			return testAll("box-shadow: 0 0 0 red");	
+		opacity: function() {
+			return el.style.opacity === "";
 		},
-		
+			
 		textshadow: function() {			
 			return style.textShadow === '';	
 		},
@@ -212,28 +223,28 @@
 			return new RegExp("(url\\s*\\(.*?){3}").test(style.background);
 		},
 		
+		boxshadow: function() {
+			return testAll("boxShadow");	
+		},
+		
 		borderimage: function() {
-			return testAll("border-image: url(m.png) 1 1 stretch");
+			return testAll("borderImage");
 		},
 		
 		borderradius: function() {
-			return testAll('border-radius:0');	
+			return testAll("borderRadius");	
 		},
-		
-		opacity: function() {
-			return el.style.opacity === "";
-		},
-		
+	
 		reflections: function() {
-			return testAll("box-reflect:right 0");
+			return testAll("boxReflect");
 		},
       
 		transforms: function() {
-			return testAll("transform:rotate(1deg)");
+			return testAll("transform");
 		},
 		
 		transitions: function() {
-			return testAll("transition:all .1s linear");
+			return testAll("transition");
 		}      
 	};
 	
@@ -252,9 +263,10 @@
 
 
 /**
- 	Head JS		The only script in your <HEAD>
+	Head JS		The only script in your <HEAD>
 	Copyright	Tero Piirainen (tipiirai)
-	License 		MIT / http://bit.ly/mit-license
+	License		MIT / http://bit.ly/mit-license
+	Version		0.8
 	
 	http://headjs.com
 */
@@ -262,60 +274,110 @@
 		
 	var head = doc.documentElement,
 		 ie = navigator.userAgent.toLowerCase().indexOf("msie") != -1, 
-		 ready = false, 	// is HEAD "ready"
+		 ready = false,	// is HEAD "ready"
 		 queue = [],		// if not -> defer execution
 		 handlers = {},	// user functions waiting for events
-		 scripts = {};		// loadable scripts in different states
-
-		 
+		 scripts = {},		// loadable scripts in different states
+ 
+		 isAsync = doc.createElement("script").async === true ||
+					"MozAppearance" in doc.documentElement.style ||
+					window.opera;		 
+					
 	/*** public API ***/
 	var head_var = window.head_conf && head_conf.head || "head",
 		 api = window[head_var] = (window[head_var] || function() { api.ready.apply(null, arguments); }); 
+		 
+
+	// states
+	var PRELOADED = 0,
+		 PRELOADING = 1,		 
+		 LOADING	= 2,
+		 LOADED = 3;
+		
 	
+	// Method 1: simply load and let browser take care of ordering	
+	if (isAsync) {			
 		
-	api.js = function() {
+		api.js = function() {
+						
+			var args = arguments,
+				 fn = args[args.length -1],
+				 els = [];
+
+			if (!isFunc(fn)) { fn = null; }	 
 			
-		var args = arguments,
-			rest = [].slice.call(args, 1),
-			next = rest[0];   
-			
-		if (!ready) {
-			queue.push(function()  {
-				api.js.apply(null, args);				
+			each(args, function(el, i) {
+					
+				if (el != fn) {					
+					el = getScript(el);
+					els.push(el);
+										
+					load(el, fn && i == args.length -2 ? function() {							
+						var allLoaded = true;
+						
+						each(els, function(s) {
+								
+							if (s.state != LOADED) { allLoaded = false; }
+						});
+							
+						if (allLoaded) { fn(); }
+							
+					} : null);
+				}							
 			});
-			return api;
-		}
-		
-		// multiple arguments	 
-		if (next) {				
 			
-			// preload the rest
-			if (!isFunc(next)) { 
+			return api;		 
+		};
+		
+		
+	// Method 2: preload	with text/cache hack
+	} else {
+		
+		api.js = function() {
+				
+			var args = arguments,
+				 rest = [].slice.call(args, 1),
+				 next = rest[0];
+				
+			if (!ready) {
+				queue.push(function()  {
+					api.js.apply(null, args);				
+				});
+				return api;
+			}
+			
+			// multiple arguments	 
+			if (next) {				
+				
+				// load
 				each(rest, function(el) {
 					if (!isFunc(el)) {
 						preload(getScript(el));
 					} 
 				});			
+				
+				// execute
+				load(getScript(args[0]), isFunc(next) ? next : function() {
+					api.js.apply(null, rest);
+				});
+				
+				
+			// single script	
+			} else {				
+				load(getScript(args[0]));
 			}
-		
-			// load all recursively in order
-			load(getScript(args[0]), isFunc(next) ? next : function() {
-				api.js.apply(null, rest);
-			});				
 			
-		// single script	
-		} else {
-			load(getScript(args[0]));
-		}
+			return api;		 
+		};			
 		
-		return api;		 
-	};
+	} 
+	
 	
 	api.ready = function(key, fn) {
 		
 		var script = scripts[key];
 		
-		if (script && script.state == 'loaded') {
+		if (script && script.state == LOADED) {
 			fn.call();
 			return api;
 		}
@@ -329,30 +391,20 @@
 		var arr = handlers[key];
 		if (!arr) { arr = handlers[key] = [fn]; }
 		else { arr.push(fn); }
-		return api;
-	};
-	
-	/*
-	api.dump = function() {
-		console.dir(scripts);	
+		return api;		
 	};
 
-	api.preload = function(url) {
-		url = { name: toLabel(url), url: url };
-		preload(url);	
-	};
-	*/
 	
+	/*** private functions ***/
 	function toLabel(url) {		
 		var els = url.split("/"),
 			 name = els[els.length -1],
 			 i = name.indexOf("?");
 			 
-		return i != -1 ? name.substring(0, i) : name				 
+		return i != -1 ? name.substring(0, i) : name;				 
 	}
 	
 	
-	/*** private functions ***/
 	function getScript(url) {
 		
 		var script;
@@ -360,31 +412,25 @@
 		if (typeof url == 'object') {
 			for (var key in url) {
 				if (url[key]) {
-					script = { name: key, url: timestampedURL(url[key]) };
+					script = { name: key, url: url[key] };
 				}
 			}
 		} else { 
-			script = { name: toLabel(url),  url: timestampedURL(url) };
+			script = { name: toLabel(url),  url: url }; 
 		}
 
 		var existing = scripts[script.name];
 		if (existing) { return existing; }
 		
+		// same URL?
+		for (var name in scripts) {
+			if (scripts[name].url == script.url) { return scripts[name]; }	
+		}
+		
 		scripts[script.name] = script;
 		return script;
 	}
-
-  function timestampedURL(url) {
-    if ((typeof $config != 'undefined') && $config.auto_cache_break_libraries) {
-      var base_url = url.split('?')[0];
-      var query_params = url.split('?')[1];
-      query_params = query_params ? query_params.split('&') : [];
-      query_params.push('ts=' + (new Date().getTime()));
-      return base_url + '?' + query_params.join('&');
-    } else {
-      return url;
-    }
-  }
+	
 	
 	function each(arr, fn) {
 		if (!arr) { return; }
@@ -404,7 +450,7 @@
 	
 	
 	function onPreload(script) {
-		script.state = "preloaded";
+		script.state = PRELOADED;
 
 		each(script.onpreload, function(el) {
 			el.call();
@@ -415,67 +461,49 @@
 		
 		if (!script.state) {
 						
-			script.state = "preloading";
+			script.state = PRELOADING;
 			script.onpreload = [];
-			
-			/*
-				Browser detection required. Firefox does not support script.type = text/cache
-				http://www.phpied.com/preload-cssjavascript-without-execution/				
-			*/	
-			if (/Firefox/.test(navigator.userAgent)) {
-			
-				var obj = doc.createElement('object');
-				obj.data = script.url;
-				obj.width  = 0;
-				obj.height = 0;		
-				
-				obj.onload = function() {
-					onPreload(script);
-					
-					// avoid spinning progress indicator with setTimeout
-					setTimeout(function() { head.removeChild(obj); }, 1);
-				};
-				
-				head.appendChild(obj);
-				
-			} else {
-				scriptTag({ src: script.url, type: 'cache'}, function()  {
-					onPreload(script);		
-				});
-			}
-			
-		}
-	}
-	
-	
-	function load(script, callback) {	
 
-		if (script.state == 'loaded') { return callback && callback.call(); }
-			
-		if (script.state == 'preloading') {
-			return script.onpreload.push(function()  {
-				load(script, callback);	
-			});
+			scriptTag({ src: script.url, type: 'cache'}, function()  {
+				onPreload(script);		
+			});			
+		}
+	} 
+	
+	function load(script, callback) {
+		
+		if (script.state == LOADED && callback) { 
+			return callback(); 
 		}
 		
-		script.state = 'loading'; 
+		if (script.state == LOADING) {
+			return api.ready(script.name, callback);	
+		}
+			
+		if (script.state == PRELOADING) {			
+			return script.onpreload.push(function() {
+				load(script, callback);	
+			});
+		}  
+		
+		script.state = LOADING; 
 
 		scriptTag(script.url, function() {
 			
-			script.state = 'loaded';
+			script.state = LOADED;
 			
-			if (callback) { callback.call(); }			
+			if (callback) { callback(); }			
+			
 			
 			// handlers for this script
-			each(handlers[script.name], function(fn) {
+			each(handlers[script.name], function(fn) {				
 				fn.call();		
 			});
 
-			// TODO: do not run until DOM is loaded			
 			var allLoaded = true;
 		
 			for (var name in scripts) {
-				if (scripts[name].state != 'loaded') { allLoaded = false; }	
+				if (scripts[name].state != LOADED) { allLoaded = false; }	
 			}
 		
 			if (allLoaded) {
@@ -484,31 +512,33 @@
 					fn.done = true;
 				});
 			}
-		});
-				
-	}   
-	
-	// if callback == true --> preload
+		});		 
+	}
+
+
 	function scriptTag(src, callback)  {
 		
-		var elem = doc.createElement('script');		
-		elem.type = 'text/' + (src.type || 'javascript');
-		elem.src = src.src || src;  
+		var s = doc.createElement('script');		
+		s.type = 'text/' + (src.type || 'javascript');
+		s.src = src.src || src;
+		s.async = false;
+		
+		s.onreadystatechange = s.onload = function() {
 			
-		elem.onreadystatechange = elem.onload = function() {
-			var state = elem.readyState;
-
+			var state = s.readyState;
+			
 			if (!callback.done && (!state || /loaded|complete/.test(state))) {
-				callback.call();
+				callback();
 				callback.done = true;
 			}
 		}; 
 		
-		head.appendChild(elem); 
-	} 
+		head.appendChild(s); 
+	}
+	
 	
 	/*
-		Start after a small delay: guessing that the the head tag needs to be closed
+		Start after HEAD tag is closed
 	*/	
 	setTimeout(function() {
 		ready = true;
@@ -517,5 +547,14 @@
 		});		
 	}, 200);	
 	
-		
+	
+	// enable document.readyState for Firefox <= 3.5 
+	if (!doc.readyState && doc.addEventListener) {
+	    doc.readyState = "loading";
+	    doc.addEventListener("DOMContentLoaded", handler = function () {
+	        doc.removeEventListener("DOMContentLoaded", handler, false);
+	        doc.readyState = "complete";
+	    }, false);
+	}
+			
 })(document);

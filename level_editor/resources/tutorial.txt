@@ -10,6 +10,8 @@ Hi there, Game On judge! Welcome to ALES, an HTML5 level editor for a Mario-styl
 
 Please do read all the way to the end of this tutorial. There's a lot of functionality here!
 
+**Tip:** ALES runs best in Firefox 4, but if you experience loading problems on any other browser, try appending ?canaudio=no to the URL to disable sound.
+
 **Tip:** you can click the "Help" button again to close this tutorial. Don't worry, your place will be saved!
 ___
 The Map and the Editor
@@ -82,12 +84,12 @@ ALES is best run on a widescreen monitor, but if your resolution is low enough t
 ___
 Thank You!
 -
-Thanks for trying ALES! We hope you have fun putting levels together.
+Thanks for trying ALES! We hope you have fun building levels and sharing them with your friends.
 
 **To learn about the different brushes you can use, click the ? to the left of the palette.**
 
 Or, try some of these demo levels:
 
-See some basic features in action: http://bit.ly/dLa3T3
-A tricky timing puzzle, better be fast: http://bit.ly/gaTwkX
-Blast your way to the star: http://bit.ly/fD8X11
+* <a href="http://bit.ly/h7XwXo">See some basic features in action</a>
+* <a href="http://bit.ly/h51x7D">A tricky timing puzzle, better be fast</a>
+* <a href="http://bit.ly/g3XxA3">Blast your way to the star</a>

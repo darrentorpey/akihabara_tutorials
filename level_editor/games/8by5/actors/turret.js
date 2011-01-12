@@ -1,28 +1,23 @@
 var GamePiece = Klass.extend({
   init: function(options) {
-    this.klass    = options.klass;
+    this.klass_name = options.klass_name;
+    this.klass      = options.klass || eval(capitalize(options.klass_name));
     if (this.klass.num_objects == null)
       this.klass.num_objects = 0;
-    this.klass_id = this.klass.num_objects++
-    this.name     = options.name || 'unknown';
+    this.klass_id   = options.klass_id || this.klass.num_objects++;
+    this.name       = options.name || this.klass_name + '_' + (this.klass_id + 1).toString();
   },
 
   kill: function(killer) {
-    // debug.log('kill', arguments.callee, arguments.callee.caller);
-    $($listener).trigger({
-      type:    'death',
-      object:  this,
-      subject: killer
-    });
+    $listener.inform(killer, 'death', this);
   }
 });
 
 var Base = GamePiece.extend({
   init: function() {
     this._super({
-      klass: Base
+      klass_name: 'base'
     });
-    this.name = 'base_' + (this.klass_id + 1).toString();
   },
 
   spawnTurret: function(target) {
@@ -35,33 +30,19 @@ var Base = GamePiece.extend({
 var Turret = GamePiece.extend({
   init: function() {
     this._super({
-      klass: Turret
+      klass_name: 'turret'
     });
-    this.name = 'turret_' + (this.klass_id + 1).toString();
   }
 });
 
 var Scanner = GamePiece.extend({
   init: function() {
     this._super({
-      klass: Scanner,
-      name: 'scanner'
+      klass_name: 'scanner'
     });
   },
 
   shoot: function(target) {
-    // target.kill.apply(this, target);
     target.kill(this);
   }
 });
-
-var obj = {
-  name: 'the_obj',
-  kill: function() {
-    debug.log(this);
-    $($listener).trigger({
-      type: 'death',
-      subject: this
-    });
-  }
-}

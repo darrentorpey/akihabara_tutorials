@@ -412,11 +412,11 @@
 		if (typeof url == 'object') {
 			for (var key in url) {
 				if (url[key]) {
-					script = { name: key, url: url[key] };
+					script = { name: key, url: timestampedURL(url[key]) };
 				}
 			}
 		} else { 
-			script = { name: toLabel(url),  url: url }; 
+			script = { name: toLabel(url),  url: timestampedURL(url) };
 		}
 
 		var existing = scripts[script.name];
@@ -558,3 +558,16 @@
 	}
 			
 })(document);
+
+if (typeof timestampedURL == 'undefined')
+  function timestampedURL(url) {
+    if ((typeof $config != 'undefined') && $config.auto_cache_break_libraries) {
+      var base_url = url.split('?')[0];
+      var query_params = url.split('?')[1];
+      query_params = query_params ? query_params.split('&') : [];
+      query_params.push('ts=' + (new Date().getTime()));
+      return base_url + '?' + query_params.join('&');
+    } else {
+      return url;
+    }
+  }

@@ -195,7 +195,6 @@ var Editor = Klass.extend({
       redrawPlugins();
     }
 
-    editor.level[4]="CC00000000000000000000000000000000000000";
 
     // Find the elements
     editor.brushes = $('.brush');
@@ -333,27 +332,11 @@ var Editor = Klass.extend({
     setInterval (function() { editor.mouseOverDelay++; }, 100);
   },
 
-  drawCanvas: function(cx, cy) {
-    for (var y = 0; y < 30; y++) {
-      for (var x = 0; x < 40; x++) {
-        var brush = jQuery('#brush' + this.level[y][x]);
-        if (brush.length) {
-          this.minictx.drawImage(brush[0], (x - 0) * 32, (y - 0) * 32);
-        } else {
-          // We didnt find the brush the normal way, check out the char code then...
-          var id = this.level[y][x].charCodeAt(0);
-          var brush = jQuery('#brush' + id);
-          if (brush.length) {
-            this.minictx.drawImage(brush[0], (x -0) * 32, (y - 0) * 32);
-          } else {
-            console.log("Could not find brush for: " + this.level[y][x]);
-          }
-        }
-      }
-    }
-
+  drawCanvas: function(cx, cym) {
+	this.drawOntoCanvas(cx,cym,true,this.minictx);
     this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
 
+	this.drawOntoCanvas(cx,cym,false,this.context);
     if (this.minimap) {
       var tc = document.createElement('canvas');
       tc.setAttribute('width', 160);
@@ -379,6 +362,33 @@ var Editor = Klass.extend({
     this.context.strokeRect(480,0,160,120);
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
+
+	drawOntoCanvas: function(cx, cym, safe, context){
+		for (var y = 0; y < 30; y++) {
+		  for (var x = 0; x < 40; x++) {
+			var brush = jQuery('#brush' + this.level[y][x]);
+			if (brush.length) {
+			  context.drawImage(brush[0], (x - 0) * 32, (y - 0) * 32);
+			} else {
+			  // We didnt find the brush the normal way, check out the char code then...
+			  var id = this.level[y][x].charCodeAt(0);
+			  var brush = jQuery('#brush' + id);
+			  if (brush.length) {
+				if(safe == true && jQuery(brush[0]).attr("src").indexOf("http://") != -1){
+					safeImage = new Image();
+					safeImage.src = "plugins/remoteDefault.png";
+					context.drawImage(safeImage, (x -0) * 32, (y - 0) * 32);
+				}else{
+					context.drawImage(brush[0], (x -0) * 32, (y - 0) * 32);
+				}
+			  } else {
+				console.log("Could not find brush for: " + this.level[y][x]);
+			  }
+			}
+		  }
+		}
+
+	},
 
   getLevelDataForSaveFile: function() {
     return JSON.stringify(this.getLevelData());
@@ -406,6 +416,7 @@ var Editor = Klass.extend({
   },
 
   genMiniMap: function() {
+
     if (gbox.getGroups().length > 0) reloadMap();
     this.minimap = this.minictx.getImageData(0, 0, 640*2, 480*2); //editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;

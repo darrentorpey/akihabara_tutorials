@@ -42,6 +42,8 @@ var Level = Klass.extend({
     }
 	 if(!$config.use_plugins){
 	   this.map[7] = '4400000000000000000000000000000000000000';
+	 }else{
+       this.map[7]="CC00000000000000000000000000000000000000";
 	 }
   },
 

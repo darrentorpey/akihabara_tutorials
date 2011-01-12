@@ -398,7 +398,7 @@
 	/*** private functions ***/
 	function toLabel(url) {		
 		var els = url.split("/"),
-			 name = els[els.length -1],
+			 name = els.join('_'),
 			 i = name.indexOf("?");
 			 
 		return i != -1 ? name.substring(0, i) : name;				 

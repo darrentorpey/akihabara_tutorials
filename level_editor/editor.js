@@ -155,6 +155,8 @@ var Editor = Klass.extend({
     this.drawCanvas(this.camx, this.camy);
     this.setupHistoryManager();
 
+    $('#imageView').show();
+
     $('.inline_help[title]').tooltip().dynamic({ bottom: { direction: 'down' } });
 
     $('#generate_url').click(function() {

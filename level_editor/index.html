@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="css/plain.css">
   <link rel="stylesheet" href="css/jquery-ui.css">
 
+  <script type="text/javascript" src="lib/first.js"></script>
+  <script type="text/javascript" src="lib/ba-debug.js"></script>
   <script type="text/javascript" src="lib/config.js"></script>
   <script type="text/javascript" src="lib/head.js"></script>
 </head>
@@ -56,7 +58,7 @@
   </div>
 
   <div id="container">
-    <canvas id="imageView" width="640" height="480"></canvas>
+    <canvas id="imageView" width="640" height="480" style="display: none"></canvas>
   </div>
 
   <section class="intro" id="intro">
@@ -152,7 +154,6 @@
 
 <script>
   head.js('lib/swfobject.js',
-    'lib/first.js',
     'lib/init.js',
     { jquery: 'lib/jquery/jquery-1.4.4.js' },
     'lib/jquery/jquery.tmpl.js',
@@ -197,7 +198,10 @@
     'lib/overrides.js',
     'player.js',
     'enemy.js',
-    'game.js',
+    'games/test/init.js',
+    'games/8by5/init.js',
+    'games/8by5/actors/turret.js',
+    { game: 'game.js' },
     'lib/levels/map.js'
   );
 
@@ -219,6 +223,10 @@
     gbox._passKeysThrough = 1;
   });
 
+  head.ready('game', function() {
+    debug.log('Game on!');
+  });
+
   head.ready(function() {
     currentLevel = new Level();
 
@@ -237,9 +245,12 @@
 
     game.level = currentLevel.map;
 
-    startGame();
+    // Hack to start up 8by5 easily
+    $config.default_game = '8by5'
 
-    if (!gameOnlyMode) {
+    the_game = new $games[$config.default_game]();
+
+    if (false && !gameOnlyMode) {
       editor = new Editor();
       editor.level = currentLevel.map;
       editor.setup();

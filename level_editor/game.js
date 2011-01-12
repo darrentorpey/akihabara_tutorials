@@ -524,3 +524,8 @@ var Game = Klass.extend({
   init: function() {
   }
 });
+
+$games = {
+  'test_game' : ALESTest,
+  '8by5'      : EightByFive
+}

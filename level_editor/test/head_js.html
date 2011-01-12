@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>head.js test</title>
+
+  <script type="text/javascript" src="../lib/first.js"></script>
+  <script type="text/javascript" src="../lib/ba-debug.js"></script>
+  <script type="text/javascript" src="../lib/head.js"></script>
+</head>
+<body>
+<script>
+  head.js(
+    '../lib/jquery/jquery.klass.js',
+    { jquery: '../lib/jquery/jquery-1.4.4.js' },
+    '../lib/init_stuff.js',
+    '../games/test/initialize.js',
+    '../games/8by5/init.js',
+    '../games/test/init.js',
+    '../game.js',
+    { game: '../lib/actors/turret.js' },
+    { jquery: '../lib/jquery/jquery-1.4.4.js' },
+    '../lib/jquery/jquery.tmpl.js',
+    '../lib/jquery/jquery.klass.js'
+  );
+
+  head.ready('game', function() {
+    console.log('Game on!');
+  });
+
+  head.ready(function() {
+    $games['8by5'].init();
+  });
+</script>
+</body></html>

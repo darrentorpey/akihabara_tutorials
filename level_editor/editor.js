@@ -382,7 +382,6 @@ var Editor = Klass.extend({
 				brushX = x-startX;
 				brushY = y-startY;
 			}
-				console.log(brushX);
 			var brush = jQuery('#brush' + this.level[y][x]);
 			if (brush && brush.length) {
 			  context.drawImage(brush[0], brushX * 32, brushY * 32);

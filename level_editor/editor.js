@@ -332,11 +332,11 @@ var Editor = Klass.extend({
     setInterval (function() { editor.mouseOverDelay++; }, 100);
   },
 
-  drawCanvas: function(cx, cym) {
-	this.drawOntoCanvas(cx,cym,true,this.minictx);
-    this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
+  drawCanvas: function(cx, cy) {
+	this.drawOntoCanvas(cx,cy,true,this.minictx);
+//    this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
+	this.drawOntoCanvas(cx,cy,false,this.context);
 
-	this.drawOntoCanvas(cx,cym,false,this.context);
     if (this.minimap) {
       var tc = document.createElement('canvas');
       tc.setAttribute('width', 160);
@@ -357,18 +357,35 @@ var Editor = Klass.extend({
 
       this.context.putImageData(a,480,0,0,0,160,120);
     }
-
+	  
     this.context.strokeStyle = '#000';
     this.context.strokeRect(480,0,160,120);
     this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
 
-	drawOntoCanvas: function(cx, cym, safe, context){
-		for (var y = 0; y < 30; y++) {
-		  for (var x = 0; x < 40; x++) {
+	drawOntoCanvas: function(cx, cy, safe, context){
+		var startX = 0;
+		var startY = 0;
+		var endX = 40;
+		var endY = 30;
+		if(!safe){
+			startX = cx;
+			startY = cy;
+			endX = cx+20;
+			endY = cy+15;
+		}
+		for (var y = startY; y < endY; y++) {
+		  for (var x = startX; x < endX; x++) {
+			var brushX = x;
+			var brushY = y;
+			if(!safe){
+				brushX = x-startX;
+				brushY = y-startY;
+			}
+				console.log(brushX);
 			var brush = jQuery('#brush' + this.level[y][x]);
-			if (brush.length) {
-			  context.drawImage(brush[0], (x - 0) * 32, (y - 0) * 32);
+			if (brush && brush.length) {
+			  context.drawImage(brush[0], brushX * 32, brushY * 32);
 			} else {
 			  // We didnt find the brush the normal way, check out the char code then...
 			  var id = this.level[y][x].charCodeAt(0);
@@ -377,9 +394,9 @@ var Editor = Klass.extend({
 				if(safe == true && jQuery(brush[0]).attr("src").indexOf("http://") != -1){
 					safeImage = new Image();
 					safeImage.src = "plugins/remoteDefault.png";
-					context.drawImage(safeImage, (x -0) * 32, (y - 0) * 32);
+					context.drawImage(safeImage, brushX * 32, brushY * 32);
 				}else{
-					context.drawImage(brush[0], (x -0) * 32, (y - 0) * 32);
+					context.drawImage(brush[0], brushX * 32, brushY * 32);
 				}
 			  } else {
 				console.log("Could not find brush for: " + this.level[y][x]);

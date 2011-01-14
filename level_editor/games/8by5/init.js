@@ -1,4 +1,4 @@
-var EightByFive = Klass.extend({
+var EightByFive = AkiGame.extend({
   init: function() {
     debug.log('Starting 8by5...');
 

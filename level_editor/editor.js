@@ -119,7 +119,10 @@ var PencilTool = Klass.extend({
     editor.drawCanvas(editor.camx, editor.camy);
     editor.context.lineWidth = 2;
     editor.context.strokeStyle = '#800';
-    editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+    this.mouseX = Math.floor(ev._x/32);
+    this.mouseY = Math.floor(ev._y/32);
+	editor.context.strokeRect(this.mouseX*32,this.mouseY*32, 32, 32);
+
   },
 
   mouseup: function(ev) {
@@ -340,10 +343,14 @@ var Editor = Klass.extend({
   },
 
   drawCanvas: function(cx, cy) {
-	this.drawOntoCanvas(cx,cy,true,this.minictx);
 	this.drawOntoCanvas(cx,cy,false,this.context);
+	var drawMinimap = true;
+	if(this.tool.mouseY < 4 && this.tool.mouseX > 14){
+		drawMinimap = false;
+	}
+    if (this.minimap && drawMinimap) {
+	  this.drawOntoCanvas(cx,cy,true,this.minictx);
 
-    if (this.minimap) {
       var tc = document.createElement('canvas');
       tc.setAttribute('width', 160);
       tc.setAttribute('height', 120);
@@ -362,11 +369,11 @@ var Editor = Klass.extend({
         }
 
       this.context.putImageData(a,480,0,0,0,160,120);
+      this.context.strokeStyle = '#000';
+      this.context.strokeRect(480,0,160,120);
+      this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
     }
-	  
-    this.context.strokeStyle = '#000';
-    this.context.strokeRect(480,0,160,120);
-    this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
+
   },
 
 	drawOntoCanvas: function(cx, cy, safe, context){

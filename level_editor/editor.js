@@ -109,13 +109,13 @@ var PencilTool = Klass.extend({
     if (this.started) {
 	  //Validate that we are drawing within the game area
 	  var y = Math.floor(ev._y/32)+editor.camy;
-	  var x = Math.floor(ev._x/32) + editor.camx;
+	  var x = Math.floor(ev._x/32)+editor.camx;
 	  if(y<=30 && x<= 40){
         editor.level[y] = replaceOneChar(editor.level[y], editor.currentBrush, [x]);
 	  }
     }else{
+	    
     }
-
     editor.drawCanvas(editor.camx, editor.camy);
     editor.context.lineWidth = 2;
     editor.context.strokeStyle = '#800';
@@ -131,7 +131,6 @@ var PencilTool = Klass.extend({
       this.mousemove(ev);
       this.started = false;
     }
-
     editor.redrawMap();
   }
 });
@@ -349,6 +348,7 @@ var Editor = Klass.extend({
 		drawMinimap = false;
 	}
     if (this.minimap && drawMinimap) {
+	  this.genMiniMap();
 	  this.drawOntoCanvas(cx,cy,true,this.minictx);
 
       var tc = document.createElement('canvas');
@@ -446,7 +446,7 @@ var Editor = Klass.extend({
 
   genMiniMap: function() {
 
-    if (gbox.getGroups().length > 0) reloadMap();
+//    if (gbox.getGroups().length > 0) reloadMap(); // RAK - 2011-01-15 - Removed. Why was this here in the first place? Does reloading the map really fall into the genMinimap function?
     this.minimap = this.minictx.getImageData(0, 0, 640*2, 480*2); //editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;
 

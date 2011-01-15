@@ -87,11 +87,10 @@ var PencilTool = Klass.extend({
 
   mousemove: function(ev) {
     editor.isMouseOut = false;
-
     if (!this.started && !editor.isMouseOut) {
-      if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)))
+      if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0))){
         editor.mouseOverDelay = 0;
-
+	  }
       // move the camera when you hit the edge of the screen
       if ($config.mouse_over_scrolling) {
         if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
@@ -107,9 +106,9 @@ var PencilTool = Klass.extend({
         }
       }
     }
-
     if (this.started) {
       editor.level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+    }else{
     }
 
     editor.drawCanvas(editor.camx, editor.camy);
@@ -327,6 +326,9 @@ var Editor = Klass.extend({
     }).mouseout(function() {
       editor.isMouseOut = true;
       editor.mouseOverDelay = 0;
+    }).mouseleave(function (){//When the mouse leaves the map stop drawing!
+	  editor.tool.started = false;
+      editor.tool.isMouseOut = false;
     });
 
     setInterval (function() { editor.mouseOverDelay++; }, 100);

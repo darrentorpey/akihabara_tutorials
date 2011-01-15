@@ -28,6 +28,8 @@ function addPlayer() {
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
+	  this.spawnX = this.x;
+	  this.spawnY = this.y;
       this.jumpaccy = 10.5; // initial jump vel (size of jump when you tap the jump button)
       this.jumpholdtime = 0.25; // amount of time you can hold the jump, in seconds
       this.jumpaccsusy = 15.5; // jump vel while holding
@@ -139,8 +141,8 @@ function addPlayer() {
 
     resetGame: function() {
       reloadMap();
-      this.x = 20;
-      this.y = 20;
+      this.x = this.spawnX;
+      this.y = this.spawnY;
       this.accx = 0;
       this.accy = 0;
       this.killed = false;

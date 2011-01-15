@@ -224,7 +224,7 @@ function introduceALESPlugin(plugin) {
       gbox._groups[gbox._groups.length-1] = plugin.group; gbox._groups[gbox._groups.length] = "game";
       gbox.setGroups(gbox._groups);
     }
-    console.log(gbox._groups);
+//    console.log(gbox._groups);
   }
 }
 

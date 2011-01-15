@@ -107,7 +107,12 @@ var PencilTool = Klass.extend({
       }
     }
     if (this.started) {
-      editor.level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+	  //Validate that we are drawing within the game area
+	  var y = Math.floor(ev._y/32)+editor.camy;
+	  var x = Math.floor(ev._x/32) + editor.camx;
+	  if(y<=30 && x<= 40){
+        editor.level[y] = replaceOneChar(editor.level[y], editor.currentBrush, [x]);
+	  }
     }else{
     }
 
@@ -336,7 +341,6 @@ var Editor = Klass.extend({
 
   drawCanvas: function(cx, cy) {
 	this.drawOntoCanvas(cx,cy,true,this.minictx);
-//    this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
 	this.drawOntoCanvas(cx,cy,false,this.context);
 
     if (this.minimap) {

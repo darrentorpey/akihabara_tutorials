@@ -80,9 +80,16 @@ var PencilTool = Klass.extend({
   },
 
   mousedown: function(ev) {
-    editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
-    this.started = true;
-    editor.drawCanvas(editor.camx, editor.camy);
+	if(ev.which == 1){//Left click
+  	  editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+	  this.started = true;
+	  editor.drawCanvas(editor.camx, editor.camy);
+	}else if(ev.which == 3){//Right click
+	  editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], 0, [Math.floor(ev._x/32) + editor.camx]);
+	  this.started = true;
+	  this.eraser = true;
+	  editor.drawCanvas(editor.camx, editor.camy);
+	}
   },
 
   mousemove: function(ev) {
@@ -111,7 +118,11 @@ var PencilTool = Klass.extend({
 	  var y = Math.floor(ev._y/32)+editor.camy;
 	  var x = Math.floor(ev._x/32)+editor.camx;
 	  if(y<=30 && x<= 40){
-        editor.level[y] = replaceOneChar(editor.level[y], editor.currentBrush, [x]);
+		if(this.eraser){
+          editor.level[y] = replaceOneChar(editor.level[y], 0, [x]);
+		}else{
+          editor.level[y] = replaceOneChar(editor.level[y], editor.currentBrush, [x]);
+		}
 	  }
     }else{
 	    
@@ -131,6 +142,7 @@ var PencilTool = Klass.extend({
       this.mousemove(ev);
       this.started = false;
     }
+	this.eraser = false;
     editor.redrawMap();
   }
 });

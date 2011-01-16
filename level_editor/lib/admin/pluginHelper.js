@@ -145,12 +145,11 @@ if ($config.use_plugins) {
 
     getPluginID: function () {
 	  pluginHelper.pluginCounter++;
-	  console.log(pluginHelper.pluginCounter);
       return pluginHelper.pluginCounter;
     },
 
     editParameters: function (pluginID) {
-      var plugin = getPluginFromID(pluginID);
+      var plugin = this.getPluginFromID(pluginID);
       var html = "<table class='pluginParamEdit' id='" + pluginID + "'>";
       $.each(plugin.parameters, function (key, value) {
         html += "<tr>"
@@ -181,7 +180,7 @@ if ($config.use_plugins) {
 
     saveParameters: function () {
       var pluginID = $(".pluginParamEdit").attr('id');
-      var plugin = getPluginFromID(pluginID);
+      var plugin = this.getPluginFromID(pluginID);
       $.each(plugin.parameters, function (key, value) {
         plugin.parameters[key] = $('[name="' + key + '"]').val();
       });

@@ -136,42 +136,42 @@ if ($config.use_plugins) {
         img.id = 'brush' + plugin; //i;
         img.setAttribute('class', 'brush plugin');
         $(img).appendTo('#palette');
-	    var content = this.loadedPlugins[plugin].name;
-	    if(this.loadedPlugins[plugin].parameters){
-		    content += "<table class='pluginParamEdit' id='" + plugin + "'>";
-			  $.each(this.loadedPlugins[plugin].parameters, function (key, value) {
-				content += "<tr>"
-				content += "<td>" + key + "</td>"
-				content += "<td><input name='" + key + "' value='" + value + "'/></td>"
-				content += "</tr>"
-			  });
+      var content = this.loadedPlugins[plugin].name;
+      if(this.loadedPlugins[plugin].parameters){
+        content += "<table class='pluginParamEdit' id='" + plugin + "'>";
+        $.each(this.loadedPlugins[plugin].parameters, function (key, value) {
+        content += "<tr>"
+        content += "<td>" + key + "</td>"
+        content += "<td><input name='" + key + "' value='" + value + "'/></td>"
+        content += "</tr>"
+        });
               content += "</table><button type='button' onclick='pluginHelper.saveParameters()'>Save</button>";
-	    }
-	    $('#'+img.id).qtip({
-		    content:{
-			    text:content
-		    },
-		    show:{
-			    delay: 1000
-		    },
-		    position:{
+      }
+      $('#'+img.id).qtip({
+        content:{
+          text:content
+        },
+        show:{
+          delay: 1000
+        },
+        position:{
               corner:{
-				target:'bottomMiddle',
-				tooltip:'topMiddle'
-			  }
-		    },
-			style:{
-			    tip:true,
-				border:{
-					radius: 5,
-					width: 5,
-					color: 'black'
-				}
-			},
-		    hide:{
-			    fixed:true
-		    }
-	    });
+        target:'bottomMiddle',
+        tooltip:'topMiddle'
+        }
+        },
+      style:{
+          tip:true,
+        border:{
+          radius: 5,
+          width: 5,
+          color: 'black'
+        }
+      },
+        hide:{
+          fixed:true
+        }
+      });
       }
     },
 
@@ -180,10 +180,10 @@ if ($config.use_plugins) {
     },
 
     getPluginID: function () {
-	  pluginHelper.pluginCounter++;
+    pluginHelper.pluginCounter++;
       return pluginHelper.pluginCounter;
     },
-	  
+    
     saveParameters: function () {
       var pluginID = $(".pluginParamEdit").attr('id');
       var plugin = this.getPluginFromID(pluginID);
@@ -263,32 +263,32 @@ if ($config.use_plugins) {
     }
   }
   $('#object_loading .drop').bind('drop',
-	 function(event) {
-	   if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
-		 var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
-		 if (pluginObject) {
-		   pluginHelper.plugin_log('Plugin URL dropped: ' + pluginObject);
-		   var pluginName = prompt('What would you like to name this plugin?');
-		   pluginHelper.includedJS = pluginHelper.storage('includedJS');
+   function(event) {
+     if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
+     var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
+     if (pluginObject) {
+       pluginHelper.plugin_log('Plugin URL dropped: ' + pluginObject);
+       var pluginName = prompt('What would you like to name this plugin?');
+       pluginHelper.includedJS = pluginHelper.storage('includedJS');
 
-		   if (pluginHelper.includedJS) {
-			 pluginHelper.includedJS[pluginName] = pluginObject;
-		   } else {
-			 pluginHelper.includedJS = new Object();
-			 pluginHelper.includedJS[pluginName] = pluginObject;
-		   }
+       if (pluginHelper.includedJS) {
+       pluginHelper.includedJS[pluginName] = pluginObject;
+       } else {
+       pluginHelper.includedJS = new Object();
+       pluginHelper.includedJS[pluginName] = pluginObject;
+       }
 
-		   pluginHelper.storage('includedJS', pluginHelper.includedJS);
-		   pluginHelper.loadPluginFromURL(pluginObject);
-		   var pl = gbox.getObject('player', 'player_id');
-		 }
-	   } else {
-		 evalFirstTextFile(event);
-		 pluginHelper.updateGroups();
-	   }
+       pluginHelper.storage('includedJS', pluginHelper.includedJS);
+       pluginHelper.loadPluginFromURL(pluginObject);
+       var pl = gbox.getObject('player', 'player_id');
+     }
+     } else {
+     evalFirstTextFile(event);
+     pluginHelper.updateGroups();
+     }
 
-	   event.stopPropagation();
-	   event.preventDefault();
-	   return false;
-	 }).bind('dragenter dragover', false);
+     event.stopPropagation();
+     event.preventDefault();
+     return false;
+   }).bind('dragenter dragover', false);
 }

@@ -139,8 +139,7 @@ function getPluginsByGroup() {
 function getPluginsForURL() {
   var pluginsURL = new Object();
   for (var pluginID in loadedPlugins) {
-//    plugin_log(pluginID);
-    pluginsURL[loadedPlugins[pluginID].name] = { url: loadedPlugins[pluginID].sourceURL, id: pluginID};
+    pluginsURL[loadedPlugins[pluginID].name] = { url: loadedPlugins[pluginID].sourceURL, id: pluginID, parameters: loadedPlugins[pluginID].parameters};
   }
   return pluginsURL;
 }
@@ -201,6 +200,10 @@ $(function() {
 
 //Load a single plugin
 function introduceALESPlugin(plugin) {
+  var urlPlugins = getURLParam('plugins');
+  if(urlPlugins && urlPlugins[plugin.name] && urlPlugins[plugin.name].parameters){
+    plugin.parameters = urlPlugins[plugin.name].parameters;
+  }
   var pluginId = pluginURLToID[plugin.sourceURL]
   if(typeof pluginId == "undefined"){
     pluginId = getPluginID();
@@ -228,6 +231,41 @@ function introduceALESPlugin(plugin) {
   }
 }
 
+function getPluginFromID(pluginID){
+  return loadedPlugins[pluginID];
+}
+
 function getPluginID() {
   return ++pluginCounter;
+}
+
+function editParameters(pluginID){
+  var plugin = getPluginFromID(pluginID);
+  var html = "<table class='pluginParamEdit' id='"+pluginID+"'>";
+  $.each(plugin.parameters,function (key,value){
+	  html +="<tr>"
+	  html +="<td>"+key+"</td>"
+	  html +="<td><input name='"+key+"' value='"+value+"'/></td>"
+	  html +="</tr>"
+  });
+  html += "</table>";
+  $("#plugin_parameters").html(html);
+  $("#plugin_parameters").dialog({
+    buttons: [{
+      text: "Save",
+      click: function() { saveParameters();$(this).dialog("close"); }
+    },{
+      text: "Cancel",
+      click: function() { $(this).dialog("close"); }
+    }]
+  });
+}
+
+function saveParameters(){
+  var pluginID = $(".pluginParamEdit").attr('id');
+  var plugin = getPluginFromID(pluginID);
+  $.each(plugin.parameters,function (key,value){
+    plugin.parameters[key] = $('[name="'+key+'"]').val();
+  });
+  $("#plugin_parameters").dialog();
 }

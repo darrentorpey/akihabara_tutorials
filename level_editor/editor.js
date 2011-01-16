@@ -220,11 +220,19 @@ var Editor = Klass.extend({
     editor.brushes.each(function(i) {
       editor.brushes_img[i] = new Image();
       editor.brushes_img[i].src = this.src;
-    }).live('click', function() {
-      editor.currentBrush = this.id.replace('brush', '');
-      if (editor.currentBrush > editor.total_brushes) {
-        editor.currentBrush = String.fromCharCode(editor.currentBrush);
-      }
+    });
+	$("#palette").delegate("img.brush",'mousedown', function(event) {
+	  if(event.which == 1){//Left click
+        editor.currentBrush = this.id.replace('brush', '');
+        if (editor.currentBrush > editor.total_brushes) {
+          editor.currentBrush = String.fromCharCode(editor.currentBrush);
+        }
+	  }else if(event.which == 3){//Right click
+		var plugin = getPluginFromID(this.id.replace('brush', ''));
+		if(plugin.parameters){//We have parameters that we need to edit!
+          editParameters(this.id.replace('brush', ''));
+		}
+	  }
     });
   },
 

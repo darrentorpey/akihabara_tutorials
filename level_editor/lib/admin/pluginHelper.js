@@ -136,6 +136,42 @@ if ($config.use_plugins) {
         img.id = 'brush' + plugin; //i;
         img.setAttribute('class', 'brush plugin');
         $(img).appendTo('#palette');
+	    var content = this.loadedPlugins[plugin].name;
+	    if(this.loadedPlugins[plugin].parameters){
+		    content += "<table class='pluginParamEdit' id='" + plugin + "'>";
+			  $.each(this.loadedPlugins[plugin].parameters, function (key, value) {
+				content += "<tr>"
+				content += "<td>" + key + "</td>"
+				content += "<td><input name='" + key + "' value='" + value + "'/></td>"
+				content += "</tr>"
+			  });
+              content += "</table><button type='button' onclick='pluginHelper.saveParameters()'>Save</button>";
+	    }
+	    $('#'+img.id).qtip({
+		    content:{
+			    text:content
+		    },
+		    show:{
+			    delay: 1000
+		    },
+		    position:{
+              corner:{
+				target:'bottomMiddle',
+				tooltip:'topMiddle'
+			  }
+		    },
+			style:{
+			    tip:true,
+				border:{
+					radius: 5,
+					width: 5,
+					color: 'black'
+				}
+			},
+		    hide:{
+			    fixed:true
+		    }
+	    });
       }
     },
 
@@ -147,44 +183,13 @@ if ($config.use_plugins) {
 	  pluginHelper.pluginCounter++;
       return pluginHelper.pluginCounter;
     },
-
-    editParameters: function (pluginID) {
-      var plugin = this.getPluginFromID(pluginID);
-      var html = "<table class='pluginParamEdit' id='" + pluginID + "'>";
-      $.each(plugin.parameters, function (key, value) {
-        html += "<tr>"
-        html += "<td>" + key + "</td>"
-        html += "<td><input name='" + key + "' value='" + value + "'/></td>"
-        html += "</tr>"
-      });
-      html += "</table>";
-      $("#plugin_parameters").html(html);
-      $("#plugin_parameters").dialog({
-        buttons: [
-          {
-            text: "Save",
-            click: function() {
-              pluginHelper.saveParameters();
-              $(this).dialog("close");
-            }
-          },
-          {
-            text: "Cancel",
-            click: function() {
-              $(this).dialog("close");
-            }
-          }
-        ]
-      });
-    },
-
+	  
     saveParameters: function () {
       var pluginID = $(".pluginParamEdit").attr('id');
       var plugin = this.getPluginFromID(pluginID);
       $.each(plugin.parameters, function (key, value) {
         plugin.parameters[key] = $('[name="' + key + '"]').val();
       });
-      $("#plugin_parameters").dialog();
     }
   });
   var pluginHelper = new PluginHelper();

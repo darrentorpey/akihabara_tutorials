@@ -228,10 +228,7 @@ var Editor = Klass.extend({
           editor.currentBrush = String.fromCharCode(editor.currentBrush);
         }
 	  }else if(event.which == 3){//Right click
-		var plugin = pluginHelper.getPluginFromID(this.id.replace('brush', ''));
-		if(plugin.parameters){//We have parameters that we need to edit!
-          pluginHelper.editParameters(this.id.replace('brush', ''));
-		}
+		  
 	  }
     });
   },

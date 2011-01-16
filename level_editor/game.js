@@ -42,9 +42,9 @@ function getImageResources(){
 		];
 	if($config.use_plugins){
 //		imageResources = [];
-		for(var plugin in loadedPlugins) {
-			if (loadedPlugins[plugin].sprites) {
-				jQuery.merge(imageResources,loadedPlugins[plugin].sprites);
+		for(var plugin in pluginHelper.loadedPlugins) {
+			if (pluginHelper.loadedPlugins[plugin].sprites) {
+				jQuery.merge(imageResources,pluginHelper.loadedPlugins[plugin].sprites);
 			}
 		}
 	}
@@ -112,9 +112,9 @@ function getTileResources(){
 	];
 	if($config.use_plugins){
 //		tileResources = [];
-		for(var plugin in loadedPlugins){
-			if(loadedPlugins[plugin].tiles){
-				jQuery.merge(tileResources,loadedPlugins[plugin].tiles);
+		for(var plugin in pluginHelper.loadedPlugins){
+			if(pluginHelper.loadedPlugins[plugin].tiles){
+				jQuery.merge(tileResources,pluginHelper.loadedPlugins[plugin].tiles);
 			}
 		}
 	}
@@ -132,9 +132,9 @@ function getAudioResources(){
   	];
 	if($config.use_plugins){
 //		audioResources = [];
-		for(var plugin in loadedPlugins){
-			if(loadedPlugins[plugin].audio){
-				audioResources.push(loadedPlugins[plugin].audio);
+		for(var plugin in pluginHelper.loadedPlugins){
+			if(pluginHelper.loadedPlugins[plugin].audio){
+				audioResources.push(pluginHelper.loadedPlugins[plugin].audio);
 			}
 		}
 	}
@@ -148,9 +148,9 @@ function getFontResources(){
 	];
 	if($config.use_plugins){
 //		fontResources = [];
-		for(var plugin in loadedPlugins){
-			if(loadedPlugins[plugin].font){
-				fontResources.push(loadedPlugins[plugin].font);
+		for(var plugin in pluginHelper.loadedPlugins){
+			if(pluginHelper.loadedPlugins[plugin].font){
+				fontResources.push(pluginHelper.loadedPlugins[plugin].font);
 			}
 		}
 	}
@@ -166,9 +166,9 @@ function main() {
 	var groups = ['background', 'staticboxes', 'boxes', 'disboxes', 'enemies', 'particles'];
 
 	if($config.use_plugins){
-		for(var plugin in loadedPlugins){
-			if(loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group,groups) == -1){
-				groups.push(loadedPlugins[plugin].group);
+		for(var plugin in pluginHelper.loadedPlugins){
+			if(pluginHelper.loadedPlugins[plugin].group && jQuery.inArray(pluginHelper.loadedPlugins[plugin].group,groups) == -1){
+				groups.push(pluginHelper.loadedPlugins[plugin].group);
 			}
 		}
 	}

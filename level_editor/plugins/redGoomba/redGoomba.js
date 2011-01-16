@@ -47,7 +47,7 @@ introduceALESPlugin({
           side:  data.side,
           onBox:  false
         });
-	    var parameters = getPluginFromID(data.tileID).parameters;
+	    var parameters = pluginHelper.getPluginFromID(data.tileID).parameters;
 	    this.speed = parameters.speed;
         this.killed = false;
       },

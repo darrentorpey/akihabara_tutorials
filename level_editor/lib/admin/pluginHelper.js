@@ -1,271 +1,290 @@
-var plugins_logging_enabled = false;
-
-
-var pluginURLToID = new Object();
-var includedJS = storage('includedJS');
-var loadedPlugins = new Object();
-var pluginOrder = new Array();
-var pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
-
-head.ready(function() {
-  redrawPlugins();
-});
-
+/*
+ * Plugin Helper
+ *   Manages everything having to do with plugins. Loading, drawing, saving etc.
+ *
+ * 2011-01-15 - RAK - Converted to utilize Klass to prevent global variables and other ickyness.. yes. ickyness.
+ * */
 if ($config.use_plugins) {
-  //Load plugins on page load!
+  //The almighty Klass
+  var PluginHelper = Klass.extend({
+    init: function(options) {
+      this.plugins_logging_enabled = false;
+      this.pluginURLToID = new Object();
+      this.includedJS = this.storage('includedJS');
+      this.loadedPlugins = new Object();
+      this.pluginOrder = new Array();
+      this.pluginCounter = 66; //Arbitrary number above 10 (the number of default objects)
+    },
+    plugin_log: function() {
+      if (this.plugins_logging_enabled) {
+        console.log.apply(console, arguments);
+      }
+    },
+    loadPluginFromURL: function (url) {
+      //Load plugins in order
+      this.pluginURLToID[url] = this.getPluginID();
+      head.js(url);
+    },
+    removeAllIncludes: function () {
+      var x = this;
+      var confirmation = confirm("Are you sure you want to remove all the plugins?");
+      if (confirmation) {
+        pluginHelper.storage('includedJS', null);
+        pluginHelper.redrawPlugins();
+      }
+      jQuery(x).dialog('close');
+
+    },
+
+    closeDialog: function () {
+      jQuery(this).dialog('close');
+    },
+
+    removePlugin: function (name) {
+      var confirmation = confirm("Are you sure you want to remove " + name + " ?");
+      if (confirmation) {
+        var includedJS = this.storage('includedJS');
+        delete includedJS[name];
+        pluginHelper.storage('includedJS', includedJS);
+        pluginHelper.redrawPlugins();
+      }
+      jQuery('.ui-dialog-titlebar-close').click();
+    },
+
+    viewPlugins: function () {
+      var div = document.createElement('div');
+      var loadedPlugins = this.storage('includedJS');
+      var htmlText = 'There are no plugins loaded';
+      var buttons = { Close: pluginHelper.closeDialog };
+      if (loadedPlugins) {
+        htmlText = '<ul style="list-style: none;">';
+        var counter = 0;
+        for (name in loadedPlugins) {
+          counter++;
+          htmlText += '<li><a onclick="pluginHelper.removePlugin(\'' + name + '\')">x<\/a>&nbsp;&nbsp;' + name + '</li>';
+        }
+        htmlText += '</ul>';
+        if (counter) {
+          buttons = { 'Remove All': pluginHelper.removeAllIncludes, Close: pluginHelper.closeDialog };
+        } else {
+          htmlText = "There are no plugins loaded";
+        }
+      }
+      jQuery(div).html(htmlText);
+      jQuery(div).dialog({
+        title:   'Loaded Plugins',
+        modal:   true,
+        buttons: buttons
+      });
+    },
+
+    storage: function (name, passedObject) {
+      if (passedObject === null) {
+        //delete
+        sessionStorage.removeItem(name);
+      } else if (passedObject) {
+        //set
+        sessionStorage.setItem(name, jQuery.toJSON(passedObject));
+      } else {
+        //get
+        return jQuery.parseJSON(sessionStorage.getItem(name)) || new Object();
+      }
+    },
+
+    /*
+     * Returns an object that has groups sorted by name,
+     * Object['groupName'] = Array of plugin objects
+     * */
+    getPluginsByGroup: function () {
+      var pluginsByGroup = new Object();
+      for (var plugin in this.loadedPlugins) {
+        if (this.loadedPlugins[plugin].group) {
+          if (!pluginsByGroup[this.loadedPlugins[plugin].group]) {
+            pluginsByGroup[this.loadedPlugins[plugin].group] = new Array();
+          }
+          pluginsByGroup[this.loadedPlugins[plugin].group].push(this.loadedPlugins[plugin]);
+        }
+      }
+      return pluginsByGroup;
+    },
+
+    getPluginsForURL: function () {
+      var pluginsURL = new Object();
+      for (var pluginID in this.loadedPlugins) {
+        pluginsURL[this.loadedPlugins[pluginID].name] = { url: this.loadedPlugins[pluginID].sourceURL, id: pluginID, parameters: this.loadedPlugins[pluginID].parameters};
+      }
+      return pluginsURL;
+    },
+
+    updateGroups: function () {
+      for (var plugin in this.loadedPlugins) {
+        if (this.loadedPlugins[plugin].group && jQuery.inArray(this.loadedPlugins[plugin].group, gbox._groups) == -1) {
+          gbox._groups[gbox._groups.length - 2] = plugin.group;
+          gbox._groups[gbox._groups.length - 1] = "game";
+          gbox._groups[gbox._groups.length] = "player";
+          gbox.setGroups(gbox._groups);
+        }
+      }
+    },
+
+
+    redrawPlugins: function () {
+      $('.plugin').remove();
+      for (var plugin in this.loadedPlugins) {
+        var img = new Image();
+        img.src = this.loadedPlugins[plugin].paletteImage;
+        img.id = 'brush' + plugin; //i;
+        img.setAttribute('class', 'brush plugin');
+        $(img).appendTo('#palette');
+      }
+    },
+
+    getPluginFromID: function (pluginID) {
+      return this.loadedPlugins[pluginID];
+    },
+
+    getPluginID: function () {
+	  pluginHelper.pluginCounter++;
+	  console.log(pluginHelper.pluginCounter);
+      return pluginHelper.pluginCounter;
+    },
+
+    editParameters: function (pluginID) {
+      var plugin = getPluginFromID(pluginID);
+      var html = "<table class='pluginParamEdit' id='" + pluginID + "'>";
+      $.each(plugin.parameters, function (key, value) {
+        html += "<tr>"
+        html += "<td>" + key + "</td>"
+        html += "<td><input name='" + key + "' value='" + value + "'/></td>"
+        html += "</tr>"
+      });
+      html += "</table>";
+      $("#plugin_parameters").html(html);
+      $("#plugin_parameters").dialog({
+        buttons: [
+          {
+            text: "Save",
+            click: function() {
+              pluginHelper.saveParameters();
+              $(this).dialog("close");
+            }
+          },
+          {
+            text: "Cancel",
+            click: function() {
+              $(this).dialog("close");
+            }
+          }
+        ]
+      });
+    },
+
+    saveParameters: function () {
+      var pluginID = $(".pluginParamEdit").attr('id');
+      var plugin = getPluginFromID(pluginID);
+      $.each(plugin.parameters, function (key, value) {
+        plugin.parameters[key] = $('[name="' + key + '"]').val();
+      });
+      $("#plugin_parameters").dialog();
+    }
+  });
+  var pluginHelper = new PluginHelper();
+
+
+//Load a single plugin
+  function introduceALESPlugin(plugin) {
+    var urlPlugins = getURLParam('plugins');
+    if (urlPlugins && urlPlugins[plugin.name] && urlPlugins[plugin.name].parameters) {
+      plugin.parameters = urlPlugins[plugin.name].parameters;
+    }
+    var pluginId = pluginHelper.pluginURLToID[plugin.sourceURL];
+    if (typeof pluginId == "undefined") {
+      pluginId = pluginHelper.getPluginID();
+    }
+    pluginHelper.loadedPlugins[pluginId] = plugin;
+
+    if (plugin.paletteImage) {
+      var img = new Image();
+      img.src = plugin.paletteImage;
+      img.id = 'brush' + pluginId;
+      img.setAttribute('class', 'brush plugin');
+      $(img).appendTo('#palette');
+    }
+
+    if (typeof gbox != 'undefined') {
+      //The game is currently running... add paletteImage, reload resources, reset the game.
+      //Reset the game and load the new resources
+      gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
+
+      if (plugin.group && jQuery.inArray(plugin.group, gbox._groups) == -1) {
+        gbox._groups[gbox._groups.length - 1] = plugin.group;
+        gbox._groups[gbox._groups.length] = "game";
+        gbox.setGroups(gbox._groups);
+      }
+//    console.log(gbox._groups);
+    }
+  }
+
+
+//Load up stuff that executes on page load.
+  head.ready(function() {
+    pluginHelper.redrawPlugins();
+  });
+
+
+//Load plugins on page load!
   var urlPlugins = getURLParam('plugins');
   if (urlPlugins) {
     for (pluginID in urlPlugins) {
-      loadPluginFromURL(urlPlugins[pluginID].url);
+      pluginHelper.loadPluginFromURL(urlPlugins[pluginID].url);
     }
   } else {
-    //Load the default plugins
+//Load the default plugins
     $.ajax({
       url: timestampedURL('plugins/defaultPlugins.json'),
       dataType: 'json',
       success: function(data, textStatus) {
         jQuery(data).each(function (index, pluginString) {
-          plugin_log(index + ': ' + pluginString);
-          pluginOrder[pluginString] = index;
-          loadPluginFromURL(pluginString);
+          pluginHelper.plugin_log(index + ': ' + pluginString);
+          pluginHelper.pluginOrder[pluginString] = index;
+          pluginHelper.loadPluginFromURL(pluginString);
         });
       },
       async: false
     });
   }
-  if (includedJS) {
-    for (name in includedJS) {
-      loadPluginFromURL(includedJS[name]);
+  if (pluginHelper.includedJS) {
+    for (name in pluginHelper.includedJS) {
+      pluginHelper.loadPluginFromURL(pluginHelper.includedJS[name]);
     }
   }
-}
-
-
-function plugin_log() {
-  if (plugins_logging_enabled) {
-    console.log.apply(console, arguments);
-  }
-}
-
-function loadPluginFromURL(url) {
-  //Load plugins in order
-  pluginURLToID[url] = getPluginID();
-  head.js(url);
-}
-
-function removeAllIncludes() {
-  var x = this;
-  var confirmation = confirm("Are you sure you want to remove all the plugins?");
-  if (confirmation) {
-    storage('includedJS', null);
-    redrawPlugins();
-  }
-  jQuery(x).dialog('close');
-
-}
-
-function closeDialog() {
-  jQuery(this).dialog('close');
-}
-
-function removePlugin(name) {
-  var confirmation = confirm("Are you sure you want to remove " + name + " ?");
-  if (confirmation) {
-    var includedJS = storage('includedJS');
-    delete includedJS[name];
-    storage('includedJS', includedJS);
-    redrawPlugins();
-  }
-  jQuery('.ui-dialog-titlebar-close').click();
-}
-
-function viewPlugins() {
-  var div = document.createElement('div');
-  var loadedPlugins = storage('includedJS');
-  var htmlText = 'There are no plugins loaded';
-  var buttons = { Close: closeDialog };
-  if (loadedPlugins) {
-    htmlText = '<ul style="list-style: none;">';
-    var counter = 0;
-    for (name in loadedPlugins) {
-      counter++;
-      htmlText += '<li><a onclick="removePlugin(\'' + name + '\')">x<\/a>&nbsp;&nbsp;' + name + '</li>';
-    }
-    htmlText += '</ul>';
-    if (counter) {
-      buttons = { 'Remove All': removeAllIncludes, Close: closeDialog };
-    } else {
-      htmlText = "There are no plugins loaded";
-    }
-  }
-  jQuery(div).html(htmlText);
-  jQuery(div).dialog({
-    title:   'Loaded Plugins',
-    modal:   true,
-    buttons: buttons
-  });
-}
-
-function storage(name, passedObject) {
-  if (passedObject === null) {
-    //delete
-    sessionStorage.removeItem(name);
-  } else if (passedObject) {
-    //set
-    sessionStorage.setItem(name, jQuery.toJSON(passedObject));
-  } else {
-    //get
-    return jQuery.parseJSON(sessionStorage.getItem(name)) || new Object();
-  }
-}
-
-/*
- * Returns an object that has groups sorted by name,
- * Object['groupName'] = Array of plugin objects
- * */
-function getPluginsByGroup() {
-  var pluginsByGroup = new Object();
-  for (var plugin in loadedPlugins) {
-    if (loadedPlugins[plugin].group) {
-      if (!pluginsByGroup[loadedPlugins[plugin].group]) {
-        pluginsByGroup[loadedPlugins[plugin].group] = new Array();
-      }
-      pluginsByGroup[loadedPlugins[plugin].group].push(loadedPlugins[plugin]);
-    }
-  }
-  return pluginsByGroup;
-}
-
-function getPluginsForURL() {
-  var pluginsURL = new Object();
-  for (var pluginID in loadedPlugins) {
-    pluginsURL[loadedPlugins[pluginID].name] = { url: loadedPlugins[pluginID].sourceURL, id: pluginID, parameters: loadedPlugins[pluginID].parameters};
-  }
-  return pluginsURL;
-}
-
-function updateGroups() {
-  for (var plugin in loadedPlugins) {
-    if (loadedPlugins[plugin].group && jQuery.inArray(loadedPlugins[plugin].group, gbox._groups) == -1) {
-      gbox._groups[gbox._groups.length-2] = plugin.group; gbox._groups[gbox._groups.length-1] = "game"; gbox._groups[gbox._groups.length] = "player";
-      gbox.setGroups(gbox._groups);
-    }
-  }
-}
-
-
-function redrawPlugins() {
-  $('.plugin').remove();
-  for (var plugin in loadedPlugins) {
-    var img = new Image();
-    img.src = loadedPlugins[plugin].paletteImage;
-    img.id = 'brush' + plugin; //i;
-    img.setAttribute('class', 'brush plugin');
-    $(img).appendTo('#palette');
-  }
-}
-
-//Handle new plugin drops
-$(function() {
   $('#object_loading .drop').bind('drop',
-       function(event) {
-         if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
-           var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
-           if (pluginObject) {
-             plugin_log('Plugin URL dropped: ' + pluginObject);
-             var pluginName = prompt('What would you like to name this plugin?');
-             var includedJS = storage('includedJS');
-    
-             if (includedJS) {
-               includedJS[pluginName] = pluginObject;
-             } else {
-               includedJS = new Object();
-               includedJS[pluginName] = pluginObject;
-             }
-    
-             storage('includedJS', includedJS);
-             loadPluginFromURL(pluginObject);
-             var pl = gbox.getObject('player', 'player_id');
-           }
-         } else {
-           evalFirstTextFile(event);
-           updateGroups();
-         }
-    
-         event.stopPropagation();
-         event.preventDefault();
-         return false;
-       }).bind('dragenter dragover', false);
-});
+	 function(event) {
+	   if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
+		 var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
+		 if (pluginObject) {
+		   pluginHelper.plugin_log('Plugin URL dropped: ' + pluginObject);
+		   var pluginName = prompt('What would you like to name this plugin?');
+		   pluginHelper.includedJS = pluginHelper.storage('includedJS');
 
-//Load a single plugin
-function introduceALESPlugin(plugin) {
-  var urlPlugins = getURLParam('plugins');
-  if(urlPlugins && urlPlugins[plugin.name] && urlPlugins[plugin.name].parameters){
-    plugin.parameters = urlPlugins[plugin.name].parameters;
-  }
-  var pluginId = pluginURLToID[plugin.sourceURL]
-  if(typeof pluginId == "undefined"){
-    pluginId = getPluginID();
-  }
-  loadedPlugins[pluginId] = plugin;
+		   if (pluginHelper.includedJS) {
+			 pluginHelper.includedJS[pluginName] = pluginObject;
+		   } else {
+			 pluginHelper.includedJS = new Object();
+			 pluginHelper.includedJS[pluginName] = pluginObject;
+		   }
 
-  if (plugin.paletteImage) {
-    var img = new Image();
-    img.src = plugin.paletteImage;
-    img.id = 'brush' + pluginId;
-    img.setAttribute('class', 'brush plugin');
-    $(img).appendTo('#palette');
-  }
+		   pluginHelper.storage('includedJS', pluginHelper.includedJS);
+		   pluginHelper.loadPluginFromURL(pluginObject);
+		   var pl = gbox.getObject('player', 'player_id');
+		 }
+	   } else {
+		 evalFirstTextFile(event);
+		 pluginHelper.updateGroups();
+	   }
 
-  if (typeof gbox != 'undefined') {
-    //The game is currently running... add paletteImage, reload resources, reset the game.
-    //Reset the game and load the new resources
-    gbox.addBundle({ file: 'resources/bundle.js?' + timestamp() });
-
-    if (plugin.group && jQuery.inArray(plugin.group, gbox._groups) == -1) {
-      gbox._groups[gbox._groups.length-1] = plugin.group; gbox._groups[gbox._groups.length] = "game";
-      gbox.setGroups(gbox._groups);
-    }
-//    console.log(gbox._groups);
-  }
-}
-
-function getPluginFromID(pluginID){
-  return loadedPlugins[pluginID];
-}
-
-function getPluginID() {
-  return ++pluginCounter;
-}
-
-function editParameters(pluginID){
-  var plugin = getPluginFromID(pluginID);
-  var html = "<table class='pluginParamEdit' id='"+pluginID+"'>";
-  $.each(plugin.parameters,function (key,value){
-	  html +="<tr>"
-	  html +="<td>"+key+"</td>"
-	  html +="<td><input name='"+key+"' value='"+value+"'/></td>"
-	  html +="</tr>"
-  });
-  html += "</table>";
-  $("#plugin_parameters").html(html);
-  $("#plugin_parameters").dialog({
-    buttons: [{
-      text: "Save",
-      click: function() { saveParameters();$(this).dialog("close"); }
-    },{
-      text: "Cancel",
-      click: function() { $(this).dialog("close"); }
-    }]
-  });
-}
-
-function saveParameters(){
-  var pluginID = $(".pluginParamEdit").attr('id');
-  var plugin = getPluginFromID(pluginID);
-  $.each(plugin.parameters,function (key,value){
-    plugin.parameters[key] = $('[name="'+key+'"]').val();
-  });
-  $("#plugin_parameters").dialog();
+	   event.stopPropagation();
+	   event.preventDefault();
+	   return false;
+	 }).bind('dragenter dragover', false);
 }

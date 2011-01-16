@@ -1,7 +1,7 @@
 introduceALESPlugin({
   targetALESVersion: '0.0.1',
   sourceURL:    'plugins/savePoint/savePoint.js',
-  name:       'Grass', //For display on hover overs and in general...
+  name:       'Save Point', //For display on hover overs and in general...
   sprites:      [
     ['savePoint_sprite', 'plugins/savePoint/savePoint.png']
   ],

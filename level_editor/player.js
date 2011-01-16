@@ -50,9 +50,8 @@ function addPlayer() {
       if (this.killed) this.resetGame();
 
     this.prevaccy = this.accy;
-
-    if (this.starsTotal > 0) maingame.hud.setValue("total","value",this.starsTotal-this.starsCollected);
-
+    if (this.starsTotal > 0) maingame.hud.setValue("total","value",this.starsTotal-this.starsCollected+" ");
+	
     // Counter, required for setFrame
     this.counter=(this.counter+1)%10;
 

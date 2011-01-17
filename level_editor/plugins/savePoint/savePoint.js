@@ -55,12 +55,12 @@ introduceALESPlugin({
         this.frame = 0;
         var pl = gbox.getObject('player', 'player_id');
 	    if (gbox.objectIsVisible(this) && pl) {
-		  if(pl.spawnX == this.x && pl.spawnY == this.y){
+		  if(pl.spawn.x == this.x && pl.spawn.y == this.y){
             this.frame = 1;
 		  }
 	      if (gbox.collides(this, pl, 0)) {
-		    pl.spawnX = this.x;
-		    pl.spawnY = this.y;
+		    pl.spawn.x = this.x;
+		    pl.spawn.y = this.y;
 	      }
 	   }
       },

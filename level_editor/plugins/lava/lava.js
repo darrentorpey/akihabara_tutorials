@@ -66,7 +66,8 @@ introduceALESPlugin({
           }
 
           if (gbox.collides(this, pl, 2)) {
-            pl.resetGame();
+	        pl.killed = true;
+//            pl.resetGame();
           }
 
           for (var i in gbox._objects['enemies']) {

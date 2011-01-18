@@ -168,35 +168,34 @@ function redrawPlugins() {
 
 //Handle new plugin drops
 $(function() {
-  $('#object_loading .drop').bind('drop',
-       function(event) {
-         if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
-           var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
-           if (pluginObject) {
-             plugin_log('Plugin URL dropped: ' + pluginObject);
-             var pluginName = prompt('What would you like to name this plugin?');
-             var includedJS = storage('includedJS');
-    
-             if (includedJS) {
-               includedJS[pluginName] = pluginObject;
-             } else {
-               includedJS = new Object();
-               includedJS[pluginName] = pluginObject;
-             }
-    
-             storage('includedJS', includedJS);
-             loadPluginFromURL(pluginObject);
-             var pl = gbox.getObject('player', 'player_id');
-           }
-         } else {
-           evalFirstTextFile(event);
-           updateGroups();
-         }
-    
-         event.stopPropagation();
-         event.preventDefault();
-         return false;
-       }).bind('dragenter dragover', false);
+  $('#object_loading .drop').bind('drop', function(event) {
+    if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {
+      var pluginObject = event.dataTransfer.types && $.inArray('text/plain', event.dataTransfer.types) && entities(event.dataTransfer.getData('text/plain'));
+      if (pluginObject) {
+        plugin_log('Plugin URL dropped: ' + pluginObject);
+        var pluginName = prompt('What would you like to name this plugin?');
+        var includedJS = storage('includedJS');
+
+        if (includedJS) {
+          includedJS[pluginName] = pluginObject;
+        } else {
+          includedJS = new Object();
+          includedJS[pluginName] = pluginObject;
+        }
+
+        storage('includedJS', includedJS);
+        loadPluginFromURL(pluginObject);
+        var pl = gbox.getObject('player', 'player_id');
+      }
+    } else {
+      evalFirstTextFile(event);
+      updateGroups();
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+    return false;
+  }).bind('dragenter dragover', false);
 });
 
 //Load a single plugin

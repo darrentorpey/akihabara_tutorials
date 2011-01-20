@@ -21,18 +21,17 @@ function addPlayer() {
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only
     // happens once, at the beginning of the game, or possibly after a player dies and respawns.
     initialize: function() {
-      toys.topview.initialize(this, {});
       // And we set the starting position and jump speed for our player.
       this.x = 20;
       this.y = 20;
-	  this.spawn = {
-		x:this.x,
-		y:this.y
-	  };
-	  this.originalSpawn = {
-		x:this.x,
-		y:this.y
-	  };
+	   this.spawn = {
+		  x:this.x,
+		  y:this.y
+	   };
+	   this.originalSpawn = {
+		  x:this.x,
+		  y:this.y
+	   };
       this.jumpaccy = 10.5; // initial jump vel (size of jump when you tap the jump button)
       this.jumpholdtime = 0.25; // amount of time you can hold the jump, in seconds
       this.jumpaccsusy = 15.5; // jump vel while holding
@@ -44,8 +43,11 @@ function addPlayer() {
       this.bc = 0;
       this.prevaccy = 0;
       this.killed = false;
-	  this.lives = 3;
-      this.resetHud();
+	   if($config.has_lives){
+	     this.lives = 3;
+		}
+		toys.topview.initialize(this, {});
+		this.resetHud();
     },
 
     // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
@@ -53,7 +55,9 @@ function addPlayer() {
     first: function() {
       
       if (this.killed){
-	      this.lives = this.lives-1;
+	   	if($config.has_lives){
+	        this.lives = this.lives-1;
+			}
 	      this.resetGame();
       }
 
@@ -90,7 +94,9 @@ function addPlayer() {
       }
 
       if (gbox.keyIsHit("c")) {
-	    this.lives = 0;
+	     if($config.has_lives){
+	       this.lives = 0;
+		  }
         this.resetGame();
       }
 
@@ -151,21 +157,28 @@ function addPlayer() {
       this.accx = 0;
       this.accy = 0;
       this.killed = false;
-	  if($config.has_lives){
-	    if(this.lives == 0){
+	   if($config.has_lives){
+	     if(this.lives == 0){
           this.x = this.originalSpawn.x;
           this.y = this.originalSpawn.y;
           this.spawn.x = this.originalSpawn.x;
           this.spawn.y = this.originalSpawn.y;
-		  this.lives = 3;
+		    this.lives = 3;
           reloadMap();
-	    }else{
+	     }else{
           this.x = this.spawn.x;
           this.y = this.spawn.y;
-	    }
-	  }else{
+	     }
+	   }else{
+	     if(this.spawn){
+          this.x = this.spawn.x;
+          this.y = this.spawn.y;
+		  }else{
+		    this.x = 20;
+			 this.y = 20;
+		  }
         reloadMap();
-	  }
+	   }
       this.resetHud();
     },
 

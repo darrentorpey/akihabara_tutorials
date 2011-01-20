@@ -80,18 +80,24 @@ var PencilTool = Klass.extend({
   },
 
   mousedown: function(ev) {
-    editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
-    this.started = true;
-    editor.drawCanvas(editor.camx, editor.camy);
+	if(ev.which == 1){//Left click
+  	  editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+	  this.started = true;
+	  editor.drawCanvas(editor.camx, editor.camy);
+	}else if(ev.which == 3){//Right click
+	  editor.level[Math.floor(ev._y/32) + editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32) + editor.camy], 0, [Math.floor(ev._x/32) + editor.camx]);
+	  this.started = true;
+	  this.eraser = true;
+	  editor.drawCanvas(editor.camx, editor.camy);
+	}
   },
 
   mousemove: function(ev) {
     editor.isMouseOut = false;
-
     if (!this.started && !editor.isMouseOut) {
-      if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0)))
+      if (!((ev._x > 600 && editor.camx < 20) || (ev._x < 40 && editor.camx > 0) || (ev._y > 440 && editor.camy < 15) || (ev._y < 40 && editor.camy > 0))){
         editor.mouseOverDelay = 0;
-
+	  }
       // move the camera when you hit the edge of the screen
       if ($config.mouse_over_scrolling) {
         if (ev._x > 600 && editor.camx < 20 && editor.mouseOverDelay >= 2) {
@@ -107,15 +113,27 @@ var PencilTool = Klass.extend({
         }
       }
     }
-
     if (this.started) {
-      editor.level[Math.floor(ev._y/32)+editor.camy] = replaceOneChar(editor.level[Math.floor(ev._y/32)+editor.camy], editor.currentBrush, [Math.floor(ev._x/32) + editor.camx]);
+	  //Validate that we are drawing within the game area
+	  var y = Math.floor(ev._y/32)+editor.camy;
+	  var x = Math.floor(ev._x/32)+editor.camx;
+	  if(y<=30 && x<= 40){
+		if(this.eraser){
+          editor.level[y] = replaceOneChar(editor.level[y], 0, [x]);
+		}else{
+          editor.level[y] = replaceOneChar(editor.level[y], editor.currentBrush, [x]);
+		}
+	  }
+    }else{
+	    
     }
-
     editor.drawCanvas(editor.camx, editor.camy);
     editor.context.lineWidth = 2;
     editor.context.strokeStyle = '#800';
-    editor.context.strokeRect((Math.floor(ev._x/32))*32, Math.floor(ev._y/32)*32, 32, 32);
+    this.mouseX = Math.floor(ev._x/32);
+    this.mouseY = Math.floor(ev._y/32);
+	editor.context.strokeRect(this.mouseX*32,this.mouseY*32, 32, 32);
+
   },
 
   mouseup: function(ev) {
@@ -124,7 +142,7 @@ var PencilTool = Klass.extend({
       this.mousemove(ev);
       this.started = false;
     }
-
+	this.eraser = false;
     editor.redrawMap();
   }
 });
@@ -194,10 +212,9 @@ var Editor = Klass.extend({
       img.id = 'brush2';
       img.setAttribute('class', 'brush');
       $(img).appendTo('#palette');
-      redrawPlugins();
+      pluginHelper.redrawPlugins();
     }
 
-    editor.level[4]="CC00000000000000000000000000000000000000";
 
     // Find the elements
     editor.brushes = $('.brush');
@@ -205,11 +222,16 @@ var Editor = Klass.extend({
     editor.brushes.each(function(i) {
       editor.brushes_img[i] = new Image();
       editor.brushes_img[i].src = this.src;
-    }).live('click', function() {
-      editor.currentBrush = this.id.replace('brush', '');
-      if (editor.currentBrush > editor.total_brushes) {
-        editor.currentBrush = String.fromCharCode(editor.currentBrush);
-      }
+    });
+	$("#palette").delegate("img.brush",'mousedown', function(event) {
+	  if(event.which == 1){//Left click
+        editor.currentBrush = this.id.replace('brush', '');
+        if (editor.currentBrush > editor.total_brushes) {
+          editor.currentBrush = String.fromCharCode(editor.currentBrush);
+        }
+	  }else if(event.which == 3){//Right click
+		  
+	  }
     });
   },
 
@@ -330,33 +352,24 @@ var Editor = Klass.extend({
     }).mouseout(function() {
       editor.isMouseOut = true;
       editor.mouseOverDelay = 0;
+    }).mouseleave(function (){//When the mouse leaves the map stop drawing!
+	  editor.tool.started = false;
+      editor.tool.isMouseOut = false;
     });
 
     setInterval (function() { editor.mouseOverDelay++; }, 100);
   },
 
   drawCanvas: function(cx, cy) {
-    for (var y = 0; y < 30; y++) {
-      for (var x = 0; x < 40; x++) {
-        var brush = jQuery('#brush' + this.level[y][x]);
-        if (brush.length) {
-          this.minictx.drawImage(brush[0], (x - 0) * 32, (y - 0) * 32);
-        } else {
-          // We didnt find the brush the normal way, check out the char code then...
-          var id = this.level[y][x].charCodeAt(0);
-          var brush = jQuery('#brush' + id);
-          if (brush.length) {
-            this.minictx.drawImage(brush[0], (x -0) * 32, (y - 0) * 32);
-          } else {
-            console.log("Could not find brush for: " + this.level[y][x]);
-          }
-        }
-      }
-    }
+	this.drawOntoCanvas(cx,cy,false,this.context);
+	var drawMinimap = true;
+	if(this.tool.mouseY < 4 && this.tool.mouseX > 14){
+		drawMinimap = false;
+	}
+    if (this.minimap && drawMinimap) {
+	  this.genMiniMap();
+	  this.drawOntoCanvas(cx,cy,true,this.minictx);
 
-    this.context.putImageData(this.minictx.getImageData(this.camx*32,this.camy*32, 640, 480),0,0);
-
-    if (this.minimap) {
       var tc = document.createElement('canvas');
       tc.setAttribute('width', 160);
       tc.setAttribute('height', 120);
@@ -375,12 +388,55 @@ var Editor = Klass.extend({
         }
 
       this.context.putImageData(a,480,0,0,0,160,120);
+      this.context.strokeStyle = '#000';
+      this.context.strokeRect(480,0,160,120);
+      this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
     }
 
-    this.context.strokeStyle = '#000';
-    this.context.strokeRect(480,0,160,120);
-    this.context.strokeRect(480+((this.camx*32)/8), 0+((this.camy*32)/8), 640/8, 480/8);
   },
+
+	drawOntoCanvas: function(cx, cy, safe, context){
+		var startX = 0;
+		var startY = 0;
+		var endX = 40;
+		var endY = 30;
+		if(!safe){
+			startX = cx;
+			startY = cy;
+			endX = cx+20;
+			endY = cy+15;
+		}
+		for (var y = startY; y < endY; y++) {
+		  for (var x = startX; x < endX; x++) {
+			var brushX = x;
+			var brushY = y;
+			if(!safe){
+				brushX = x-startX;
+				brushY = y-startY;
+			}
+			var brush = jQuery('#brush' + this.level[y][x]);
+			if (brush && brush.length) {
+			  context.drawImage(brush[0], brushX * 32, brushY * 32);
+			} else {
+			  // We didnt find the brush the normal way, check out the char code then...
+			  var id = this.level[y][x].charCodeAt(0);
+			  var brush = jQuery('#brush' + id);
+			  if (brush.length) {
+				if(safe == true && jQuery(brush[0]).attr("src").indexOf("http://") != -1){
+					safeImage = new Image();
+					safeImage.src = "plugins/remoteDefault.png";
+					context.drawImage(safeImage, brushX * 32, brushY * 32);
+				}else{
+					context.drawImage(brush[0], brushX * 32, brushY * 32);
+				}
+			  } else {
+				console.log("Could not find brush for: " + this.level[y][x]);
+			  }
+			}
+		  }
+		}
+
+	},
 
   getLevelDataForSaveFile: function() {
     return JSON.stringify(this.getLevelData());
@@ -408,7 +464,8 @@ var Editor = Klass.extend({
   },
 
   genMiniMap: function() {
-    if (gbox.getGroups().length > 0) reloadMap();
+
+//    if (gbox.getGroups().length > 0) reloadMap(); // RAK - 2011-01-15 - Removed. Why was this here in the first place? Does reloading the map really fall into the genMinimap function?
     this.minimap = this.minictx.getImageData(0, 0, 640*2, 480*2); //editor.minimapCanvasContext.getImageData(0, 0, 640*2, 480*2);
     var pix = editor.minimap.data;
 

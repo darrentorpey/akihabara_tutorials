@@ -5,6 +5,9 @@ introduceALESPlugin({
   sprites:    [
     ['red_goomba_sprite', 'plugins/redGoomba/redGoomba.png']
   ],
+  parameters:{
+    speed: 1.5
+  },
   paletteImage:  'plugins/redGoomba/redGoombaPalette.png',
   tiles: [
     {
@@ -44,6 +47,8 @@ introduceALESPlugin({
           side:  data.side,
           onBox:  false
         });
+	    var parameters = pluginHelper.getPluginFromID(data.tileID).parameters;
+	    this.speed = parameters.speed;
         this.killed = false;
       },
 
@@ -84,7 +89,7 @@ introduceALESPlugin({
 
           if (this.touchedfloor && !this.blink) // If touching the floor and not blinking (about to explode)
           {
-            toys.platformer.auto.goomba(this, {moveWhileFalling:true,speed:1.5});
+            toys.platformer.auto.goomba(this, {moveWhileFalling:true,speed:parseInt(this.speed)});
           } // goomba movement
           else {
             this.accx = 0;

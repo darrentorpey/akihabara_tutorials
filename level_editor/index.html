@@ -17,7 +17,7 @@
   <h1 id="">ALES &mdash; the Akihabara Level Editor &amp; Sharer</h1>
 
   <section id="top_tools">
-    <div id="palette"><span id="tutorial_brushes">?</span>&nbsp;</div>
+    <div id="palette" oncontextmenu="return false;"><span id="tutorial_brushes">?</span>&nbsp;</div>
 
     <div id="level_name">
       <label for="level_name">Level Name</label>
@@ -25,7 +25,7 @@
       <!-- <p class="last_saved">
         Last saved: <span id="last_saved">-----</span>
       </p> -->
-
+	  <a href="javascript:currentLevel.initMap();editor.loadLevelState(currentLevel.map);" style="float:left">Clear Map</a>
       <a href="" id="open_level_storage">
         go back in time &raquo;
         <!-- <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">"> -->
@@ -58,7 +58,7 @@
   </div>
 
   <div id="container">
-    <canvas id="imageView" width="640" height="480" style="display: none"></canvas>
+    <canvas id="imageView" width="640" height="480"  oncontextmenu="return false;" style="display: none"></canvas>
   </div>
 
   <section class="intro" id="intro">
@@ -136,7 +136,7 @@
           <div class="drop">
             Drop jQuery plugin URLs here to load them
           </div>
-          <a class="view_plugins" onclick="viewPlugins()">View Plugins</a>
+          <a class="view_plugins" onclick="pluginHelper.viewPlugins()">View Plugins</a>
         </div>
 
         <a href="#" id="reset_tutorial_status">reset tutorial status</a>
@@ -150,6 +150,7 @@
   <aside id="tutorial_box_brushes" class="tutorial_box">
     Hello
   </aside>
+
   <label id="tutorial_link">Help</label>
 
 <script>
@@ -164,6 +165,7 @@
     'lib/LZMA_encoder.js',
     'lib/jquery/jquery-base64.js',
     'lib/jquery/jquery.json-2.2.js',
+    'lib/jquery/jquery.qtip-1.0.0-rc3.min.js',
     { bbq: 'lib/jquery/jquery.ba-bbq.js' },
     'lib/jstorage.js',
     'lib/downloadify.min.js',

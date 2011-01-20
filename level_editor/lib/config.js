@@ -7,5 +7,6 @@ $config = {
   auto_cache_break_libraries  : true,
   use_plugins                 : true,
   use_audio                   : true,
+  has_lives                   : true,
   default_game                : 'test_game'
 }

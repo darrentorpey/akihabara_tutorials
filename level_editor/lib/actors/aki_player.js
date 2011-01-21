@@ -1,0 +1,3 @@
+var AkiPlayer = Klass.extend({
+  
+});

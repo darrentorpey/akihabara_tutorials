@@ -248,7 +248,6 @@ var AkiGame = Klass.extend({
         if(this.accx == 0 && this.accy < 0) this.animIndex = "up";
         if(this.accx > 0 && this.accy < 0) this.animIndex = "upRight";
 
-        // set the animation -Nick
         if(frameCount%this.animList[this.animIndex].speed == 0) this.frame = help.decideFrame(frameCount,this.animList[this.animIndex]);
 
         // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
@@ -279,9 +278,8 @@ var AkiGame = Klass.extend({
     return [
       ['font',                 'resources/CasualEncounter.png'],
       ['logo',                 'resources/logo.png'],
-      ['player_sprite',        'resources/walk.png'],
+      ['player_sprite',        'games/8by5/images/player_sprite.png'],
       ['map_spritesheet',      'resources/map_pieces.png'],
-      ['enemy_sprite',         'resources/enemy_sprite.png'],
       ['block_sprite',         'resources/block_sprite.png'],
       ['background_tilesheet', 'resources/bg0.png'],
       ['explosion_sprite',     'resources/Frk_Blast1.png']
@@ -306,18 +304,9 @@ var AkiGame = Klass.extend({
     {
       id:      'player_tiles',  // Set a unique ID for future reference
       image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
-      tileh:   64,
-      tilew:   32,
+      tileh:   16,
+      tilew:   16,
       tilerow: 10,
-      gapx:    0,
-      gapy:    0
-    },
-    {
-      id:      'block_tiles',  // Set a unique ID for future reference
-      image:   'block_sprite', // Use the 'player_sprite' image, as loaded above
-      tileh:   32,
-      tilew:   32,
-      tilerow: 3,
       gapx:    0,
       gapy:    0
     },
@@ -329,20 +318,10 @@ var AkiGame = Klass.extend({
       tilerow: 3,
       gapx:    0,
       gapy:    0
-    },
-    {
-      id:      'enemy_tiles',  // Set a unique ID for future reference
-      image:   'enemy_sprite', // Use the 'player_sprite' image, as loaded above
-      tileh:   32,
-      tilew:   32,
-      tilerow: 2,
-      gapx:    0,
-      gapy:    0
     }];
   },
-  getAudioResources: function() {
-    return [];
-  },
+
+  getAudioResources: function() { return []; },
 
   generateMapObj: function(){
       // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision

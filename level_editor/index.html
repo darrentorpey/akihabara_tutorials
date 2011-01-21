@@ -255,6 +255,7 @@
     the_game = new $games[$config.default_game]();
     the_game.start();
 
+    $('#top_tools, footer').hide();
     if (false && !gameOnlyMode) {
       editor = new Editor();
       editor.level = currentLevel.map;

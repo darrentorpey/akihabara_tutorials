@@ -84,10 +84,8 @@ akiba = {
       });
     },
 
-    init_topdown: function(obj, data) {
-      if (!data) data = {};
-
-      help.mergeWithModel(obj, {
+    init_topdown: function() {
+      help.mergeWithModel(this, {
         x: 0, y: 0, z: 0,
         accx: 0, accy: 0, accz: 0,
         frames        : {},
@@ -103,18 +101,32 @@ akiba = {
         flipside      : true,
         haspushing    : false,
         frame         : 0,
-        colh          : gbox.getTiles(obj.tileset).tileh,
-        colw          : gbox.getTiles(obj.tileset).tilew,
+        colh          : gbox.getTiles(this.tileset).tileh,
+        colw          : gbox.getTiles(this.tileset).tilew,
         colx          : 0,
         staticspeed   : 0,
         nodiagonals   : false,
         noreset       : false
       });
-      if (obj.coly==null) obj.coly=gbox.getTiles(obj.tileset).tileh-obj.colh;
-      obj.colhh=Math.floor(obj.colh/2);
-      obj.colhw=Math.floor(obj.colw/2);
+      if (this.coly==null) this.coly=gbox.getTiles(this.tileset).tileh-this.colh;
+      this.colhh=Math.floor(this.colh/2);
+      this.colhw=Math.floor(this.colw/2);
 
-      toys.topview.spawn(obj);
+      toys.topview.spawn(this);
+    }
+  }
+}
+
+akiba.actors = {
+  top_down_object: {
+    initialize: akiba.magic.init_topdown,
+    blit: akiba.magic.standard_blit,
+    first: function() {
+      this.processControlKeys();
+
+      this.updateAnimation();
+
+      this.applyPhysics();
     }
   }
 }

@@ -8,26 +8,11 @@ var AkiPlayer = Klass.extend({
 
   getAkiObject: function() {
     var obj = this.aki_attributes;
-    _.extend(obj, {
+    _.extend(obj, akiba.actors.top_down_object, {
       game: this.game,
       colh: gbox.getTiles('player_tiles').tileh,
       x: 50,
-      y: 30,
-
-      initialize: function() {
-        // aki_magic.init_topdown(this);
-        akiba.magic.init_topdown(this);
-      },
-
-      first: function() {
-        this.processControlKeys();
-
-        this.updateAnimation();
-
-        this.applyPhysics();
-      },
-
-      blit: akiba.magic.standard_blit
+      y: 30
     });
 
     akiba.animation.makeAnimationList(obj, 'eight_way_std');

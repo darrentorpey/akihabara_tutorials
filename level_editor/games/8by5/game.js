@@ -128,9 +128,7 @@ var AkiGame = Klass.extend({
         // reloadGamePieces();
       },
 
-      first: function() {
-
-      },
+      first: function() {},
 
       // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
       blit: function() {
@@ -150,17 +148,15 @@ var AkiGame = Klass.extend({
   },
 
   addPlayer: function() {
-    var pl = new AkiPlayer({
+    var aki_player = new AkiPlayer({
       aki_attributes: {
         id:      'player_id',
-        group:   'player',
-        tileset: 'player_tiles',
         game:    the_game,
         x:       50,
         y:       50
       }
     });
-    gbox.addObject(pl.getAkiObject());
+    gbox.addObject(aki_player.getAkiObject());
   },
 
   getImageResources: function() {

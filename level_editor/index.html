@@ -25,7 +25,7 @@
       <!-- <p class="last_saved">
         Last saved: <span id="last_saved">-----</span>
       </p> -->
-	  <a href="javascript:currentLevel.initMap();editor.loadLevelState(currentLevel.map);" style="float:left">Clear Map</a>
+    <a href="javascript:currentLevel.initMap();editor.loadLevelState(currentLevel.map);" style="float:left">Clear Map</a>
       <a href="" id="open_level_storage">
         go back in time &raquo;
         <!-- <img src="images/icons/arrow_right_blue_24x24.jpg" alt=">"> -->
@@ -259,7 +259,7 @@ currentLevel.map[0] = "1000000000000000000000000000000000000000";
     the_game = new $games[$config.default_game]();
     the_game.start();
 
-    $('#top_tools, footer').hide();
+    $('#top_tools, footer, #tutorial_link').hide();
     if (false && !gameOnlyMode) {
       editor = new Editor();
       editor.level = currentLevel.map;
@@ -280,7 +280,7 @@ currentLevel.map[0] = "1000000000000000000000000000000000000000";
       $('#tutorial_link').click(function() {
         $('#tutorial_box').tutorial('toggle');
       });
-      
+
       $('#tutorial_brushes').click(function() {
         $('#tutorial_box_brushes').fadeToggle();
       });

@@ -1,4 +1,4 @@
-var AkiPlayer = Klass.extend({
+var TopDownActor = Klass.extend({
   init: function(options) {
     if (!options) options = {};
 
@@ -14,5 +14,16 @@ var AkiPlayer = Klass.extend({
     akiba.physics.setPhysics(obj);
 
     return obj;
+  }
+});
+
+var AkiPlayer = TopDownActor.extend({
+  init: function(options) {
+    options.aki_attributes = _.extend(options.aki_attributes || {}, {
+      group:   'player',
+      tileset: 'player_tiles'
+    })
+
+    this._super(options);
   }
 });

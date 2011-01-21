@@ -152,9 +152,12 @@ var AkiGame = Klass.extend({
   addPlayer: function() {
     var pl = new AkiPlayer({
       aki_attributes: {
-        id:      'player_id',    // id refers to the specific object
-        group:   'player',       // The rendering group
-        tileset: 'player_tiles' // tileset is where the graphics come from
+        id:      'player_id',
+        group:   'player',
+        tileset: 'player_tiles',
+        game:    the_game,
+        x:       50,
+        y:       50
       }
     });
     gbox.addObject(pl.getAkiObject());

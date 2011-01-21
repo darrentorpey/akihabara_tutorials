@@ -7,13 +7,7 @@ var AkiPlayer = Klass.extend({
   },
 
   getAkiObject: function() {
-    var obj = this.aki_attributes;
-    _.extend(obj, akiba.actors.top_down_object, {
-      game: this.game,
-      colh: gbox.getTiles('player_tiles').tileh,
-      x: 50,
-      y: 30
-    });
+    var obj = _(this.aki_attributes).extend(akiba.actors.top_down_object);
 
     akiba.animation.makeAnimationList(obj, 'eight_way_std');
     akiba.controls.setControlKeys(obj, 'eight_way_std');

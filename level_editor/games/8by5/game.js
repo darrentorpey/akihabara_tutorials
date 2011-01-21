@@ -35,6 +35,7 @@ var AkiGame = Klass.extend({
     // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
     var groups = ['background', 'staticboxes', 'boxes', 'disboxes', 'enemies', 'particles'];
     groups.push('player');
+    groups.push('enemies');
     groups.push('game');
 
     gbox.setGroups(groups);
@@ -116,6 +117,8 @@ var AkiGame = Klass.extend({
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     the_game.addPlayer();
 
+    the_game.addEnemies();
+
     // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
     the_game.addMap();
   },
@@ -150,13 +153,35 @@ var AkiGame = Klass.extend({
   addPlayer: function() {
     var aki_player = new AkiPlayer({
       aki_attributes: {
-        id:      'player_id',
-        game:    the_game,
-        x:       50,
-        y:       50
+        id:   'player_id',
+        game: the_game,
+        x:    50,
+        y:    50
       }
     });
     gbox.addObject(aki_player.getAkiObject());
+  },
+
+  addEnemies: function() {
+    var aki_box = new AkiBox({
+      aki_attributes: {
+        id:   'box_1',
+        game: the_game,
+        x:    150,
+        y:    150
+      }
+    });
+    gbox.addObject(aki_box.getAkiObject());
+
+    var aki_box2 = new AkiBox({
+      aki_attributes: {
+        id:   'box_2',
+        game: the_game,
+        x:    300,
+        y:    250
+      }
+    });
+    gbox.addObject(aki_box2.getAkiObject());
   },
 
   getImageResources: function() {
@@ -164,6 +189,8 @@ var AkiGame = Klass.extend({
       ['font',                 'resources/CasualEncounter.png'],
       ['logo',                 'resources/logo.png'],
       ['player_sprite',        'games/8by5/images/player_sprite.png'],
+      ['enemy_sprite',         'games/8by5/images/enemy_sprite.png'],
+      ['bullet_sprite',        'games/8by5/images/bullet.png'],
       ['map_spritesheet',      'resources/map_pieces.png'],
       ['block_sprite',         'resources/block_sprite.png'],
       ['background_tilesheet', 'resources/bg0.png'],
@@ -201,6 +228,15 @@ var AkiGame = Klass.extend({
       tileh:   32,
       tilew:   32,
       tilerow: 3,
+      gapx:    0,
+      gapy:    0
+    },
+    {
+      id:      'enemy_tiles',
+      image:   'enemy_sprite',
+      tileh:   16,
+      tilew:   16,
+      tilerow: 19,
       gapx:    0,
       gapy:    0
     }];

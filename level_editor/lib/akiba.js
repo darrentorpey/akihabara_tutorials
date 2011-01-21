@@ -122,7 +122,7 @@ akiba.actors = {
     initialize: akiba.magic.init_topdown,
     blit: akiba.magic.standard_blit,
     first: function() {
-      this.processControlKeys();
+      if (this.processControlKeys) this.processControlKeys();
 
       this.updateAnimation();
 

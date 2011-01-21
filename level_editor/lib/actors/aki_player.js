@@ -10,7 +10,6 @@ var TopDownActor = Klass.extend({
     var obj = _(this.aki_attributes).extend(akiba.actors.top_down_object);
 
     akiba.animation.makeAnimationList(obj, 'eight_way_std');
-    akiba.controls.setControlKeys(obj, 'eight_way_std');
     akiba.physics.setPhysics(obj);
 
     return obj;
@@ -22,6 +21,23 @@ var AkiPlayer = TopDownActor.extend({
     options.aki_attributes = _.extend(options.aki_attributes || {}, {
       group:   'player',
       tileset: 'player_tiles'
+    })
+
+    this._super(options);
+  },
+
+  getAkiObject: function() {
+    var obj = this._super();
+    akiba.controls.setControlKeys(obj, 'eight_way_std');
+    return obj;
+  }
+});
+
+var AkiBox = TopDownActor.extend({
+  init: function(options) {
+    options.aki_attributes = _.extend(options.aki_attributes || {}, {
+      group:   'enemies',
+      tileset: 'enemy_tiles'
     })
 
     this._super(options);

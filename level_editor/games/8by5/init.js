@@ -1,6 +1,6 @@
 var EightByFive = AkiGame.extend({
   init: function() {
-    debug.log('Starting 8by5...');
+    // debug.log('Starting 8by5...');
 
     this.scanner = new Scanner();
 

@@ -28,14 +28,13 @@ var AkiGame = Klass.extend({
   },
 
   setup_game: function() {
-    console.log('Game assets loaded...');
     var self = the_game;
 
     // For Tutorial Part 3 we're adding 'background' to the next line.
     // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
     var groups = ['background', 'staticboxes', 'boxes', 'disboxes', 'enemies', 'particles'];
     groups.push('player');
-    groups.push('enemies');
+    groups.push('bullets');
     groups.push('game');
 
     gbox.setGroups(groups);
@@ -160,6 +159,32 @@ var AkiGame = Klass.extend({
       }
     });
     gbox.addObject(aki_player.getAkiObject());
+
+    $('canvas').mousedown(function() {
+      var thePlayer = gbox.getObject('player', 'player_id');
+      var cam = gbox.getCamera();
+
+      var xPos = event.layerX - this.offsetLeft + cam.x;
+      var yPos = event.layerY - this.offsetTop + cam.y;
+
+      var ang = Math.atan2(yPos - (thePlayer.y + 8), xPos - (thePlayer.x + 8));
+
+      toys.topview.fireBullet('bullets', null, {
+        tileset:      'player_shot',
+        collidegroup: 'enemies',
+        from:         thePlayer,
+        x:            thePlayer.x + thePlayer.colhw - 2,
+        y:            thePlayer.y + thePlayer.colhh - 2,
+        accx:         8 * Math.cos(ang),
+        accy:         8 * Math.sin(ang),
+        maxacc:       8,
+        frames:       { speed: 2, frames: [0, 1] },
+        upper:        true,
+        camera:       true,
+        map:          the_game.map,
+        mapindex:     'map'
+      });
+    });
   },
 
   addEnemies: function() {
@@ -182,6 +207,10 @@ var AkiGame = Klass.extend({
       }
     });
     gbox.addObject(aki_box2.getAkiObject());
+
+    makeBoxEnemy(400, 200);
+    makeBoxEnemy(500, 400);
+    makeBoxEnemy(50, 350);
   },
 
   getImageResources: function() {
@@ -190,7 +219,7 @@ var AkiGame = Klass.extend({
       ['logo',                 'resources/logo.png'],
       ['player_sprite',        'games/8by5/images/player_sprite.png'],
       ['enemy_sprite',         'games/8by5/images/enemy_sprite.png'],
-      ['bullet_sprite',        'games/8by5/images/bullet.png'],
+      ['player_bullet',        'games/8by5/images/bullet.png'],
       ['map_spritesheet',      'resources/map_pieces.png'],
       ['block_sprite',         'resources/block_sprite.png'],
       ['background_tilesheet', 'resources/bg0.png'],
@@ -223,6 +252,15 @@ var AkiGame = Klass.extend({
       gapy:    0
     },
     {
+      id:       'player_shot',
+      image:    'player_bullet',
+      tileh:    4,
+      tilew:    4,
+      tilerow:  2,
+      gapx:     0,
+      gapy:     0
+    },
+    {
       id:      'background_tiles',  // Set a unique ID for future reference
       image:   'background_tilesheet', // Use the 'player_sprite' image, as loaded above
       tileh:   32,
@@ -237,6 +275,15 @@ var AkiGame = Klass.extend({
       tileh:   16,
       tilew:   16,
       tilerow: 19,
+      gapx:    0,
+      gapy:    0
+    },
+    {
+      id:      'explosion_tiles',  // Set a unique ID for future reference
+      image:   'explosion_sprite', // Use the 'player_sprite' image, as loaded above
+      tileh:   96,
+      tilew:   96,
+      tilerow: 14,
       gapx:    0,
       gapy:    0
     }];

@@ -6,5 +6,6 @@
   "plugins/vanishBox/vanishBox.js",
   "plugins/physicsBox/physicsBox.js",
   "plugins/redGoomba/redGoomba.js",
-  "plugins/dumbGoomba/dumbGoomba.js"
+  "plugins/dumbGoomba/dumbGoomba.js",
+  "plugins/savePoint/savePoint.js"
 ]

@@ -70,7 +70,7 @@ Plugin System
 -
 If you want to build your own blocks and share them with others, we provide a plugin system that makes it easy. To see it in action, click on the Admin button in the upper right and drag this purple lava plugin from ryan-kahn.com into the designated drop area.
 
-<a href="http://ryan-kahn.com/akihabara/plugins/purpleLava/purpleLava.js" onclick="event.preventDefault &amp;&amp; event.preventDefault();alert('You need to drag this to the plugins import section! Admin-&gt;Plugins');"><img src="http://ryan-kahn.com/akihabara/plugins/purpleLava/purpleLavaPalette.png"></a>
+<a href="http://ryan-kahn.com/akihabara/plugins/purpleLava2/purpleLava.js" onclick="event.preventDefault &amp;&amp; event.preventDefault();alert('You need to drag this to the plugins import section! Admin-&gt;Plugins');"><img src="http://ryan-kahn.com/akihabara/plugins/purpleLava2/purpleLavaPalette.png"></a>
 
 (Here's how to do it!)
 

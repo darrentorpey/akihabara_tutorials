@@ -53,8 +53,18 @@
   }
   
   function main() {
-  gbox.setGroups(['game']);
+  // ** For Part 2 we're adding 'player' to this next line **
+  gbox.setGroups(['player', 'game']);
+  
   maingame = gamecycle.createMaingame('game', 'game');
+  
+  // ** Part 2 code below **
+ 
+  // Disable the default difficulty-choice menu; we don't need it for our tutorial
+  maingame.gameMenu = function() { return true; };
+ 
+  // Disable the default "get ready" screen; we don't need it for our tutorial
+  maingame.gameIntroAnimation = function() { return true; };
  
   maingame.gameTitleIntroAnimation=function(reset) {
   if (reset) {
@@ -82,7 +92,68 @@
       }
   };
  
+  // maingame.initializeGame is where all the game's objects and behaviors are defined. This is where your game code lives!
+  maingame.initializeGame = function() {
+    addPlayer();
+  };
+
+ 
   gbox.go();
   }
+  
+  // Our wrapper function for adding a player object -- this keeps our main game code nice and clean
+  function addPlayer() {
+  // gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
+  gbox.addObject({
+ 
+    // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
+    id: 'playerid',
+    group: 'player',
+    tileset: 'playerTiles',
+ 
+    // the initialize function contains code that is run when the object is first created. In the case of the player object this only happens once, at the beginning of the game, or possibly after a player dies and respawns.
+    initialize: function() {
+      // Toys are helper functions that are specific to certain genres.
+      // We're using the "topview" toys because we're creating a game with a top view and Akihabara provides convenient helper functions for that.
+     
+      // Here we're just telling it to initialize the object, in this case our player.
+      toys.topview.initialize(this, {
+      });
+    },
+ 
+    // the first function is like a step function. it runs every frame and does calculations. it's called first because it happens before the rendering, so we calculate new positions and actions and THEN render the object
+    first: function() {
+      // Toys.topview.controlKeys sets the main key controls. In this case we want to use the arrow keys which
+      //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
+      toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
+     
+      // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
+      toys.topview.handleAccellerations(this);
+     
+      // This tells the physics engine to apply those forces
+      toys.topview.applyForces(this);
+    },
+ 
+    // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
+    blit: function() {
+      // Clear the screen.
+      gbox.blitFade(gbox.getBufferContext(),{});
+     
+      // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
+      //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
+      //  spries is flipped, camera info, and the alpha transparency value
+      gbox.blitTile(gbox.getBufferContext(), {
+        tileset: this.tileset,
+        tile:    this.frame,
+        dx:      this.x,
+        dy:      this.y,
+        fliph:   this.fliph,
+        flipv:   this.flipv,
+        camera:  this.camera,
+        alpha:   1.0
+      });
+    },
+  }); // end gbox.addObject for player
+  } // end addPlayer()
   </script>
 </html

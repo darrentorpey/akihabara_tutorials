@@ -1,4 +1,5 @@
-<html><head>
+<html>
+  <head>
   <script type="text/javascript" src="akihabara/gbox.js"></script>
   <script type="text/javascript" src="akihabara/iphopad.js"></script>
   <script type="text/javascript" src="akihabara/trigo.js"></script>
@@ -8,236 +9,221 @@
   <script type="text/javascript" src="akihabara/gamecycle.js"></script>
   <style>BODY { -webkit-user-select: none; margin: 0px }</style>
   <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+  </head>
+  <body></body>
   <script>
-var maingame;
-var map;
-
-window.addEventListener('load', loadResources, false);
-
-function loadResources() {
-  // This initializes Akihabara with the default settings.
-  // The title (which appears in the browser title bar) is the text we're passing to the function.
-  help.akihabaraInit('8by5');
-
-  // Here we tell the game to look for an image called 'font.png' in the same directory as this HTML file and call it 'font' internally
+  var maingame;
+  window.addEventListener('load', loadResources, false);
+  function loadResources() {
+  // We're passing some overrides to help.akihabaraInit to set our title, resolution, and zoom factor
+  help.akihabaraInit({
+    title: '8by5',
+    width: 640,
+    height: 480,
+    zoom: 1
+    });
+ 
+  // Here we tell the game to look for an image called 'font.png' in the same directory as the HTML file and call it 'font' internally
   gbox.addImage('font', 'font.png');
-
-  // Same thing for our logo here, where we add our logo image for the intro screen
+ 
+  // Same thing for our logo here.
   gbox.addImage('logo', 'logo.png');
-
+ 
+  // ** Part 2 Code Below **
+   
   // Adding our spritesheet here, which gives us our circular protagonist
-  gbox.addImage('player_sprite', 'player_sprite.png');
-
+  gbox.addImage('playerSprite', 'playerSprite.png');
+   
   // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
   gbox.addTiles({
-    id:      'player_tiles',  // Set a unique ID for future reference
-    image:   'player_sprite', // Use the 'player_sprite' image, as loaded above
+    id:      'playerTiles', // set a unique ID for future reference
+    image:   'playerSprite', // Use the 'sprites' image, as loaded above
     tileh:   16,
     tilew:   16,
     tilerow: 1,
     gapx:    0,
     gapy:    0
   });
-
-  // Add our map spritesheet, which gives us our "wall" pieces
+ 
+   // Add our map spritesheet, which gives us our "wall" pieces
   gbox.addImage('map_spritesheet', 'map_pieces.png');
 
-  // The tilesets are taken from the sprite sheet too.
   gbox.addTiles({
     id:      'map_pieces',
     image:   'map_spritesheet',
-    tileh:   8,
-    tilew:   8,
+    tileh:   16,
+    tilew:   16,
     tilerow: 1,
     gapx:    0,
     gapy:    0
   });
-
+ 
   // Fonts are mapped over an image, setting the first letter, the letter size, the length of all rows of letters and a horizontal/vertical gap.
   gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
-
-  // The 'main' function is registered as a callback: this just says that when we're done with loadAll we should call 'main'
-  gbox.setCallback(main);
-
-  // When everything is ready, the 'loadAll' downloads all the needed resources.
-  gbox.loadAll();
-};
-
-function main() {
-  // For Tutorial Part 3 we're adding 'background' to the next line.
-  // The 'background' rendering group that we'll use for our map, and it will render before anything else because we put it first in this list
+ 
+  // When everything is ready, the 'loadAll' downloads all the needed resources, and then calls the function "main".
+  gbox.loadAll(main);
+  }
+  
+  function main() {
+  // ** For Part 3 we're adding 'background' to the next line **
   gbox.setGroups(['background', 'player', 'game']);
-
-  // Create a new maingame into the "gamecycle" group. Will be called "gamecycle". From now, we've to "override" some of the maingame default actions.
+  
   maingame = gamecycle.createMaingame('game', 'game');
-
+  
+  // ** Part 2 code below **
+ 
   // Disable the default difficulty-choice menu; we don't need it for our tutorial
   maingame.gameMenu = function() { return true; };
-
-  // Disable the default "get ready" screen; we don't need it for our tutorial
+ 
+  // Disable the default "Let's begin" screen; we don't need it for our tutorial
   maingame.gameIntroAnimation = function() { return true; };
-
-  // Set our intro screen animation
-  maingame.gameTitleIntroAnimation = function(reset) {
-    if (reset) {
-      toys.resetToy(this, 'rising');
-    }
-
-    gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
-
-    toys.logos.linear(this, 'rising', {
-      image: 'logo',
-      sx:    gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      sy:    gbox.getScreenH(),
-      x:     gbox.getScreenW()/2 - gbox.getImage('logo').width/2,
-      y:     20,
-      speed: 1
-    });
+ 
+  maingame.gameTitleIntroAnimation=function(reset) {
+  if (reset) {
+    toys.resetToy(this, 'rising');
+  }
+ 
+  gbox.blitFade(gbox.getBufferContext(),{ alpha: 1 });
+ 
+  toys.logos.linear(this, 'rising', {
+    image: 'logo',
+    sx:    gbox.getScreenW()/2-gbox.getImage('logo').width/2,
+    sy:    gbox.getScreenH(),
+    x:     gbox.getScreenW()/2-gbox.getImage('logo').width/2,
+    y:     20,
+    speed: 1
+  });
   };
-
-  // This function will be called before the game starts running, so here is where we add our game elements
+  
+  maingame.pressStartIntroAnimation=function(reset) {
+    if (reset) {
+      toys.resetToy(this,"default-blinker");
+    } else {
+      toys.text.blink(this,"default-blinker",gbox.getBufferContext(),{font:"small",text:"PRESS Z TO START",valign:gbox.ALIGN_MIDDLE,halign:gbox.ALIGN_CENTER,dx:0,dy:Math.floor(gbox.getScreenH()/3),dw:gbox.getScreenW(),dh:Math.floor(gbox.getScreenH()/3)*2,blinkspeed:10});
+      return gbox.keyIsHit("a");
+      }
+  };
+ 
+  // maingame.initializeGame is where all the game's objects and behaviors are defined. This is where your game code lives!
   maingame.initializeGame = function() {
-    // Create the 'player' (see tutorial Part 2 for a detailed explanation)
+    // From Part 2...
     addPlayer();
-
-    // Here we create a map object that will draw the map onto the 'background' layer each time our game world is drawn
+   
+    // Here we create a background object that will draw the map onto the 'background' layer each time our game world is drawn
     addMap();
   };
-
+  
   // Here we define the map, which consists of a tileset, the actual map data, and a helper function for collision
   map = {
     tileset: 'map_pieces', // Specify that we're using the 'map_pieces' tiles that we created in the loadResources function
-
+   
     // This loads an ASCII-definition of all the 'pieces' of the map as an array of integers specifying a type for each map tile
     // Each 'type' corresponds to a sprite in our tileset. For example, if a map tile has type 0, then it uses the first sprite in the
     //  map's tile set ('map_pieces', as defined above) and if a map tile has type 1, it uses the second sprite in the tile set, etc.
     // Also note that null is an allowed type for a map tile, and uses no sprite from the tile set
     map: loadMap(),
-
+   
     // This function have to return true if the object 'obj' is checking if the tile 't' is a wall, so...
     tileIsSolid: function(obj, t) {
       return t != null; // Is a wall if is not an empty space
     }
-  }
-
-  // This function calculates the overall height and width of the map and puts them into the 'x' and 'y' fields of the object
+  };
+  
+  // this function calculates the overall height and width of the map by counting the number of tiles.
   map = help.finalizeTilemap(map);
-
-  // We create a canvas that our map will be drawn to, seting its dimentions by using the map's width and height
+ 
+  // Since finalizeMap has calculated the height and width, we can create a canvas that fits our map. Let's call it "map_canvas".
   gbox.createCanvas('map_canvas', { w: map.w, h: map.h });
-
-  // We draw the map onto our 'map_canvas' canvas that we created above.
-  // This means that the map's 'blit' function can simply draw the 'map_canvas' to the screen to render the map
+ 
+  // This function grabs the map from the "map" object and draws it onto our "map_canvas". So now the map is in the rendering pipeline.
   gbox.blitTilemap(gbox.getCanvasContext('map_canvas'), map);
-
-  // Now that we've set up our game's elements, this tells the game to run
+  
   gbox.go();
-}
-
-function loadMap() {
-  return help.asciiArtToMap([
-"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-"xx                                    xx",
-"xx                                    xx",
-"xx                                    xx",
-"xx                                    xx",
-"xxxxxxxxxxxxxxxx            xx        xx",
-"xxxxxxxxxxxxxxxx            xx        xx",
-"xx                          xx        xx",
-"xx                          xx        xx",
-"xx                          xx        xx",
-"xx                          xx        xx",
-"xx                          xx        xx",
-"xx                          xx        xx",
-"xx          xxxxxxxx   xxxxxxxxxxxxxxxxx",
-"xx          xxxxxxxx   xxxxxxxxxxxxxxxxx",
-"xx                                    xx",
-"xx                                    xx",
-"xx                                    xx",
-"xxxxxxxx                              xx",
-"xxxxxxxx                              xx",
-"xx                                    xx",
-"xx            xxxxxxxxxxxxxxxxxx      xx",
-"xx            xxxxxxxxxxxxxxxxxx      xx",
-"xx                                    xx",
-"xx                                    xx",
-"xx                                    xx",
-"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-    ], [ [null, ' '], [0, 'x'] ])
-}
-
-// This is our function for adding the map object -- this keeps our main game code nice and clean
-function addMap() {
-  gbox.addObject({    
-    id:    'background_id', // This is the object ID
-    group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
-
-    // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
-    blit: function() {
-      // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
-      gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
-
-      // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
-      //  just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
-      gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
-    }
-  });
-}
-
-// This is our function for adding the player object -- this keeps our main game code nice and clean
-function addPlayer() {
+  }
+  
+  function loadMap() {
+    return help.asciiArtToMap([
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "x                  xx                  x",
+  "x                  xx                  x",
+  "xxxxxxxx      x    xx                  x",
+  "x             x    xxxxxxxxxx          x",
+  "x             x                        x",
+  "x             x                        x",
+  "x     xxxx  xxxxxxxxx           xxxxxxxx",
+  "x                  xx                  x",
+  "x                  xx                  x",
+  "xxxx               xx                  x",
+  "x      xxxxxxxxx   xx                  x",
+  "x                  xx                  x",
+  "x                  xx        x         x",
+  "xxxxxxx  xxxxxxxxxxxx        x         x",
+  "xxxxxxx  xxxxxxxxxxxx        x         x",
+  "x                  xx      xxxx        x",
+  "x                  xx        x         x",
+  "xxxxxxxx      x    xx        x         x",
+  "x             x    xx                  x",
+  "x             x    xx                  x",
+  "x             x    xx                  x",
+  "x     xxxx  xxxxxxxxx                  x",
+  "x                  xx                  x",
+  "xxxx                                   x",
+  "x                                      x",
+  "x      xxxxxxxxx   xx                  x",
+  "x                  xx                  x",
+  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      ], [ [null, ' '], [0, 'x'] ])
+  }
+  
+  // Our wrapper function for adding a player object -- this keeps our main game code nice and clean
+  function addPlayer() {
+  // gbox.addObject creates a new object in your game, with variables and functions. In this case we're creating the player.
   gbox.addObject({
-    id:      'player_id',    // id refers to the specific object
-    group:   'player',       // The rendering group
-    tileset: 'player_tiles', // tileset is where the graphics come from
-
-    // We're overriding the default colh value for the object. "colh" stands for collision height, and it's the height of our collision box. Similarly,
-    //  the object automatically has values for colw (collision box width) and colx and coly (the x/y offset of the collision box).
-    // We're overriding colh from its default because by default in the toys.topview object, colh is set to half the height of the sprite.
-    // We have to do this because topview is normally used for Zelda-style games where the hitbox is considered to be the bottom half
-    //  of the sprite so the top half can "overlap" scenery that's "behind" it. In this case we're just setting colh to the default tile height.
-    colh: gbox.getTiles('player_tiles').tileh,
-
-    // the initialize function contains code that is run when the object is first created. In the case of the player object this only
-    // happens once, at the beginning of the game, or possibly after a player dies and respawns.
+ 
+    // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
+    id: 'playerid',
+    group: 'player',
+    tileset: 'playerTiles',
+    // ** New code for Part 3 **
+    // We're overriding the default colh value for the object. "colh" stands for collision height, and it's the height of our collision box.
+    colh:gbox.getTiles('playerTiles').tileh,
+    
+    // the initialize function contains code that is run when the object is first created. In the case of the player object this only happens once, at the beginning of the game, or possibly after a player dies and respawns.
     initialize: function() {
-      // Toys are helper functions that are specific to certain genres.
-      // We're using the "topview" toys because we're creating a game with a top view and Akihabara provides convenient helper functions for that.
-
       // Here we're just telling it to initialize the object, in this case our player.
-      //  The second argument provides data to initialize the object with,
-      //  but in this case we don't have any, so we just pass an empty hash
       toys.topview.initialize(this, {});
-
+     
+      // ** New code for Part 3 **
       // And we set the starting position for our player.
       this.x = 20;
       this.y = 20;
-    },
-
-    // The 'first' function is like a step function. Tt runs every frame and does calculations. It's called 'first'
-    //  because it happens before the rendering, so we calculate new positions and actions and THEN render them
+     },
+ 
+    // the first function is like a step function. it runs every frame and does calculations. it's called first because it happens before the rendering, so we calculate new positions and actions and THEN render the object
     first: function() {
       // Toys.topview.controlKeys sets the main key controls. In this case we want to use the arrow keys which
       //  are mapped to their english names. Inside this function it applies acceleration values to each of these directions
       toys.topview.controlKeys(this, { left: 'left', right: 'right', up: 'up', down: 'down' });
-
+     
       // This adds some friction to our accelerations so we stop when we're not accelerating, otherwise our game would control like Asteroids
       toys.topview.handleAccellerations(this);
-
+     
       // This tells the physics engine to apply those forces
       toys.topview.applyForces(this);
-
+     
+      // ** New code for Part 3 **
+     
       // We're setting up a collision bounding box here based on our colx, coly, colh, and colw parameters. We're setting the tolerance to 6
-      //  because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
-      //  feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
-      //  be somewhere between 0 and half your sprite width or height. 
+      // because our sprite is round. A tolerance of about 6 gives us a good feeling of rounded corners to our object without making the object
+      // feel too jello-like on corners. We arrived that the particular number through trial and error -- generally speaking tolerance should
+      // be somewhere between 0 and half your sprite width or height.
       toys.topview.tileCollision(this, map, 'map', null, { tolerance: 6, approximation: 3 });
     },
-
+ 
     // the blit function is what happens during the game's draw cycle. everything related to rendering and drawing goes here
     blit: function() {
+     
       // Render the current sprite.. don't worry too much about what's going on here. We're pretty much doing
       //  the default drawing function, sending along the tileset, the frame info, coordinates, whether the
       //  spries is flipped, camera info, and the alpha transparency value
@@ -252,7 +238,25 @@ function addPlayer() {
         alpha:   1.0
       });
     },
-  });
-}
-</script>
-</head><body></body></html>
+  }); // end gbox.addObject for player
+  } // end addPlayer()
+  
+  // This is our function for adding the map object -- this keeps our main game code nice and clean
+  function addMap() {
+    gbox.addObject({
+      id:    'background_id', // This is the object ID
+      group: 'background',    // We use the 'backround' group we created above with our 'setGroups' call.
+   
+      // The blit function is what happens during the game's draw cycle. Everything related to rendering and drawing goes here.
+      blit: function() {
+        // First let's clear the whole screen. Blitfade draws a filled rectangle over the given context (in this case, the screen)
+        gbox.blitFade(gbox.getBufferContext(), { alpha: 1 });
+   
+        // Since we blitted the tilemap to 'map_canvas' back in our main function, we now draw 'map_canvas' onto the screen. The 'map_canvas' is
+        // just a picture of our tilemap, and by blitting it here we're making sure that the picture re-draws every frame.
+        gbox.blit(gbox.getBufferContext(), gbox.getCanvas('map_canvas'), { dx: 0, dy: 0, dw: gbox.getCanvas('map_canvas').width, dh: gbox.getCanvas('map_canvas').height, sourcecamera: true });
+      }
+    });
+  }
+  </script>
+</html

@@ -32,12 +32,12 @@
   // ** Part 2 Code Below **
    
   // Adding our spritesheet here, which gives us our circular protagonist
-  gbox.addImage('playerSprite', 'playerSprite.png');
+  gbox.addImage('player_sprite', 'player_sprite.png');
    
   // Sprites sheets are cut here, setting the tile size, the number of sprites per row and the gap of the frames set.
   gbox.addTiles({
-    id:      'playerTiles', // set a unique ID for future reference
-    image:   'playerSprite', // Use the 'sprites' image, as loaded above
+    id:      'player_tiles', // set a unique ID for future reference
+    image:   'player_sprite', // Use the 'sprites' image, as loaded above
     tileh:   16,
     tilew:   16,
     tilerow: 1,
@@ -109,7 +109,7 @@
     // id refers to the specific object, group is the group it's in for rendering purposes, tileset is where the graphics come from
     id: 'playerid',
     group: 'player',
-    tileset: 'playerTiles',
+    tileset: 'player_tiles',
  
     // the initialize function contains code that is run when the object is first created. In the case of the player object this only happens once, at the beginning of the game, or possibly after a player dies and respawns.
     initialize: function() {

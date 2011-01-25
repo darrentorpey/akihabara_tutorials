@@ -182,9 +182,10 @@ var cachelist={
 }
 
 /**
- * Gamebox module allows multiple grouped objects to move simultaneously, it helps with collisions, 
+ * @namespace
+ * Gamebox module allows multiple grouped objects to move simultaneously, it helps with collisions, #
  * rendering and moving objects. It also provides monospaced pixel-font rendering, keyboard handling,  
- * audio, double buffering and eventually FSEs. Gamebox can also store and load data from cookies! 
+ * audio, double buffering and FSEs. Gamebox can also store and load data from cookies! 
  */
 var gbox={
 	// CONSTANTS
@@ -195,6 +196,12 @@ var gbox={
 	COLOR_BLACK:'rgb(0,0,0)',
 	COLOR_WHITE:'rgb(255,255,255)',
 	ZINDEX_LAYER:-1,
+	PALETTES:{ // I think that some retrogamers will find these useful and/or inspiring
+		c64:{ // C64 palette, picked from http://pepto.de/projects/colorvic/
+			order:["black","white","red","cyan","purple","green","blue","yellow","orange","brown","lightred","darkgray","gray","lightgreen","lightblue","lightgray"],
+			colors:{ black:"#000000", white:"#FFFFFF", red:"#68372B", cyan:"#70A4B2", purple:"#6F3D86", green:"#588D43", blue:"#352879", yellow:"#B8C76F", orange:"#6F4F25", brown:"#433900", lightred:"#9A6759", darkgray:"#444444", gray:"#6C6C6C", lightgreen:"#9AD284", lightblue:"#6C5EB5", lightgray:"#959595"}
+		}
+	},
 	
 	// VARS
 	_autoid:0,
@@ -209,10 +216,19 @@ var gbox={
 		b:88,
 		c:67
 	},
+	_flagstype:{
+		experimental:"check",
+		noaudio:"check",
+		loadscreen:"list",
+		fse:"list"
+	},
 	_flags:{
 		experimental:false,
-		noaudio:false
+		noaudio:false,
+		loadscreen:"normal",
+		fse:"none"
 	},
+	_localflags:{},
 	_fonts:{},
 	_tiles:{},
 	_images:{},
@@ -275,10 +291,12 @@ var gbox={
 		try { if ((sh>0)&&(sw>0)&&(sx<img.width)&&(sy<img.height)) tox.drawImage(img, sx,sy,sw,sh,dx,dy,dw,dh); } catch(e){}
 	},
 	_keydown:function(e){
+		if (e.preventDefault) e.preventDefault();
 		var key=(e.fake||window.event?e.keyCode:e.which);
 		if (!gbox._keyboard[key]) gbox._keyboard[key]=1;
 	},
 	_keyup:function(e){
+		if (e.preventDefault) e.preventDefault();
 		var key=(e.fake||window.event?e.keyCode:e.which);
 		gbox._keyboard[key]=-1;
 	},
@@ -323,12 +341,41 @@ var gbox={
 		}
 		return sizes;
 	},
+  
+  /**
+  * Sets the gbox._forcedidle property.
+  * @param {Boolean} f The value to write to gbox._forcedidle.
+  */	  
 	setForcedIdle:function(f) { this._forcedidle=f},
+  
+  /**
+  * Returns a gbox flag at index f.
+  * @param {Object} f The index of the flag you want returned.
+  */	  
 	getFlag:function(f) { return this._flags[f] },
-	setStatusBar:function(a) { this._statbar=a },
+  
+  /**
+  * Sets the gbox._statbar property. Only useful if called before gbox.initScreen. Debugging funtionality.
+  * Much easier to access if you add '?statusbar=1' to your URL.
+  * @param {Boolean} f The value to write to gbox._statbar.
+  */	
+  setStatusBar:function(a) { this._statbar=a },
 	setScreenBorder:function(a) { this._border=a},
+  
+  /**
+  * Initializes the screen to a certain width and height, applies zoom attributes, populates the 
+  * body of the HTML document including the canvas element, sets an initial camera, creates a '_buffer'
+  * canvas, sets keyboard event listeners, and many other initialization functions.
+  * @param {Integer} w The width of the main canvas.
+  * @param {Integer} h The height of the main canvas.
+  */	
 	initScreen:function(w,h) {
 		document.body.style.textAlign="center";
+		document.body.style.height="100%";
+		document.body.style.margin="0px";
+		document.body.style.padding="0px";			
+		document.getElementsByTagName("html")[0].style.height="100%";
+		
 		var container=document.createElement("div");
 		container.style.width="100%";
 		container.style.height="100%";
@@ -358,8 +405,8 @@ var gbox={
 		document.body.appendChild(container);
 
 		this.createCanvas("_buffer");
-		window.addEventListener('keydown', this._keydown,false);
-		window.addEventListener('keyup', this._keyup,false);
+		gbox.addEventListener(window,'keydown', this._keydown);
+		gbox.addEventListener(window,'keyup', this._keyup);
 		if (this._statbar) {
 			this._statbar=document.createElement("div");
 			if (this._border) this._statbar.style.border="1px solid black";
@@ -386,23 +433,93 @@ var gbox={
 		
 		gbox._loadsettings(); // Load default configuration
 		gbox.setCanAudio(true); // Tries to enable audio by default
+		
+		switch (gbox._flags.fse) { // Initialize FSEs
+			case "scanlines": {
+				gbox.createCanvas("-gbox-fse",{w:w,h:h});
+				gbox.getCanvasContext("-gbox-fse").save();
+				gbox.getCanvasContext("-gbox-fse").globalAlpha=0.2;
+				gbox.getCanvasContext("-gbox-fse").fillStyle = gbox.COLOR_BLACK;
+				for (var j=0;j<h;j+=2)
+					gbox.getCanvasContext("-gbox-fse").fillRect(0,j,w,1);
+				gbox.getCanvasContext("-gbox-fse").restore();
+				gbox._localflags.fse=true;
+				break;
+			}
+			case "lcd":{
+				gbox.createCanvas("-gbox-fse-old",{w:w,h:h});
+				gbox.createCanvas("-gbox-fse-new",{w:w,h:h});
+				gbox._localflags.fse=true;
+				break;
+			}
+		}
 	},
+
+  /**
+  * Sets the gbox._db property. Turns on an off double buffering.
+  * @param {Boolean} db The value to write to gbox._db. True enables double buffering, false disables.
+  */	  
 	setDoubleBuffering:function(db){this._db=db},
+  
+  /**
+  * Writes text to the status bar, but only if the status bar is enabled.
+  * @param {String} txt The text to write to the status bar.
+  */	  
 	setStatBar:function(txt){ if (gbox._statbar) this._statbar.innerHTML=(txt?txt:"&nbsp")},
+
+  /**
+  * Set the frames per second rate.
+  * @param {Integer} f Total frames per second for the game to run at.
+  */	  
 	setFps:function(f){
 		this._fps=f;
 		this._mspf=Math.floor(1000/f)
 	},
+  
+  /**
+  * Get the frames per second rate (default is 25).
+  * @returns {Integer} Returns the frames per second.
+  */
 	getFps:function() { return this._fps },
 	setAutoskip:function(f){this._autoskip=f},
 	setFrameskip:function(f){this._frameskip=f},
+  
+  /**
+  * Get the screen height.
+  * @returns {Integer} Screen height in pixels.
+  */
 	getScreenH:function(){return this._screenh},
+
+  /**
+  * Get the screen width.
+  * @returns {Integer} Screen width in pixels.
+  */
 	getScreenW:function(){return this._screenw},
+  
+  /**
+  * Get the screen half-height.
+  * @returns {Integer} Screen half-height in pixels.
+  */
 	getScreenHH:function(){return this._screenhh},
+
+  /**
+  * Get the screen half-width.
+  * @returns {Integer} Screen half-width in pixels.
+  */
 	getScreenHW:function(){return this._screenhw},
+  
+  /**
+  * Sets the gbox._zoom parameter, only works before gbox.initScreen is called.
+  * @param {Integer} z Zoom factor.
+  */
 	setZoom:function(z) { this._zoom=z},
-	// setCallback is deprecated, as cb is now passed directly into loadAll(). Leaving it in for backwards compatibility.
+
+  /**
+  * Deprecated: gbox._cb is now set by passing it directly into gbox.loadAll(). Left in for backwards compatibility.
+  * @param {String} cb The name of the function to be called once gbox.loadAll is completed.
+  */
 	setCallback:function(cb) { this._cb=cb; },
+
 	_playobject:function(g,obj,a) {
 		if (gbox._objects[g][obj].initialize) {
 			gbox._objects[g][obj].initialize(obj);
@@ -410,6 +527,7 @@ var gbox={
 		}
 		if (gbox._objects[g][obj][a]) gbox._objects[g][obj][a](obj,a);
 	},
+
 	_nextframe:function(){
 		gbox._framestart=gbox._mspf-(new Date().getTime()-gbox._framestart);
 		if (gbox._autoskip)
@@ -418,6 +536,38 @@ var gbox={
 		if (gbox._statbar) gbox.debugGetstats();
 		this._gametimer=setTimeout(gbox.go,(gbox._framestart<=0?1:gbox._framestart));		
 	},
+	/**
+  * Apply FSEs to the screen. Is called each frame. 
+  */
+  _applyfse:function(){
+	  switch (gbox._flags.fse) {
+		case "scanlines": {
+			gbox.getBufferContext().drawImage(gbox.getCanvas("-gbox-fse"),0,0);
+			break;
+		}
+		case "lcd":{
+			if (gbox._localflags.fselcdget&&gbox.getBuffer())
+				gbox.getCanvasContext("-gbox-fse-new").drawImage(gbox.getBuffer(),0,0);
+			gbox.getBufferContext().save();
+			gbox.getBufferContext().globalAlpha=0.5;
+			gbox.getBufferContext().drawImage(gbox.getCanvas("-gbox-fse-old"),0,0);
+			gbox.getBufferContext().restore();
+			if (gbox._localflags.fselcdget)
+				gbox.swapCanvas("-gbox-fse-new","-gbox-fse-old");
+			gbox._localflags.fselcdget=!gbox._localflags.fselcdget;	
+			break;
+		}
+	}
+  },
+  /**
+  * Register the code that have to be executed once the page is loaded. Usually contains game initialization, resources loading etc.
+  */
+  onLoad:function(code) {
+  	this.addEventListener(window,'load',code);
+  },
+  /**
+  * This function is called once per frame. This is where the basic rendering and processing of groups occurs.
+  */
 	go:function() {
 		if (gbox._loaderqueue.isBusy()) {
 			if (gbox._gamewaiting==1) {
@@ -458,6 +608,7 @@ var gbox={
 							for (var obj in gbox._objects[gbox._renderorder[g]])
 								gbox._playobject(gbox._renderorder[g],obj,gbox._actionqueue[i]);
 			if (gbox._fskid>=gbox._frameskip) {
+				if (gbox._localflags.fse) gbox._applyfse();
 				if (gbox._db) gbox.blitImageToScreen(gbox.getBuffer());
 				gbox._fskid=0;
 			} else gbox._fskid++;
@@ -487,7 +638,10 @@ var gbox={
 				gbox._nextframe();
 		}
 	},
-	
+  
+  /**
+  * Displays basic audio, object, and performance statistics in the status bar. Automatically called each frame if the status bar is enabled.
+  */
 	debugGetstats:function() {
 		var statline="Idle: "+gbox._framestart+"/"+gbox._mspf+(gbox._frameskip>0?" ("+gbox._frameskip+"skip)":"")+" | ";
 		var cnt=0;
@@ -515,20 +669,52 @@ var gbox={
 			*/
 		gbox.setStatBar(statline);
 	},
+  
 	setZindex:function(th,z) {
 		if ((th.__zt==null)||(th.zindex!=z)) {
 			th.zindex=z;
 			this._zindexch.push({o:{g:th.group,o:th.id},z:z});
 		}
 	},
+
+  /**
+  * Returns true if a given key in this._keymap is pressed. Only returns true on the transition from unpressed to pressed.
+  * @param {String} id A key in the keymap. By default, one of: "up" "down" "left" "right" "a" "b" "c"
+  * @returns {Boolean} True if the given key is transitioning from unpressed to pressed in this frame.
+  */
 	keyIsHit:function(id) { return this._keyboard[this._keymap[id]]==1},
+  
+  /**
+  * Returns true if a given key in this._keymap is being held down. Returns true as long as the key is held down.
+  * @param {String} id A key in the keymap. By default, one of: "up" "down" "left" "right" "a" "b" "c"
+  * @returns {Boolean} True if the given key is held down.
+  */  
 	keyIsPressed:function(id) { return this._keyboard[this._keymap[id]]>0},
+
+  /**
+  * Returns true if a given key in this._keymap has been held down for at least one frame. Will not return true if a key
+  * is quickly tapped, only once it has been held down for a frame.
+  * @param {String} id A key in the keymap. By default, one of: "up" "down" "left" "right" "a" "b" "c"
+  * @returns {Boolean} True if the given key has been held down for at least one frame.
+  */  
 	keyIsHold:function(id) { return this._keyboard[this._keymap[id]]>1},
+  
+  /**
+  * Returns true if a given key in this._keymap is released. Only returns true on the transition from pressed to unpressed.
+  * @param {String} id A key in the keymap. By default, one of: "up" "down" "left" "right" "a" "b" "c"
+  * @returns {Boolean} True if the given key is transitioning from pressed to unpressed in this frame.
+  */
 	keyIsReleased:function(id) { return this._keyboard[this._keymap[id]]==-1},
+  
 	_savesettings:function() {
 		var saved="";
 		for (var k in this._keymap) saved+="keymap-"+k+":"+this._keymap[k]+"~";
-		for (var f in this._flags) saved+="flag-"+f+":"+(this._flags[f]?1:0)+"~";
+		for (var f in this._flags) {
+			switch (this._flagstype[f]) {
+				case "check": { saved+="flag-"+f+":"+(this._flags[f]?1:0)+"~"; break; }
+				case "list": { saved+="flag-"+f+":"+this._flags[f]+"~"; break; }
+			}
+		}
 		this.dataSave("sys",saved);
 	},
 	_loadsettings:function() {
@@ -542,16 +728,42 @@ var gbox={
 				mk=kv[0].split("-");
 				switch (mk[0]) {
 					case "keymap": { this._keymap[mk[1]]=kv[1]*1; break }
-					case "flag": { this._flags[mk[1]]=kv[1]*1; break }
+					case "flag": {
+						switch (this._flagstype[mk[1]]) {
+							case "check": { this._flags[mk[1]]=kv[1]*1; break }
+							case "list": { this._flags[mk[1]]=kv[1]; break }
+						}
+						break
+					}
 				}
 			}
 		}
 	},
+
+  /**
+  * Saves data to a browser cookie as a key-value pair, which can be restored later using gbox.dataLoad. Only 
+  * works if user has cookies enabled.
+  * @param {String} k The key which identifies the value you are storing.
+  * @param {String} v The value you wish to store. Needs to be a string!
+  * @param {String} d A date offset, to be added to the current date. Defines the cookie's expiration date. By default this is set to 10 years.
+  * @example
+  * // (from Capman)
+  * gbox.dataSave("capman-hiscore",maingame.hud.getNumberValue("score","value"));
+  */
 	dataSave:function(k,v,d) { 
 		var date = new Date();
-		date.setTime(date.getTime()+((d?d:356*10)*24*60*60*1000));
+		date.setTime(date.getTime()+((d?d:365*10)*24*60*60*1000));
 		document.cookie =this._systemcookie+"~"+k+"="+v+"; expires="+date.toGMTString()+"; path=/";
 	},
+  
+  /**
+  * Loads data from a browser cookie. Send it a key and it returns a value (if available). Only works if user has cookies enabled.
+  * @param {String} k The key which identifies the value you are loading.
+  * @param {String} a A switch to determine whether a string or a number is returned. By default a string is returned.
+  * @returns {Object} A string or a number loaded from the cookie.
+  * @example
+  * hiscore = gbox.dataLoad("hiscore");
+  */
 	dataLoad:function(k,a) {
 		var nameeq=this._systemcookie+"~"+k+"=";
 		var ca = document.cookie.split(";");
@@ -562,30 +774,76 @@ var gbox={
 			if (c.indexOf(nameeq)==0) {
 				rt=c.substring(nameeq.length,c.length);
 				if (a&&a.number) return rt*1; else return rt;
+				if (a&&a.number) return rt*1; else return rt;
 			}
 		}
 		return null;
 	},
+
+  /**
+  * Clears a value stored in a  key-value pair in a browser cookie. Sets value to "". Only works if user has cookies enabled.
+  * @param {String} k The key which identifies the value you are clearing.
+  */
 	dataClear:function(k) { this.dataSave(k,"",-1) },
+  
+  /**
+  * Gets the current camera object.
+  * @returns {Object} The camera object.
+  */
 	getCamera:function() { return this._camera; },
+  
+  /**
+  * Sets the y value of the current camera object.
+  * @param {Integer} y The camera object's new y value.
+  * @param {Object} viewdata An object containing parameters h and w, which are a bounding box that the camera is
+  * not supposed to leave. For example, to use your map as a bounding area for the camera, pass along {w: map.w, h: map.h}.
+  */
 	setCameraY:function(y,viewdata) {
 		this._camera.y=y;
 		if (this._camera.y+this._camera.h>viewdata.h) this._camera.y=viewdata.h-this._screenh;
 		if (this._camera.y<0) this._camera.y=0;
 	},
+
+  /**
+  * Sets the x value of the current camera object.
+  * @param {Integer} x The camera object's new x value.
+  * @param {Object} viewdata An object containing parameters h and w, which are a bounding box that the camera is
+  * not supposed to leave. For example, to use your map as a bounding area for the camera, pass along {w: map.w, h: map.h}.
+  */  
 	setCameraX:function(x,viewdata) {
 		this._camera.x=x;
 		if (this._camera.x+this._camera.w>viewdata.w) this._camera.x=viewdata.w-this._screenw;
 		if (this._camera.x<0) this._camera.x=0;
 	},
+  
+  /**
+  * Centers the camera.
+  * @param {Object} data An object containing x and y parameters -- typically the object you wish to center the camera on.
+  * @param {Object} viewdata An object containing parameters h and w, which are a bounding box that the camera is
+  * not supposed to leave. For example, to use your map as a bounding area for the camera, pass along {w: map.w, h: map.h}.
+  * @example
+  * // Center the camera on the player object
+  * gbox.centerCamera(gbox.getObject('player', 'player_id'), {w: map.w, h: map.h});
+  */
 	centerCamera:function(data,viewdata) {
 		this.setCameraX(data.x-this._screenhw,viewdata);
 		this.setCameraY(data.y-this._screenhh,viewdata);
 	},
-	
-	
 
-	getGroups:function() { return this._groups; },
+  /**
+  * Get an array containing the names of each group in the game, in order of rendering.
+  * @returns {Array} An array of group names.
+  * @example
+  * grouplist = gbox.getGroups();
+  * grouplist; // => ["background", "player", "enemy", "game"]	
+  */
+  getGroups:function() { return this._groups; },
+  
+  /**
+  * Defines the names of each group in the game along with their rendering order.
+  * @param {Array} g An array of strings of group names, in the order in which the groups should be rendered. So
+  * g[0] will contain the first group to render, g[1] the second group to render, etc.
+  */
 	setGroups:function(g){
 		this._groups=g;
 		this._groupplay[gbox.ZINDEX_LAYER]=true;
@@ -596,15 +854,53 @@ var gbox={
 				this._renderorder[i]=g[i];
 			}
 	},
+  
+  /**
+  * A method of setting the render order of groups independently of gbox.setGroups. Sets gbox._renderorder, 
+  * which by default is equivalent to gbox._groups. However, gbox._renderorder is what ultimately determines
+  * the rendering order of groups. If you need to change your rendering order on the fly, use this function 
+  * by passing it a reordered array of group names.
+  * @param {Array} g An array of strings of group names, in the order in which the groups should be rendered. So
+  * g[0] will contain the first group to render, g[1] the second group to render, etc.
+  */
 	setRenderOrder:function(g) { this._renderorder=g; },
+  
+  /**
+  * If a group is disabled, this will enable the group.
+  * @param {String} gid The id of the group.
+  */
 	playGroup:function(gid){this._groupplay[gid]=true;},
+
+  /**
+  * If a group is enabled, this will disable the group.
+  * @param {String} gid The id of the group.
+  */
 	stopGroup:function(gid){this._groupplay[gid]=false;},
+  
+  /**
+  * Toggles a group between enabled and disabled status.
+  * @param {String} gid The id of the group.
+  */
 	toggleGroup:function(gid){this._groupplay[gid]=!this._groupplay[gid];},
+  
+  /**
+  * Turns off all groups except for the one specified. 
+  * @param {String} gid The id of the group.
+  */
 	soloGroup:function(gid) {
 		for (var i=0;i<this._groups.length;i++)
 			if (this._groups[i]==gid) this.playGroup(this._groups[i]); else this.stopGroup(this._groups[i]);
 	},
+  
+  /**
+  * Enables all groups, toggling any groups that are currently disabled.
+  */
 	playAllGroups:function() { for (var i=0;i<this._groups.length;i++) this.playGroup(this._groups[i]); },
+
+  /**
+  * Destroys all objects in a given group.
+  * @param {String} gid The id of the group.
+  */
 	clearGroup:function(group) {
 		for (var obj in this._objects[group]) {
 			if (this._objects[group][obj].__zt!=null) this._zindex.remove(this._objects[group][obj].__zt);
@@ -614,36 +910,113 @@ var gbox={
 	playGroups:function(gid){for (var i=0;i<gid.length;i++)this.playGroup(gid[i])},
 	stopGroups:function(gid){for (var i=0;i<gid.length;i++)this.stopGroup(gid[i])},
 	toggleGroups:function(gid){for (var i=0;i<gid.length;i++)this.toggleGroup(gid[i])},
+  
+  /**
+  * Given a group and an id for a particular object instance, this returns the instance requested.
+  * <b>NOTE:</b> this does not return a copy of the object you've requested! Any modifications you make
+  * to the object returned are directly modifying the object you requested.
+  * @param {String} group The id of the group that contains the object.
+  * @param {String} id The id of the instance of the object.
+  * @returns {Object} The object requested.
+  * @example
+  * // Find the player and reduce health by half.
+  * playertemp = gbox.getObject('player','player_id');
+  * player.health = player.health/2;
+  */ 
 	getObject:function(group,id) {return this._objects[group][id]},
+
+  /**
+  * Creates a font.
+  * @param {Object} data An object containing: <ul><li>id: the id of the font</li>
+  * <li>image: reference to the font image loaded (must contain font character tiles in ASCII order)</li>
+  * <li>firstletter: the ASCII character that the font image's first character corresponds to</li>
+  * <li>tileh: height in pixels of the character tiles</li>
+  * <li>tilew: width in pixels of the character tiles</li>
+  * <li>tilerow: width in pixels of each row in the font image</li>
+  * <li>gapx: x-coord gap between tile columns, in pixels</li>
+  * <li>gapy: y-coord gap between tile rows, in pixels</li></ul>
+  * @example
+  * gbox.addImage('font', 'font.png');
+  * gbox.addFont({ id: 'small', image: 'font', firstletter: ' ', tileh: 8, tilew: 8, tilerow: 255, gapx: 0, gapy: 0 });
+  */ 
 	addFont:function(data) {
 		data.tilehh=Math.floor(data.tileh/2);
 		data.tilehw=Math.floor(data.tilew/2);
 		this._fonts[data.id]=data;
 		this._fonts[data.id].firstascii=data.firstletter.charCodeAt(0);
 	},
+  
+  /**
+  * Returns a font object containing data about the font.
+  * @param {String} id The id of the font, as set in gbox.addFont.
+  */   
 	getFont:function(id) {
 		return this._fonts[id];
 	},
+
+  /**
+  * Deletes an object, keeping a record of its group and id in gbox._garbage.
+  * @param {Object} obj The object you wish to delete.
+  */  
 	trashObject:function(obj) {
 		if (!this._garbage[obj.group]) this._garbage[obj.group]={};
 		this._garbage[obj.group][obj.id]=1;
 		obj.__trashing=true;
 	},
+  
+  /**
+  * Clears the record held in gbox._garbage of what has been deleted. The "onpurge" method is called on the object before being deleted (for canvas deallocation etc.)
+  */    
 	purgeGarbage:function() {
 		for (var group in this._garbage)
 			for (var id in this._garbage[group]) {
+				if (this._objects[group][id]["onpurge"]) this._objects[group][id].onpurge();
 				if (this._objects[group][id].__zt!=null)
 					this._zindex.remove(this._objects[group][id].__zt)
 				delete this._objects[group][id];
 			}
 		gbox._garbage={};
 	},
+  
+  /**
+  * Deletes every object in a given group.
+  * @param {String} group The group id.
+  */    
 	trashGroup:function(group) {
 		if (!this._garbage[group]) this._garbage[group]={};
 		for (var obj in this._objects[group])
 			this._garbage[group][obj]=1;
 	},
+  
+  /**
+  * Returns whether an object is due to be trashed. Useful in cases you want to check if
+  * an object is marked as trash before it is actually deleted.
+  * @param {Object} o The object you're checking.
+  * @returns {Boolean} True if the object is marked as trash.
+  */      
 	objectIsTrash:function(o) { return o.__trashing },
+  
+  /**
+  * Creates a new game object. Generally speaking you pass a fully-defined object as the parameter (including a group, id, tileset, and so on).
+  * A group must be specified, or the program will crash. If no id is specified, then it will automatically provide 
+  * an id of 'obj-XXXX' where 'XXXX' is an automatically incrementing integer. This is where the <i>initialize</i>, <i>first</i>, and <i>blit</i>
+  * functions are defined, as well.
+  * @param {Object} data The object you wish to create.
+  * @returns {Object} The object you created.
+  * @example
+  * data = {
+  *   group: 'player',
+  *   id: 'player_id',
+  *   tileset: 'player_tiles', 
+  *   x: 0,
+  *   y: 0,
+  *   initialize: function() {
+      this.x = 10;
+      this.y = 10;
+      },
+  * };
+  * gbox.addObject(data);
+  */    
 	addObject:function(data) {
 		// Extras
 		if (!data.id) {
@@ -661,22 +1034,107 @@ var gbox={
 			this.setZindex(this._objects[data.group][data.id],data.zindex);
 		return this._objects[data.group][data.id];
 	},
+  
+   /**
+  * Returns whether a given group contains no objets.
+  * @param {String} gid The group you're checking.
+  * @returns {Boolean} True if the group contains no objects.
+  */    
 	groupIsEmpty:function(gid) { for (var i in this._objects[gid]) return false; return true; },
+  
+  /**
+  * Creates a new canvas. By default, the width and height is the current gbox._screenw and gbox._screenh,
+  * but it can also be set by passing in a data object with the appropriate parameters.
+  * @param {String} id The id of the new canvas.
+  * @param {Object} data (Optional) The height and width of the new canvas, contained in data.h and data.w parameters.
+  * @example
+  * gbox.createCanvas('newCanvas', {w: 640, h: 480});
+  */    
 	createCanvas:function(id,data) {
 		this.deleteCanvas(id);
+		var w=(data&&data.w?data.w:this._screenw);
+		var h=(data&&data.h?data.h:this._screenh);
 		this._canvas[id]=document.createElement("canvas");
-		this._canvas[id].setAttribute('height',(data&&data.h?data.h:this._screenh));
-		this._canvas[id].setAttribute('width',(data&&data.w?data.w:this._screenw));
+		this._canvas[id].setAttribute('height',h);
+		this._canvas[id].setAttribute('width',w);
+		this._canvas[id].getContext("2d").save();
+		this._canvas[id].getContext("2d").globalAlpha=0;
+		this._canvas[id].getContext("2d").fillStyle = gbox.COLOR_BLACK;
+		this._canvas[id].getContext("2d").fillRect(0,0,w,h);
+		this._canvas[id].getContext("2d").restore();
 	},
+  /**
+  * Swap two canvas using their ID.
+  * @param {String} id The id of the first canvas.
+  * @param {String} id The id of the second canvas.
+  * @example
+  * gbox.swapCanvas('canvas1','canvas2');
+  */    
+  swapCanvas:function(a,b) {
+  	var swp=this._canvas[a];
+  	this._canvas[a]=this._canvas[b];
+  	this._canvas[b]=swp;
+  },
+  /**
+  * Deletes a given canvas.
+  * @param {String} id The id of the canvas to be deleted.
+  */  
 	deleteCanvas:function(id) {
 		if (this._canvas[id]) delete this._canvas[id];	
 	},
+  
+  /**
+  * Checks to see if an image was successfully loaded.
+  * @param {String} id The id of the image.
+  * @returns {Boolean} True if the image has been loaded.
+  */    
 	imageIsLoaded:function(id){ return this._images[id]&&(this._images[id].getAttribute("wasloaded"))&&this._images[id].width },
+  
+  /**
+  * Gets information about a loaded image.
+  * @param {String} id The id of the image.
+  * @returns {Object} A DOM Image element, including the URL and last modified date of the image, its ID, and whether it was loaded successfully.
+  * @example
+  * image = gbox.getImage('logo');
+  * image; // => <img src=?"logo.png?_brc=5-7-2010-15-48-42" src_org=?"logo.png" id=?"logo" wasloaded=?"true">?
+  */
 	getImage:function(id){return this._images[id]},
-	getBuffer:function(id){return this.getCanvas("_buffer")},
-	getBufferContext:function(id){ return (gbox._fskid>=gbox._frameskip?(this._db?this.getCanvasContext("_buffer"):this._screen.getContext("2d")):null) },
+  
+  /**
+  * Gets the buffer canvas (automatically created by gbox.initScreen).
+  * @returns {Object} A DOM Canvas element, including the width and height of the canvas.
+  */
+	getBuffer:function(){return (gbox._fskid>=gbox._frameskip?(this._db?this.getCanvas("_buffer"):this._screen):null)},
+
+  /**
+  * Gets the buffer canvas context.
+  * @returns {Object} A DOM Canvas context object.
+  */
+	getBufferContext:function(){ return (gbox._fskid>=gbox._frameskip?(this._db?this.getCanvasContext("_buffer"):this._screen.getContext("2d")):null) },
+  
+  /**
+  * Gets a given canvas.
+  * @param {Object} id The identifier of the canvas.
+  * @returns {Object} A DOM Canvas element, including the width and height of the canvas.
+  */
 	getCanvas:function(id){return this._canvas[id]},
+  
+  /**
+  * Gets the two-dimensional canvas context of a given canvas. The object it returns contains all the drawing functions for the canvas.
+  * See <a href = "http://dev.w3.org/html5/spec/Overview.html#the-canvas-element">W3C</a> and
+  * <a href = "https://developer.mozilla.org/en/canvas_tutorial/basic_usage">Mozilla Developer Center</a> for details.
+  * @param {Object} id The identifier of the canvas.
+  * @returns {Object} A DOM Canvas context object.
+  */
 	getCanvasContext:function(id){return this.getCanvas(id).getContext("2d");},
+  
+  /**
+  * Adds an image file to the loader, assigning it to an ID. If adding an image to an existing ID, it checks to see if the file you're
+  * adding is different than the one currently assigned to the ID. If it's different, it overwrites the old image. If it's the same, then
+  * no action is taken.
+  * @param {String} id The identifier of the image.
+  * @param {String} filename The file name of the image.
+  */
 	addImage:function(id,filename) {
 		if (this._images[id])
 			if (this._images[id].getAttribute("src_org")==filename)
@@ -685,16 +1143,49 @@ var gbox={
 				delete this._images[id];
 		this._addtoloader({type:"image",id:id,filename:filename});
 	},
+  
+  /**
+  * Deletes an image currently in use. Does not delete the image file, but removes it from Akihabara's image list.
+  * @param {String} id The identifier of the image.
+  */
 	deleteImage:function(id) {
 		delete this._images[id];
 	},
+  
+  /**
+  * Creates a new Akihabara tileset, adding it to the engine.
+  * @param {Object} t An object containing: <ul><li>id {String}: the new id of the tileset</li>
+  * <li>image {String}: reference to the tileset image loaded</li>
+  * <li>tileh {Integer}: height in pixels of the tiles</li>
+  * <li>tilew {Integer}: width in pixels of the tiles</li>
+  * <li>tilerow {Integer}: width in pixels of each row in the font image</li>
+  * <li>gapx {Integer}: x-coord gap between tile columns, in pixels</li>
+  * <li>gapy {Integer}: y-coord gap between tile rows, in pixels</li></ul>
+  */
 	addTiles:function(t) { 
 		t.tilehh=Math.floor(t.tileh/2);
 		t.tilehw=Math.floor(t.tilew/2);
 		this._tiles[t.id]=t;
 	},
+
+  /**
+  * Gets an Akihabara tileset, adding it to the engine.
+  * @param {String} t The ID of a tileset.
+  * @returns An object containing: <ul><li>id {String}: the new id of the tileset</li>
+  * <li>image {String}: reference to the tileset image loaded</li>
+  * <li>tileh {Integer}: height in pixels of the tiles</li>
+  * <li>tilew {Integer}: width in pixels of the tiles</li>
+  * <li>tilerow {Integer}: width in pixels of each row in the font image</li>
+  * <li>gapx {Integer}: x-coord gap between tile columns, in pixels</li>
+  * <li>gapy {Integer}: y-coord gap between tile rows, in pixels</li></ul>
+  */
 	getTiles:function(t) { return this._tiles[t] },
-	getFont:function(t){ return this._fonts[t] },
+  
+  /**
+  * Loads the initial splash screen and debugging font, then calls gbox._waitforloaded which adds to the game all the previously
+  * defined resources. Once gbox._waitforloaded is done, it calls the callback function cb.
+  * @params {String} cb The name of the function to be called when all assets are done loading.
+  */
 	loadAll:function(cb) {
 		// Setup logger
 		if (this._canlog) this.log=console.log;
@@ -708,6 +1199,7 @@ var gbox={
 			gbox._minimalexpired=2;
 		this._waitforloaded();
 	},
+  
 	_implicitsargs:function(data) {
 		if (data.camera) {
 			data.dx-=this._camera.x;
@@ -718,6 +1210,22 @@ var gbox={
 			data.y=this._camera.y*(data.parallaxy?data.parallaxy:1);	
 		}
 	},
+  
+  /**
+  * Draws a tile to a canvas context
+  * @param {Object} tox The canvas context to be drawn on.
+  * @param {Object} data An object containing data about the tile to be drawn, including:
+  * <ul><li>tileset {String}: the id of the tileset</li>
+  * <li>tile {Integer}: the index of the tile within the tileset to be drawn</li>
+  * <li>dx {Integer}: x coordinate to draw the tile at</li>
+  * <li>dy {Integer}: y coordinate to draw the tile at</li>
+  * <li>fliph {Integer}: horizontal flip, either 1 or -1</li>
+  * <li>flipv {Integer}: vertical flip, either 1 or -1</li>
+  * <li>alpha {Float}: alpha value (0 is transparent, 1 is opaque)</li></ul>
+  * @example
+  * // from capman, draws an current object's tile, called from inside its blit function
+  * gbox.blitTile(gbox.getBufferContext(),{tileset:this.tileset,tile:this.frame,dx:this.x,dy:this.y,fliph:this.fliph,flipv:this.flipv,camera:this.camera,alpha:1});
+  */
 	blitTile:function(tox,data) {
 		if (tox==null) return;
 		var ts=this._tiles[data.tileset];
@@ -729,6 +1237,21 @@ var gbox={
 		this._safedrawimage(tox,img, ts.gapx+(ts.tilew*(data.tile%ts.tilerow)),ts.gapy+(ts.tileh*Math.floor(data.tile/ts.tilerow)),(data.w==null?ts.tilew:data.w),(data.h==null?ts.tileh:data.h),data.dx*(data.fliph?-1:1),data.dy*(data.flipv?-1:1),(data.w?data.w:ts.tilew),(data.h?data.h:ts.tileh));
 		tox.restore();
 	},
+
+  /**
+  * Draws an image to a canvas context
+  * @param {Object} tox The canvas context to be drawn on.
+  * @param {Object} image The image to draw. Must be a DOM Image element, typicallly accessed via gbox.getImage
+  * @param {Object} data An object containing data about the tile to be drawn, including:
+  * <ul><li>dx {Integer}: (required) x coordinate to draw the image at</li>
+  * <li>dy {Integer}: (required) y coordinate to draw the image at</li>
+  * <li>fliph {Integer}: horizontal flip, either 1 or -1</li>
+  * <li>flipv {Integer}: vertical flip, either 1 or -1</li>
+  * <li>alpha {Float}: alpha value (0 is transparent, 1 is opaque)</li></ul>
+  * @example
+  * // draw an image at (100,100)
+  * gbox.blitAll(gbox.getBufferContext(),gbox.getImage("image_id"),{dx:100,dy:100});
+  */
 	blitAll:function(tox,image,data) {
 		if (tox==null) return;
 		this._implicitsargs(data);
@@ -738,6 +1261,7 @@ var gbox={
 		this._safedrawimage(tox,image, 0,0, image.width,image.height,data.dx*(data.fliph?-1:1),data.dy*(data.flipv?-1:1),image.width,image.height);
 		tox.restore();
 	},
+  
 	blit:function(tox,image,data) {
 		if (tox==null) return;
 		this._implicitsargs(data);
@@ -747,6 +1271,15 @@ var gbox={
 		this._safedrawimage(tox,image,(data.x?data.x:0), (data.y?data.y:0),(data.w?data.w:data.dw),(data.h?data.h:data.dh),data.dx*(data.fliph?-1:1),data.dy*(data.flipv?-1:1),data.dw,data.dh);
 		tox.restore();
 	},
+  
+  
+  /**
+  * Draws a tilemap to a canvas context
+  * @param {Object} tox The canvas context to be drawn on.
+  * @param {Object} data An object containing a set of tilemap data, including:
+  * <ul><li>tileset {String}: (required) the id of the tileset the tilemap is based on</li>
+  * <li>map {Array}: an array whose x and y coord represent the tilemap coordinates, containing integers that correspond to the index of a given tile (or null for no tile)</li></ul>
+  */
 	blitTilemap:function(tox,data) {
 		if (tox==null) return;
 		var ts=this._tiles[data.tileset];
@@ -754,6 +1287,22 @@ var gbox={
 			for (var x=0;x<data.map[y].length;x++)
 				if (data.map[y][x]!=null) this.blitTile(tox,{tileset:data.tileset,tile:data.map[y][x],dx:x*ts.tilew,dy:y*ts.tilew});
 	},
+  
+  
+  /**
+  * Draws text to a canvas context
+  * @param {Object} tox The canvas context to be drawn on.
+  * @param {Object} data An object containing a set of data, including:
+  * <ul><li>font {String}: (required) the id of font to draw the text with</li>
+  * <li>text {String}: (required) the text to display</li>
+  * <li>dx {Integer}: (required) the x coordinate to draw the text at</li>
+  * <li>dy {Integer}: (required) the y coordinate to draw the text at</li>
+  * <li>dw {Integer}: the width of the text area -- required if you define data.halign</li>
+  * <li>dh {Integer}: the height of the text area -- required if you define data.valign</li>
+  * <li>valign {Integer}: either gbox.ALIGN_BOTTOM (aligns from the bottom of the text area) or gbox.ALIGN_MIDDLE (vertically centers text in text area)</li>
+  * <li>halign {Integer}: either gbox.ALIGN_RIGHT (aligns to the right hand side of text area) or gbox.ALIGN_CENTER (horizontallly centers text in text area)</li>
+  * <li>alpha {Float}: alpha value (0 is transparent, 1 is opaque)</li></ul>
+  */
 	blitText:function(tox,data) {
 		if (tox==null) return;
 		data.text+=""; // Convert to string.
@@ -778,18 +1327,52 @@ var gbox={
 		}
 		tox.restore();
 	},
+  
+  /**
+  * Clears a rectangular area of a canvas context.
+  * @param {Object} image The canvas context to be drawn on.
+  * @param {Object} data An object containing a set of data, including:
+  * <ul><li>x {Integer}: (required) the x coordinate of the top-left corner of the rectangle</li>
+  * <li>y {Integer}: (required) the y coordinate of the top-left corner of the rectangle</li>
+  * <li>w {Integer}: the width of the box; defaults to canvas width</li>
+  * <li>h {Integer}: the height the box; defaults to canvas height</li></ul>
+  */
 	blitClear:function(image,data) {
 		if (image==null) return;
 		if (data==null) data={x:0,y:0};
 		this._implicitsargs(data);
 		image.clearRect(data.x,data.y,(data.w==null?image.canvas.width:data.w),(data.h==null?image.canvas.height:data.h));
 	},
+  
+  /**
+  * Draws an image directly to the screen's current canvas context. Used internally in gbox.go(). Probably shouldn't be used otherwise.
+  */
 	blitImageToScreen:function(image) {
 		this._screen.getContext("2d").drawImage(image,0,0);
 	},
+  
+   /**
+  * Draws a filled rectangle over an entire canvas context.
+  * @param {Object} tox The canvas context to be filled.
+  * @param {Object} data An object containing a set of data, including:
+  * <ul><li>alpha {Float}: the alpha value of the rectangle; defaults to 1</li>
+  * <li>color {Object}: the color of the box, formatted rgb(rValue, gValue, bValue); default black</li></ul>
+  */
 	blitFade:function(tox,data) { 
 		if (tox) this.blitRect(tox,{x:0,y:0,w:tox.canvas.width,h:tox.canvas.height,alpha:data.alpha,color:data.color});
 	},
+  
+  /**
+  * Draws a filled rectangle to a canvas context.
+  * @param {Object} tox The canvas context to be drawn on.
+  * @param {Object} data An object containing a set of data, including:
+  * <ul><li>x {Integer}: (required) the x coordinate of the top-left corner of the rectangle</li>
+  * <li>y {Integer}: (required) the y coordinate of the top-left corner of the rectangle</li>
+  * <li>w {Integer}: (required) the width of the box</li>
+  * <li>h {Integer}: (required) the height the box</li>
+  * <li>alpha {Float}: the alpha value of the rectangle; defaults to 1</li>
+  * <li>color {Object}: the color of the box, formatted rgb(rValue, gValue, bValue); default black</li></ul>
+  */
 	blitRect:function(tox,data) {
 		if (tox==null) return;
 		tox.save();
@@ -798,14 +1381,56 @@ var gbox={
 		tox.fillRect(data.x,data.y,data.w,data.h);
 		tox.restore();
 	},
+  
+  /**
+  * Calculates a box collision between two collision boxes within a given tolerance. A higher tolerance means less precise collision.
+  * @param {Object} o1 A collision box you're testing for collision. Must contain:
+  * <ul><li>x {Integer}: (required) the x coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>y {Integer}: (required) the y coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>w {Integer}: (required) the width of the box</li>
+  * <li>h {Integer}: (required) the height the box</li></ul>
+  * @param {Object} o2 A collision box you're testing for collision. Must contain:
+  * <ul><li>x {Integer}: (required) the x coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>y {Integer}: (required) the y coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>w {Integer}: (required) the width of the box</li>
+  * <li>h {Integer}: (required) the height the box</li></ul>
+  * @param {Integer} t The tolerance for the collision, in pixels. A value of 0 means pixel-perfect box collision. A value of 2 would mean that the
+  * boxes could overlap by up to 2 pixels without being considered a collision.
+  * @returns True if the two collision boxes are colliding within the given tolerance.
+  */  
 	collides:function(o1,o2,t) {
 		if (!t) t=0;
 		return !((o1.y+o1.h-1-t<o2.y+t) || (o1.y+t> o2.y+o2.h-1-t) || (o1.x+o1.w-1-t<o2.x+t) || (o1.x+t>o2.x+o2.w-1-t));
 	},
+  
+  /**
+  * Calculates a point-box collision between a point and a collision box within a given tolerance. A higher tolerance means less precise collision.
+  * @param {Object} o1 A point you're testing for collision. Must contain:
+  * <ul><li>x {Integer}: (required) the x coordinate of the point</li>
+  * <li>y {Integer}: (required) the y coordinate of the point</li></ul>
+  * @param {Object} o2 A collision box you're testing for collision. Must contain:
+  * <ul><li>x {Integer}: (required) the x coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>y {Integer}: (required) the y coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>w {Integer}: (required) the width of the box</li>
+  * <li>h {Integer}: (required) the height the box</li></ul>
+  * @param {Integer} t The tolerance for the collision, in pixels. A value of 0 means pixel-perfect collision. A value of 2 would mean that the
+  * point could exist within the outermost 2 pixels of the box without being considered a collision.
+  * @returns True if the point is colliding with the box within the given tolerance.
+  */  
 	pixelcollides:function(o1,o2,t) {
 		if (!t) t=0;
 		return !((o1.y<o2.y+t) || (o1.y> o2.y+o2.h-1-t) || (o1.x<o2.x+t) || (o1.x>o2.x+o2.w-1-t));
 	},
+  
+  /**
+  * Determines whether an object is visible by seeing if it collides with the camera's viewport.
+  * @param {Object} obj The object you're testing to see if it's visible. Must contain:
+  * <ul><li>x {Integer}: (required) the x coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>y {Integer}: (required) the y coordinate of the object's origin; assumes the Akihabara default of top-left being the origin</li>
+  * <li>w {Integer}: (required) the width of the object's collision box</li>
+  * <li>h {Integer}: (required) the height the object's box</li></ul>
+  * @returns True if the object's collision box is within the camera's viewport.
+  */  
 	objectIsVisible:function(obj) { return this.collides(obj,this._camera,0); },
 	
 	// --- 
@@ -831,6 +1456,8 @@ var gbox={
 	_singlechannelname:"bgmusic",
 	_positiondelay:0,
 	_playerforcer:0,
+	_forcedmimeaudio:null,
+	_singlechannelaudio:false,
 	_audiomutevolume:0.0001, // Zero is still not accepted by everyone :(
 	_rawstopaudio:function(su) {
 		if (gbox._audiocompatmode==1) {
@@ -857,10 +1484,10 @@ var gbox={
 	_finalizeaudio:function(ob,who,donext){
 	
 		var cur=(who?who:this);
-		cur.removeEventListener('ended', gbox._finalizeaudio,false);
-		cur.removeEventListener('timeupdate', gbox._checkprogress,false);
+		gbox.removeEventListener(cur,'ended', gbox._finalizeaudio);
+		gbox.removeEventListener(cur,'timeupdate', gbox._checkprogress);
 		
-		cur.addEventListener('ended', gbox._playbackended,false);
+		gbox.addEventListener(cur,'ended', gbox._playbackended);
 		if (donext) gbox._loaderloaded();
 	},
 	_audiodoload:function() {
@@ -919,9 +1546,16 @@ var gbox={
 		ael.setAttribute('controls',gbox._showplayers);
 		ael.setAttribute('aki_id',cau.id);
 		ael.setAttribute('aki_cnt',cau.team);
-		ael.addEventListener('loadedmetadata', gbox._pushaudio,false); // Push locked audio in safari
+		gbox.addEventListener(ael,'loadedmetadata', gbox._pushaudio); // Push locked audio in safari
 		if (((gbox._createmode==0)&&(cau.team==0))||(gbox._createmode==1)) {
-			if (ael.canPlayType) {
+			if (gbox._forcedmimeaudio) {
+				for (var i=0;i<cau.filename.length;i++) {
+					if (gbox._audiofiletomime(cau.filename[i]).indexOf(gbox._forcedmimeaudio)!=-1) {
+						ael.src=gbox._breakcacheurl(cau.filename[i]);
+						break;
+					}
+				}
+			} else if (ael.canPlayType) {
 				var cmime;
 				for (var i=0;i<cau.filename.length;i++) {
 					cmime=gbox._audiofiletomime(cau.filename[i]);
@@ -937,11 +1571,11 @@ var gbox={
 					ael.appendChild(src);
 				}
 			}
-			ael.addEventListener('ended',this._finalizeaudio,false);
+			gbox.addEventListener(ael,'ended',this._finalizeaudio);
 			if (gbox._audiocompatmode==1)
 				setTimeout(gbox._fakecheckprogress,gbox._fakecheckprogressspeed);
 			else
-				ael.addEventListener('timeupdate',this._checkprogress,false);
+				gbox.addEventListener(ael,'timeupdate',this._checkprogress);
 			ael.setAttribute('buffering',"auto");
 			ael.volume=0;
 			this._audio.aud[cau.id].push(ael);
@@ -1013,7 +1647,8 @@ var gbox={
 			} else gbox._audio.qtimer=false;
 	
 	},
-	getAudioIsSingleChannel:function() { return this._audiocompatmode==2; },
+	getAudioIsSingleChannel:function() { return this._singlechannelaudio; },
+	setAudioIsSingleChannel:function(m) { gbox._singlechannelaudio=m },
 	setAudioPositionDelay:function(m) { gbox._positiondelay=m },
 	setAudioDequeueTime:function(m) { gbox._audiodequeuetime=m },
 	setShowPlayers:function(m) { gbox._showplayers=m},
@@ -1026,7 +1661,7 @@ var gbox={
 					return;
 				else
 					gbox.deleteAudio(id);
-			if ((gbox._audiocompatmode!=2)||(def.channel==gbox._singlechannelname)) {
+			if (!gbox._singlechannelaudio||(def.channel==gbox._singlechannelname)) {
 				var grsize=(def.channel==gbox._singlechannelname?gbox._loweraudioteam:(def.background?gbox._loweraudioteam:gbox._audioteam));
 				for (var i=0;i<grsize;i++)
 					gbox._addtoloader({type:"audio",data:{id:id,filename:filename,def:(i==0?def:null),team:i}});
@@ -1119,6 +1754,7 @@ var gbox={
 
 	changeAudioVolume:function(a,vol) { if (this._canaudio&&this._audio.ast[a]) { if (this._audio.ast[a].volume+vol>1) this._audio.ast[a].volume=1; else  if (this._audio.ast[a].volume+vol<0) this._audio.ast[a].volume=0; else this._audio.ast[a].volume+=vol; this._updateaudio(a); } },
 	setCanAudio:function(a) { this._canaudio=!this._flags.noaudio&&a;},
+	setForcedMimeAudio:function(a){ this._forcedmimeaudio=a;},
 	setAudioChannels:function(a){
 		this._audiochannels=a;
 		for (var ch in a) {
@@ -1184,11 +1820,14 @@ var gbox={
 	},
 	// Callback for loaded bundle
 	_loaderhmlhttploading:function(){
-		if(this.readyState == 4 && (this.status == 0||this.status == 200)) {
-			if (this.responseText) {
+		var rs=(typeof this.readyState != "undefined" ?this.readyState:gbox._xmlhttp.readyState);
+		var st=(typeof this.status != "undefined" ?this.status:gbox._xmlhttp.status);
+		var rt=(typeof this.responseText != "undefined" ?this.responseText:gbox._xmlhttp.responseText);
+		if(rs == 4 && (!st ||st == 200)) {
+			if (rt) {
 				if (!gbox._loaderqueue.getCurrent().call.skipCacheSave)
-					gbox._loadercache.add(gbox._loaderqueue.getCurrent().call.file,this.responseText);
-				var pack=eval("("+this.responseText+")");
+					gbox._loadercache.add(gbox._loaderqueue.getCurrent().call.file,rt);
+				var pack=eval("("+rt+")");
 				gbox.readBundleData(pack,gbox._loaderqueue.getCurrent().call);
 				// Keep loading the other resources.
 				gbox._loaderloaded();
@@ -1215,7 +1854,7 @@ var gbox={
 			switch (gbox._loaderqueue.getCurrent().type) {
 				case "image":{
 					gbox._images[current.id]=new Image();
-					gbox._images[current.id].addEventListener('load', gbox._loaderimageloaded,false);
+					gbox.addEventListener(gbox._images[current.id],'load', gbox._loaderimageloaded);
 					gbox._images[current.id].src=gbox._breakcacheurl(current.filename);
 					gbox._images[current.id].setAttribute('src_org',current.filename);
 					gbox._images[current.id].setAttribute('id',current.id);
@@ -1235,7 +1874,7 @@ var gbox={
 						}
 					}
 					if (!done) {
-						gbox._xmlhttp=new XMLHttpRequest();
+						gbox._xmlhttp=gbox.createXmlHttpRequest();
 						gbox._xmlhttp.open((current.call.data?"POST":"GET"), gbox._breakcacheurl(current.call.file),true);
 						gbox._xmlhttp.onreadystatechange = gbox._loaderhmlhttploading;
 						if (current.call.data) {
@@ -1277,36 +1916,59 @@ var gbox={
 				setTimeout(gbox._minimaltimeexpired,gbox._splash.minimalTime);
 			}
 			if (gbox._splash.loading) gbox._splash.loading(tox,gbox._loaderqueue.getDone(),gbox._loaderqueue.getTotal());
-			if (gbox._splash.background&&gbox.imageIsLoaded("_splash"))
-				gbox.blit(tox,gbox.getImage("_splash"),{w:gbox.getImage("_splash").width,h:gbox.getImage("_splash").height,dx:0,dy:0,dw:gbox.getScreenW(),dh:gbox.getScreenH()});
-			if (gbox._splash.minilogo&&gbox.imageIsLoaded("logo")) {
-				var dw=gbox.getScreenW()/4;
-				var dh=(gbox.getImage("logo").height*dw)/gbox.getImage("logo").width
-				gbox.blit(tox,gbox.getImage(gbox._splash.minilogo),{w:gbox.getImage("logo").width,h:gbox.getImage("logo").height,dx:gbox.getScreenW()-dw-5,dy:gbox.getScreenH()-dh-5,dw:dw,dh:dh});
-			}
-			if (gbox._splash.footnotes&&gbox.imageIsLoaded("_dbf")) {
-				if (!gbox.getCanvas("_footnotes")) {
-					var fd=gbox.getFont("_dbf");
-					gbox.createCanvas("_footnotes",{w:gbox.getScreenW()-5,h:(gbox._splash.footnotes.length)*(fd.tileh+gbox._splash.footnotesSpacing)});
-					for (var i=0;i<gbox._splash.footnotes.length;i++)
-						gbox.blitText(gbox.getCanvasContext("_footnotes"),{
-										font:"_dbf",
-										dx:0,
-										dy:i*(fd.tileh+gbox._splash.footnotesSpacing),
-										text:gbox._splash.footnotes[i]
-									});
+			switch (gbox._flags.loadscreen) {
+				case "c64": {
+					var p=0;
+					var l=0;
+					while (p!=gbox.getScreenH()) {
+						l=10+Math.floor(Math.random()*gbox.getScreenH()/4);
+						if (p+l>gbox.getScreenH()) l=gbox.getScreenH()-p;
+						tox.fillStyle = gbox.PALETTES.c64.colors[gbox.PALETTES.c64.order[Math.floor(Math.random()*gbox.PALETTES.c64.order.length)]];
+						tox.fillRect(0,p,gbox.getScreenW(),l);
+						p+=l;
+					}
+					tox.fillStyle = gbox.PALETTES.c64.colors.lightblue;
+					tox.fillRect(Math.floor(gbox.getScreenW()/10),Math.floor(gbox.getScreenH()/10),gbox.getScreenW()-Math.floor(gbox.getScreenW()/5),gbox.getScreenH()-Math.floor(gbox.getScreenH()/5));
+					if (gbox._splash.minilogo&&gbox.imageIsLoaded("logo")) {
+						var dw=gbox.getScreenW()/4;
+						var dh=(gbox.getImage("logo").height*dw)/gbox.getImage("logo").width;
+						gbox.blit(tox,gbox.getImage(gbox._splash.minilogo),{w:gbox.getImage("logo").width,h:gbox.getImage("logo").height,dx:(gbox.getScreenW()-dw)/2,dy:(gbox.getScreenH()-dh)/2,dw:dw,dh:dh});
+					}					
+					break;
 				}
-				gbox.blitAll(tox,gbox.getCanvas("_footnotes"),{dx:5,dy:gbox.getScreenH()-gbox.getCanvas("_footnotes").height-5});
-			}
-			if (gbox._loaderqueue.isBusy()) {
-				var bw=Math.floor(((gbox.getScreenW()-4)*gbox._loaderqueue.getDone())/gbox._loaderqueue.getTotal());
-				tox.globalAlpha=1;
-				tox.fillStyle = gbox._splash.gaugeBorderColor;
-				tox.fillRect(0,Math.floor((gbox.getScreenH()-gbox._splash.gaugeHeight)/2),gbox.getScreenW(),gbox._splash.gaugeHeight);
-				tox.fillStyle = gbox._splash.gaugeBackColor;
-				tox.fillRect(1,Math.floor(((gbox.getScreenH()-gbox._splash.gaugeHeight)/2)+1),gbox.getScreenW()-4,gbox._splash.gaugeHeight-2);
-				tox.fillStyle = gbox._splash.gaugeColor;
-				tox.fillRect(1,Math.floor(((gbox.getScreenH()-gbox._splash.gaugeHeight)/2)+1),(bw>0?bw:0),gbox._splash.gaugeHeight-2);
+				default:{
+					if (gbox._splash.background&&gbox.imageIsLoaded("_splash"))
+						gbox.blit(tox,gbox.getImage("_splash"),{w:gbox.getImage("_splash").width,h:gbox.getImage("_splash").height,dx:0,dy:0,dw:gbox.getScreenW(),dh:gbox.getScreenH()});
+					if (gbox._splash.minilogo&&gbox.imageIsLoaded("logo")) {
+						var dw=gbox.getScreenW()/4;
+						var dh=(gbox.getImage("logo").height*dw)/gbox.getImage("logo").width;
+						gbox.blit(tox,gbox.getImage(gbox._splash.minilogo),{w:gbox.getImage("logo").width,h:gbox.getImage("logo").height,dx:gbox.getScreenW()-dw-5,dy:gbox.getScreenH()-dh-5,dw:dw,dh:dh});
+					}
+					if (gbox._splash.footnotes&&gbox.imageIsLoaded("_dbf")) {
+						if (!gbox.getCanvas("_footnotes")) {
+							var fd=gbox.getFont("_dbf");
+							gbox.createCanvas("_footnotes",{w:gbox.getScreenW()-5,h:(gbox._splash.footnotes.length)*(fd.tileh+gbox._splash.footnotesSpacing)});
+							for (var i=0;i<gbox._splash.footnotes.length;i++)
+								gbox.blitText(gbox.getCanvasContext("_footnotes"),{
+												font:"_dbf",
+												dx:0,
+												dy:i*(fd.tileh+gbox._splash.footnotesSpacing),
+												text:gbox._splash.footnotes[i]
+											});
+						}
+						gbox.blitAll(tox,gbox.getCanvas("_footnotes"),{dx:5,dy:gbox.getScreenH()-gbox.getCanvas("_footnotes").height-5});
+					}
+					if (gbox._loaderqueue.isBusy()) {
+						var bw=Math.floor(((gbox.getScreenW()-4)*gbox._loaderqueue.getDone())/gbox._loaderqueue.getTotal());
+						tox.globalAlpha=1;
+						tox.fillStyle = gbox._splash.gaugeBorderColor;
+						tox.fillRect(0,Math.floor((gbox.getScreenH()-gbox._splash.gaugeHeight)/2),gbox.getScreenW(),gbox._splash.gaugeHeight);
+						tox.fillStyle = gbox._splash.gaugeBackColor;
+						tox.fillRect(1,Math.floor(((gbox.getScreenH()-gbox._splash.gaugeHeight)/2)+1),gbox.getScreenW()-4,gbox._splash.gaugeHeight-2);
+						tox.fillStyle = gbox._splash.gaugeColor;
+						tox.fillRect(1,Math.floor(((gbox.getScreenH()-gbox._splash.gaugeHeight)/2)+1),(bw>0?bw:0),gbox._splash.gaugeHeight-2);
+					}
+				}
 			}
 			tox.restore();		
 			gbox.setStatBar("Loading... ("+gbox._loaderqueue.getDone()+"/"+gbox._loaderqueue.getTotal()+")");
@@ -1317,7 +1979,49 @@ var gbox={
 			gbox._cb();
 		}
 	},
-	clearCache:function() { this._loadercache.clear(); }
+	clearCache:function() { this._loadercache.clear(); },
+	
+	// --- 
+	// --- 
+	// ---  BROWSER QUIRKS
+	// --- 
+	// --- 
+	
+	checkCanvasSupport:function() {
+	  return !!document.createElement('canvas').getContext;
+	},
+	addEventListener:function(to,event,code) {
+		if (to.addEventListener) to.addEventListener(event,code,false);
+		else to.attachEvent('on'+event,code);
+	},
+	removeEventListener:function(to,event,code) {
+		if (to.removeEventListener) to.removeEventListener(event,code,false);
+		else to.detachEvent('on'+event,code);
+	},
+	XMLHttpFactories:[
+		function () {return new XMLHttpRequest()},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP")},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP")},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP")}
+	],
+	createXmlHttpRequest:function() {
+		var xmlhttp=false;
+	   /* running locally on IE5.5, IE6, IE7 */                                              ; /*@cc_on
+		 if(location.protocol=="file:"){
+		  if(!xmlhttp)try{ xmlhttp=new ActiveXObject("MSXML2.XMLHTTP"); }catch(e){xmlhttp=false;}
+		  if(!xmlhttp)try{ xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); }catch(e){xmlhttp=false;}
+		 }                                                                                ; @cc_off @*/
+	   /* IE7, Firefox, Safari, Opera...  */
+		 if(!xmlhttp)try{ xmlhttp=new XMLHttpRequest(); }catch(e){xmlhttp=false;}
+	   /* IE6 */
+		 if(typeof ActiveXObject != "undefined"){
+		  if(!xmlhttp)try{ xmlhttp=new ActiveXObject("MSXML2.XMLHTTP"); }catch(e){xmlhttp=false;}
+		  if(!xmlhttp)try{ xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); }catch(e){xmlhttp=false;}
+		 }
+	   /* IceBrowser */
+		 if(!xmlhttp)try{ xmlhttp=createRequest(); }catch(e){xmlhttp=false;}
+		return xmlhttp;
+	}
 
 };
 

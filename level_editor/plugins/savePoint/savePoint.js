@@ -54,7 +54,7 @@ introduceALESPlugin({
         this.counter = (this.counter + 1) % 10;
         this.frame = 0;
         var pl = gbox.getObject('player', 'player_id');
-	    if (gbox.objectIsVisible(this) && pl) {
+	    if (gbox.objectIsVisible(this) && pl && pl.spawn) {
 		  if(pl.spawn.x == this.x && pl.spawn.y == this.y){
             this.frame = 1;
 		  }

@@ -60,8 +60,8 @@ mouse = gbox.addObject({
         }
       if (mouse.isDragging && mouse.dragObject.id == obj.id && mouse.dragObject.group == obj.group) 
         {
-        obj.x = mouse.x-obj.hh;
-        obj.y = mouse.y-obj.hw;
+        obj.x = mouse.x-obj.hw;
+        obj.y = mouse.y-obj.hh;
         }
       }
   }); // end gbox.addObject for mouseControl

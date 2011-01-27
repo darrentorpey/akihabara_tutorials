@@ -54,6 +54,13 @@ akiba = {
       obj.processControlKeys = function() {
         toys.topview.controlKeys(this, my_keys);
       }
+    },
+
+    watchKeys: function(mapping) {
+      $(window).keydown(function(event) {
+        var key = akiba.codeToKey[event.which];
+        mapping[key] && mapping[key]();
+      });
     }
   },
 
@@ -130,3 +137,18 @@ akiba.actors = {
     }
   }
 }
+
+akiba.keyCode = _($.ui.keyCode).extend({
+  A: 65,
+  B: 66,
+  C: 67
+});
+
+// akiba.codeToKey = {};
+// akiba.codeToKey1 = {};
+// _.map(akiba.keyCode, function(num, key) { this[key] = num; }, akiba.codeToKey1);
+// inject
+// _.reduce(akiba.keyCode, function(memo, keyCode, keyLeter) { memo[keyCode] = keyLeter; return memo; }, akiba.codeToKey);
+akiba.codeToKey = _.reduce(akiba.keyCode, function(memo, keyCode, keyLeter) { memo[keyCode] = keyLeter; return memo; }, {});
+
+$aki = akiba;

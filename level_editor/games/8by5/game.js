@@ -4,9 +4,8 @@ var map;
 var frameCount = 0;
 
 var AkiGame = Klass.extend({
-  init: function() {
+  init: function() {},
 
-  },
   start: function() {
     help.akihabaraInit({
       width:  640,
@@ -112,7 +111,6 @@ var AkiGame = Klass.extend({
   },
 
   initGame: function() {
-    console.log('initGame', this);
     // Create the 'player' (see tutorial Part 2 for a detailed explanation)
     the_game.addPlayer();
 
@@ -188,7 +186,7 @@ var AkiGame = Klass.extend({
   },
 
   addEnemies: function() {
-    var aki_box = new AkiBox({
+    var aki_box = new YellowDot({
       aki_attributes: {
         id:   'box_1',
         game: the_game,
@@ -198,19 +196,21 @@ var AkiGame = Klass.extend({
     });
     gbox.addObject(aki_box.getAkiObject());
 
-    var aki_box2 = new AkiBox({
+    var aki_box2 = new YellowDot({
       aki_attributes: {
         id:   'box_2',
         game: the_game,
-        x:    300,
+        x:    400,
         y:    250
       }
     });
     gbox.addObject(aki_box2.getAkiObject());
 
-    makeBoxEnemy(400, 200);
+    makeBoxEnemy(50,  150);
+    makeBoxEnemy(50,  425);
+    makeBoxEnemy(300, 350);
+    makeBoxEnemy(450, 200);
     makeBoxEnemy(500, 400);
-    makeBoxEnemy(50, 350);
   },
 
   getImageResources: function() {
@@ -312,3 +312,30 @@ var AkiGame = Klass.extend({
     return map;
   }
 });
+
+var EightByFive = AkiGame.extend({
+  init: function() {
+    debug.log('Starting 8by5...');
+
+    this.scanner = new Scanner();
+
+    this.turret_1 = new Turret();
+    this.turret_2 = new Turret();
+    this.turret_3 = new Turret();
+
+    this.base = new Base();
+
+    $aki.controls.watchKeys({
+      B: function() {
+        makeBoxEnemy(150, 50);
+      },
+      C: function() {
+        makeBoxEnemy(50, 200);
+      }
+    });
+  }
+});
+
+// Try these out in the console:
+//  the_game.scanner.shoot(the_game.turret_2);
+//  the_game.base.spawnTurret()

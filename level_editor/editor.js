@@ -450,7 +450,6 @@ var Editor = Klass.extend({
     this.setLevel(level);
     game.level = level;
     reloadMap();
-    $('#last_saved').text(getCurrentTimestamp());
   },
 
   redrawMap: function() {

@@ -225,41 +225,46 @@ if ($config.use_plugins) {
         gbox._groups[gbox._groups.length] = "game";
         gbox.setGroups(gbox._groups);
       }
-//    console.log(gbox._groups);
     }
   }
 
-//Load up stuff that executes on page load.
+  // Load up stuff that executes on page load.
   head.ready(function() {
     pluginHelper.redrawPlugins();
   });
 
-//Load plugins on page load!
-  var urlPlugins = getURLParam('plugins');
-  if (urlPlugins) {
-    for (pluginID in urlPlugins) {
-      pluginHelper.loadPluginFromURL(urlPlugins[pluginID].url);
+  loadURLOrDefaultPlugins = function() {
+    // Load plugins on page load!
+    var urlPlugins = getURLParam('plugins');
+    if (urlPlugins) {
+      for (pluginID in urlPlugins) {
+        pluginHelper.loadPluginFromURL(urlPlugins[pluginID].url);
+      }
+    } else if (the_game.defaultPlugins) {
+      console.log('Loading default plugins');
+      // Load the default plugins
+      $.ajax({
+        url: timestampedURL('plugins/defaultPlugins.json' || the_game.defaultPlugins()),
+        dataType: 'json',
+        success: function(data, textStatus) {
+          jQuery(data).each(function (index, pluginString) {
+            pluginHelper.plugin_log(index + ': ' + pluginString);
+            pluginHelper.pluginOrder[pluginString] = index;
+            pluginHelper.loadPluginFromURL(pluginString);
+          });
+        },
+        async: false
+      });
     }
-  } else {
-//Load the default plugins
-    $.ajax({
-      url: timestampedURL('plugins/defaultPlugins.json'),
-      dataType: 'json',
-      success: function(data, textStatus) {
-        jQuery(data).each(function (index, pluginString) {
-          pluginHelper.plugin_log(index + ': ' + pluginString);
-          pluginHelper.pluginOrder[pluginString] = index;
-          pluginHelper.loadPluginFromURL(pluginString);
-        });
-      },
-      async: false
-    });
-  }
-  if (pluginHelper.includedJS) {
-    for (name in pluginHelper.includedJS) {
-      pluginHelper.loadPluginFromURL(pluginHelper.includedJS[name]);
+
+    if (pluginHelper.includedJS) {
+      for (name in pluginHelper.includedJS) {
+        pluginHelper.loadPluginFromURL(pluginHelper.includedJS[name]);
+      }
     }
+    
   }
+
   $('#object_loading .drop').bind('drop',
    function(event) {
      if (event.dataTransfer.types && jQuery.inArray('text/plain', event.dataTransfer.types) >= 0) {

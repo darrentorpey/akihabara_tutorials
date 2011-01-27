@@ -22,9 +22,6 @@
     <div id="level_name">
       <label for="level_name">Level Name</label>
       <input name="level_name" value="Akihabara Live Edit" size="30">
-      <!-- <p class="last_saved">
-        Last saved: <span id="last_saved">-----</span>
-      </p> -->
     <a href="javascript:currentLevel.initMap();editor.loadLevelState(currentLevel.map);" style="float:left">Clear Map</a>
       <a href="" id="open_level_storage">
         go back in time &raquo;
@@ -202,12 +199,13 @@
     'lib/overrides.js',
     'player.js',
     'enemy.js',
+    'lib/actors/top_down.js',
     'lib/actors/aki_player.js',
     'games/test/init.js',
     'games/8by5/game.js',
-    'games/8by5/init.js',
     'games/8by5/listeners.js',
     'games/8by5/actors/turret.js',
+    'games/8by5/actors/enemies.js',
     { game: 'game.js' },
     'lib/levels/map.js'
   );
@@ -222,45 +220,25 @@
     if (urlParams.encoded) {
       urlParams = decompressToObject(urlParams.encoded);
     }
-
-    gameOnlyMode = getURLParam('g');
-  });
-
-  head.ready('akihabara', function() {
-    gbox._passKeysThrough = 1;
-  });
-
-  head.ready('game', function() {
-    // debug.log('Game on!');
   });
 
   head.ready(function() {
     currentLevel = new Level();
 
     levelParam = getURLParam('level');
-    if (levelParam)
-      currentLevel.generateMapFromString(levelParam);
+    levelParam && currentLevel.generateMapFromString(levelParam);
 
-    game = new Game();
+    the_game = new $games[getURLParam('game') || $config.default_game]();
+    the_game.start && the_game.start();
+    the_game.level = currentLevel.map;
 
-    if (gameOnlyMode) {
-      // console.log('Initializing game mode');
+    loadURLOrDefaultPlugins();
+
+    if (getURLParam('g')) {
+      // debug.log('Initializing game mode');
       initGameMode();
     } else {
-      // console.log('Initializing editor mode');
-    }
-
-currentLevel.map[0] = "1000000000000000000000000000000000000000";
-    game.level = currentLevel.map;
-
-    // Hack to start up 8by5 easily
-    $config.default_game = '8by5'
-
-    the_game = new $games[$config.default_game]();
-    the_game.start();
-
-    $('#top_tools, footer, #tutorial_link').hide();
-    if (false && !gameOnlyMode) {
+      // debug.log('Initializing editor mode');
       editor = new Editor();
       editor.level = currentLevel.map;
       editor.setup();

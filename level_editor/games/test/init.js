@@ -1,6 +1,6 @@
 var ALESTest = Klass.extend({
   init: function() {
-    debug.log('Starting ALES Test game...');    
+    debug.log('Starting ALES Test game...');
 
     // This initializes Akihabara with the default settings.
     // The title (which appears in the browser title bar) is the text we're passing to the function.
@@ -16,5 +16,11 @@ var ALESTest = Klass.extend({
 
     // When everything is ready, the 'loadAll' downloads all the needed resources.
     gbox.loadAll();
+
+    gbox._passKeysThrough = 1;
+  },
+
+  defaultPlugins: function() {
+    return 'plugins/defaultPlugins.json';
   }
 });

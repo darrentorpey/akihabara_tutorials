@@ -208,3 +208,92 @@ var Turret = GamePiece.extend({
     }
   }
 });
+
+
+var YellowDotManager = Klass.extend({
+  init: function() {
+    this.count = 0;
+    var that = this;
+
+    $l.bind('death', function(event, data) {
+      that.decrementCount();
+      debug.log(that.count);
+    });
+
+    $l.bind('spawn', function(event, data) {
+      that.incrementCount();
+      debug.log(that.count);
+    });
+  },
+
+  decrementCount: function() {
+    this.updateCount(this.count--);
+  },
+
+  incrementCount: function() {
+    this.updateCount(this.count++);
+  },
+
+  updateCount: function() {
+    if (this.count < 5) {
+      // makeYellowDot(Math.random() * 650,  Math.random() * 450);
+      $c(YellowDot, {
+        x:    Math.random() * 650,
+        y:    Math.random() * 450,
+        id:   'yellow_dot_' + YellowDot.objc++,
+        game: the_game,
+      }, {
+        delay: 300 + (Math.random() * 700)
+      });
+    }
+  }
+});
+var yellowDotManager = new YellowDotManager();
+
+var YellowDot = TopDownActor.extend({
+  init: function(options) {
+    options.aki_attributes = _.extend(options.aki_attributes || {}, {
+      group:   'enemies',
+      tileset: 'enemy_tiles',
+      hitByBullet: function() {
+        toys.generate.sparks.simple(this, 'background', null, { animspeed: 2, tileset: 'explosion_tiles', accx: 0, accy: 0 });
+
+        $listener.inform(the_game.player_one, 'death', this);
+
+        gbox.trashObject(this);
+      }
+    })
+
+    $listener.inform(the_game.player_one, 'spawn', this);
+
+    this._super(options);
+  }
+});
+YellowDot.objc = 0;
+
+makeYellowDot = function(x, y) {
+  var aki_box = new YellowDot({
+    aki_attributes: {
+      id:   'yellow_dot_' + YellowDot.objc++,
+      game: the_game,
+      x:    x,
+      y:    y
+    }
+  });
+  gbox.addObject(aki_box.getAkiObject());
+}
+
+$c = function(type, data, options) {
+  if (!options) options = {};
+
+  var objz = new type({ aki_attributes: data });
+  var action = function() {
+    gbox.addObject(objz.getAkiObject());
+  }
+
+  if (options.delay) {
+    setTimeout(action, options.delay);
+  } else {
+    action();
+  }
+}

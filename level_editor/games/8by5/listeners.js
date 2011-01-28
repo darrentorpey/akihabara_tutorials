@@ -25,18 +25,17 @@ var GlobalListener = MessageListener.extend({
     this._super();
     var self = this;
 
-    $(this).bind('death', function(data) {
-      // self.log(msg.text.killed, data.subject.name, data.subject, data.object, this);
-      self.log(data.subject.name, 'killed', data.object.name);
+    $(this).bind('death', function(event, data) {
+      self.log(data.subject.id, 'killed', data.object.id);
     });
 
-    $(this).bind('spawn', function(data) {
-      self.log(data.subject.name, 'spawned', data.object.name);
+    $(this).bind('spawn', function(event, data) {
+      self.log(data.subject.id, 'spawned', data.object.id);
     });
   },
 
   inform: function(subject, event_name, object, data) {
-    $(this).trigger({
+    $(this).trigger(event_name, {
       type:    event_name,
       subject: subject,
       object:  object,
@@ -45,6 +44,7 @@ var GlobalListener = MessageListener.extend({
   }
 });
 $listener = new GlobalListener();
+$l = $($listener);
 
 function instrumentFunction(context, functionName, callback) {
   context = context || window;

@@ -4,6 +4,7 @@ var TopDownActor = Klass.extend({
 
     this.game = the_game;
     this.aki_attributes = options.aki_attributes || {};
+    this.id = options.aki_attributes.id;
   },
 
   getAkiObject: function() {

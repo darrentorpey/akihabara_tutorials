@@ -1,6 +1,5 @@
 var maingame;
 var map;
-// This keeps track of how many frames have been rendered in total
 var frameCount = 0;
 
 var AkiGame = Klass.extend({
@@ -148,7 +147,7 @@ var AkiGame = Klass.extend({
   },
 
   addPlayer: function() {
-    var aki_player = new AkiPlayer({
+    the_game.player_one = new AkiPlayer({
       aki_attributes: {
         id:   'player_id',
         game: the_game,
@@ -156,7 +155,7 @@ var AkiGame = Klass.extend({
         y:    50
       }
     });
-    gbox.addObject(aki_player.getAkiObject());
+    gbox.addObject(the_game.player_one.getAkiObject());
 
     $('canvas').mousedown(function() {
       var thePlayer = gbox.getObject('player', 'player_id');
@@ -206,11 +205,11 @@ var AkiGame = Klass.extend({
     });
     gbox.addObject(aki_box2.getAkiObject());
 
-    makeBoxEnemy(50,  150);
-    makeBoxEnemy(50,  425);
-    makeBoxEnemy(300, 350);
-    makeBoxEnemy(450, 200);
-    makeBoxEnemy(500, 400);
+    makeYellowDot(50,  150);
+    makeYellowDot(50,  425);
+    makeYellowDot(300, 350);
+    makeYellowDot(450, 200);
+    makeYellowDot(500, 400);
   },
 
   getImageResources: function() {
@@ -327,10 +326,10 @@ var EightByFive = AkiGame.extend({
 
     $aki.controls.watchKeys({
       B: function() {
-        makeBoxEnemy(150, 50);
+        makeYellowDot(150, 50);
       },
       C: function() {
-        makeBoxEnemy(50, 200);
+        makeYellowDot(50, 200);
       }
     });
   }

@@ -217,12 +217,10 @@ var YellowDotManager = Klass.extend({
 
     $l.bind('death', function(event, data) {
       that.decrementCount();
-      debug.log(that.count);
     });
 
     $l.bind('spawn', function(event, data) {
       that.incrementCount();
-      debug.log(that.count);
     });
   },
 

@@ -1,6 +1,8 @@
 var maingame;
 var map;
 var frameCount = 0;
+var g_mouseIsDown = false;
+var g_mouseIsAt = {};
 
 var AkiGame = Klass.extend({
   init: function() {},
@@ -19,6 +21,8 @@ var AkiGame = Klass.extend({
       addTiles: this.getTileResources(),
       addAudio: this.getAudioResources()
     }, { onLoad: null });
+
+    this.game_canvas = gbox._screen;
 
     gbox.setAudioChannels({ jump: { volume: 0.1 }, hit: { volume: 0.3 }, boom: { volume: 0.3 }});
 
@@ -158,29 +162,21 @@ var AkiGame = Klass.extend({
     gbox.addObject(the_game.player_one.getAkiObject());
 
     $('canvas').mousedown(function() {
+      g_mouseIsDown = true;
+      g_mouseIsAt = { x: event.layerX, y: event.layerY };
+      $(this).mousemove(function(event) {
+        g_mouseIsAt = { x: event.layerX, y: event.layerY };
+      });
+
       var thePlayer = gbox.getObject('player', 'player_id');
-      var cam = gbox.getCamera();
-
-      var xPos = event.layerX - this.offsetLeft + cam.x;
-      var yPos = event.layerY - this.offsetTop + cam.y;
-
+      var xPos = event.layerX - this.offsetLeft + gbox.getCamera().x;
+      var yPos = event.layerY - this.offsetTop + gbox.getCamera().y;
       var ang = Math.atan2(yPos - (thePlayer.y + 8), xPos - (thePlayer.x + 8));
 
-      toys.topview.fireBullet('bullets', null, {
-        tileset:      'player_shot',
-        collidegroup: 'enemies',
-        from:         thePlayer,
-        x:            thePlayer.x + thePlayer.colhw - 2,
-        y:            thePlayer.y + thePlayer.colhh - 2,
-        accx:         8 * Math.cos(ang),
-        accy:         8 * Math.sin(ang),
-        maxacc:       8,
-        frames:       { speed: 2, frames: [0, 1] },
-        upper:        true,
-        camera:       true,
-        map:          the_game.map,
-        mapindex:     'map'
-      });
+      the_game.player_one.fireBullet(ang);
+    }).mouseup(function() {
+      $(this).unbind('mousemove');
+      g_mouseIsDown = false;
     });
   },
 

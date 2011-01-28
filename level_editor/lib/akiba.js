@@ -131,9 +131,17 @@ akiba.actors = {
     first: function() {
       if (this.processControlKeys) this.processControlKeys();
 
+      this.dealWithMouse();
+
       this.updateAnimation();
 
       this.applyPhysics();
+    },
+
+    dealWithMouse: function() {
+      if (g_mouseIsDown) {
+        this.whenMouseDown && this.whenMouseDown();
+      }
     }
   }
 }
